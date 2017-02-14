@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'url' => 'http://ubsrvweb05.ub.tu-berlin.de/',
+    'url' => env('SERVER_URL', 'http://dmp.localhost'),
 
     /*
     |--------------------------------------------------------------------------
