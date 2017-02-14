@@ -22,7 +22,6 @@ class CreateTemplatesTable extends Migration
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
-        DB::update("ALTER TABLE templates AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -32,8 +31,6 @@ class CreateTemplatesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('templates');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

@@ -25,8 +25,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        DB::update("ALTER TABLE users AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -36,8 +34,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('users');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

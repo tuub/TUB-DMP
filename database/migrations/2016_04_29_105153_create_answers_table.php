@@ -23,7 +23,6 @@ class CreateAnswersTable extends Migration
             $table->text('value');
             $table->timestamps();
         });
-        DB::update("ALTER TABLE institutions AUTO_INCREMENT = 1;");
     }
 
     /**

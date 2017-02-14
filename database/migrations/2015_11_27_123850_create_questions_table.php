@@ -40,7 +40,6 @@ class CreateQuestionsTable extends Migration
             $table->boolean('read_only')->default(0);
             $table->timestamps();
         });
-        DB::update("ALTER TABLE questions AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -50,8 +49,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('questions');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

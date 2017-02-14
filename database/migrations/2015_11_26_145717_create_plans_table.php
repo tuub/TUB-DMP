@@ -29,7 +29,6 @@ class CreatePlansTable extends Migration
             $table->dateTime('prefilled_at')->nullable()->default(null);
             $table->timestamps();
         });
-        DB::update("ALTER TABLE plans AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -39,8 +38,6 @@ class CreatePlansTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('plans');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

@@ -24,7 +24,6 @@ class CreateIvmcMappingsTable extends Migration
             $table->integer('display_order')->default(1);
             $table->timestamps();
         });
-        DB::update("ALTER TABLE ivmc_mappings AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -34,8 +33,6 @@ class CreateIvmcMappingsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('ivmc_mappings');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

@@ -24,7 +24,6 @@ class CreateSectionsTable extends Migration
             $table->text('guidance')->nullable();
             $table->timestamps();
         });
-        DB::update("ALTER TABLE sections AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -34,8 +33,6 @@ class CreateSectionsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('sections');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

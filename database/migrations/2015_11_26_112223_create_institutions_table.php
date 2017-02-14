@@ -22,7 +22,6 @@ class CreateInstitutionsTable extends Migration
             $table->boolean('is_external')->default(0);
             $table->timestamps();
         });
-        DB::update("ALTER TABLE institutions AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -32,9 +31,6 @@ class CreateInstitutionsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('institutions');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
-
     }
 }

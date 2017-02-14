@@ -24,7 +24,6 @@ class CreateQuestionOptionsTable extends Migration
             $table->integer('parent_id')->unsigned()->nullable();
             $table->timestamps();
         });
-        DB::update("ALTER TABLE question_options AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -34,8 +33,6 @@ class CreateQuestionOptionsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('question_options');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

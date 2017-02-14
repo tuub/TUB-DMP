@@ -21,7 +21,6 @@ class CreateInputTypesTable extends Migration
             $table->string('category',125);
             $table->timestamps();
         });
-        DB::update("ALTER TABLE input_types AUTO_INCREMENT = 1;");
     }
 
     /**
@@ -31,8 +30,6 @@ class CreateInputTypesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('input_types');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

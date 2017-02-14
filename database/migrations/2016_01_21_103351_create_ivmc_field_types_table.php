@@ -29,8 +29,6 @@ class CreateIvmcFieldTypesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('ivmc_field_types');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }
