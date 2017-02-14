@@ -1,10 +1,15 @@
 {
   "private": true,
   "devDependencies": {
+    "bower": "^1.8.0",
     "gulp": "^3.9.1"
   },
   "dependencies": {
     "laravel-elixir": "^5.0.0",
     "bootstrap-sass": "^3.0.0"
+    "bootstrap-sass": "^3.3.7"
+  },
+  "scripts": {
+    "postinstall": "bower install & bower update && gulp"
   }
 }
