@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment() == 'local' || $this->app->environment() == 'testing') {
             $this->app->register('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
-            $this->app->register('Clockwork\Support\Laravel\ClockworkServiceProvider');
             $this->app->register('Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider');
             $this->app->register('Barryvdh\Debugbar\ServiceProvider');
             $this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
@@ -41,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment() == 'production') {
             $this->app->register('Ccovey\ODBCDriver\ODBCDriverServiceProvider');
-            $this->app->register('Clockwork\Support\Laravel\ClockworkServiceProvider');
         }
     }
 }

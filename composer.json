@@ -13,7 +13,7 @@
         "elibyy/laravel-tcpdf": "0.*",
         "iamcal/lib_autolink": "^1.7",
         "themsaid/laravel-langman": "^1.1",
-        "orangehill/iseed": "dev-master",
+        "orangehill/iseed": "2.2",
         "laracasts/flash": "^2.0",
         "felixkiss/uniquewith-validator": "^2.0"
     },

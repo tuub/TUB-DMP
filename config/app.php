@@ -152,7 +152,6 @@ return [
         Elibyy\TCPDF\ServiceProvider::class,
 
         Themsaid\Langman\LangmanServiceProvider::class,
-        EricMakesStuff\ServerMonitor\ServerMonitorServiceProvider::class,
         Orangehill\Iseed\IseedServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class
