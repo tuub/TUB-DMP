@@ -8,12 +8,9 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
         "laravelcollective/html": "5.1.*",
-        "garylocke/odbc-driver": "dev-master",
         "xuma/laravel-amaran": "~1.0@dev",
         "elibyy/laravel-tcpdf": "0.*",
         "iamcal/lib_autolink": "^1.7",
-        "themsaid/laravel-langman": "^1.1",
-        "orangehill/iseed": "2.2",
         "laracasts/flash": "^2.0",
         "felixkiss/uniquewith-validator": "^2.0"
     },
@@ -26,7 +23,8 @@
         "doctrine/dbal": "~2.3",
         "barryvdh/laravel-debugbar": "^2.2",
         "laracasts/generators": "^1.1",
-        "mockery/mockery": "^0.9.8"
+        "mockery/mockery": "^0.9.8",
+        "themsaid/laravel-langman": "^1.1"
     },
     "autoload": {
         "classmap": [

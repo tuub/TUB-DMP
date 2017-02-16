@@ -50,6 +50,7 @@ elixir(function(mix) {
     mix.copy(paths.images + '**', 'public/images/');
 
     mix.copy(paths.jquery + 'dist/jquery.js', 'public/js/');
+    mix.copy(paths.js + 'env.js', 'public/js/');
     mix.copy(paths.js + 'plan.js', 'public/js/');
 
     mix.scripts([
