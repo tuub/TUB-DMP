@@ -16,18 +16,16 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('project_number')->nullable();
+            $table->string('title',255);
+            $table->integer('project_id')->unsigned();
             $table->integer('version')->default(1);
             $table->integer('template_id')->unsigned();
-            $table->foreign('template_id')->references('id')->on('templates');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('datasource')->default(null)->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_final')->default(0);
-            $table->boolean('is_prefilled')->default(0);
-            $table->dateTime('prefilled_at')->nullable()->default(null);
             $table->timestamps();
+
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('template_id')->references('id')->on('templates');
         });
     }
 

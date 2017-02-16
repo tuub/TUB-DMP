@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTemplatesTable extends Migration
+class CreateDataSourceNamespaces extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,14 @@ class CreateTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('templates');
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::dropIfExists('data_source_namespaces');
+        Schema::create('data_source_namespaces', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->integer('data_source_id')->unsigned();
             $table->string('name', 255)->unique();
-            $table->integer('institution_id')->unsigned();
-            $table->foreign('institution_id')->references('id')->on('institutions');
-            $table->boolean('is_active')->default(1);
-            $table->timestamps();
+
+            $table->foreign('data_source_id')->references('id')->on('data_sources')->onDelete('cascade');
         });
     }
 
@@ -31,6 +30,6 @@ class CreateTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('templates');
+        Schema::drop('data_source_namespaces');
     }
 }

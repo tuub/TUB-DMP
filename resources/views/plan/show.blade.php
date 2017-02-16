@@ -27,7 +27,7 @@
                     <a class="anchor" name="{{ $section->keynumber }}"></a>{{ $section->keynumber }}. {{ $section->name }}
                 </h3>
                 <div class="section-text">
-                    @foreach( $section->questions()->parent()->get() as $question )
+                    @foreach( $section->questions()->active()->parent()->get() as $question )
                         @include('partials.question.show', $question)
                     @endforeach
                 </div>

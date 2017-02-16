@@ -13,14 +13,15 @@
     <h3>Edit Data</h3>
 
     {!! link_to_route('admin.template.index', 'Templates') !!}<br/>
-    {!! link_to_route('admin.section.index', 'Sections')  !!}<br/>
-    {!! link_to_route('admin.question.index', 'Questions')  !!}<br/>
+    {!! link_to_route('admin.section.index', 'Sections') !!}<br/>
+    {!! link_to_route('admin.question.index', 'Questions') !!}<br/>
 
-    {!! link_to_route('admin.plan.index', 'Plans')  !!}<br/>
-    {!! link_to_route('admin.user.index', 'Users')  !!}<br/>
+    {!! link_to_route('admin.project.index', 'Projects') !!}<br/>
+    {!! link_to_route('admin.plan.index', 'Plans') !!}<br/>
+    {!! link_to_route('admin.user.index', 'Users') !!}<br/>
 
     <hr/>
-    {!! link_to_route('phpinfo', 'PHP Info')  !!}<br/>
-    {!! link_to_route('random_ivmc', 'Random IVMC')  !!}<br/>
+    {!! link_to_route('phpinfo', 'PHP Info') !!}<br/>
+    {!! link_to_route('random_ivmc', 'Random IVMC') !!}<br/>
 
 @stop

@@ -12,13 +12,14 @@ class IvmcMappingTableSeeder extends Seeder
      */
     public function run()
     {
+        /*
         IvmcMapping::create([
             'question_id' => 101,
             'source' => 't_821300_IVMC_DMP_Projekt',
             'field' => 'Projekt_Nr'
         ]);
 
-        /* 102: Project Title german / english */
+        // 102: Project Title german / english
         IvmcMapping::create([
             'question_id' => 102,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -35,7 +36,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 4
         ]);
 
-        /* 103: Abstract german */
+        // 103: Abstract german
         IvmcMapping::create([
             'question_id' => 103,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -43,7 +44,7 @@ class IvmcMappingTableSeeder extends Seeder
             'field_type' => 1
         ]);
 
-        /* 104: Abstract english */
+        // 104: Abstract english
         IvmcMapping::create([
             'question_id' => 104,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -51,7 +52,7 @@ class IvmcMappingTableSeeder extends Seeder
             'field_type' => 1
         ]);
 
-        /* 105: Begin and End of Project */
+        // 105: Begin and End of Project
         IvmcMapping::create([
             'question_id' => 105,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -68,7 +69,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 2
         ]);
 
-        /* 107: Principal Investigator (First Name, Last Name) */
+        // 107: Principal Investigator (First Name, Last Name)
         /*
         IvmcMapping::create([
             'question_id' => 107,
@@ -78,7 +79,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 1
         ]);
         */
-
+        /*
         IvmcMapping::create([
             'question_id' => 107,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -95,7 +96,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 3
         ]);
 
-        /* 109: Other Principal Investigators (First Name, Last Name) */
+        // 109: Other Principal Investigators (First Name, Last Name)
         IvmcMapping::create([
             'question_id' => 109,
             'source' => 't_821320_IVMC_DMP_Weitere_Projektleiter',
@@ -112,7 +113,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 2
         ]);
 
-        /* 111: External Project Partner */
+        // 111: External Project Partner
         IvmcMapping::create([
             'question_id' => 111,
             'source' => 't_821310_IVMC_DMP_Projektpartner_extern',
@@ -121,7 +122,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 1
         ]);
 
-        /* 112: Funding Source */
+        // 112: Funding Source
         IvmcMapping::create([
             'question_id' => 112,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -130,7 +131,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 1
         ]);
 
-        /* 113: Funding Program */
+        // 113: Funding Program
         IvmcMapping::create([
             'question_id' => 113,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -155,7 +156,7 @@ class IvmcMappingTableSeeder extends Seeder
             'display_order' => 3
         ]);
 
-        /* 115: Funding Source */
+        // 115: Funding Source
         IvmcMapping::create([
             'question_id' => 115,
             'source' => 't_821300_IVMC_DMP_Projekt',
@@ -171,5 +172,6 @@ class IvmcMappingTableSeeder extends Seeder
             'field_type' => 4,
             'display_order' => 2
         ]);
+        */
     }
 }

@@ -465,3 +465,7 @@ a.anchor {
     justify-content : center;
 }
 
+tr.parent td {
+    font-weight: bold;
+    background-color: #ededed;
+}

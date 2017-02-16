@@ -15,60 +15,61 @@
 @stop
 
 @section('title')
-    {{ $plan->project_number }} / {{ $plan->version }}
+
 @stop
 
 @section('body')
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            Edit Plan "{{ $plan->project_number }} / {{ $plan->version }}"
+            New Project
         </div>
         <div class="panel-body">
             <div class="row">
-                {!! Form::model($plan, ['method' => 'PUT', 'route' => ['admin.plan.update', $plan->id], 'class' => '', 'role' => 'form']) !!}
+                {!! Form::model($project, ['method' => 'POST', 'route' => ['admin.project.store'], 'class' => '', 'role' => 'form']) !!}
                     <div class="form-group row container">
                         <div class="col-md-2">
-                            {!! Form::Label( 'title', 'Title' ) !!}
+                            {!! Form::Label( 'identifier', 'Project Number' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::Text( 'title', $plan->title, array('class' => 'form-control xs') ) !!}
-                            <span class="help-block {{ ($errors->first('title') ? 'form-error' : '') }}">{{ $errors->first('title') }}</span>
+                            {!! Form::Text( 'identifier', Input::old('identifier'), array('class' => 'form-control') ) !!}
+                            <span class="help-block {{ ($errors->first('identifier') ? 'form-error' : '') }}">{{ $errors->first('identifier') }}</span>
                         </div>
                     </div>
                     <div class="row form-group container">
                         <div class="col-md-2">
-                            {!! Form::label('project_id', 'Project', array('class' => 'control-label')) !!}
+                            {!! Form::Label( 'parent_id', 'Parent Project' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('project_id', $projects, $plan->project_id, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('project_id') ? 'form-error' : '') }}">{{ $errors->first('project_id') }}</span>
+                            {!! Form::select('parent_id', $projects, $project->parent_id, array('class' => 'form-control') ) !!}
+                            <span class="help-block {{ ($errors->first('parent_id') ? 'form-error' : '') }}">{{ $errors->first('parent_id') }}</span>
                         </div>
                     </div>
                     <div class="row form-group container">
                         <div class="col-md-2">
-                            {!! Form::label('version', 'DMP Version', array('class' => 'control-label')) !!}
+                            {!! Form::Label( 'user_id', 'Owner' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('version', $versions, $plan->version, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('version') ? 'form-error' : '') }}">{{ $errors->first('version') }}</span>
+                            {!! Form::select('user_id', $users, $project->user_id, array('class' => 'form-control') ) !!}
+                            <span class="help-block {{ ($errors->first('user_id') ? 'form-error' : '') }}">{{ $errors->first('user_id') }}</span>
                         </div>
                     </div>
                     <div class="row form-group container">
                         <div class="col-md-2">
-                            {!! Form::label('template_id', 'Plan Template', array('class' => 'control-label')) !!}
+                            {!! Form::Label( 'data_source_id', 'Data Source' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('template_id', $templates, $plan->template_id, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('template_id') ? 'form-error' : '') }}">{{ $errors->first('template_id') }}</span>
+                            {!! Form::select('data_source_id', $data_sources, $project->data_source_id, array('class' => 'form-control') ) !!}
+                            <span class="help-block {{ ($errors->first('data_source_id') ? 'form-error' : '') }}">{{ $errors->first('data_source_id') }}</span>
                         </div>
                     </div>
+
                     <div class="form-group row container">
                         <div class="col-md-2">
                             &nbsp;
                         </div>
                         <div class="col-md-10">
-                            {!! Form::submit('Update', array('class' => 'button btn btn-success')) !!}
+                            {!! Form::submit('Create', array('class' => 'button btn btn-success')) !!}
                         </div>
                     </div>
                 {!! Form::close() !!}

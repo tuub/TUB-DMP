@@ -15,73 +15,21 @@ use Storage;
 use Exporters;
 use Mail;
 
-
-/**
- * App\Plan
- *
- * @property integer $id
- * @property string $project_number
- * @property integer $version
- * @property integer $template_id
- * @property integer $user_id
- * @property string $datasource
- * @property boolean $is_active
- * @property boolean $is_final
- * @property boolean $is_prefilled
- * @property \Carbon\Carbon $prefilled_at
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \App\Template $template
- * @property-read \App\User $user
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereProjectNumber($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereVersion($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereTemplateId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereDatasource($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereIsActive($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereIsFinal($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereIsPrefilled($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan wherePrefilledAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Plan whereUpdatedAt($value)
- */
-
-
 class Plan extends Model
 {
-    public    $timestamps = true;
-    protected $table      = 'plans';
-    protected $dates = ['created_at', 'prefilled_at', 'updated_at'];
-    protected $fillable = ['is_prefilled', 'prefilled_at'];
+    public $timestamps = true;
+    protected $table = 'plans';
+    protected $dates = ['created_at', 'updated_at'];
+    protected $fillable = ['title','project_id','version','template_id','is_active','is_final'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    public function project()
+    {
+        return $this->belongsTo('App\Project');
+    }
+
     public function template()
     {
         return $this->belongsTo('App\Template');
-    }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
-
-
-    /**
-     * Get all plans with specified external datasource that weren't already prefilled
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeUnprefilled($query)
-    {
-        return $query->where('is_prefilled', false);
     }
 
 
@@ -94,9 +42,9 @@ class Plan extends Model
     public static function getPlans()
     {
         /* 27.04.2016: Reduced Query Number via Eager Loading */
-        $plans = Plan::with('template','user')
+        $plans = Plan::with('template','project')
             // See Constraints: https://laravel.com/docs/5.1/eloquent-relationships#querying-relations
-            ->where( 'user_id', Auth::user()->id )
+            //->where( 'user_id', Auth::user()->id )
             ->orderBy( 'updated_at', 'desc' )
             ->get();
         return $plans;
@@ -131,7 +79,7 @@ class Plan extends Model
      */
     public function getQuestionCount()
     {
-        $count = $this->template->questions()->mandatory()->count();
+        $count = $this->template->questions()->active()->mandatory()->count();
         return $count;
     }
 
@@ -141,18 +89,8 @@ class Plan extends Model
      */
     public function getMandatoryQuestions()
     {
-        return $this->template->questions()->mandatory()->get();
+        return $this->template->questions()->active()->mandatory()->get();
     }
-
-
-    /**
-     * @return mixed
-     */
-    public static function getUnprefilledPlans() {
-        $result = Plan::unprefilled()->get();
-        return $result;
-    }
-
 
     /**
      * @return int

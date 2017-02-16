@@ -11,6 +11,42 @@
 |
 */
 
+$factory->define('App\Institution', function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->company,
+        'url' => $faker->url,
+        'logo' => 'logo-tu.png',
+        'is_active' => $faker->boolean,
+        'is_external' => $faker->boolean,
+    ];
+});
+
+$factory->define('App\User', function ($faker)
+{
+    return [
+        'name' => strtolower( $faker->userName ),
+        'real_name' => $faker->name,
+        'institution_id' => factory(App\Institution::class)->create()->id,
+        'email' => $faker->safeEmail,
+        'password' => bcrypt(str_random(10)),
+        'remember_token' => str_random(10),
+        'is_admin' => $faker->boolean,
+        'is_active' => $faker->boolean,
+        'last_login' => $faker->dateTime,
+    ];
+});
+
+$factory->define('App\Project', function ($faker)
+{
+    return [
+        'identifier' => $faker->numberBetween(2000000,8000000),
+        'user_id' => factory(App\User::class)->create()->id,
+    ];
+});
+
+
+/*
+
 $factory->define(App\InputType::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->text(15),
@@ -88,3 +124,5 @@ $factory->define(App\Question::class, function (Faker\Generator $faker) {
         'is_active' => $faker->boolean(80)
     ];
 });
+
+*/

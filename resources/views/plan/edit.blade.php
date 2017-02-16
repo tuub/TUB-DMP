@@ -73,7 +73,7 @@
                 @if( $section->guidance )
                     <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($section->guidance) !!}</span>
                 @endif
-                @foreach( $section->questions()->parent()->get() as $question )
+                @foreach( $section->questions()->active()->parent()->get() as $question )
                     @include('partials.question.edit', $question)
                 @endforeach
             </section>

@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth'], function()
     /* PLAN */
 
     /* SHOW */
-    Route::get('/plan/{project_number}/{version}/show',[
+    Route::get('/plan/{id}/show',[
         'uses' => 'PlanController@show',
         'as' => 'show_plan'
     ]);
@@ -116,6 +116,7 @@ Route::group(['middleware' => 'auth'], function()
 
         /* REST ENTITIES */
         Route::resource( 'user', 'Admin\UserController' );
+        Route::resource( 'project', 'Admin\ProjectController' );
         Route::resource( 'plan', 'Admin\PlanController' );
         Route::resource( 'template', 'Admin\TemplateController' );
         Route::resource( 'section', 'Admin\SectionController' );
@@ -135,14 +136,14 @@ Route::group(['middleware' => 'auth'], function()
         ] );
 
         /* RAW IVMC */
-        Route::get( '/plan/{project_number}/{version}/raw_ivmc', [
-            'uses' => 'PlanController@raw_ivmc',
+        Route::get( '/project/{project_number}/raw_ivmc', [
+            'uses' => 'ProjectController@raw_ivmc',
             'as'   => 'raw_ivmc'
         ] );
 
         /* RANDOM IVMC */
         Route::get( 'random_ivmc', [
-            'uses' => 'PlanController@random_ivmc',
+            'uses' => 'ProjectController@random_ivmc',
             'as'   => 'random_ivmc'
         ] );
     });

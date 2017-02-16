@@ -12,6 +12,7 @@ use App\Http\Requests\Admin\UpdateSectionRequest;
 use Request;
 use Redirect;
 use View;
+use Session;
 
 class SectionController extends Controller {
 

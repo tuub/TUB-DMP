@@ -116,6 +116,11 @@ class Question extends Model
         return $query->where('is_mandatory', true);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
 
 
     /**

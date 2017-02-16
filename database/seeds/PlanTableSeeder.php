@@ -14,11 +14,10 @@ class PlanTableSeeder extends Seeder
     {
         Plan::create([
             'id' => 1,
-            'project_number' => 'DMP-123',
+            'title' => 'Data Management Plan',
+            'project_id' => 1,
             'version' => 1,
             'template_id' => 1,
-            'user_id' => 1,
-            'datasource' => null,
             'is_active' => 1,
             'is_final' => 0
         ]);

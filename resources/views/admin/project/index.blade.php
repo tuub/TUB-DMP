@@ -12,7 +12,7 @@
 
 @section('headline')
     <h1>Admin: TUB-DMP</h1>
-    <h3>Plans</h3>
+    <h3>Projects</h3>
 @stop
 
 @section('title')
@@ -23,33 +23,34 @@
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            All Plans
+            All Projects
         </div>
         <div class="panel-body">
             <div class="table-responsive">
                 <table class="table table-fixed">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Project Number</th>
-                            <th>Title</th>
-                            <th>Version</th>
-                            <th>Template</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>Updated</th>
-                            <th>Tools</th>
-                        </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Identifier</th>
+                        <th>Owner</th>
+                        <th>Plans</th>
+                        <th>Sub-Projects</th>
+                        <th>Data Source</th>
+                        <th>Prefilled</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                        <th>Tools</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach( $plans as $plan )
-                            @include('partials.admin.plan.info', $plan)
+                        @foreach( $projects as $project )
+                            @include('partials.admin.project.info', $project)
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    {!! link_to_route('admin.plan.create', 'Create') !!}
+    {!! link_to_route('admin.project.create', 'Create') !!}
 
 @stop
