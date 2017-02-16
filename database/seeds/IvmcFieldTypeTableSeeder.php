@@ -12,8 +12,6 @@ class IvmcFieldTypeTableSeeder extends Seeder
      */
     public function run()
     {
-        IvmcFieldType::table()->delete();
-
         IvmcFieldType::create([
             'id' => 1,
             'name' => 'simple',

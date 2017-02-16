@@ -12,8 +12,6 @@ class SectionTableSeeder extends Seeder
      */
     public function run()
     {
-        Section::table()->delete();
-
         Section::create([
             'id' => 1,
             'template_id' => 1,

@@ -12,8 +12,6 @@ class PlanTableSeeder extends Seeder
      */
     public function run()
     {
-        Plan::table()->delete();
-
         Plan::create([
             'id' => 1,
             'project_number' => 'DMP-123',

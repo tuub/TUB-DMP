@@ -12,9 +12,7 @@ class InstitutionTableSeeder extends Seeder
      */
     public function run()
     {
-        Institution::table()->delete();
-
-        Institution::create([
+       Institution::create([
             'id' => 1,
             'name' => 'Technische Universität zu Berlin',
             'url' => 'http://www.tu-berlin.de',

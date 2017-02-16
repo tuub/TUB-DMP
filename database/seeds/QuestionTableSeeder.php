@@ -13,8 +13,6 @@ class QuestionTableSeeder extends Seeder
      */
     public function run()
     {
-        Question::table()->delete();
-
         // TODO: IDs and parent_question_ids
 
         Question::create([

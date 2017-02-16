@@ -12,8 +12,6 @@ class IvmcMappingTableSeeder extends Seeder
      */
     public function run()
     {
-        IvmcMapping::table()->delete();
-
         IvmcMapping::create([
             'question_id' => 101,
             'source' => 't_821300_IVMC_DMP_Projekt',

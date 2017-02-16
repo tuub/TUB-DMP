@@ -12,8 +12,6 @@ class QuestionOptionTableSeeder extends Seeder
      */
     public function run()
     {
-        QuestionOption::table()->delete();
-
         // TODO: question_ids
 
         QuestionOption::create(array(

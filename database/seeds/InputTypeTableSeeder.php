@@ -12,8 +12,6 @@ class InputTypeTableSeeder extends Seeder
      */
     public function run()
     {
-        InputType::table()->delete();
-
         InputType::create([
             'id' => 1,
             'name' => 'Textfeld, einzeilig',

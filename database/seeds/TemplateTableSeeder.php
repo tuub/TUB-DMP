@@ -12,8 +12,6 @@ class TemplateTableSeeder extends Seeder
      */
     public function run()
     {
-        Template::table()->delete();
-
         Template::create([
             'id' => 1,
             'name' => 'TU Berlin DMP',
