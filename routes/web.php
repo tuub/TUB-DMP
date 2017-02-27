@@ -2,18 +2,20 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
-// HOMEPAGE
-Route::group(['middleware' => 'guest'], function() {
+//Auth::routes();
 
+// HOMEPAGE
+Route::group(['middleware' => 'guest'], function()
+{
     // HOME SCREEN
     Route::get( '/', ['uses' => 'HomeController@index', 'as'   => 'home']);
 
@@ -24,7 +26,6 @@ Route::group(['middleware' => 'guest'], function() {
     // REGISTER
     Route::get('/register', ['uses' => 'UserController@getRegister']);
     Route::post('/register', ['uses' => 'UserController@postRegister', 'as' => 'register']);
-
 });
 
 Route::group(['middleware' => 'auth'], function()
@@ -69,7 +70,7 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'create_plan'
     ]);
     /* EDIT */
-    Route::get('/plan/{project_number}/{version}/edit', [
+    Route::get('/plan/{id}/edit', [
         'uses' => 'PlanController@edit',
         'as' => 'edit_plan'
     ]);
@@ -79,7 +80,7 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'update_plan'
     ]);
     /* EXPORT */
-    Route::get('/plan/{project_number}/{version}/export/{format?}', [
+    Route::get('/plan/{id}/export/{format?}', [
         'uses' => 'PlanController@export',
         'as' => 'export_plan'
     ]);
@@ -89,7 +90,7 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'email_plan'
     ]);
     /* TOGGLE FINAL STATE */
-    Route::get('/plan/{project_number}/{version}/toggle', [
+    Route::get('/plan/{id}/toggle', [
         'uses' => 'PlanController@toggle',
         'as' => 'toggle_plan'
     ]);
@@ -101,50 +102,30 @@ Route::group(['middleware' => 'auth'], function()
 
 
 
-    Route::get('/plan/{project_number}/{version}/test_output_filter', [
+    Route::get('/plan/{id}/test_output_filter', [
         'uses' => 'PlanController@test_output_filter',
         'as' => 'test_output_filter'
     ]);
 
 
-    Route::group(['middleware' => 'App\Http\Middleware\AdminMiddleware', 'prefix' => 'admin'], function() {
-        /* DASHBOARD */
-        Route::get( '/', [
-            'uses' => 'Admin\DashboardController@index',
-            'as'   => 'admin'
-        ] );
+    Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function()
+    {
+        Route::get( '/', 'Admin\DashboardController@index', ['as' => 'admin'])->name('admin.dashboard');
+
+        Route::get('/phpinfo', function () {
+            return phpinfo();
+        })->name('admin.phpinfo');
+
+        Route::get( '/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', ['as' => 'admin'] )->name('admin.log_viewer');
+        Route::get( '/project/{project_number}/raw_ivmc', 'Admin\ProjectController@raw_ivmc', ['as' => 'admin'])->name('admin.raw_ivmc');
+        Route::get( '/project/random_ivmc', 'Admin\ProjectController@random_ivmc', ['as' => 'admin'])->name('admin.random_ivmc');
 
         /* REST ENTITIES */
-        Route::resource( 'user', 'Admin\UserController' );
-        Route::resource( 'project', 'Admin\ProjectController' );
-        Route::resource( 'plan', 'Admin\PlanController' );
-        Route::resource( 'template', 'Admin\TemplateController' );
-        Route::resource( 'section', 'Admin\SectionController' );
-        Route::resource( 'question', 'Admin\QuestionController' );
-
-        /* TESTING */
-
-        /* LOG VIEWER */
-        Route::get( 'logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index' );
-
-        /* PHPINFO */
-        Route::get( 'info', [
-            'as' => 'phpinfo',
-            function () {
-                return phpinfo();
-            }
-        ] );
-
-        /* RAW IVMC */
-        Route::get( '/project/{project_number}/raw_ivmc', [
-            'uses' => 'ProjectController@raw_ivmc',
-            'as'   => 'raw_ivmc'
-        ] );
-
-        /* RANDOM IVMC */
-        Route::get( 'random_ivmc', [
-            'uses' => 'ProjectController@random_ivmc',
-            'as'   => 'random_ivmc'
-        ] );
+        Route::resource( 'user', 'Admin\UserController', ['as' => 'admin'] );
+        Route::resource( 'project', 'Admin\ProjectController', ['as' => 'admin']  );
+        Route::resource( 'plan', 'Admin\PlanController', ['as' => 'admin']  );
+        Route::resource( 'template', 'Admin\TemplateController', ['as' => 'admin']  );
+        Route::resource( 'section', 'Admin\SectionController', ['as' => 'admin']  );
+        Route::resource( 'question', 'Admin\QuestionController', ['as' => 'admin']  );
     });
 });

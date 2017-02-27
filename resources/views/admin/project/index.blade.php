@@ -5,7 +5,7 @@
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Datenmanagementplan <b class="caret"></b></a>
         <ul class="dropdown-menu">
-            <li>{{ link_to_route( 'admin', 'Zurück zur Übersicht' ) }}</li>
+            <li>{{ link_to_route( 'admin.dashboard', 'Zurück zur Übersicht' ) }}</li>
         </ul>
     </li>
 @stop

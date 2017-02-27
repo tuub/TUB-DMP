@@ -21,7 +21,8 @@
     {!! link_to_route('admin.user.index', 'Users') !!}<br/>
 
     <hr/>
-    {!! link_to_route('phpinfo', 'PHP Info') !!}<br/>
-    {!! link_to_route('random_ivmc', 'Random IVMC') !!}<br/>
+    {!! link_to_route('admin.phpinfo', 'PHP Info') !!}<br/>
+    {!! link_to_route('admin.random_ivmc', 'Random IVMC') !!}<br/>
+    {!! link_to_route('admin.log_viewer', 'Log Viewer') !!}<br/>
 
 @stop

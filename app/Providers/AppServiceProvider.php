@@ -15,12 +15,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         /* Formats given date after $date_pattern */
-        Blade::directive('date', function($expression) {
-            return "<?php echo with{$expression}->format( 'Y/m/d' ); ?>";
+        Blade::directive('date', function ($expression) {
+            return "<?php echo ($expression)->format('Y/m/d'); ?>";
         });
+
         /* Formats given date after $date_pattern */
-        Blade::directive('time', function($expression) {
-            return "<?php echo with{$expression}->format( 'g:i A' ); ?>";
+        Blade::directive('time', function ($expression) {
+            return "<?php echo ($expression)->format('g:i A'); ?>";
         });
     }
 

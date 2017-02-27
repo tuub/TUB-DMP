@@ -21,7 +21,7 @@ class UserController extends Controller
 
     public function __construct( User $user, Institution $institution )
     {
-        $this->beforeFilter('auth');
+        //$this->beforeFilter('auth');
         $this->user = $user;
         $this->institution = $institution;
     }
