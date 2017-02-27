@@ -97,7 +97,7 @@ class MacroServiceProvider extends ServiceProvider
                 $value = $output->value;
             }
 
-            $question_options = array('' => 'Please choose ...') + QuestionOption::where('question_id','=',$question->id)->lists('text','text')->toArray();
+            $question_options = array('' => 'Please choose ...') + QuestionOption::where('question_id','=',$question->id)->pluck('text','text')->toArray();
             $html = '';
             $html .= $question->prepend;
             $html .= \Form::select($input_name . '[]', $question_options, $value, array('data-type' => 'option', 'class' => 'question form-control' ) );
@@ -113,7 +113,7 @@ class MacroServiceProvider extends ServiceProvider
                 $value = $output->value;
             }
 
-            $question_options = array('' => 'Please choose ...') + QuestionOption::where('question_id','=',$question['id'])->lists('text','text');
+            $question_options = array('' => 'Please choose ...') + QuestionOption::where('question_id','=',$question['id'])->pluck('text','text');
             $html = '';
             $html .= $question->prepend;
             //$html .= \Form::hidden( $input_name . '[]', 'option' );
@@ -140,7 +140,7 @@ class MacroServiceProvider extends ServiceProvider
         /* ID 6: Checkboxen */
         \Form::macro('question_checkboxes', function( $question, $input_name, Collection $answer = null, $default_value = null )
         {
-            $question_options = QuestionOption::where('question_id','=',$question['id'])->lists('text','text');
+            $question_options = QuestionOption::where('question_id','=',$question['id'])->pluck('text','text');
             $html = '';
             $html .= $question->prepend;
 
@@ -176,7 +176,7 @@ class MacroServiceProvider extends ServiceProvider
         /* ID 7: Radiobuttons */
         \Form::macro('question_radiobuttons', function( $question, $input_name, Collection $answer = null, $default_value = null )
         {
-            $question_options = QuestionOption::where('question_id', '=', $question->id)->lists('text','text');
+            $question_options = QuestionOption::where('question_id', '=', $question->id)->pluck('text','text');
 
             $value = null;
             foreach( $answer as $output ) {
@@ -319,7 +319,7 @@ class MacroServiceProvider extends ServiceProvider
         /* ID 12: Ja / Nein */
         \Form::macro('question_boolean', function( $question, $input_name, Collection $answer = null, $default_value = null )
         {
-            $question_options = QuestionOption::where('question_id', '=', $question['id'])->lists('text', 'id');
+            $question_options = QuestionOption::where('question_id', '=', $question['id'])->pluck('text', 'id');
             $html = '';
             $html .= $question->prepend;
             foreach ($question_options as $option_value => $option_label) {

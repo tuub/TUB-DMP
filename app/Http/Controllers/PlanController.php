@@ -39,14 +39,19 @@ class PlanController extends Controller
     protected $plan;
     protected $template;
 
+    public function __construct(Template $template, Plan $plan)
+    {
+        $this->template = $template;
+        $this->plan = $plan;
+    }
 
     public function index()
     {
-        $internal_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->lists( 'name', 'id' )->toArray();
-        $external_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->lists( 'name', 'id' )->toArray();
+        $internal_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
+        $external_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
         //$template_selector = [ 'TU Berlin' => $internal_templates ] + [ 'Other Organisations' => $external_templates ];
         $template_selector = $internal_templates;
-        $user_selector = User::active()->lists('real_name','id')->toArray();
+        $user_selector = User::active()->pluck('real_name','id')->toArray();
         $plans = $this->plan->getPlans();
         return view('dashboard', compact('plans', 'template_selector', 'user_selector'));
     }

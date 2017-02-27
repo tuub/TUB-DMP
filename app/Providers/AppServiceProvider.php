@@ -32,14 +32,14 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->environment() == 'local' || $this->app->environment() == 'testing') {
-            $this->app->register('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
+            //$this->app->register('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
             $this->app->register('Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider');
             $this->app->register('Barryvdh\Debugbar\ServiceProvider');
             $this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
         }
 
         if ($this->app->environment() == 'production') {
-            $this->app->register('Ccovey\ODBCDriver\ODBCDriverServiceProvider');
+            //$this->app->register('Ccovey\ODBCDriver\ODBCDriverServiceProvider');
         }
     }
 }

@@ -31,9 +31,9 @@ class ProjectController extends Controller
     public function create()
     {
         $project = $this->project;
-        $projects = $this->project->all()->lists('identifier','id')->prepend('Select a parent','');
-        $users = User::all()->lists('real_name','id')->prepend('Select an owner','');
-        $data_sources = DataSource::all()->lists('name','id')->prepend('Select a data source','');
+        $projects = $this->project->all()->pluck('identifier','id')->prepend('Select a parent','');
+        $users = User::all()->pluck('real_name','id')->prepend('Select an owner','');
+        $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
         return view('admin.project.new', compact('project','projects','users','data_sources'));
     }
 
@@ -55,9 +55,9 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $project = $this->project->findOrFail($id);
-        $projects = $this->project->all()->lists('identifier','id')->prepend('Select a parent','');
-        $users = User::all()->lists('name_with_email','id')->prepend('Select an owner','');
-        $data_sources = DataSource::all()->lists('name','id')->prepend('Select a data source','');
+        $projects = $this->project->all()->pluck('identifier','id')->prepend('Select a parent','');
+        $users = User::all()->pluck('name_with_email','id')->prepend('Select an owner','');
+        $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
         return view('admin.project.edit', compact('project','projects','users','data_sources'));
     }
 

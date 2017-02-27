@@ -6,20 +6,20 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
-        "laravelcollective/html": "5.1.*",
+        "laravel/framework": "5.2.*",
+        "laravelcollective/html": "5.2.*",
         "xuma/laravel-amaran": "~1.0@dev",
-        "elibyy/laravel-tcpdf": "0.*",
         "iamcal/lib_autolink": "^1.7",
         "laracasts/flash": "^2.0",
         "felixkiss/uniquewith-validator": "^2.0"
     },
     "require-dev": {
+        "symfony/dom-crawler": "2.7.*|3.0.*",
+        "symfony/css-selector": "2.8.*|3.0.*",
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~5.0",
         "phpspec/phpspec": "~2.1",
         "rap2hpoutre/laravel-log-viewer": "^0.5.3",
-        "barryvdh/laravel-ide-helper": "v2.1.0",
         "doctrine/dbal": "~2.3",
         "barryvdh/laravel-debugbar": "^2.2",
         "laracasts/generators": "^1.1",
@@ -35,7 +35,6 @@
         },
         "files": [
             "app/Helpers/notifier.php",
-            "app/Helpers/pdf.php",
             "app/Helpers/exporters.php"
         ]
     },

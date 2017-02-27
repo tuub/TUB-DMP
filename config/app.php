@@ -2,6 +2,8 @@
 
 return [
 
+    'env' => env('APP_ENV', 'production'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -113,13 +115,11 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
-        Illuminate\Routing\ControllerServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
@@ -149,10 +149,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         App\Providers\MacroServiceProvider::class,
         Xuma\Amaran\AmaranServiceProvider::class,
-        Elibyy\TCPDF\ServiceProvider::class,
 
         Themsaid\Langman\LangmanServiceProvider::class,
-        Orangehill\Iseed\IseedServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class
 
@@ -210,6 +208,6 @@ return [
         'Amaran'    => Xuma\Amaran\Facades\Amaran::class,
         'Debugbar'  => Barryvdh\Debugbar\Facade::class,
         'Flash'     => Laracasts\Flash\Flash::class
-],
+    ],
 
 ];

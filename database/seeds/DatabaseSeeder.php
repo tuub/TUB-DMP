@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
         $this->call(InputTypeTableSeeder::class);
         $this->call(DataSourceTableSeeder::class);
         $this->call(InstitutionTableSeeder::class);
@@ -25,6 +24,5 @@ class DatabaseSeeder extends Seeder
         $this->call(QuestionOptionTableSeeder::class);
         $this->call(IvmcFieldTypeTableSeeder::class);
         $this->call(IvmcMappingTableSeeder::class);
-        Model::reguard();
     }
 }

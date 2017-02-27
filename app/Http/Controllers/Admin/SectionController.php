@@ -46,7 +46,7 @@ class SectionController extends Controller {
     public function create()
     {
         $section = new $this->section;
-        $templates = $this->template->all()->lists('name', 'id');
+        $templates = $this->template->all()->pluck('name', 'id');
         return View::make('admin.section.new', compact('section','templates'));
     }
 
@@ -87,7 +87,7 @@ class SectionController extends Controller {
     public function edit($id)
     {
         $section = $this->section->find($id);
-        $templates = $this->template->all()->lists('name', 'id');
+        $templates = $this->template->all()->pluck('name', 'id');
         return View::make('admin.section.edit', compact('section','templates'));
     }
 

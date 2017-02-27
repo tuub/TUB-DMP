@@ -45,7 +45,7 @@ class UserController extends Controller
     public function create()
     {
         $user = new $this->user;
-        $institutions = $this->institution->all()->lists('name', 'id');
+        $institutions = $this->institution->all()->pluck('name', 'id');
         return View::make('admin.user.new', compact('user','institutions'));
     }
 
@@ -90,7 +90,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = $this->user->find($id);
-        $institutions = $this->institution->all()->lists('name', 'id');
+        $institutions = $this->institution->all()->pluck('name', 'id');
         return View::make('admin.user.edit', compact('user','institutions'));
     }
 

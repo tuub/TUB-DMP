@@ -47,7 +47,7 @@ class TemplateController extends Controller
     public function create()
     {
         $template = new $this->template;
-        $institutions = $this->institution->all()->lists('name', 'id');
+        $institutions = $this->institution->all()->pluck('name', 'id');
         return View::make('admin.template.new', compact('template','institutions'));
     }
 
@@ -88,7 +88,7 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $template = $this->template->find($id);
-        $institutions = $this->institution->all()->lists('name', 'id');
+        $institutions = $this->institution->all()->pluck('name', 'id');
         return View::make('admin.template.edit', compact('template','institutions'));
     }
 

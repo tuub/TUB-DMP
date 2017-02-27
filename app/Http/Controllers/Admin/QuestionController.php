@@ -51,10 +51,10 @@ class QuestionController extends Controller {
     public function create()
     {
         $question = new $this->question;
-        $questions = $this->question->all()->lists('text', 'id');
-        $templates = $this->template->all()->lists('name', 'id');
-        $sections = $this->section->all()->lists('name', 'id');
-        $input_types = $this->input_type->all()->lists('name', 'id');
+        $questions = $this->question->all()->pluck('text', 'id');
+        $templates = $this->template->all()->pluck('name', 'id');
+        $sections = $this->section->all()->pluck('name', 'id');
+        $input_types = $this->input_type->all()->pluck('name', 'id');
         return View::make('admin.question.new', compact('question','questions','templates','sections','input_types'));
     }
 
@@ -113,10 +113,10 @@ class QuestionController extends Controller {
     {
         //session(['redirect' => Request::server('HTTP_REFERER')]);
         $question = $this->question->find($id);
-        $questions = $this->question->all()->lists('text', 'id');
-        $templates = $this->template->all()->lists('name', 'id');
-        $sections = $this->section->all()->lists('name', 'id');
-        $input_types = $this->input_type->all()->lists('name', 'id');
+        $questions = $this->question->all()->pluck('text', 'id');
+        $templates = $this->template->all()->pluck('name', 'id');
+        $sections = $this->section->all()->pluck('name', 'id');
+        $input_types = $this->input_type->all()->pluck('name', 'id');
         return View::make('admin.question.edit', compact('question','questions','templates','sections','input_types'));
     }
 
