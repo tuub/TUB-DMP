@@ -1,6 +1,9 @@
-<tr>
+<tr class={{ $project->isRoot() ? "parent" : "" }}>
     <td>
         {{ $project->identifier }}
+        @if( $project->isRoot() )
+            PARENT
+        @endif
     </td>
     <td>
         {{ $project->title }}
@@ -36,3 +39,6 @@
         Expand----
     </td>
 </tr>
+@foreach ($project->children as $project)
+    @include('partials.project.info', $project)
+@endforeach
