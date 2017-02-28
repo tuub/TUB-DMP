@@ -19,11 +19,12 @@
                 <table class="table table-fixed">
                     <thead>
                         <tr>
-                            <th style="width: 15%">Project-ID</th>
-                            <th style="width: 5%;">Title</th>
-                            <th style="width: 40%;">Members</th>
-                            <th style="width: 40%;">Projects</th>
-                            <th style="width: 40%;">Plans</th>
+                            <th style="width: 15%">Project</th>
+                            <th style="width: 25%">Metadata</th>
+                            <th style="width: 20%;">Owners</th>
+                            <th style="width: 5%;">Plans</th>
+                            <th style="width: 10%;">Sub-Projects</th>
+                            <th style="width: 10%;">Data Source</th>
                             <th>Status</th>
                             <th>&nbsp;</th>
                         </tr>

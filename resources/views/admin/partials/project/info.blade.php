@@ -1,7 +1,7 @@
 <tr>
     <td>{{ $project->id }}</td>
     <td>{{ $project->identifier }}
-        @if($project->isParent()->count() > 0)
+        @if($project->children()->count() > 0)
             PARENT
         @endif
     </td>
@@ -9,7 +9,7 @@
     <td>{{ $project->plans()->count() }}</td>
     <td>
         {{ $project->children()->count() }}
-        @if( $project->children->count() > 0 )
+        @if( $project->children()->count() > 0 )
             {!! Form::button('Show', ['class' => 'btn btn-xs']) !!}
         @endif
     </td>
@@ -43,16 +43,3 @@
         {!! Form::close() !!}
     </td>
 </tr>
-@if( false )
-@foreach( $project->children()->get() as $project )
-    @include('admin.partials.project.info', $project)
-@endforeach
-
-
-    @if( $project->children()->count() > 0)
-        @foreach($project->children as $project)
-            @include('admin.partials.project.info', $project)
-        @endforeach
-    @endif
-@endif
-
