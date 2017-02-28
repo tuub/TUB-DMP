@@ -19,18 +19,18 @@
                 <table class="table table-fixed">
                     <thead>
                         <tr>
-                            <th style="width: 15%">TUB Project</th>
-                            <th style="width: 5%;">Version</th>
-                            <th style="width: 40%;">Details</th>
-                            <th style="width: 40%;">Tools</th>
-                            @if( false )
-                                <th>Status</th>
-                            @endif
+                            <th style="width: 15%">Project-ID</th>
+                            <th style="width: 5%;">Title</th>
+                            <th style="width: 40%;">Members</th>
+                            <th style="width: 40%;">Projects</th>
+                            <th style="width: 40%;">Plans</th>
+                            <th>Status</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($plans as $plan)
-                            @include('partials.plan.info', $plan)
+                        @foreach ($projects as $project)
+                            @include('partials.project.info', $project)
                         @endforeach
                     </tbody>
                 </table>

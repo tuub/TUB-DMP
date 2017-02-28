@@ -32,7 +32,7 @@ Route::group(['middleware' => 'auth'], function()
 {
     // DASHBOARD
     Route::get('/my/dashboard', [
-        'uses' => 'PlanController@index',
+        'uses' => 'ProjectController@index',
         'as' => 'dashboard'
     ]);
 
