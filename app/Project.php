@@ -10,68 +10,17 @@ class Project extends Node
     public $timestamps = true;
     protected $dates = ['created_at', 'updated_at', 'prefilled_at'];
     protected $fillable = ['identifier','parent_id','user_id','data_source_id','is_prefilled','prefilled_at'];
+    protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
 
-
-    // /**
-    //  * Column name which stores reference to parent's node.
-    //  *
-    //  * @var string
-    //  */
-    // protected $parentColumn = 'parent_id';
-
-    // /**
-    //  * Column name for the left index.
-    //  *
-    //  * @var string
-    //  */
-    // protected $leftColumn = 'lft';
-
-    // /**
-    //  * Column name for the right index.
-    //  *
-    //  * @var string
-    //  */
-    // protected $rightColumn = 'rgt';
-
-    // /**
-    //  * Column name for the depth field.
-    //  *
-    //  * @var string
-    //  */
-    // protected $depthColumn = 'depth';
-
-    // /**
-    //  * Column to perform the default sorting
-    //  *
-    //  * @var string
-    //  */
-    // protected $orderColumn = null;
-
-    // /**
-    // * With Baum, all NestedSet-related fields are guarded from mass-assignment
-    // * by default.
-    // *
-    // * @var array
-    // */
-    // protected $guarded = array('id', 'parent_id', 'lft', 'rgt', 'depth');
-
-    //
-    // This is to support "scoping" which may allow to have multiple nested
-    // set trees in the same database table.
-    //
-    // You should provide here the column names which should restrict Nested
-    // Set queries. f.ex: company_id, etc.
-    //
-
-    // /**
-    //  * Columns which restrict what we consider our Nested Set list
-    //  *
-    //  * @var array
-    //  */
-    // protected $scoped = array();
+    /* Nested Sets */
+    protected $parentColumn = 'parent_id';
+    protected $leftColumn = 'lft';
+    protected $rightColumn = 'rgt';
+    protected $depthColumn = 'depth';
+    protected $orderColumn = null;
+    protected $scoped = [];
 
     //////////////////////////////////////////////////////////////////////////////
-
     //
     // Baum makes available two model events to application developers:
     //
@@ -112,5 +61,4 @@ class Project extends Node
     {
         return $query->where('is_prefilled', true);
     }
-
 }

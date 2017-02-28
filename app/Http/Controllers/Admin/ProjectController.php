@@ -22,7 +22,7 @@ class ProjectController extends Controller
     public function index()
     {
         // Get only parent projects so we can include the child projects via view
-        $projects = $this->project->where('parent_id', null)->get();
+        $projects = $this->project->get()->toHierarchy();
         //dd($projects);
         return view('admin.project.index', compact('projects'));
     }
