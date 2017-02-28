@@ -23,4 +23,14 @@ class DataSource extends Model
     {
         return $this->hasMany('App\DataSourceMapping');
     }
+
+    public function getIdentifierAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function getTypeAttribute($value)
+    {
+        return strtoupper($value);
+    }
 }
