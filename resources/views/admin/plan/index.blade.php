@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                         @foreach( $plans as $plan )
-                            @include('partials.admin.plan.info', $plan)
+                            @include('admin.partials.plan.info', $plan)
                         @endforeach
                     </tbody>
                 </table>

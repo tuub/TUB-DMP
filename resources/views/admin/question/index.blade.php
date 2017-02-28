@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                         @foreach( $questions as $question )
-                            @include('partials.admin.question.info', $question)
+                            @include('admin.partials.question.info', $question)
                         @endforeach
                     </tbody>
                 </table>

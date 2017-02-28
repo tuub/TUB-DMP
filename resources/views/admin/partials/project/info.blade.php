@@ -45,13 +45,13 @@
 </tr>
 @if( false )
 @foreach( $project->children()->get() as $project )
-    @include('partials.admin.project.info', $project)
+    @include('admin.partials.project.info', $project)
 @endforeach
 
 
     @if( $project->children()->count() > 0)
         @foreach($project->children as $project)
-            @include('partials.admin.project.info', $project)
+            @include('admin.partials.project.info', $project)
         @endforeach
     @endif
 @endif

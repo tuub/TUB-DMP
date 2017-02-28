@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                         @foreach( $sections as $section )
-                            @include('partials.admin.section.info', $section)
+                            @include('admin.partials.section.info', $section)
                         @endforeach
                     </tbody>
                 </table>

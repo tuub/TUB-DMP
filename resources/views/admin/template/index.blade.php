@@ -41,7 +41,7 @@
                     </thead>
                     <tbody>
                         @foreach( $templates as $template )
-                            @include('partials.admin.template.info', $template)
+                            @include('admin.partials.template.info', $template)
                         @endforeach
                     </tbody>
                 </table>

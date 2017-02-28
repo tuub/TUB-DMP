@@ -44,7 +44,7 @@
                     </thead>
                     <tbody>
                         @foreach( $projects as $project )
-                            @include('partials.admin.project.info', $project)
+                            @include('admin.partials.project.info', $project)
                         @endforeach
                     </tbody>
                 </table>

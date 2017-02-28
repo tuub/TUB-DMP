@@ -45,7 +45,7 @@
                     </thead>
                     <tbody>
                     @foreach( $users as $user )
-                        @include('partials.admin.user.info', $user)
+                        @include('admin.partials.user.info', $user)
                     @endforeach
                     </tbody>
                 </table>
