@@ -155,7 +155,8 @@ return [
 
         Themsaid\Langman\LangmanServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
-        Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class
+        Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
+        Baum\Providers\BaumServiceProvider::class,
 
     ],
 
