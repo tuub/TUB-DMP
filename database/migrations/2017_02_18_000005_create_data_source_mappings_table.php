@@ -19,9 +19,10 @@ class CreateDataSourceMappingsTable extends Migration
         Schema::create('data_source_mappings', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            //$table->integer('data_source_id')->unsigned();
+            $table->integer('data_source_id')->unsigned();
             $table->integer('data_source_namespace_id')->unsigned();
             $table->json('data_source_entity');
+            $table->string('target_namespace', 100);
             $table->json('target_entity');
             //$table->integer('field_type')->unsigned()->default(1);
             //$table->integer('display_order')->default(1);

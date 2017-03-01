@@ -46,13 +46,13 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('/my/profile', [
         'uses' => 'UserController@getProfile'
     ]);
-    Route::post('/profile', [
+    Route::post('/my/profile', [
         'uses' => 'UserController@postProfile',
         'as' => 'update_profile'
     ]);
 
     // FEEDBACK
-    Route::post('/feedback', [
+    Route::post('/my/feedback', [
         'uses' => 'DashboardController@feedback',
         'as' => 'feedback'
     ]);
@@ -99,6 +99,20 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@version',
         'as' => 'version_plan'
     ]);
+
+    /* Project */
+
+    /* EDIT */
+    Route::get('/my/project/{id}/edit', [
+        'uses' => 'ProjectController@edit',
+        'as' => 'project.edit'
+    ]);
+    /* UPDATE */
+    Route::post('/my/project/{id}/update', [
+        'uses' => 'ProjectController@update',
+        'as' => 'project.update'
+    ]);
+
 
 
 

@@ -19,6 +19,9 @@ class CreateMetadataFieldsTable extends Migration
             $table->string('identifier', 125);
             $table->string('name', 125);
             $table->text('description')->nullable();
+            $table->integer('input_type_id')->default(1);
+
+            $table->foreign('input_type_id')->references('id')->on('input_types');
         });
     }
 
@@ -29,6 +32,6 @@ class CreateMetadataFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('metadata_entities');
+        Schema::dropIfExists('metadata_fields');
     }
 }

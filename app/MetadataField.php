@@ -8,4 +8,6 @@ class MetadataField extends Model
 {
     protected $table = 'metadata_fields';
     public $timestamps = false;
+
+    
 }
