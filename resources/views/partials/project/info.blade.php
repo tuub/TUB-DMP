@@ -1,8 +1,8 @@
-<tr class={{ $project->isRoot() ? "parent" : "" }}>
+<tr v-show={{ $project->isRoot() ? "true" : "false" }}>
     <td>
         {{ $project->identifier }}
         @if( $project->isRoot() )
-            PARENT
+            <br/><i>Parent Project</i>
         @endif
     </td>
     <td>
@@ -28,7 +28,12 @@
         @if($project->data_source)
             {{ $project->data_source->identifier }}
             ({{ $project->data_source->type }})
-            + STATUS
+            &nbsp;
+            @if ($project->is_prefilled)
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+            @else
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+            @endif
         @endif
     </td>
     <td>
@@ -36,7 +41,10 @@
         Running
     </td>
     <td>
-        Expand----
+        @if( $project->children()->count() )
+            <a href="#" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
+            <a href="#" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
+        @endif
     </td>
 </tr>
 @foreach ($project->children as $project)

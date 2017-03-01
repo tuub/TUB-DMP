@@ -15,7 +15,7 @@
             {{ trans('dashboard.my-plans-header') }}
         </div>
         <div class="panel-body">
-            <div class="table-responsive">
+            <div class="table-responsive" id="my-plans">
                 <table class="table table-fixed">
                     <thead>
                         <tr>
@@ -23,8 +23,8 @@
                             <th style="width: 25%">Metadata</th>
                             <th style="width: 20%;">Owners</th>
                             <th style="width: 5%;">Plans</th>
-                            <th style="width: 10%;">Sub-Projects</th>
-                            <th style="width: 10%;">Data Source</th>
+                            <th style="width: 5%;">Projects</th>
+                            <th style="width: 15%;">Data Source</th>
                             <th>Status</th>
                             <th>&nbsp;</th>
                         </tr>
