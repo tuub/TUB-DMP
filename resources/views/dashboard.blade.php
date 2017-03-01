@@ -10,6 +10,42 @@
 
 @section('body')
 
+    <style>
+        div.dashboard-plan-info {
+            margin-left: 2%;
+            font-style: italic;
+        }
+
+        div.dashboard-plan-info td {
+            padding: 15px 15px 5px 0px !important;
+        }
+
+        div.dashboard-plan-info td.title {
+            font-weight: bold;
+            vertical-align: top;
+            text-transform: uppercase;
+        }
+
+        div.dashboard-plan-info td.metadata {
+            vertical-align: top;
+        }
+
+        div.dashboard-plan-info td.timestamps {
+            vertical-align: top;
+        }
+
+        div.dashboard-plan-info td.status {
+            font-weight: bold;
+            font-size: 2em;
+        }
+
+        div.dashboard-plan-info td.tools {
+            font-weight: bold;
+            font-size: 2em;
+        }
+
+    </style>
+
     <div class="panel panel-default">
         <div class="panel-heading text-center">
             {{ trans('dashboard.my-plans-header') }}

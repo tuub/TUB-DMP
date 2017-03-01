@@ -30,9 +30,9 @@
             ({{ $project->data_source->type }})
             &nbsp;
             @if ($project->is_prefilled)
-                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>
             @else
-                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>
             @endif
         @endif
     </td>
@@ -47,6 +47,16 @@
         @endif
     </td>
 </tr>
+@if( $project->plans()->count() > 0 )
+    <tr>
+        <td colspan="8">
+            @foreach ($project->plans as $plan)
+                @include('partials.plan.info', $plan)
+            @endforeach
+        </td>
+    </tr>
+@endif
+
 @foreach ($project->children as $project)
     @include('partials.project.info', $project)
 @endforeach
