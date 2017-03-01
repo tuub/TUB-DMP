@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Http\Requests\Request;
+use Route;
 
 class PlanRequest extends Request
 {
