@@ -27,7 +27,7 @@ class PlanRequest extends Request
         //TODO: checkout out unique_width
         $id = Route::input('plan');
         return [
-            'title' => 'required|max:255|unique:plans,title' . ($id ? ',' . $id : ''),
+            //'title' => 'required|max:255|unique:plans,title,project_id' . ($id ? ',' . $id : ''),
             'version' => 'required',
             'template_id' => 'required'
         ];
