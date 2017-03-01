@@ -52,6 +52,7 @@ elixir(function(mix) {
     mix.copy(paths.jquery + 'dist/jquery.js', 'public/js/');
     mix.copy(paths.js + 'env.js', 'public/js/');
     mix.copy(paths.js + 'plan.js', 'public/js/');
+    mix.copy(paths.js + 'my.vue.js', 'public/js/');
 
     mix.scripts([
         paths.jqueryui + 'jquery-ui.js',

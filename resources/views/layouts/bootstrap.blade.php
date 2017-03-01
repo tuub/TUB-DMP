@@ -24,72 +24,75 @@
             {!! HTML::script('js/vendor.js') !!}
             {!! HTML::script('js/env.js') !!}
             {!! HTML::script('js/my.jquery.js') !!}
+
+            {!! HTML::script('https://unpkg.com/vue') !!}
         @show
 
-        <style>
-            * {
-                outline: 0px #336699 solid;
-            }
-        </style>
+<style>
+* {
+    outline: 0px #336699 solid;
+}
+</style>
 
-    </head>
+</head>
 
-    <body>
+<body>
 
-    @include('flash::message')
-    @include('amaran::javascript')
+@include('flash::message')
+@include('amaran::javascript')
 
-    <!--<header class="navbar navbar-static-top">-->
+<!--<header class="navbar navbar-static-top">-->
 
-    <header>
-        @section('header')
-            @include('partials.header')
-        @show
-    </header>
+<header>
+@section('header')
+@include('partials.header')
+@show
+</header>
 
-    <main class="main">
-        <div class="container">
+<main class="main">
+<div class="container">
 
-            @section('headline')
-                <div class="text-center">
-                    <h3>Create your Data Management Plan</h3>
-                </div>
-            @show
+@section('headline')
+    <div class="text-center">
+        <h3>Create your Data Management Plan</h3>
+    </div>
+@show
 
-            @yield('body')
+@yield('body')
 
-        </div>
-    </main>
+</div>
+</main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="text-center">
-                &copy; {{ date("Y") }}
-                <a href="http://www.szf.tu-berlin.de/" target="_blank">Servicezentrum Forschungsdaten und Publikationen</a>
-            </div>
-            <div class="text-center">
-                <a href="http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/" target="_blank">About TUB-DMP</a> |
-                <!--Policy |-->
-                <a href="http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/" target="_blank">Contact</a> |
-                <a href="http://www.szf.tu-berlin.de/servicemenue/impressum/" target="_blank">Imprint</a> |
-                <a href="http://www.tu-berlin.de/allgemeine_seiten/datenschutz/" target="_blank">Privacy Statement</a>
-            </div>
-        </div>
-    </footer>
+<footer class="footer">
+<div class="container">
+<div class="text-center">
+    &copy; {{ date("Y") }}
+    <a href="http://www.szf.tu-berlin.de/" target="_blank">Servicezentrum Forschungsdaten und Publikationen</a>
+</div>
+<div class="text-center">
+    <a href="http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/" target="_blank">About TUB-DMP</a> |
+    <!--Policy |-->
+    <a href="http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/" target="_blank">Contact</a> |
+    <a href="http://www.szf.tu-berlin.de/servicemenue/impressum/" target="_blank">Imprint</a> |
+    <a href="http://www.tu-berlin.de/allgemeine_seiten/datenschutz/" target="_blank">Privacy Statement</a>
+</div>
+</div>
+</footer>
 
-    @if( Auth::check() )
-        @include('partials.modal')
-    @endif
+@if( Auth::check() )
+@include('partials.modal')
+@endif
 
-    <!-- This is only necessary if you do Flash::overlay('...') -->
-    <script>
-        $('#flash-overlay-modal').modal();
-    </script>
+<!-- This is only necessary if you do Flash::overlay('...') -->
+<script>
+$('#flash-overlay-modal').modal();
+</script>
 
-    <!-- JS
-    via Laravel-Elixir
-    ================================================== -->
+<!-- JS
+via Laravel-Elixir
+================================================== -->
 
+{!! HTML::script('js/my.vue.js') !!}
 
-    </body>
+</body>
 </html>
