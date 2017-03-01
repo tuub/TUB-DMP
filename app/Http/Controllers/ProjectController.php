@@ -30,7 +30,7 @@ class ProjectController extends Controller
         //dd($nestedList);
 
         $projects = $this->project
-            ->where('user_id', Auth::user()->id)
+            ->where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get()
             ->toHierarchy();
