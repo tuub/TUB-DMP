@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function getLogin()
     {
-        return View::make('login');
+        return View::make('home');
     }
 
 
