@@ -32,9 +32,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Real Name</th>
                         <th>Institution</th>
                         <th>Email</th>
+                        <th>Plans</th>
                         <th>Admin</th>
                         <th>Active</th>
                         <th>Last Login</th>

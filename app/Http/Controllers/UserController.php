@@ -122,12 +122,12 @@ class UserController extends Controller
      */
     public function postProfile( ProfileRequest $request )
     {
-        $data['real_name'] = $request->get( 'real_name' );
+        $data['name'] = $request->get( 'name' );
         $data['email'] = $request->get( 'email' );
         $data['password'] = $request->get( 'new_password' );
 
         $user = User::find( Auth::user()->id );
-        $user->real_name = $data['real_name'];
+        $user->name = $data['name'];
         $user->email = $data['email'];
         if( strlen($data['password']) > 0 ) {
             $user->password = Hash::make($data['password']);

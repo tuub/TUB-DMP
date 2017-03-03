@@ -9,7 +9,7 @@
                 <div class="modal-body">
                     {!! csrf_field() !!}
                     {!! Form::label('name', 'Name', array('class' => 'control-label')) !!}
-                    {!! Form::text('name', Auth::user()->real_name, array('class' => 'form-control', 'placeholder' => 'John Doe')) !!}
+                    {!! Form::text('name', Auth::user()->name, array('class' => 'form-control', 'placeholder' => 'John Doe')) !!}
                     {!! Form::label('email', 'Email', array('class' => 'control-label')) !!}
                     {!! Form::text('email', Auth::user()->email, array('class' => 'form-control', 'placeholder' => 'john.doe@example.org')) !!}
                     <div class="row form-group">

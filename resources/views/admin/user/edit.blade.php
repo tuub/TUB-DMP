@@ -15,14 +15,14 @@
 @stop
 
 @section('title')
-    {{ $user->real_name }}
+    {{ $user->name_with_email }}
 @stop
 
 @section('body')
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            Edit User "{{ $user->real_name }}"
+            Edit User "{{ $user->name_with_email }}"
         </div>
         <div class="panel-body">
             <div class="row">
@@ -41,8 +41,8 @@
                             {!! Form::Label( 'real_name', 'Real Name' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::Text( 'real_name', $user->real_name, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('real_name') ? 'form-error' : '') }}">{{ $errors->first('real_name') }}</span>
+                            {!! Form::Text( 'real_name', $user->name, array('class' => 'form-control') ) !!}
+                            <span class="help-block {{ ($errors->first('name') ? 'form-error' : '') }}">{{ $errors->first('name') }}</span>
                         </div>
                     </div>
                     <div class="form-group row container">

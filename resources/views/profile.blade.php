@@ -17,8 +17,8 @@
                 <br/>
                 {!! csrf_field() !!}
                 <div>
-                    {!! Form::label('real_name', 'Name', array('class' => 'control-label')) !!}
-                    {!! Form::text('real_name', Auth::user()->real_name, array('class' => 'form-control', 'placeholder' => '')) !!}
+                    {!! Form::label('name', 'Name', array('class' => 'control-label')) !!}
+                    {!! Form::text('name', Auth::user()->name, array('class' => 'form-control', 'placeholder' => '')) !!}
                 </div>
                 <span class="help-block {{ ($errors->first('real_name') ? 'form-error' : '') }}">{{ $errors->first('real_name') }}</span>
                 <div>

@@ -1,9 +1,9 @@
 <tr>
     <td>{{ $user->id }}</td>
     <td>{{ $user->name }}</td>
-    <td>{{ $user->real_name }}</td>
     <td>{{ $user->institution->name }}</td>
     <td>{{ $user->email }}</td>
+    <td>{{ $user->plans_count    }}</td>
     <td>{{ $user->is_admin }}</td>
     <td>{{ $user->is_active }}</td>
     <td>

@@ -5,7 +5,7 @@
             PARENT
         @endif
     </td>
-    <td>{{ $project->user->real_name }} &lt;{{ $project->user->email }}&gt;</td>
+    <td>{{ $project->user->name_with_email }}</td>
     <td>{{ $project->plans()->count() }}</td>
     <td>
         {{ $project->children()->count() }}

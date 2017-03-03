@@ -38,7 +38,7 @@ class Exporters
 
         $metadata = [
             'title'   => 'Data Management Plan for TUB Project ' . $plan->project_number . ' / Version ' . $plan->version,
-            'author'  => Auth::user()->real_name,
+            'author'  => Auth::user()->name,
             'creator' => 'TUB-DMP'
         ];
 
@@ -264,7 +264,7 @@ class Exporters
 
         $metadata = [
             'title'   => 'Data Management Plan for Project ' . $plan->project_number . ' / Version ' . $plan->version,
-            'author'  => Auth::user()->real_name,
+            'author'  => Auth::user()->name,
             'creator' => 'TUB-DMP'
         ];
 

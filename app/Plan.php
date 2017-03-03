@@ -24,12 +24,12 @@ class Plan extends Model
 
     public function project()
     {
-        return $this->belongsTo('App\Project');
+        return $this->belongsTo(Project::class);
     }
 
     public function template()
     {
-        return $this->belongsTo('App\Template');
+        return $this->belongsTo(Template::class);
     }
 
 
@@ -323,7 +323,7 @@ class Plan extends Model
      */
     public function emailPlan( EmailPlanRequest $request )
     {
-        $sender['name'] = Auth::user()->real_name;
+        $sender['name'] = Auth::user()->name;
         $sender['email'] = Auth::user()->email;
         $recipient['name'] = $request->get('name');
         $recipient['email'] = $request->get('email');

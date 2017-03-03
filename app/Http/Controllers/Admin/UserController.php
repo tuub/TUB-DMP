@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->user->all();
+        $users = $this->user->withCount('plans')->get();
         return View::make('admin.user.index', compact('users'));
     }
 
@@ -59,7 +59,6 @@ class UserController extends Controller
     {
         $user = new User;
         $user->name       = $request->get('name');
-        $user->real_name       = $request->get('real_name');
         $user->email      = $request->get('email');
         $user->institution_id = $request->get('institution_id');
         $user->is_admin = $request->get('is_admin');

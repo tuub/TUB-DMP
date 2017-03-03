@@ -7,7 +7,7 @@
 in the attachment please find the Data Management Plan for TUB project "{!! $plan->getTitle() !!}" (Version {!! $plan->version !!}).
 
 Best regards,
-{!! Auth::user()->real_name !!}
+{!! Auth::user()->name !!}
 
 
 ---
