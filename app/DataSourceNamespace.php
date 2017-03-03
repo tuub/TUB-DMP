@@ -12,6 +12,6 @@ class DataSourceNamespace extends Model
     //TODO: Through-Relation: DataSource hasmany DataSourceMappings through DataSourceNamespaces? See migration file as well.
     public function datasource()
     {
-        return $this->belongsTo('App\DataSource');
+        return $this->belongsTo(DataSource::class);
     }
 }

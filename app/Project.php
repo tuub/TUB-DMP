@@ -39,17 +39,22 @@ class Project extends Node
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     public function data_source()
     {
-        return $this->belongsTo('App\DataSource');
+        return $this->belongsTo(DataSource::class);
     }
 
     public function plans()
     {
-        return $this->hasMany('App\Plan');
+        return $this->hasMany(Plan::class);
+    }
+
+    public function metadata()
+    {
+        return $this->hasMany(ProjectMetadata::class);
     }
 
     public function scopeUnprefilled($query)

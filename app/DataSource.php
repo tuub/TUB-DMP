@@ -16,12 +16,12 @@ class DataSource extends Model
 
     public function namespaces()
     {
-        return $this->hasMany('App\DataSourceNamespace');
+        return $this->hasMany(DataSourceNamespace::class);
     }
 
     public function mappings()
     {
-        return $this->hasMany('App\DataSourceMapping');
+        return $this->hasMany(DataSourceMapping::class);
     }
 
     public function getIdentifierAttribute($value)

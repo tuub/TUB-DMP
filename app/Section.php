@@ -4,30 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * App\Section
- *
- * @property integer $id
- * @property string $name
- * @property integer $template_id
- * @property string $keynumber
- * @property integer $order
- * @property string $guidance
- * @property boolean $is_complete
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \App\Template $template
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Question[] $questions
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereTemplateId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereKeynumber($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereGuidance($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereIsComplete($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Section whereUpdatedAt($value)
- */
+
 class Section extends \Eloquent
 {
     /*
@@ -48,12 +25,12 @@ class Section extends \Eloquent
 
     public function template()
     {
-        return $this->belongsTo('App\Template');
+        return $this->belongsTo(Template::class);
     }
 
     public function questions()
     {
-        return $this->hasMany('App\Question')->orderBy('order');
+        return $this->hasMany(Question::class)->orderBy('order');
     }
 
     /*

@@ -11,6 +11,11 @@ class DataSourceMapping extends Model
 
     public function datasource()
     {
-        return $this->belongsTo('App\DataSource');
+        return $this->belongsTo(DataSource::class);
+    }
+
+    public function metadata_field()
+    {
+        return $this->belongsTo(MetadataField::class);
     }
 }
