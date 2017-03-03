@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-24">
                         <p class="lead">Welcome</p>
                         <br/><br/><br/>
                         @if( false )
@@ -16,7 +16,7 @@
 
                         <br/><br/><p class="small">TUB-DMP is limited to TUB members</p>
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-24">
                         <p class="lead">Our service</p>
                         <ul class="list-unstyled" style="line-height: 2">
                             <li><span class="fa fa-check text-success"></span> A step by step workflow</li>
@@ -43,7 +43,7 @@
             {!! Form::open(array('route' => 'login', 'class' => '', 'method' => 'post', 'id' => 'login-form')) !!}
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-24">
                         <p><strong>Login</strong></p>
                         <!--<div class="well">-->
                             <div class="form-group input-group {{ ($errors->first('email') ? 'form-error' : '') }}" style="margin-top: 14px;">
@@ -59,7 +59,7 @@
                             <span class="help-block {{ ($errors->first('password') ? 'form-error' : '') }}">{{ $errors->first('password') }}</span>
                         <!--</div>-->
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-24">
                         <strong>Please confirm:</strong>
                         <div class="checkbox">
                             <label>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-24">
                         {!! Form::button( trans('login.submit') , array('type' => 'submit', 'name' => 'signin', 'class' => 'btn btn-success col-md-2 col-xs-12 pull-right' )) !!}
                     </div>
                 </div>
