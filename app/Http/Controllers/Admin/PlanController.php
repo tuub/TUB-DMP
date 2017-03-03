@@ -61,14 +61,14 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($id);
         $data = $request->all();
-        $this->plan->update($data);
+        $plan->update($data);
         return Redirect::route('admin.dashboard');
     }
 
     public function destroy($id)
     {
         $plan = $this->plan->findOrFail($id);
-        $this->plan->delete();
+        $plan->delete();
         return Redirect::route('admin.plan.index');
     }
 }
