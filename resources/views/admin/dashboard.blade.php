@@ -5,12 +5,12 @@
 @stop
 
 @section('headline')
-    <h1>Admin: TUB-DMP</h1>
+    <h1 class="page-header">Admin: TUB-DMP</h1>
 @stop
 
 @section('body')
 
-    <h3>Edit Data</h3>
+    <h2>Edit Data</h2>
 
     {!! link_to_route('admin.template.index', 'Templates') !!}<br/>
     {!! link_to_route('admin.section.index', 'Sections') !!}<br/>
