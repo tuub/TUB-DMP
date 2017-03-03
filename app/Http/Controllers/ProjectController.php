@@ -34,6 +34,7 @@ class ProjectController extends Controller
         //dd($nestedList);
 
         $projects = $this->project
+            ->with('metadata.metadata_field')
             ->where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get()
