@@ -6,12 +6,13 @@
         @endif
     </td>
     <td>
-        {{ $project->title }}
-        Title<br/>
-        Laufzeit<br/>
-        Funding<br/>
-        Partners<br/>
-        Current Stage?<br/>
+        {{ $project->title  }}
+        @foreach( $project->metadata as $metadata )
+            {{ $metadata->metadata_field->name }}
+            :
+            {{ $metadata->content }}
+            <br/>
+        @endforeach
     </td>
     <td>
         {{ $project->user->name_with_email }}
@@ -27,7 +28,6 @@
     <td>
         @if($project->data_source)
             {{ $project->data_source->identifier }}
-            ({{ $project->data_source->type }})
             &nbsp;
             @if ($project->is_prefilled)
                 <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>

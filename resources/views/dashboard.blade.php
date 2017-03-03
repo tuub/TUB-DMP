@@ -11,37 +11,17 @@
 @section('body')
 
     <style>
+
+        .dashboard-plans {
+            visibility: hidden;
+        }
+
         div.dashboard-plan-info {
-            margin-left: 2%;
             font-style: italic;
         }
 
-        div.dashboard-plan-info td {
-            padding: 15px 15px 5px 0px !important;
-        }
-
-        div.dashboard-plan-info td.title {
-            font-weight: bold;
-            vertical-align: top;
-            text-transform: uppercase;
-        }
-
-        div.dashboard-plan-info td.metadata {
-            vertical-align: top;
-        }
-
-        div.dashboard-plan-info td.timestamps {
-            vertical-align: top;
-        }
-
-        div.dashboard-plan-info td.status {
-            font-weight: bold;
-            font-size: 2em;
-        }
-
-        div.dashboard-plan-info td.tools {
-            font-weight: bold;
-            font-size: 2em;
+        div.dashboard-plan-info div.version {
+            margin-top: 10px !important;
         }
 
     </style>
@@ -51,7 +31,7 @@
             {{ trans('dashboard.my-plans-header') }}
         </div>
         <div class="panel-body">
-            <div class="table-responsive" id="my-plans">
+            <div class="table-responsive">
                 <table class="table table-fixed">
                     <thead>
                         <tr>
