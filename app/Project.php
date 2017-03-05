@@ -4,6 +4,7 @@ namespace App;
 
 use Baum\Node;
 use Carbon\Carbon;
+use DB;
 
 class Project extends Node
 {
@@ -68,6 +69,14 @@ class Project extends Node
         return $query->where('is_prefilled', true);
     }
 
+    public function getInfoAttribute()
+    {
+        $data = DB::table('project_metadata')
+            ->join('metadata_fields', 'project_metadata.metadata_field_id', '=', 'metadata_fields.id')
+            ->pluck('content','identifier'  );
+        return $data;
+    }
+
     public function getTitleAttribute()
     {
         $field = MetadataField::where('namespace','project')->where('identifier','title')->first();
@@ -77,13 +86,21 @@ class Project extends Node
     public function getBeginDateAttribute()
     {
         $field = MetadataField::where('namespace','project')->where('identifier','begin')->first();
-        return Carbon::parse($this->metadata->where('metadata_field_id', $field->id)->first()['content'])->format('Y/m/d');
+        $value = $this->metadata->where('metadata_field_id', $field->id)->first()['content'];
+        if(!empty($value)) {
+            return Carbon::parse($value)->format('Y/m/d');
+        }
+        return null;
     }
 
     public function getEndDateAttribute()
     {
         $field = MetadataField::where('namespace','project')->where('identifier','end')->first();
-        return Carbon::parse($this->metadata->where('metadata_field_id', $field->id)->first()['content'])->format('Y/m/d');
+        $value = $this->metadata->where('metadata_field_id', $field->id)->first()['content'];
+        if(!empty($value)) {
+            return Carbon::parse($value)->format('Y/m/d');
+        }
+        return null;
     }
 
     public function getMembersAttribute()
@@ -102,7 +119,7 @@ class Project extends Node
     // TODO: View Composer to the rescue?
     public function getStatusAttribute()
     {
-        if(!isset($this->end_date)) {
+        if(empty($this->begin_date)) {
             return 'Unknown';
         } else {
             if (Carbon::parse($this->end_date) < Carbon::now()->format('Y/m/d')) {
@@ -112,6 +129,4 @@ class Project extends Node
             }
         }
     }
-
-
 }

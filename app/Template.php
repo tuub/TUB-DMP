@@ -34,7 +34,7 @@ class Template extends Model
 
     public function questions()
     {
-        return $this->hasMany('App\Question');
+        return $this->hasManyThrough(Question::class, Section::class);
     }
 
     public function institution()

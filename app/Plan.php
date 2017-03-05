@@ -32,7 +32,6 @@ class Plan extends Model
         return $this->belongsTo(Template::class);
     }
 
-
     /**
      * Get all plans for the authenticated user
      * To-DO: maybe rename to all()

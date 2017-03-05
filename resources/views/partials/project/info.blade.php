@@ -6,9 +6,15 @@
         @endif
     </td>
     <td>
-        @if( $project->title ) {{ $project->title }}<br/> @endif
-        @if( $project->begin_date ) {{ $project->begin_date }} - {{ $project->end_date }}<br/> @endif
-        Funded by {{ $project->funders }}
+        @if( $project->title )
+            {{ $project->title }}<br/>
+        @endif
+        @if( $project->begin_date )
+            {{ $project->begin_date }} - {{ $project->end_date }}<br/>
+        @endif
+        @if( $project->title )
+            Funded by {{ $project->funders }}
+        @endif
         @if(false)
             @foreach( $project->metadata as $metadata )
                 {{ $metadata->metadata_field->name }}
@@ -26,10 +32,10 @@
         @endforeach
     </td>
     <td>
-        {{ $project->plans()->count() }}
+        {{ $project->plans_count }}
     </td>
     <td>
-        {{ $project->children()->count() }}
+        {{ $project->children_count }}
     </td>
     <td>
         @if($project->data_source)
@@ -46,13 +52,13 @@
         <span class="text-info">{{ $project->status }}</span>
     </td>
     <td>
-        @if( $project->children()->count() )
+        @if( $project->children_count )
             <a href="#" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
             <a href="#" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
         @endif
     </td>
 </tr>
-@if( $project->plans()->count() > 0 )
+@if( $project->plans_count > 0 )
     <tr>
         <td colspan="8">
             @foreach ($project->plans as $plan)

@@ -35,10 +35,14 @@ class ProjectController extends Controller
 
         $projects = $this->project
             ->with('metadata.metadata_field')
+            ->withCount('children')
+            ->withCount('plans')
             ->where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get()
             ->toHierarchy();
+
+        //dd($projects);
 
         return view('dashboard', compact('projects'));
     }
