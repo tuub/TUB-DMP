@@ -5,26 +5,30 @@
                 <div class="col-md-1 col-sm-1 col-xs-1">
                     <i class="fa fa-file-text-o fa-1x"></i>
                 </div>
-                <div class="col-md-20 col-sm-20 col-xs-18">
+                <div class="col-md-20 col-sm-17 col-xs-18">
                     {{ $plan->title }}
                 </div>
-                <div class="col-md-3 col-sm-3 col-xs-4 text-right">
+                <div class="col-md-3 col-sm-5 col-xs-4 text-right">
                     @if( $plan->is_final )
                         <i class="fa fa-check-square-o fa-1x" aria-hidden="true"></i><span class="hidden-xs"></span>
                     @else
-                        <span class="plan-status">{{ $plan->getQuestionAnswerPercentage() }}&nbsp;%</span>
+                        @if (false)
+                            <span class="plan-status">{{ $plan->getQuestionAnswerPercentage() }}&nbsp;%</span>
+                        @endif
                     @endif
                 </div>
             </div>
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-24">
-                    {{ $plan->getAnswerCount() }} of {{ $plan->getQuestionCount() }} answered<br/>
+                <div class="col-md-12 col-sm-14 col-xs-12">
+                    @if (false)
+                        {{ $plan->getAnswerCount() }} of {{ $plan->getQuestionCount() }} answered<br/>
+                    @endif
                     <strong>Created:</strong> @date( $plan->created_at ) at @time( $plan->created_at )<br/>
                     <strong>Updated:</strong> @date( $plan->updated_at ) at @time( $plan->updated_at )<br/>
                 </div>
-                <div class="col-md-12 col-sm-12 col-xs-24">
+                <div class="col-md-12 col-sm-10 col-xs-12">
                     <div class="tools">
                         @unless( $plan->is_final )
                             <a href="{{ URL::route('edit_plan', [$plan->project->identifier, $plan->version]) }}" class="btn btn-default btn-xs" title="Edit">
