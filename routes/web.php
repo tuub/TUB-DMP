@@ -142,4 +142,55 @@ Route::group(['middleware' => 'auth'], function()
         Route::resource( 'section', 'Admin\SectionController', ['as' => 'admin']  );
         Route::resource( 'question', 'Admin\QuestionController', ['as' => 'admin']  );
     });
+
+    Route::get('/test', function(){
+
+        $project = \App\Project::find(1);
+        $project->load(['metadata.metadata_field' => function ($q) use ( &$metadata_field ) {
+            $metadata_field = $q->get()->unique();
+        }]);
+
+        //dd($metadata_field); // the collection we needed
+
+        $project = \App\Project::find(1);
+        $title_field = \App\MetadataField::where('namespace','project')->where('identifier','title')->first();
+        $titel = $project->metadata->where('metadata_field_id', $title_field->id);
+        dd($titel);
+
+
+    });
+
+    Route::get('/test2', function()
+    {
+        $plan = \App\Plan::find(1);
+
+        $plan->load(['template.questions.answers' => function ($q) use ( &$result ) {
+            $result = $q->count();
+        }]);
+
+        dd($result);
+        //dd($metadata_field); // the collection we needed
+
+        $project = \App\Project::find(1);
+        $title_field = \App\MetadataField::where('namespace','project')->where('identifier','title')->first();
+        $titel = $project->metadata->where('metadata_field_id', $title_field->id);
+        dd($titel);
+
+
+    });
+
+    Route::get('/test3', function()
+    {
+        $project = \App\Project::find(1)->getMetadata();
+
+        //dd($project);
+
+        dd($project['title']);
+        //dd($metadata_field); // the collection we needed
+
+
+
+    });
+
+
 });
