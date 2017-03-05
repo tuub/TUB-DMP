@@ -6,18 +6,24 @@
         @endif
     </td>
     <td>
-        {{ $project->title  }}
-        @foreach( $project->metadata as $metadata )
-            {{ $metadata->metadata_field->name }}
-            :
-            {{ $metadata->content }}
-            <br/>
-        @endforeach
+        @if( $project->title ) {{ $project->title }}<br/> @endif
+        @if( $project->begin_date ) {{ $project->begin_date }} - {{ $project->end_date }}<br/> @endif
+        Funded by {{ $project->funders }}
+        @if(false)
+            @foreach( $project->metadata as $metadata )
+                {{ $metadata->metadata_field->name }}
+                :
+                {{ $metadata->content }}
+                <br/>
+            @endforeach
+        @endif
     </td>
     <td>
-        {{ $project->user->name_with_email }}
+        {{ $project->user->name }}
         <br/>
-        MEMBERS
+        @foreach( $project->members as $member )
+            {{ $member }}<br/>
+        @endforeach
     </td>
     <td>
         {{ $project->plans()->count() }}
@@ -37,8 +43,7 @@
         @endif
     </td>
     <td>
-        DATE COMPARE:
-        Running
+        <span class="text-info">{{ $project->status }}</span>
     </td>
     <td>
         @if( $project->children()->count() )
@@ -53,6 +58,15 @@
             @foreach ($project->plans as $plan)
                 @include('partials.plan.info', $plan)
             @endforeach
+
+            <div class="dashboard-plan-create-new container col-md-24 col-sm-24 col-xs-24 text-center">
+                <div class="col-md-24">
+                    <a href="#" class="btn btn-default btn-lg" data-toggle="modal" data-target="#create-new-plan" title="Create new DMP">
+                        <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs">&nbsp;&nbsp;&nbsp;Create DMP</span>
+                    </a>
+                </div>
+            </div>
+
         </td>
     </tr>
 @endif

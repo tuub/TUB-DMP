@@ -3,6 +3,7 @@
 namespace App;
 
 use Baum\Node;
+use Carbon\Carbon;
 
 class Project extends Node
 {
@@ -42,14 +43,14 @@ class Project extends Node
         return $this->belongsTo(User::class);
     }
 
-    public function data_source()
-    {
-        return $this->belongsTo(DataSource::class);
-    }
-
     public function plans()
     {
         return $this->hasMany(Plan::class);
+    }
+
+    public function data_source()
+    {
+        return $this->belongsTo(DataSource::class);
     }
 
     public function metadata()
@@ -66,4 +67,51 @@ class Project extends Node
     {
         return $query->where('is_prefilled', true);
     }
+
+    public function getTitleAttribute()
+    {
+        $field = MetadataField::where('namespace','project')->where('identifier','title')->first();
+        return $this->metadata->where('metadata_field_id', $field->id)->pluck('content')->implode(' / ');
+    }
+
+    public function getBeginDateAttribute()
+    {
+        $field = MetadataField::where('namespace','project')->where('identifier','begin')->first();
+        return Carbon::parse($this->metadata->where('metadata_field_id', $field->id)->first()['content'])->format('Y/m/d');
+    }
+
+    public function getEndDateAttribute()
+    {
+        $field = MetadataField::where('namespace','project')->where('identifier','end')->first();
+        return Carbon::parse($this->metadata->where('metadata_field_id', $field->id)->first()['content'])->format('Y/m/d');
+    }
+
+    public function getMembersAttribute()
+    {
+        $field = MetadataField::where('namespace','project')->where('identifier','members')->first();
+        return $this->metadata->where('metadata_field_id', $field->id)->pluck('content');
+    }
+
+    public function getFundersAttribute()
+    {
+        $field = MetadataField::where('namespace','project')->where('identifier','funding_source')->first();
+        return $this->metadata->where('metadata_field_id', $field->id)->pluck('content')->implode(', ');
+    }
+
+
+    // TODO: View Composer to the rescue?
+    public function getStatusAttribute()
+    {
+        if(!isset($this->end_date)) {
+            return 'Unknown';
+        } else {
+            if (Carbon::parse($this->end_date) < Carbon::now()->format('Y/m/d')) {
+                return 'Running';
+            } else {
+                return 'Ended';
+            }
+        }
+    }
+
+
 }

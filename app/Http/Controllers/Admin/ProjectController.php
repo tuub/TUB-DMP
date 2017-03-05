@@ -23,7 +23,6 @@ class ProjectController extends Controller
     {
         // Get only parent projects so we can include the child projects via view
         $projects = $this->project->get()->toHierarchy();
-        //dd($projects);
         return view('admin.project.index', compact('projects'));
     }
 

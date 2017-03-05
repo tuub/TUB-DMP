@@ -24,6 +24,10 @@
             margin-top: 10px !important;
         }
 
+        div.dashboard-plan-create-new {
+            line-height:100px;
+        }
+
     </style>
 
     <div class="panel panel-default">
@@ -37,7 +41,7 @@
                         <tr>
                             <th style="width: 15%">Project</th>
                             <th style="width: 25%">Metadata</th>
-                            <th style="width: 20%;">Owners</th>
+                            <th style="width: 20%;">Members</th>
                             <th style="width: 5%;">Plans</th>
                             <th style="width: 5%;">Projects</th>
                             <th style="width: 15%;">Data Source</th>

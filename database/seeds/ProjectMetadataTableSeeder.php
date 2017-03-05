@@ -14,14 +14,14 @@ class ProjectMetadataTableSeeder extends Seeder
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_field_id' => 1,
-            'content' => 'Mein Projekt-Titel',
+            'content' => 'SFB 1026 - Sustainable Manufacturing',
             'language' => 'de'
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_field_id' => 1,
-            'content' => 'My Project Title',
+            'content' => 'SFB 1026 - Sustainable Manufacturing',
             'language' => 'en'
         ]);
 
@@ -34,7 +34,25 @@ class ProjectMetadataTableSeeder extends Seeder
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_field_id' => 4,
-            'content' => '2017-31-12'
+            'content' => '2017-12-31'
+        ]);
+
+        ProjectMetadata::create([
+            'project_id' => 1,
+            'metadata_field_id' => 7,
+            'content' => 'Rainer Rauball'
+        ]);
+
+        ProjectMetadata::create([
+            'project_id' => 1,
+            'metadata_field_id' => 7,
+            'content' => 'Winnie Schäfer'
+        ]);
+
+        ProjectMetadata::create([
+            'project_id' => 1,
+            'metadata_field_id' => 7,
+            'content' => 'Laurenz-Günther Köstner'
         ]);
 
         ProjectMetadata::create([
@@ -42,6 +60,13 @@ class ProjectMetadataTableSeeder extends Seeder
             'metadata_field_id' => 9,
             'content' => 'DFG'
         ]);
+
+        ProjectMetadata::create([
+            'project_id' => 1,
+            'metadata_field_id' => 9,
+            'content' => 'BMBF'
+        ]);
+
 
 
 
