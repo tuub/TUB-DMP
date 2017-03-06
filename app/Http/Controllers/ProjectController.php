@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectRequest;
-use App\MetadataField;
+use App\MetadataRegistry;
 use App\Project;
 use Auth;
 use Illuminate\Http\Request;
@@ -11,14 +11,13 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     protected $project;
-    protected $metadata_field;
+    protected $metadata_registry;
 
-    public function __construct(Project $project, MetadataField $metadata_field)
+    public function __construct(Project $project, MetadataRegistry $metadata_registry)
     {
         $this->project = $project;
-        $this->metadata_field = $metadata_field;
+        $this->metadata_registry = $metadata_registry;
     }
-
 
     public function index()
     {

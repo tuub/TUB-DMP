@@ -23,7 +23,7 @@ class InputType extends Model
 
     public function metadata_fields()
     {
-        $this->belongsToMany(MetadataField::class);
+        $this->belongsToMany(MetadataRegistry::class);
     }
 
     /*

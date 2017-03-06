@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MetadataField extends Model
+class MetadataRegistry extends Model
 {
-    protected $table = 'metadata_fields';
+    protected $table = 'metadata_registry';
     public $timestamps = false;
 
     public function input_type()

@@ -2,6 +2,7 @@
 
 namespace App;
 
+//use App\MetadataRegistry;
 use Baum\Node;
 use Carbon\Carbon;
 use DB;
@@ -72,20 +73,20 @@ class Project extends Node
     public function getInfoAttribute()
     {
         $data = DB::table('project_metadata')
-            ->join('metadata_fields', 'project_metadata.metadata_field_id', '=', 'metadata_fields.id')
-            ->pluck('content','identifier'  );
+            ->join('metadata_registry', 'project_metadata.metadata_field_id', '=', 'metadata_registry.id')
+            ->pluck('content', 'identifier');
         return $data;
     }
 
     public function getTitleAttribute()
     {
-        $field = MetadataField::where('namespace','project')->where('identifier','title')->first();
+        $field = MetadataRegistry::where('namespace','project')->where('identifier','title')->first();
         return $this->metadata->where('metadata_field_id', $field->id)->pluck('content')->implode(' / ');
     }
 
     public function getBeginDateAttribute()
     {
-        $field = MetadataField::where('namespace','project')->where('identifier','begin')->first();
+        $field = MetadataRegistry::where('namespace','project')->where('identifier','begin')->first();
         $value = $this->metadata->where('metadata_field_id', $field->id)->first()['content'];
         if(!empty($value)) {
             return Carbon::parse($value)->format('Y/m/d');
@@ -95,7 +96,7 @@ class Project extends Node
 
     public function getEndDateAttribute()
     {
-        $field = MetadataField::where('namespace','project')->where('identifier','end')->first();
+        $field = MetadataRegistry::where('namespace','project')->where('identifier','end')->first();
         $value = $this->metadata->where('metadata_field_id', $field->id)->first()['content'];
         if(!empty($value)) {
             return Carbon::parse($value)->format('Y/m/d');
@@ -105,13 +106,13 @@ class Project extends Node
 
     public function getMembersAttribute()
     {
-        $field = MetadataField::where('namespace','project')->where('identifier','members')->first();
+        $field = MetadataRegistry::where('namespace','project')->where('identifier','members')->first();
         return $this->metadata->where('metadata_field_id', $field->id)->pluck('content');
     }
 
     public function getFundersAttribute()
     {
-        $field = MetadataField::where('namespace','project')->where('identifier','funding_source')->first();
+        $field = MetadataRegistry::where('namespace','project')->where('identifier','funding_source')->first();
         return $this->metadata->where('metadata_field_id', $field->id)->pluck('content')->implode(', ');
     }
 
