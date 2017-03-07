@@ -13,7 +13,7 @@ class ProjectMetadata extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function metadata_field()
+    public function metadata_registry()
     {
         return $this->belongsTo(MetadataRegistry::class);
     }

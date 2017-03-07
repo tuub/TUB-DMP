@@ -33,15 +33,13 @@ class ProjectController extends Controller
         //dd($nestedList);
 
         $projects = $this->project
-            ->with('metadata.metadata_field')
+            ->with('metadata.metadata_registry')
             ->withCount('children')
             ->withCount('plans')
             ->where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get()
             ->toHierarchy();
-
-        //dd($projects);
 
         return view('dashboard', compact('projects'));
     }
@@ -51,7 +49,7 @@ class ProjectController extends Controller
         $project = $this->project->findOrFail($id);
         if( $project ) {
             $projects = $this->project->where('user_id', Auth::id())->get()->pluck('identifier','id')->prepend('Select a parent','');
-            $metadata_fields = $this->metadata_field->where('namespace', 'project')->get();
+            $metadata_fields = $this->metadata_registry->where('namespace', 'project')->get();
             //dd($metadata_fields);
             return view('project.edit', compact('project','projects','metadata_fields'));
         }

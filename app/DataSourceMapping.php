@@ -14,7 +14,7 @@ class DataSourceMapping extends Model
         return $this->belongsTo(DataSource::class);
     }
 
-    public function metadata_field()
+    public function metadata_registry()
     {
         return $this->belongsTo(MetadataRegistry::class);
     }

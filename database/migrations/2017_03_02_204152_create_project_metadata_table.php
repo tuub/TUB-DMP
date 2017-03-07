@@ -16,6 +16,7 @@ class CreateProjectMetadataTable extends Migration
         Schema::create('project_metadata', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('project_id')->unsigned();
+            $table->integer('metadata_registry_id')->unsigned();
             $table->text('content')->nullable();
             $table->string('language')->nullable();
             $table->timestamps();

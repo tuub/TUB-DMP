@@ -21,7 +21,7 @@ class InputType extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function metadata_fields()
+    public function metadata_registry()
     {
         $this->belongsToMany(MetadataRegistry::class);
     }

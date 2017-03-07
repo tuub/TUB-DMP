@@ -21,6 +21,7 @@ class MetadataRegistry extends Model
 
     public function project_metadata()
     {
+        //return $this->belongsTo(ProjectMetadata::class, 'metadata_registry_id');
         return $this->hasMany(ProjectMetadata::class);
     }
 }
