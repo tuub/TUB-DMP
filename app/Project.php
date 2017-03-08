@@ -70,54 +70,110 @@ class Project extends Node
         return $query->where('is_prefilled', true);
     }
 
-    public function getInfoAttribute()
+    public function scopeWithInputType($query)
     {
+        return $query->addSelect('metadata_registry.input_type_id as fooooo');
+    }
+
+    public function getMetadata($attribute)
+    {
+        /*
+        SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
+        metadata_registry.namespace, metadata_registry.identifier,
+        input_types.name
+        FROM project_metadata
+        INNER JOIN metadata_registry
+        ON project_metadata.metadata_registry_id = metadata_registry.id
+        INNER JOIN input_types
+        ON metadata_registry.input_type_id = input_types.id;
+        */
+
+        $result = $this->metadata()
+            ->join('metadata_registry', 'project_metadata.metadata_registry_id', '=', 'metadata_registry.id')
+            ->join('input_types', 'metadata_registry.input_type_id', '=', 'input_types.id')
+            ->select(
+                'project_metadata.id',
+                'project_metadata.project_id',
+                'project_metadata.content',
+                'project_metadata.language',
+                'metadata_registry.namespace',
+                'metadata_registry.identifier',
+                'input_types.name'
+            )
+            //->getQuery() // Optional: downgrade to non-eloquent builder so we don't build invalid User objects.
+            ->get();
+
+        dd($result);
+
+        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) use($attribute) {
+            return $q->where('identifier', $attribute );
+        })->toSql();
+
+        dd($data);
+
+
+
+        // TODO: process with type
+        //dd($data);
+
+        /*
         $data = DB::table('project_metadata')
             ->join('metadata_registry', 'project_metadata.metadata_registry_id', '=', 'metadata_registry.id')
             ->pluck('content', 'identifier');
+        */
         return $data;
     }
 
+
     public function getTitleAttribute()
     {
-        //$foo = $this->metadata()->with('metadata_field')->get();
-        //dd($foo);
+        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
+            return $q->where('identifier', '=', 'title');
+        })->pluck('content')->implode(' / ');
 
-
-        $field = MetadataRegistry::where('namespace','project')->where('identifier','title')->first();
-        return $this->metadata->where('metadata_registry_id', $field->id)->pluck('content')->implode(' / ');
+        return $data;
     }
 
     public function getBeginDateAttribute()
     {
-        $field = MetadataRegistry::where('namespace','project')->where('identifier','begin')->first();
-        $value = $this->metadata->where('metadata_registry_id', $field->id)->first()['content'];
-        if(!empty($value)) {
-            return Carbon::parse($value)->format('Y/m/d');
+        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
+            return $q->where('identifier', '=', 'begin');
+        })->first()['content'];
+
+        if(!empty($data)) {
+            return Carbon::parse($data)->format('Y/m/d');
         }
         return null;
     }
 
     public function getEndDateAttribute()
     {
-        $field = MetadataRegistry::where('namespace','project')->where('identifier','end')->first();
-        $value = $this->metadata->where('metadata_registry_id', $field->id)->first()['content'];
-        if(!empty($value)) {
-            return Carbon::parse($value)->format('Y/m/d');
+        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
+            return $q->where('identifier', '=', 'end');
+        })->first()['content'];
+
+        if(!empty($data)) {
+            return Carbon::parse($data)->format('Y/m/d');
         }
         return null;
     }
 
     public function getMembersAttribute()
     {
-        $field = MetadataRegistry::where('namespace','project')->where('identifier','members')->first();
-        return $this->metadata->where('metadata_registry_id', $field->id)->pluck('content');
+        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
+            return $q->where('identifier', '=', 'members');
+        })->pluck('content');
+
+        return $data;
     }
 
     public function getFundersAttribute()
     {
-        $field = MetadataRegistry::where('namespace','project')->where('identifier','funding_source')->first();
-        return $this->metadata->where('metadata_registry_id', $field->id)->pluck('content')->implode(', ');
+        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
+            return $q->where('identifier', '=', 'funding_source');
+        })->pluck('content')->implode(', ');
+
+        return $data;
     }
 
 

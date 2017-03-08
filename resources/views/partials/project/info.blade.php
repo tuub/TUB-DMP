@@ -6,6 +6,9 @@
         @endif
     </td>
     <td>
+
+        {{ $project->getMetadata('title') }}
+
         @if( $project->title )
             {{ $project->title }}<br/>
         @endif
