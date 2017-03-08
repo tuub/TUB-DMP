@@ -21,9 +21,9 @@ class InputType extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function metadata_registry()
+    public function content_type()
     {
-        $this->belongsToMany(MetadataRegistry::class);
+        $this->belongsToMany(ContentType::class);
     }
 
     /*
@@ -34,6 +34,6 @@ class InputType extends Model
 
     public static function getCategory( $input_type_method )
     {
-        return self::where('method', $input_type_method)->pluck('category');
+        return self::where('identifier', $input_type_method)->pluck('category');
     }
 }

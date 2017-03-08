@@ -14,99 +14,99 @@ class InputTypeTableSeeder extends Seeder
     {
         InputType::create([
             'id' => 1,
-            'name' => 'Textfeld, einzeilig',
-            'method' => 'text',
+            'title' => 'Textfeld, einzeilig',
+            'identifier' => 'text',
             'category' => 'text'
         ]);
 
         InputType::create([
             'id' => 2,
-            'name' => 'Textfeld, mehrzeilig',
-            'method' => 'textarea',
+            'title' => 'Textfeld, mehrzeilig',
+            'identifier' => 'textarea',
             'category' => 'text'
         ]);
 
         InputType::create([
             'id' => 3,
-            'name' => 'Auswahlbox, einzeilig',
-            'method' => 'select',
+            'title' => 'Auswahlbox, einzeilig',
+            'identifier' => 'select',
             'category' => 'option'
         ]);
 
         InputType::create([
             'id' => 4,
-            'name' => 'Auswahlbox, mehrzeilig',
-            'method' => 'multiselect',
+            'title' => 'Auswahlbox, mehrzeilig',
+            'identifier' => 'multiselect',
             'category' => 'option'
         ]);
 
         InputType::create([
             'id' => 5,
-            'name' => 'Liste',
-            'method' => 'list',
+            'title' => 'Liste',
+            'identifier' => 'list',
             'category' => 'list',
         ]);
 
         InputType::create([
             'id' => 6,
-            'name' => 'Checkboxen',
-            'method' => 'checkboxes',
+            'title' => 'Checkboxen',
+            'identifier' => 'checkboxes',
             'category' => 'option'
         ]);
 
         InputType::create([
             'id' => 7,
-            'name' => 'Radiobuttons',
-            'method' => 'radiobuttons',
+            'title' => 'Radiobuttons',
+            'identifier' => 'radiobuttons',
             'category' => 'option'
         ]);
 
         InputType::create([
             'id' => 8,
-            'name' => 'Datumsfeld',
-            'method' => 'date',
+            'title' => 'Datumsfeld',
+            'identifier' => 'date',
             'category' => 'text'
         ]);
 
         InputType::create([
             'id' => 9,
-            'name' => 'Datumsbereich',
-            'method' => 'daterange',
+            'title' => 'Datumsbereich',
+            'identifier' => 'daterange',
             'category' => 'range'
         ]);
 
         InputType::create([
             'id' => 10,
-            'name' => 'Wertefeld',
-            'method' => 'value',
+            'title' => 'Wertefeld',
+            'identifier' => 'value',
             'category' => 'text'
         ]);
 
         InputType::create([
             'id' => 11,
-            'name' => 'Wertebereich',
-            'method' => 'valuerange',
+            'title' => 'Wertebereich',
+            'identifier' => 'valuerange',
             'category' => 'range'
         ]);
 
         InputType::create([
             'id' => 12,
-            'name' => 'Ja/Nein',
-            'method' => 'boolean',
+            'title' => 'Ja/Nein',
+            'identifier' => 'boolean',
             'category' => 'option'
         ]);
 
         InputType::create([
             'id' => 13,
-            'name' => 'Plain (not editable)',
-            'method' => 'plain',
+            'title' => 'Plain (not editable)',
+            'identifier' => 'plain',
             'category' => 'text'
         ]);
 
         InputType::create([
             'id' => 99,
-            'name' => 'Frage als Überschrift',
-            'method' => 'headline',
+            'title' => 'Frage als Überschrift',
+            'identifier' => 'headline',
             'category' => 'headline'
         ]);
 

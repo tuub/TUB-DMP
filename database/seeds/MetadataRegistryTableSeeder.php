@@ -16,6 +16,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'title',
             'title' => 'Project Title',
             'description' => 'The title of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -24,6 +25,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'abstract',
             'title' => 'Project Abstract',
             'description' => 'The desription of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -32,6 +34,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'begin',
             'title' => 'Project Begin',
             'description' => 'The begin date of the research project.',
+            'content_type_id' => 2,
         ]);
 
         MetadataRegistry::create([
@@ -40,6 +43,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'end',
             'title' => 'Project End',
             'description' => 'The end date of the research project.',
+            'content_type_id' => 2,
         ]);
 
         MetadataRegistry::create([
@@ -48,6 +52,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'stage',
             'title' => 'Project Stage',
             'description' => 'The stage of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -56,6 +61,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'leader',
             'title' => 'Principal Investigator',
             'description' => 'The principal investigator of the research project.',
+            'content_type_id' => 3,
         ]);
 
         MetadataRegistry::create([
@@ -64,6 +70,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'members',
             'title' => 'Other Principal Investigator(s)',
             'description' => 'Other principal investigator(s) of the research project.',
+            'content_type_id' => 3,
         ]);
 
         MetadataRegistry::create([
@@ -72,6 +79,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'partner',
             'title' => 'External Project Partner(s)',
             'description' => 'The external project partner(s) of the research project.',
+            'content_type_id' => 4,
         ]);
 
         MetadataRegistry::create([
@@ -80,6 +88,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'funding_source',
             'title' => 'Funding Source',
             'description' => 'The funding source of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -88,6 +97,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'funding_program',
             'title' => 'Funding Program',
             'description' => 'The funding program of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -96,6 +106,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'grant_reference_number',
             'title' => 'Grant Reference Number',
             'description' => 'The grant reference number of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -104,6 +115,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'project_management_organisation',
             'title' => 'Project Management Organisation',
             'description' => 'The project management organisation of the research project.',
+            'content_type_id' => 1,
         ]);
 
         MetadataRegistry::create([
@@ -112,6 +124,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'project_data_contact',
             'title' => 'Project Data Contact',
             'description' => 'The project data contact of the research project.',
+            'content_type_id' => 1,
         ]);
     }
 }

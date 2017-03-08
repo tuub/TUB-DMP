@@ -9,9 +9,9 @@ class MetadataRegistry extends Model
     protected $table = 'metadata_registry';
     public $timestamps = false;
 
-    public function input_type()
+    public function content_type()
     {
-        return hasOne(InputType::class);
+        return hasOne(ContentType::class);
     }
 
     public function datasource_mapping()
