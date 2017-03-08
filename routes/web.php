@@ -183,7 +183,9 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('/test3', function()
     {
         $project = \App\Project::with('metadata', 'metadata.metadata_registry')->find(1);
-        dd($project->metadata);
+        //$project->metadata()->where('metadata_registry.id', 'metadata_registry_id')->get();
+        echo get_class($project->metadata);
+        dd($project->metadata)->filter();
         dd($project->metadata()->where('metadata_registry_id', 3)->get());
     });
 });
