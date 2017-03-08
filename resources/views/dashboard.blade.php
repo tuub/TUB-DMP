@@ -10,10 +10,36 @@
 
 @section('body')
 
+    <script>
+        $(document).ready(function () {
+            $('a.show-plans').bind('click', function (e) {
+                e.preventDefault();
+                $(this).hide();
+                $('a.hide-plans').show();
+                $('tr[data-content=' + $(this).data('href') + ']').removeClass('hidden');
+            })
+
+            $('a.hide-plans').bind('click', function (e) {
+                e.preventDefault();
+                $(this).hide();
+                $('a.show-plans').show();
+                $('tr[data-content=' + $(this).data('href') + ']').addClass('hidden');
+            })
+
+        })
+    </script>
+
     <style>
 
-        .dashboard-plans {
+        a.hide-plans {
+            display: none;
+        }
+
+        .hidden {
             visibility: hidden;
+            over-flow: hidden;
+            width: 0px;
+            height: 0px;
         }
 
         div.dashboard-plan-info {

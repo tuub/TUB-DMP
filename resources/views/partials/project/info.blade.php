@@ -53,13 +53,13 @@
     </td>
     <td>
         @if( $project->children_count )
-            <a href="#" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
-            <a href="#" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
+            <a href="#" class="show-plans" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
+            <a href="#" class="hide-plans" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
         @endif
     </td>
 </tr>
 @if( $project->plans_count > 0 )
-    <tr>
+    <tr class="hidden" data-content="{{  $project->id }}">
         <td colspan="8">
             @foreach ($project->plans as $plan)
                 @include('partials.plan.info', $plan)
