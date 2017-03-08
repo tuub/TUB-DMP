@@ -182,10 +182,19 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('/test3', function()
     {
-        $project = \App\Project::with('metadata', 'metadata.metadata_registry')->find(1);
-        //$project->metadata()->where('metadata_registry.id', 'metadata_registry_id')->get();
-        echo get_class($project->metadata);
-        dd($project->metadata)->filter();
-        dd($project->metadata()->where('metadata_registry_id', 3)->get());
+        // This works
+        if( false ) {
+            $project = \App\Project::with('metadata', 'metadata.metadata_registry')->find(1);
+            echo get_class($project->metadata);
+            dd($project->metadata)->filter();
+            dd($project->metadata()->where('metadata_registry_id', 3)->get());
+        }
+
+        $foo = \App\ProjectMetadata::with('metadata_registry')->whereHas('metadata_registry', function($q) {
+            return $q->where('identifier', '=', 'title');
+        })->get(['content']);
+
+        dd($foo);
+
     });
 });
