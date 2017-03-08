@@ -6,26 +6,9 @@
         @endif
     </td>
     <td>
-
-        {{ $project->getMetadata('title') }}
-
-        @if( $project->title )
-            {{ $project->title }}<br/>
-        @endif
-        @if( $project->begin_date )
-            {{ $project->begin_date }} - {{ $project->end_date }}<br/>
-        @endif
-        @if( $project->title )
-            Funded by {{ $project->funders }}
-        @endif
-        @if(false)
-            @foreach( $project->metadata as $metadata )
-                {{ $metadata->metadata_field->name }}
-                :
-                {{ $metadata->content }}
-                <br/>
-            @endforeach
-        @endif
+        {{ $project->getMetadata('title') }}<br/>
+        {{ $project->getMetadata('begin') }} - {{ $project->getMetadata('end') }}<br/>
+        Funded by {{ $project->getMetadata('funding_source') }}
     </td>
     <td>
         {{ $project->user->name }}

@@ -75,7 +75,7 @@ class Project extends Node
         return $query->addSelect('metadata_registry.input_type_id as fooooo');
     }
 
-    public function getMetadata($attribute)
+    public function getMetadata($attribute = null)
     {
         /*
         SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
@@ -90,31 +90,40 @@ class Project extends Node
 
         $result = $this->metadata()
             ->join('metadata_registry', 'project_metadata.metadata_registry_id', '=', 'metadata_registry.id')
-            ->join('input_types', 'metadata_registry.input_type_id', '=', 'input_types.id')
+            ->join('content_types', 'metadata_registry.content_type_id', '=', 'content_types.id')
             ->select(
-                'project_metadata.id',
-                'project_metadata.project_id',
-                'project_metadata.content',
-                'project_metadata.language',
-                'metadata_registry.namespace',
-                'metadata_registry.identifier',
-                'input_types.name'
+                //'project_metadata.id',
+                //'project_metadata.project_id',
+                'metadata_registry.title as title',
+                'project_metadata.content as content',
+                'project_metadata.language as language',
+                //'metadata_registry.namespace',
+                //'metadata_registry.identifier',
+                'content_types.identifier as content_type'
             )
-            //->getQuery() // Optional: downgrade to non-eloquent builder so we don't build invalid User objects.
+            ->where('metadata_registry.namespace', 'project')
+            ->where('metadata_registry.identifier', $attribute)
             ->get();
 
-        dd($result);
+        if($result->isEmpty()) {
+            return collect([]);
+        }
 
+        $data = $result->unique()->pluck('content', 'content_type');
+
+        //dd($data);
+
+
+
+        //dd($data);
+        /*
         $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) use($attribute) {
             return $q->where('identifier', $attribute );
         })->toSql();
-
-        dd($data);
-
-
+        */
 
         // TODO: process with type
-        //dd($data);
+
 
         /*
         $data = DB::table('project_metadata')
