@@ -75,7 +75,7 @@ class Project extends Node
         return $query->addSelect('metadata_registry.input_type_id as fooooo');
     }
 
-    public function getMetadata($attribute = null)
+    public function getMetadata($attribute = null, $language = null, $format = 'html')
     {
         /*
         SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
@@ -88,39 +88,56 @@ class Project extends Node
         ON metadata_registry.input_type_id = input_types.id;
         */
 
-        $result = $this->metadata()
+        $data = collect([]);
+        $query = $this->metadata()
             ->join('metadata_registry', 'project_metadata.metadata_registry_id', '=', 'metadata_registry.id')
             ->join('content_types', 'metadata_registry.content_type_id', '=', 'content_types.id')
             ->select(
-                //'project_metadata.id',
-                //'project_metadata.project_id',
                 'metadata_registry.title as title',
                 'project_metadata.content as content',
-                'project_metadata.language as language',
-                //'metadata_registry.namespace',
-                //'metadata_registry.identifier',
+                //'project_metadata.language as language',
                 'content_types.identifier as content_type'
             )
-            ->where('metadata_registry.namespace', 'project')
-            ->where('metadata_registry.identifier', $attribute)
-            ->get();
+            ->where('metadata_registry.namespace', 'project');
+            //->get();
 
-        if($result->isEmpty()) {
-            return collect([]);
+        if( !is_null($attribute) ) {
+            $query = $query->where('metadata_registry.identifier', $attribute);
         }
 
-        $data = $result->unique()->pluck('content', 'content_type');
+        if( !is_null($language) ) {
+            $query = $query->where('project_metadata.language', $language);
+        }
 
+        $results = $query->get();
+
+
+        if($results->isEmpty()) {
+            return $data;
+        }
+
+        foreach( $results as $result ) {
+            if( !empty($result->content) ) {
+                switch ($result->content_type) {
+                    case 'date':
+                        $data->push(Carbon::parse($result->content)->format('Y/m/d'));
+                        break;
+                    case 'person':
+                        $data->push($result->content);
+                        break;
+                    case 'organization':
+                        $data->push($result->content);
+                        break;
+                    default:
+                        $data->push($result->content);
+                        break;
+                };
+            };
+        }
+
+
+        //$data = $result->pluck('content', 'content_type');
         //dd($data);
-
-
-
-        //dd($data);
-        /*
-        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) use($attribute) {
-            return $q->where('identifier', $attribute );
-        })->toSql();
-        */
 
         // TODO: process with type
 
@@ -133,7 +150,21 @@ class Project extends Node
         return $data;
     }
 
+    // TODO: View Composer to the rescue?
+    public function getStatusAttribute()
+    {
+        if( $this->getMetadata('begin')->isEmpty() ) {
+            return 'Unknown';
+        } else {
+            if( $this->getMetadata('end')->isEmpty() || Carbon::parse($this->getMetadata('end')) < Carbon::now()) {
+                return 'Running';
+            } else {
+                return 'Ended';
+            }
+        }
+    }
 
+    /*
     public function getTitleAttribute()
     {
         $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
@@ -184,19 +215,5 @@ class Project extends Node
 
         return $data;
     }
-
-
-    // TODO: View Composer to the rescue?
-    public function getStatusAttribute()
-    {
-        if(empty($this->begin_date)) {
-            return 'Unknown';
-        } else {
-            if (Carbon::parse($this->end_date) < Carbon::now()->format('Y/m/d')) {
-                return 'Running';
-            } else {
-                return 'Ended';
-            }
-        }
-    }
+    */
 }

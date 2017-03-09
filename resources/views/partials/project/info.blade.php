@@ -6,16 +6,31 @@
         @endif
     </td>
     <td>
-        {{ $project->getMetadata('title') }}<br/>
-        {{ $project->getMetadata('begin') }} - {{ $project->getMetadata('end') }}<br/>
-        Funded by {{ $project->getMetadata('funding_source') }}
+        @unless( $project->getMetadata('title', 'de')->isEmpty() )
+            @foreach( $project->getMetadata('title', 'de') as $title )
+                {{ $title }}<br/>
+            @endforeach
+        @endunless
+        @unless( $project->getMetadata('begin')->isEmpty() )
+            {{ $project->getMetadata('begin')->first() }} -
+            @unless( $project->getMetadata('end')->isEmpty() )
+                {{ $project->getMetadata('end')->first() }}
+            @endunless
+            <br/>
+        @endunless
+        @unless( $project->getMetadata('funding_source')->isEmpty() )
+            Funded by
+            {{ $project->getMetadata('funding_source')->implode(', ') }}
+        @endunless
     </td>
     <td>
         {{ $project->user->name }}
         <br/>
-        @foreach( $project->members as $member )
-            {{ $member }}<br/>
-        @endforeach
+        @unless( $project->getMetadata('members')->isEmpty() )
+            @foreach( $project->getMetadata('members') as $member )
+                {{ $member }}<br/>
+            @endforeach
+        @endunless
     </td>
     <td>
         {{ $project->plans_count }}
