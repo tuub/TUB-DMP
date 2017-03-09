@@ -23,6 +23,8 @@ class Project extends Node
     protected $orderColumn = null;
     protected $scoped = [];
 
+    public $metadata_result;
+
     //////////////////////////////////////////////////////////////////////////////
     //
     // Baum makes available two model events to application developers:
@@ -77,6 +79,44 @@ class Project extends Node
 
     public function getMetadata($attribute = null, $language = null, $format = 'html')
     {
+        $data = collect([]);
+
+        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
+            $q->where('identifier', $attribute);
+            if( !is_null($language) ) {
+                $q->where('project_metadata.language', $language);
+            }
+        });
+        $results = $metadata_query->get();
+
+
+        if($results->isEmpty()) {
+            return $data;
+        }
+
+        foreach( $results as $result ) {
+            if( !empty($result->content) ) {
+                switch ($result->content_type) {
+                    case 'date':
+                        $data->push(Carbon::parse($result->content)->format('Y/m/d'));
+                        break;
+                    case 'person':
+                        $data->push($result->content);
+                        break;
+                    case 'organization':
+                        $data->push($result->content);
+                        break;
+                    default:
+                        $data->push($result->content);
+                        break;
+                };
+            };
+        };
+        return $data;
+    }
+
+    public function getMetadataViaJoin($attribute = null, $language = null, $format = 'html')
+    {
         /*
         SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
         metadata_registry.namespace, metadata_registry.identifier,
@@ -99,7 +139,6 @@ class Project extends Node
                 'content_types.identifier as content_type'
             )
             ->where('metadata_registry.namespace', 'project');
-            //->get();
 
         if( !is_null($attribute) ) {
             $query = $query->where('metadata_registry.identifier', $attribute);
@@ -111,6 +150,7 @@ class Project extends Node
 
         $results = $query->get();
 
+        /* No results? Return empty collection */
 
         if($results->isEmpty()) {
             return $data;
@@ -135,12 +175,9 @@ class Project extends Node
             };
         }
 
-
-        //$data = $result->pluck('content', 'content_type');
-        //dd($data);
-
-        // TODO: process with type
-
+        if($attribute == 'begin') {
+            //dd($data);
+        }
 
         /*
         $data = DB::table('project_metadata')
@@ -156,7 +193,7 @@ class Project extends Node
         if( $this->getMetadata('begin')->isEmpty() ) {
             return 'Unknown';
         } else {
-            if( $this->getMetadata('end')->isEmpty() || Carbon::parse($this->getMetadata('end')) < Carbon::now()) {
+            if( $this->getMetadata('end')->isEmpty() || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
                 return 'Running';
             } else {
                 return 'Ended';

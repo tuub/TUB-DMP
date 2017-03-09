@@ -190,11 +190,53 @@ Route::group(['middleware' => 'auth'], function()
             dd($project->metadata()->where('metadata_registry_id', 3)->get());
         }
 
+        $project = \App\Project::find(1);
+
+        $attribute = 'title';
+        $language = 'de';
+
+        $metadata_query = $project->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
+            $q->where('identifier', $attribute);
+            if( !is_null($language) ) {
+                $q= $q->where('project_metadata.language', $language);
+            }
+        });
+
+        //if( !is_null($language) ) {
+        //    $metadata_query = $metadata_query->where('language', $language);
+        //}
+
+        $results = $metadata_query->get();
+        /*
+        foreach( $project_metadata as $project_metadatum ) {
+            var_dump($project_metadatum->metadata_registry->title);
+        }
+        */
+
+        dd($results);
+
+
+
+        foreach( $project_metadata as $project_metadatum ) {
+            dd($project_metadatum->get(['metadata_registry.description']));
+        }
+        //->get('name')
+
+        /*
+        foreach($metadata as $metadatum)
+        {
+            $metadata->load(array('metadata_registry' => function($q) {
+                $q->where('Categorie.parent_id', NULL);
+            }))
+}
+        return $traductions;
+
         $foo = \App\ProjectMetadata::with('metadata_registry')->whereHas('metadata_registry', function($q) {
             return $q->where('identifier', '=', 'title');
         })->get(['content']);
 
         dd($foo);
+        */
 
     });
 });
