@@ -11,7 +11,7 @@ class MetadataRegistry extends Model
 
     public function content_type()
     {
-        return hasOne(ContentType::class);
+        return $this->belongsTo(ContentType::class);
     }
 
     public function datasource_mapping()
