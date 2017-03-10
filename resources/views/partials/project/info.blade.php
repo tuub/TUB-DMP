@@ -11,10 +11,11 @@
                 {{ $title }}<br/>
             @endforeach
         @endunless
+
         @unless( $project->getMetadata('begin')->isEmpty() )
-            {{ $project->getMetadata('begin')->first() }} -
+            @date( $project->getMetadata('begin')->first() ) -
             @unless( $project->getMetadata('end')->isEmpty() )
-                {{ $project->getMetadata('end')->first() }}
+                @date( $project->getMetadata('end')->first() )
             @endunless
             <br/>
         @endunless
@@ -68,7 +69,7 @@
 
             <div class="dashboard-plan-create-new container col-md-24 col-sm-24 col-xs-24 text-center">
                 <div class="col-md-24">
-                    <a href="#" class="btn btn-default btn-lg" data-toggle="modal" data-target="#create-new-plan" title="Create new DMP">
+                    <a href="#" class="bootstrap-modal-form-open btn btn-default btn-lg" data-toggle="modal" data-target="#create-plan" title="Create new DMP">
                         <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs">&nbsp;&nbsp;&nbsp;Create DMP</span>
                     </a>
                 </div>

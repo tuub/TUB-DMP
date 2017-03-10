@@ -17,4 +17,17 @@ class ProjectMetadata extends Model
     {
         return $this->belongsTo(MetadataRegistry::class);
     }
+
+    public function scopeOfField($query, $field)
+    {
+        return $query->where('metadata_registry.identifier', $field);
+    }
+
+    public function scopeOfLanguage($query, $language = null)
+    {
+        if( !is_null($language) ) {
+            return $query->where('language', $language);
+        }
+        return $query;
+    }
 }

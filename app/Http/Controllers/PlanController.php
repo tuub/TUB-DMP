@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\HtmlOutputFilter;
 use App\Http\Requests\Request;
-use App\Http\Requests\CreatePlanRequest;
+use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\VersionPlanRequest;
-use App\Http\Requests\UpdatePlanRequest;
 
 use App\IvmcMapping;
 use App\Plan;
@@ -57,7 +56,17 @@ class PlanController extends Controller
     }
 
 
-    public function create(CreatePlanRequest $request)
+    public function store(PlanRequest $request)
+    {
+        $data = array_filter($request->all(), 'strlen');
+        $this->plan->create($data);
+        dd($this->plan);
+        return 'FOOOOO';
+
+    }
+
+    /*
+    public function store(PlanRequest $request)
     {
         if($this->plan->createPlan($request)) {
             $msg = 'Plan created successfully!';
@@ -68,6 +77,7 @@ class PlanController extends Controller
         }
         return Redirect::route( 'dashboard' );
     }
+    */
 
 
     public function show($id) {
@@ -81,14 +91,12 @@ class PlanController extends Controller
 
     public function edit($id) {
         $plan = $this->plan->findOrFail($id);
-        if( $plan ) {
-            return view('plan.edit', compact('plan'));
-        }
-        throw new NotFoundHttpException;
+        $templates = collect([]);
+        return view('plan.edit', compact('plan','templates'))->render();
     }
 
 
-    public function update(UpdatePlanRequest $request)
+    public function update(PlanRequest $request)
     {
         if($this->plan->updatePlan($request)) {
             $msg = 'Save';

@@ -64,20 +64,20 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@show',
         'as' => 'show_plan'
     ]);
-    /* CREATE */
-    Route::post('/plan/create', [
-        'uses' => 'PlanController@create',
-        'as' => 'create_plan'
+    /* STORE */
+    Route::put('/plan/store', [
+        'uses' => 'PlanController@store',
+        'as' => 'plan.store'
     ]);
     /* EDIT */
     Route::get('/plan/{id}/edit', [
         'uses' => 'PlanController@edit',
-        'as' => 'edit_plan'
+        'as' => 'plan.edit'
     ]);
     /* UPDATE */
-    Route::post('/plan/update', [
+    Route::put('/plan/{id}/update', [
         'uses' => 'PlanController@update',
-        'as' => 'update_plan'
+        'as' => 'plan.update'
     ]);
     /* EXPORT */
     Route::get('/plan/{id}/export/{format?}', [
@@ -190,53 +190,43 @@ Route::group(['middleware' => 'auth'], function()
             dd($project->metadata()->where('metadata_registry_id', 3)->get());
         }
 
-        $project = \App\Project::find(1);
+        // This works
+        if( false ) {
+            $project = \App\Project::find(1);
+            $attribute = 'title';
+            $language = 'de';
 
-        $attribute = 'title';
-        $language = 'de';
+            $metadata_query = $project->metadata()->whereHas('metadata_registry',
+                function ($q) use ($attribute, $language) {
+                    $q->where('identifier', $attribute);
+                    if (!is_null($language)) {
+                        $q->where('project_metadata.language', $language);
+                    }
+                });
 
-        $metadata_query = $project->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
-            $q->where('identifier', $attribute);
-            if( !is_null($language) ) {
-                $q= $q->where('project_metadata.language', $language);
+            //if( !is_null($language) ) {
+            //    $metadata_query = $metadata_query->where('language', $language);
+            //}
+
+            $results = $metadata_query->get();
+
+            foreach ($results as $project_metadatum) {
+                var_dump($project_metadatum->metadata_registry->title);
             }
+
+            //dd($results);
+        }
+
+        // This should work
+        $project = \App\Project::with('metadata', 'metadata.metadata_registry')->find(1);
+
+        $project->metadata()->each(function($item){
+            print_r($item->metadata_registry->identifier);
+            print_r($item->metadata_registry->content_type->identifier);
         });
 
-        //if( !is_null($language) ) {
-        //    $metadata_query = $metadata_query->where('language', $language);
-        //}
-
-        $results = $metadata_query->get();
-        /*
-        foreach( $project_metadata as $project_metadatum ) {
-            var_dump($project_metadatum->metadata_registry->title);
-        }
-        */
-
-        dd($results);
 
 
-
-        foreach( $project_metadata as $project_metadatum ) {
-            dd($project_metadatum->get(['metadata_registry.description']));
-        }
-        //->get('name')
-
-        /*
-        foreach($metadata as $metadatum)
-        {
-            $metadata->load(array('metadata_registry' => function($q) {
-                $q->where('Categorie.parent_id', NULL);
-            }))
-}
-        return $traductions;
-
-        $foo = \App\ProjectMetadata::with('metadata_registry')->whereHas('metadata_registry', function($q) {
-            return $q->where('identifier', '=', 'title');
-        })->get(['content']);
-
-        dd($foo);
-        */
 
     });
 });

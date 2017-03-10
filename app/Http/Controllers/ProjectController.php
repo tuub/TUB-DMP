@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\MetadataRegistry;
 use App\Project;
+use App\Template;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,10 @@ class ProjectController extends Controller
             ->get()
             ->toHierarchy();
 
-        return view('dashboard', compact('projects'));
+        // For Modals
+        $templates = Template::get();
+
+        return view('dashboard', compact('projects', 'templates'));
     }
 
     public function edit($id)

@@ -72,12 +72,7 @@ class Project extends Node
         return $query->where('is_prefilled', true);
     }
 
-    public function scopeWithInputType($query)
-    {
-        return $query->addSelect('metadata_registry.input_type_id as fooooo');
-    }
-
-    public function getMetadata($attribute = null, $language = null, $format = 'html')
+    public function getMetadataViaRelation($attribute = null, $language = null, $format = 'html')
     {
         $data = collect([]);
 
@@ -89,6 +84,7 @@ class Project extends Node
         });
         $results = $metadata_query->get();
 
+        dd($results);
 
         if($results->isEmpty()) {
             return $data;
@@ -98,12 +94,12 @@ class Project extends Node
             if( !empty($result->content) ) {
                 switch ($result->content_type) {
                     case 'date':
-                        $data->push(Carbon::parse($result->content)->format('Y/m/d'));
-                        break;
-                    case 'person':
-                        $data->push($result->content);
+                        $content = Carbon::parse($result->content)->format('Y/d/m');
+                        $data = $content;
                         break;
                     case 'organization':
+                        break;
+                    case 'person':
                         $data->push($result->content);
                         break;
                     default:
@@ -115,7 +111,7 @@ class Project extends Node
         return $data;
     }
 
-    public function getMetadataViaJoin($attribute = null, $language = null, $format = 'html')
+    public function getMetadata($attribute = null, $language = null, $format = 'html')
     {
         /*
         SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
@@ -160,7 +156,7 @@ class Project extends Node
             if( !empty($result->content) ) {
                 switch ($result->content_type) {
                     case 'date':
-                        $data->push(Carbon::parse($result->content)->format('Y/m/d'));
+                        $data->push(Carbon::parse($result->content));
                         break;
                     case 'person':
                         $data->push($result->content);
