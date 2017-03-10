@@ -17,6 +17,7 @@
     "jquery.expander": "~1.6.1",
     "jquery.steps": "~1.1.0",
     "jquery.cookie": "~1.4.1",
-    "simple-expand": "sylvain-hamel/simple-expand"
+    "simple-expand": "sylvain-hamel/simple-expand",
+    "laravel-bootstrap-modal-form": "jerseymilker/laravel-bootstrap-modal-form"
   }
 }

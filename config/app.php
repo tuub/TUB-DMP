@@ -157,7 +157,7 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
         Baum\Providers\BaumServiceProvider::class,
-
+        AdamWathan\BootForms\BootFormsServiceProvider::class,
     ],
 
     /*
@@ -212,7 +212,8 @@ return [
         'HTML'      => Collective\Html\HtmlFacade::class,
         'Amaran'    => Xuma\Amaran\Facades\Amaran::class,
         'Debugbar'  => Barryvdh\Debugbar\Facade::class,
-        'Flash'     => Laracasts\Flash\Flash::class
+        'Flash'     => Laracasts\Flash\Flash::class,
+        'BootForm' => AdamWathan\BootForms\Facades\BootForm::class,
     ],
 
 ];
