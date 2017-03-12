@@ -1,21 +1,47 @@
-<!-- Modal -->
+<!-- Create Plan Modal -->
 <div class="modal fade" id="create-plan" tabindex="-1" role="dialog" aria-labelledby="create-plan">
-    {!! BootForm::open()->class('bootstrap-modal-form')->action( route('plan.store') )->put() !!}
-    {!! BootForm::hidden('project_id') !!}
-    {!! BootForm::text('DMP Title', 'title')->placeholder('My Data Management Plan') !!}
-    {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id'))->placeholder('Select Template') !!}
-    {!! BootForm::submit('Create')->class('btn btn-success') !!}
+    {!! BootForm::open()->id('create-plan-form')->action( route('plan.store') )->put() !!}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create DMP</h4>
+            </div>
+            <div class="modal-body">
+                {!! BootForm::hidden('project_id')->id('project_id') !!}
+                {!! BootForm::text('DMP Title', 'title')->placeholder('My Data Management Plan') !!}
+                {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
+            </div>
+            <div class="modal-footer">
+                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit('Create')->class('btn btn-success') !!}
+            </div>
+        </div>
+    </div>
     {!! BootForm::close() !!}
 </div>
 
+<!-- Edit Plan Modal -->
 <div class="modal fade" id="edit-plan" tabindex="-1" role="dialog" aria-labelledby="edit-plan">
-    <?php var_dump($plan->title); ?>
-    {!! BootForm::open()->class('bootstrap-modal-form')->action( route('plan.update', $plan->id) )->put() !!}
-    {!! BootForm::bind($plan) !!}
-    {!! BootForm::hidden('project_id') !!}
-    {!! BootForm::text('DMP Title', 'title') !!}
-    {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
-    {!! BootForm::submit('Save')->class('btn btn-success') !!}
+    {!! BootForm::open()->id('edit-plan-form')->action( route('plan.update') )->put() !!}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit DMP</h4>
+            </div>
+            <div class="modal-body">
+                {!! BootForm::hidden('id')->id('id') !!}
+                {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
+                {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
+                {!! BootForm::text('DMP Version', 'version') !!}
+            </div>
+            <div class="modal-footer">
+                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit('Save')->class('btn btn-success') !!}
+            </div>
+        </div>
+    </div>
     {!! BootForm::close() !!}
 </div>
 

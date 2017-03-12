@@ -63,13 +63,13 @@
 @if( $project->plans_count > 0 )
     <tr class="hidden" data-content="{{  $project->id }}">
         <td colspan="8">
-            @foreach ($project->plans as $plan)
+            @foreach ($project->plans()->ordered()->get() as $plan)
                 @include('partials.plan.info', $plan)
             @endforeach
 
             <div class="dashboard-plan-create-new container col-md-24 col-sm-24 col-xs-24 text-center">
                 <div class="col-md-24">
-                    <a href="#" class="bootstrap-modal-form-open btn btn-default btn-lg" data-toggle="modal" data-target="#create-plan" title="Create new DMP">
+                    <a href="#" class="create-plan btn btn-default btn-lg" data-toggle="modal" data-target="#create-plan" data-rel="{{ $project->id }}"title="Create new DMP">
                         <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs">&nbsp;&nbsp;&nbsp;Create DMP</span>
                     </a>
                 </div>

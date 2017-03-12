@@ -75,7 +75,7 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'plan.edit'
     ]);
     /* UPDATE */
-    Route::put('/plan/{id}/update', [
+    Route::put('/plan/update', [
         'uses' => 'PlanController@update',
         'as' => 'plan.update'
     ]);
@@ -101,6 +101,13 @@ Route::group(['middleware' => 'auth'], function()
     ]);
 
     /* Project */
+
+
+    /* EDIT */
+    Route::get('/project/{id}/show', [
+        'uses' => 'ProjectController@show',
+        'as' => 'project.show'
+    ]);
 
     /* EDIT */
     Route::get('/my/project/{id}/edit', [

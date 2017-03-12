@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HtmlOutputFilter;
-use App\Http\Requests\Request;
+use Request;
 use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\VersionPlanRequest;
@@ -55,14 +55,17 @@ class PlanController extends Controller
         return view('dashboard', compact('plans', 'template_selector', 'user_selector'));
     }
 
-
     public function store(PlanRequest $request)
     {
         $data = array_filter($request->all(), 'strlen');
         $this->plan->create($data);
-        dd($this->plan);
-        return 'FOOOOO';
-
+        //dd($this->plan);
+        if ($request->ajax()) {
+            return response()->json([
+                'response' => 200,
+                'msg' => 'DMP created!'
+            ]);
+        };
     }
 
     /*
@@ -83,7 +86,11 @@ class PlanController extends Controller
     public function show($id) {
         $plan = $this->plan->findOrFail($id);
         if( $plan ) {
-            return view('plan.show', compact('plan'));
+            if (Request::ajax()) {
+                return $plan->toJson();
+            } else {
+                return view('plan.show', compact('plan'));
+            }
         }
         throw new NotFoundHttpException;
     }
@@ -98,6 +105,31 @@ class PlanController extends Controller
 
     public function update(PlanRequest $request)
     {
+        $plan = $this->plan->findOrFail($request->id);
+        $data = array_filter($request->all(), 'strlen');
+        /*
+        array_walk($data, function (&$item) {
+            $item = ($item == '') ? null : $item;
+        });
+        */
+        $plan->update($data);
+        if ($request->ajax()) {
+            return response()->json([
+                'response' => 200,
+                'msg' => 'DMP updated!'
+            ]);
+        };
+            /*
+            $input = Input::all();//Get all the old input.
+            $input['autoOpenModal'] = 'true';//Add the auto open indicator flag as an input.
+            return Redirect::back()
+                ->withErrors($this->messageBag)
+                ->withInput($input);//Passing the old input and the flag.
+            */
+            //return response()->json(['message' => 'OK']);
+
+        //return Redirect::route('dashboard');
+        /*
         if($this->plan->updatePlan($request)) {
             $msg = 'Save';
             if ($request->ajax()) {
@@ -112,6 +144,8 @@ class PlanController extends Controller
             Notifier::error($msg)->flash()->create();
         }
         return Redirect::back();
+        */
+        //return $request->ajax();
     }
 
 

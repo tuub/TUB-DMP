@@ -1,4 +1,4 @@
-<div class="dashboard-plan-info container col-md-12 col-sm-12 col-xs-24">
+<div class="dashboard-plan-info container col-md-12 col-sm-12 col-xs-24" id="plan-{{ $plan->id }}">
     <div class="panel panel-info">
         <div class="panel-heading">
             <div class="row">
@@ -7,8 +7,7 @@
                 </div>
                 <div class="col-md-20 col-sm-17 col-xs-18">
                     {{ $plan->title }}
-                    // class="bootstrap-modal-form-open"
-                    <a href="{{ route('plan.edit', $plan->id)}}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
+                    <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
                         <i class="fa fa-pencil"></i>
                     </a>
                 </div>
@@ -66,9 +65,6 @@
         </div>
     </div>
 </div>
-
-@include('plan.new')
-@include('plan.edit', $plan)
 
 @if( false )
 

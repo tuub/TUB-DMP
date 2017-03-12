@@ -32,6 +32,11 @@ class Plan extends Model
         return $this->belongsTo(Template::class);
     }
 
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy( 'updated_at', 'desc' );
+    }
+
     /**
      * Get all plans for the authenticated user
      * To-DO: maybe rename to all()

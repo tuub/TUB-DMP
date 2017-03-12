@@ -7,7 +7,7 @@ use App\MetadataRegistry;
 use App\Project;
 use App\Template;
 use Auth;
-use Illuminate\Http\Request;
+use Request;
 
 class ProjectController extends Controller
 {
@@ -46,6 +46,18 @@ class ProjectController extends Controller
         $templates = Template::get();
 
         return view('dashboard', compact('projects', 'templates'));
+    }
+
+    public function show($id) {
+        $project = $this->project->findOrFail($id);
+        if( $project) {
+            if (Request::ajax()) {
+                return $project->toJson();
+            } else {
+                return view('project.show', compact('project'));
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
     public function edit($id)
