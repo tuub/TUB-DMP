@@ -35,87 +35,88 @@
 
             $('a.create-plan').bind('click', function (e) {
                 e.preventDefault();
+
+                var form    = $('#create-plan-form');
+                var div     = form.parent();
+
                 $.ajax({
-                    type: 'GET',
-                    url: '<?=URL::to('/')?>/project/' + $(this).data('rel') + '/show',
-                    dataType:'json',
-                    success: function(result) {
-                        $('#create-plan-form #project_id').val(result.id);
-                        $('#create-plan').modal();
+                    type    : 'GET',
+                    url     : '/project/' + $(this).data('rel') + '/show',
+                    dataType: 'json',
+                    success : function (json) {
+                        form.find('#project_id').val(json.id);
+                        div.modal();
                     }
                 });
             })
 
             $('#create-plan-form').bind('submit', function (e) {
                 e.preventDefault();
-                var datastring = $('#create-plan-form').serialize();
+
+                var form    = $(this);
+                var div     = $(this).parent();
+
                 $.ajax({
-                    type: 'POST',
-                    url: '<?=URL::to('/')?>/plan/store',
-                    data: datastring,
-                    dataType:'json',
-                    error: function(result) {
-                        console.log(result);
-                        //$('#edit-plan').modal();
+                    url     : form.attr('action'),
+                    type    : form.attr('method'),
+                    data    : form.serialize(),
+                    dataType: 'json',
+                    error   : function (json) {
+                        console.log(json.responseJSON);
+                        div.modal();
                     },
-                    success: function(result) {
-                        if( result.response == '200' ) {
-                            //$('#edit-form').html('Saved!');
-                            $('#edit-plan').modal('hide');
-                            //$('div#plan-1').hide().html('goo').fadeIn(1000);
-                            //$('div#plan-1').fadeOut(800, function(){
-                            //    $(this).html(result.msg).fadeIn().delay(2000);
-                            //});
+                    success : function (json) {
+                        if (json.response == '200') {
+                            div.modal('hide');
                             location.reload();
                         }
                     }
                 });
-            })
+            });
 
             $('a.edit-plan').bind('click', function (e) {
                 e.preventDefault();
+
+                var form    = $('#edit-plan-form');
+                var div     = form.parent();
+
                 $.ajax({
-                    type: 'GET',
-                    url: '<?=URL::to('/')?>/plan/' + $(this).data('rel') + '/show',
-                    dataType:'json',
-                    success: function(result) {
-                        $.each(result, function(field, value) {
-                            $('#edit-plan-form #' + field).val(value);//name is database field name such as id,name,address etc
+                    type    : 'GET',
+                    url     : '/plan/' + $(this).data('rel') + '/show',
+                    dataType: 'json',
+                    success : function (json) {
+                        $.each(json, function (field, value) {
+                            form.find('#' + field).val(value);
                         });
-                        console.log(result);
-                        $('#edit-plan').modal();
+                        div.modal();
                     }
                 });
-            })
+            });
 
             $('#edit-plan-form').bind('submit', function (e) {
                 e.preventDefault();
-                //var plan_id = $('#edit-plan-form #id').val();
-                var datastring = $('form#edit-plan-form').serialize();
+
+                var form    = $(this);
+                var div     = $(this).parent();
+
                 $.ajax({
-                    type: 'POST',
-                    url: '<?=URL::to('/')?>/plan/update',
-                    data: datastring,
-                    dataType:'json',
-                    error: function(result) {
-                        console.log(result);
-                        //$('#edit-plan').modal();
+                    url     : form.attr('action'),
+                    type    : form.attr('method'),
+                    data    : form.serialize(),
+                    dataType: 'json',
+                    error   : function (json) {
+                        console.log(json.responseJSON);
+                        div.modal();
                     },
-                    success: function(result) {
-                        if( result.response == '200' ) {
-                            //$('#edit-form').html('Saved!');
-                            $('#edit-plan').modal('hide');
-                            //$('div#plan-1').hide().html('goo').fadeIn(1000);
-                            //$('div#plan-1').fadeOut(800, function(){
-                            //    $(this).html(result.msg).fadeIn().delay(2000);
-                            //});
+                    success : function (json) {
+                        if (json.response == '200') {
+                            div.modal('hide');
                             location.reload();
                         }
                     }
-                });
-
-            })
-        })
+                })
+            });
+        });
     </script>
 
     <style>
