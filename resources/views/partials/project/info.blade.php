@@ -58,7 +58,7 @@
         <a href="#" class="hide-plans" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
     </td>
 </tr>
-    <tr class="hidden" data-content="{{  $project->id }}">
+    <tr class="dashboard-project-plans hidden" data-content="{{  $project->id }}">
         <td colspan="8">
             @foreach ($project->plans()->ordered()->get() as $plan)
                 @include('partials.plan.info', $plan)

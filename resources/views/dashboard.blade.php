@@ -12,26 +12,38 @@
 
     <script>
 
-        function setCookie(key, value)
-        {
-            //var params = { project_id: key};
-            var cookie = JSON.parse( Cookies.get('tub-dmp_dashboard') );
-            var cookie_length = Object.keys(cookie).length;
-
-            if( cookie_length > 0 ) {
-                //console.log( cookie_length );
-
-            }
-
-            console.log( key );
-
-            //Cookies.set('tub-dmp_dashboard[' + key + ']', value);
-            //console.log( Cookies.get('tub-dmp_dashboard') );
-
-        }
-
-
         $(document).ready(function () {
+
+            function getOpenedPlans()
+            {
+                $('tr.dashboard-project-plans').not('.hidden').data('content').each(function(item){
+                    console.log( item );
+                });
+                //var params = { project_id: key};
+                /*
+                Cookies.set('tub-dmp_dashboard', {
+                    'projects': {
+                        key: value,
+                        key: 'hidden',
+                        key: 'hidden',
+                        key: 'visible',
+                        key: 'visible',
+                        key: 'hidden'
+                    }}
+                );
+                */
+                //var cookie = Cookies.getJSON('tub-dmp_dashboard');
+                //console.log( cookie );
+
+                //Cookies.set('tub-dmp_dashboard', { 'visible': '1' });
+
+
+                //cookie['3'] = key;
+
+                //Cookies.set('tub-dmp_dashboard, value);
+                //console.log( Cookies.get('tub-dmp_dashboard') );
+                //Cookies.remove('tub-dmp_dashboard');
+            }
 
             $.ajaxSetup({
                 headers: {
@@ -52,8 +64,8 @@
 
                 show_link.hide();
                 hide_link.show();
-                setCookie('visible', project_id);
                 $('tr[data-content=' + project_id + ']').removeClass('hidden');
+                getOpenedPlans();
             })
 
             $('a.hide-plans').bind('click', function (e) {
@@ -68,9 +80,9 @@
 
                 hide_link.hide();
                 show_link.show();
-                setCookie('hidden', project_id);
 
                 $('tr[data-content=' + project_id + ']').addClass('hidden');
+                getOpenedPlans();
             })
 
             $('a.create-plan').bind('click', function (e) {
