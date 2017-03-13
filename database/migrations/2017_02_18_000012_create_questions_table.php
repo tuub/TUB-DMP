@@ -16,13 +16,16 @@ class CreateQuestionsTable extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->integer('parent_id')->nullable()->index();
+            $table->integer('lft')->nullable()->index();
+            $table->integer('rgt')->nullable()->index();
+            $table->integer('depth')->nullable();
             $table->integer('template_id')->unsigned();
             $table->foreign('template_id')->references('id')->on('templates');
             $table->integer('section_id')->unsigned();
             $table->foreign('section_id')->references('id')->on('sections');
             $table->string('keynumber')->nullable();
             $table->integer('order')->default(1);
-            $table->integer("parent_question_id")->unsigned()->nullable();
             $table->text('text');
             $table->text('output_text')->default(null)->nullable();
             $table->integer('input_type_id')->unsigned()->default(1);

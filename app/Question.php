@@ -2,13 +2,12 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
+use Baum\Node;
 
 use Auth;
 use App\Answer;
 
-class Question extends Model
+class Question extends Node
 {
 
     /*
@@ -19,7 +18,15 @@ class Question extends Model
 
     protected $table = 'questions';
     public $timestamps = true;
-    protected $guarded = [];
+    protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
+
+    /* Nested Sets */
+    protected $parentColumn = 'parent_id';
+    protected $leftColumn = 'lft';
+    protected $rightColumn = 'rgt';
+    protected $depthColumn = 'depth';
+    protected $orderColumn = null;
+    protected $scoped = [];
 
     /*
     |--------------------------------------------------------------------------
