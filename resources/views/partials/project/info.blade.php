@@ -54,13 +54,10 @@
         <span class="text-info">{{ $project->status }}</span>
     </td>
     <td>
-        @if( $project->children_count )
-            <a href="#" class="show-plans" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
-            <a href="#" class="hide-plans" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
-        @endif
+        <a href="#" class="show-plans" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
+        <a href="#" class="hide-plans" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
     </td>
 </tr>
-@if( $project->plans_count > 0 )
     <tr class="hidden" data-content="{{  $project->id }}">
         <td colspan="8">
             @foreach ($project->plans()->ordered()->get() as $plan)
@@ -77,7 +74,7 @@
 
         </td>
     </tr>
-@endif
+
 
 @foreach ($project->children as $project)
     @include('partials.project.info', $project)

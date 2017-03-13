@@ -11,6 +11,26 @@
 @section('body')
 
     <script>
+
+        function setCookie(key, value)
+        {
+            //var params = { project_id: key};
+            var cookie = JSON.parse( Cookies.get('tub-dmp_dashboard') );
+            var cookie_length = Object.keys(cookie).length;
+
+            if( cookie_length > 0 ) {
+                //console.log( cookie_length );
+
+            }
+
+            console.log( key );
+
+            //Cookies.set('tub-dmp_dashboard[' + key + ']', value);
+            //console.log( Cookies.get('tub-dmp_dashboard') );
+
+        }
+
+
         $(document).ready(function () {
 
             $.ajaxSetup({
@@ -21,16 +41,36 @@
 
             $('a.show-plans').bind('click', function (e) {
                 e.preventDefault();
-                $(this).hide();
-                $('a.hide-plans').show();
-                $('tr[data-content=' + $(this).data('href') + ']').removeClass('hidden');
+                //console.log($(this).data('href'));
+                var project_id  = $(this).data('href');
+                var show_link   = $(this).filter(function(){
+                    return $(this).data('href') == project_id
+                });
+                var hide_link   = $('a.hide-plans').filter(function(){
+                    return $(this).data('href') == project_id
+                });
+
+                show_link.hide();
+                hide_link.show();
+                setCookie('visible', project_id);
+                $('tr[data-content=' + project_id + ']').removeClass('hidden');
             })
 
             $('a.hide-plans').bind('click', function (e) {
                 e.preventDefault();
-                $(this).hide();
-                $('a.show-plans').show();
-                $('tr[data-content=' + $(this).data('href') + ']').addClass('hidden');
+                var project_id = $(this).data('href');
+                var show_link   = $('a.show-plans').filter(function(){
+                    return $(this).data('href') == project_id
+                });
+                var hide_link   = $(this).filter(function(){
+                    return $(this).data('href') == project_id
+                });
+
+                hide_link.hide();
+                show_link.show();
+                setCookie('hidden', project_id);
+
+                $('tr[data-content=' + project_id + ']').addClass('hidden');
             })
 
             $('a.create-plan').bind('click', function (e) {
