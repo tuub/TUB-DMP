@@ -19,13 +19,13 @@ class CreatePlansTable extends Migration
             $table->string('title',255);
             $table->integer('project_id')->unsigned();
             $table->integer('version')->default(1);
-            $table->integer('template_id')->unsigned();
+
             $table->boolean('is_active')->default(1);
             $table->boolean('is_final')->default(0);
             $table->timestamps();
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->foreign('template_id')->references('id')->on('templates');
+
         });
     }
 

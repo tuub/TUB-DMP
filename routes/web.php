@@ -57,6 +57,32 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'feedback'
     ]);
 
+
+    /* SURVEY*/
+
+    /* SHOW */
+    Route::get('/survey/{id}/show',[
+        'uses' => 'SurveyController@show',
+        'as' => 'survey.show'
+    ]);
+    /* STORE */
+    Route::put('/survey/store', [
+        'uses' => 'SurveyController@store',
+        'as' => 'survey.store'
+    ]);
+    /* EDIT */
+    Route::get('/survey/{id}/edit', [
+        'uses' => 'SurveyController@edit',
+        'as' => 'survey.edit'
+    ]);
+    /* UPDATE */
+    Route::put('/survey/update', [
+        'uses' => 'SurveyController@update',
+        'as' => 'survey.update'
+    ]);
+
+
+
     /* PLAN */
 
     /* SHOW */

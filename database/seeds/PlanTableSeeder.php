@@ -17,7 +17,6 @@ class PlanTableSeeder extends Seeder
             'title' => 'Data Management Plan',
             'project_id' => 1,
             'version' => 1,
-            'template_id' => 1,
             'is_active' => 1,
             'is_final' => 0
         ]);

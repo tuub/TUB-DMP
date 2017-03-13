@@ -22,14 +22,14 @@ class Template extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function plans()
+    public function surveys()
     {
-        return $this->hasMany('App\Plan');
+        return $this->hasMany(Survey::class);
     }
 
     public function sections()
     {
-        return $this->hasMany('App\Section');
+        return $this->hasMany(Section::class);
     }
 
     public function questions()
@@ -39,7 +39,7 @@ class Template extends Model
 
     public function institution()
     {
-        return $this->belongsTo('App\Institution');
+        return $this->belongsTo(Institution::class);
     }
 
     public function scopeActive($query)

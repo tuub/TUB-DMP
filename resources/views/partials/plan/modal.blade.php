@@ -11,6 +11,7 @@
                 {!! BootForm::hidden('project_id')->id('project_id') !!}
                 {!! BootForm::text('DMP Title', 'title')->placeholder('My Data Management Plan') !!}
                 {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
+                {!! BootForm::text('DMP Version', 'version') !!}
             </div>
             <div class="modal-footer">
                 {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
@@ -33,7 +34,6 @@
             <div class="modal-body">
                 {!! BootForm::hidden('id')->id('id') !!}
                 {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
-                {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
                 {!! BootForm::text('DMP Version', 'version') !!}
             </div>
             <div class="modal-footer">

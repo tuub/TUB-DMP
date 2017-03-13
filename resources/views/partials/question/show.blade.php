@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-24">
         <span class="question-text">
             @if( $question->input_type == 'headline')
                 <span class="headline_question">
@@ -17,13 +17,12 @@
             @endif
         </span>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-24">
         <span class="question-answer-text">
             @if( $question->input_type != 'headline')
                 <?php
-                $answers = App\Answer::getAnswer( $plan, $question );
+                //$answers = App\Answer::getAnswer( $plan, $question );
                 ?>
-                {!! $answers !!}
             @endif
         </span>
     </div>

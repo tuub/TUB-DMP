@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\HtmlOutputFilter;
-use App\Survey;
 use Request;
 use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\VersionPlanRequest;
 
-use App\IvmcMapping;
-use App\Plan;
-use App\User;
-use App\Question;
-use App\Answer;
-use App\Template;
+use App\Survey;
 
 //use PhpSpec\Process\Shutdown\UpdateConsoleAction;
 use Jenssegers\Optimus\Optimus;
@@ -30,55 +24,40 @@ use Notifier;
 use View;
 
 /**
- * Class PlanController
+ * Class SurveyController
  *
  * @package App\Http\Controllers
  */
-class PlanController extends Controller
+class SurveyController extends Controller
 {
-    protected $plan;
-    protected $template;
+    protected $survey;
 
-    public function __construct(Template $template, Plan $plan)
+    public function __construct(Survey $survey)
     {
-        $this->template = $template;
-        $this->plan = $plan;
+        $this->survey = $survey;
     }
 
-    public function index()
-    {
-        $internal_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
-        $external_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
-        //$template_selector = [ 'TU Berlin' => $internal_templates ] + [ 'Other Organisations' => $external_templates ];
-        $template_selector = $internal_templates;
-        $user_selector = User::active()->pluck('real_name','id')->toArray();
-        $plans = $this->plan->getPlans();
-        return view('dashboard', compact('plans', 'template_selector', 'user_selector'));
+
+    public function show($id) {
+        $survey = $this->survey->with('plan', 'template')->findOrFail($id);
+        $plan = $survey->plan;
+        $questions = $survey->template->questions;
+        if( $survey ) {
+            if (Request::ajax()) {
+                return $questions->toJson();
+            } else {
+                return view('survey.show', compact('survey'));
+            }
+        }
+        throw new NotFoundHttpException;
     }
+
 
     public function store(PlanRequest $request)
     {
         $data = array_filter($request->all(), 'strlen');
-        $plan = new $this->plan([
-            'project_id' => $data['project_id'],
-            'title' => $data['title'],
-            'version' => $data['version'],
-        ]);
-
-        $survey = new Survey([
-            'template_id' => $data['template_id'],
-        ]);
-        $plan->save();
-        $survey->plan()->associate($plan);
-
-        //$plan->push();
-
-        //$survey = new Survey();
-        //var_dump($survey->plan()->get());
-        //$survey->plan()->associate($plan);
-        //$survey->template_id = $data['template_id'];
-        //$survey->save();
-
+        $this->plan->create($data);
+        //dd($this->plan);
         if ($request->ajax()) {
             return response()->json([
                 'response' => 200,
@@ -102,23 +81,12 @@ class PlanController extends Controller
     */
 
 
-    public function show($id) {
-        $plan = $this->plan->findOrFail($id);
-        if( $plan ) {
-            if (Request::ajax()) {
-                return $plan->toJson();
-            } else {
-                return view('plan.show', compact('plan'));
-            }
-        }
-        throw new NotFoundHttpException;
-    }
+
 
 
     public function edit($id) {
-        $plan = $this->plan->findOrFail($id);
-        $templates = collect([]);
-        return view('plan.edit', compact('plan','templates'))->render();
+        $survey = $this->survey->with('plan', 'template')->findOrFail($id);
+        return view('survey.edit', compact('survey'))->render();
     }
 
 

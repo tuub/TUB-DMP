@@ -25,7 +25,7 @@ class PlanRequest extends Request
     {
         return [
             'title' => 'required',
-            'template_id' => 'required'
+            'version' => 'required'
         ];
     }
 }

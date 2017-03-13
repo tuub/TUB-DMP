@@ -16,9 +16,9 @@
 
             function getOpenedPlans()
             {
-                $('tr.dashboard-project-plans').not('.hidden').data('content').each(function(item){
-                    console.log( item );
-                });
+                //$('tr.dashboard-project-plans').not('.hidden').data('content').each(function(item){
+                //    console.log( item );
+                //});
                 //var params = { project_id: key};
                 /*
                 Cookies.set('tub-dmp_dashboard', {

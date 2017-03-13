@@ -27,9 +27,9 @@ class Plan extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function template()
+    public function survey()
     {
-        return $this->belongsTo(Template::class);
+        return $this->hasOne(Survey::class);
     }
 
     public function scopeOrdered($query)
@@ -78,48 +78,12 @@ class Plan extends Model
     }
 
 
-    /**
-     * @return int
-     */
-    public function getQuestionCount()
-    {
-        $count = $this->template->questions()->active()->mandatory()->count();
-        return $count;
-    }
 
 
-    /**
-     * @return mixed
-     */
-    public function getMandatoryQuestions()
-    {
-        return $this->template->questions()->active()->mandatory()->get();
-    }
-
-    /**
-     * @return int
-     */
-    public function getAnswerCount()
-    {
-        $counter = [];
-        foreach( $this->getMandatoryQuestions() as $question ) {
-            /* See: http://stackoverflow.com/questions/28651727/laravel-eloquent-distinct-and-count-not-working-properly-together */
-            /* Does not work */ //$counter[] = Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupBy( 'question_id' )->count();
-            /* Works as well */ //$counter[] = count(Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupby('question_id')->distinct()->get());
-            $counter[] = Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->distinct('question_id')->count('question_id');
-        }
-        $count = array_sum( $counter );
-        return $count;
-    }
 
 
-    /**
-     * @return int
-     */
-    public function getQuestionAnswerPercentage()
-    {
-        return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
-    }
+
+
 
 
     /**

@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(IvmcMappingTableSeeder::class);
         $this->call(MetadataRegistryTableSeeder::class);
         $this->call(ProjectMetadataTableSeeder::class);
+        $this->call(SurveyTableSeeder::class);
     }
 }

@@ -1,5 +1,5 @@
 <div class="row form-group">
-    <label for="{{ $question->id }}" class="control-label col-md-3 col-xs-12">
+    <label for="{{ $question->id }}" class="control-label col-md-6 col-xs-24">
         <span class="question-text">
             @if( $question->input_type == 'headline')
                 <span class="headline_question">
@@ -24,11 +24,11 @@
             <span class="comment">{!! HTML::decode($question->comment) !!}</span>
         @endif
     </label>
-    <div class="col-md-8 col-xs-12">
+    <div class="col-md-16 col-xs-24">
         @if( $question->guidance )
             <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($question->guidance) !!}</span>
         @endif
-        {!! Form::input_type_constructor( $plan, $question ) !!}
+        {{-- Form::input_type_constructor( $plan, $question ) --}}
         @if( $question->hint )
             <span class="hint-block">
                 <a href="#" class="expander" style="padding-left: 12px;">Click here for more information</a>
@@ -38,7 +38,7 @@
             </span>
         @endif
     </div>
-    <div class="col-md-1 col-xs-12 text-md-left text-xs-left">
+    <div class="col-md-2 col-xs-24 text-md-left text-xs-left">
         <div class="question-status" id="{{ $question->id }}">
             <div class="saved">
                 <span class="fa fa-check fa-2x" title="OK"></span>

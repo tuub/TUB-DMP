@@ -34,11 +34,11 @@
                 <div class="col-md-12 col-sm-10 col-xs-12">
                     <div class="tools">
                         @unless( $plan->is_final )
-                            <a href="{{ URL::route('plan.edit', [$plan->id]) }}" class="btn btn-default btn-xs" title="Edit Survey">
+                            <a href="{{ URL::route('survey.edit', [$plan->id]) }}" class="btn btn-default btn-xs" title="Edit Survey">
                                 <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit Survey</span>
                             </a>
                         @endunless
-                        <a href="{{ URL::route('show_plan', [$plan->id]) }}" class="btn btn-default btn-xs" title="View">
+                        <a href="{{ URL::route('survey.show', [$plan->id]) }}" class="btn btn-default btn-xs" title="View">
                             <i class="fa fa-eye"></i><span class="hidden-sm hidden-xs"> View</span>
                         </a>
                         <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#email-option-for-{{ $plan->id }}" title="Email">

@@ -10,7 +10,7 @@
 @append
 
 @section('headline')
-    <h2>Data Management Plan for TUB Project {{ $plan->project_number }}</h2>
+    <h2>Data Management Plan for TUB Project {{ $survey->plan->project->identifier }}</h2>
 @stop
 
 @section('body')
@@ -52,13 +52,11 @@
         })
     </script>
 
-    {!! Form::open(array('route' => array('update_plan'), 'method' => 'post', 'class' => 'form-horizontal', 'id' => 'save_plan'))  !!}
-    {!! Form::hidden( 'project_number', $plan->project_number) !!}
-    {!! Form::hidden( 'version', $plan->version) !!}
+    {!! Form::open(array('route' => array('survey.update'), 'method' => 'post', 'class' => 'form-horizontal', 'id' => 'save_plan'))  !!}
 
     <div>
         <div class="progress col-md-10 col-sm-12 nopadding">
-            <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $plan->getQuestionAnswerPercentage() }}"></div>
+            <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $survey->getQuestionAnswerPercentage() }}"></div>
         </div>
         <div class=" col-md-2 col-sm-12 nopadding">
             {!! Form::button('<i class="fa fa-floppy-o"></i><span class="hidden-xs"> Plan speichern</span>', array('type' => 'submit', 'name' => 'save', 'class' => 'btn btn-success pull-right', 'style' => 'font-size: 17px')) !!}
@@ -66,7 +64,7 @@
     </div>
     <br/><br/><br/>
     <div id="plan-section-steps">
-        @foreach( $plan->template->sections as $section )
+        @foreach( $survey->template->sections as $section )
             <h4 style="font-weight: bold;">{!! HTML::decode( $section->keynumber . '. ' . $section->name ) !!}</h4>
             <section id="section-{{ $section->keynumber }}">
                 <h4 style="font-weight: bold;">{!! HTML::decode( $section->keynumber . '. ' . $section->name ) !!}</h4>
