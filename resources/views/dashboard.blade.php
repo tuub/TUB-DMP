@@ -14,35 +14,13 @@
 
         $(document).ready(function () {
 
-            function getOpenedPlans()
+            function setVisibleProjects()
             {
-                //$('tr.dashboard-project-plans').not('.hidden').data('content').each(function(item){
-                //    console.log( item );
-                //});
-                //var params = { project_id: key};
-                /*
-                Cookies.set('tub-dmp_dashboard', {
-                    'projects': {
-                        key: value,
-                        key: 'hidden',
-                        key: 'hidden',
-                        key: 'visible',
-                        key: 'visible',
-                        key: 'hidden'
-                    }}
-                );
-                */
-                //var cookie = Cookies.getJSON('tub-dmp_dashboard');
-                //console.log( cookie );
-
-                //Cookies.set('tub-dmp_dashboard', { 'visible': '1' });
-
-
-                //cookie['3'] = key;
-
-                //Cookies.set('tub-dmp_dashboard, value);
-                //console.log( Cookies.get('tub-dmp_dashboard') );
-                //Cookies.remove('tub-dmp_dashboard');
+                var open = [];
+                $('tr.dashboard-project-plans').not('.hidden').each(function(index, item){
+                    open.push($(item).data('content'));
+                });
+                $.cookie('tubdmp-dashboard', open);
             }
 
             $.ajaxSetup({
