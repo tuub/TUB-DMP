@@ -3,6 +3,12 @@
     <head>
         <title>TUB-DMP</title>
         <meta charset="utf-8">
+
+        <!-- Startup configuration -->
+        <link rel="manifest" href="/manifest.webmanifest">
+        <!-- Fallback application metadata for legacy browsers -->
+        <meta name="application-name" content="TUB-DMP">
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta http-equiv="Cache-control" content="no-store">
