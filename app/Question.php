@@ -61,7 +61,7 @@ class Question extends Node
 
     public function scopeParent($query)
     {
-        return $query->where('parent_question_id', null);
+        return $query->where('parent_id', null);
     }
 
     public function scopeMandatory($query)
@@ -124,6 +124,6 @@ class Question extends Node
     */
 
     public function getChildren() {
-        return Question::where('parent_question_id', $this->id)->get();
+        return Question::where('parent_id', $this->id)->get();
     }
 }

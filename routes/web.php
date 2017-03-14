@@ -262,4 +262,41 @@ Route::group(['middleware' => 'auth'], function()
 
 
     });
+
+    Route::get('/test4', function(){
+        $plan = new \App\Plan();
+        /*
+        $id = $plan->insertGetId([
+            'project_id' => 1,
+            'title' => 'foo',
+            'version' => 1,
+        ]);
+        */
+
+        /*
+        $plan = $plan->create([
+            'project_id' => 1,
+            'title' => 'foo',
+            'version' => 1,
+        ]);
+
+        dd($plan->id);
+        */
+
+        $plan = $plan->create([
+            'project_id' => 1,
+            'title' => 'foo',
+            'version' => 1,
+        ]);
+
+        $survey = new \App\Survey;
+        $survey->plan()->associate($plan);
+        $survey->template_id = 1;
+        $survey->save();
+
+
+
+
+
+    });
 });

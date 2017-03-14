@@ -1,5 +1,5 @@
 <tr>
-    @if( $question->parent_question_id )
+    @if( $question->parent_id )
         <td style="padding-left:5em">
     @else
         <td>

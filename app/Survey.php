@@ -9,7 +9,7 @@ class Survey extends Model
     public $timestamps = true;
     protected $table = 'surveys';
     protected $dates = ['created_at', 'updated_at'];
-    protected $fillable = ['template_id'];
+    protected $fillable = ['plan_id', 'template_id'];
 
 
     public function plan()

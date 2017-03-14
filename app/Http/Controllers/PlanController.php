@@ -58,31 +58,28 @@ class PlanController extends Controller
 
     public function store(PlanRequest $request)
     {
+        /* Filter out all empty inputs */
         $data = array_filter($request->all(), 'strlen');
-        $plan = new $this->plan([
+
+        /* Create a new plan instance */
+        $plan = new $this->plan;
+        $plan = $plan->create([
             'project_id' => $data['project_id'],
             'title' => $data['title'],
             'version' => $data['version'],
         ]);
 
-        $survey = new Survey([
-            'template_id' => $data['template_id'],
-        ]);
-        $plan->save();
+        /* Create a new survey instance and attach plan to it */
+        $survey = new Survey;
         $survey->plan()->associate($plan);
+        $survey->template_id = $data['template_id'];
+        $survey->save();
 
-        //$plan->push();
-
-        //$survey = new Survey();
-        //var_dump($survey->plan()->get());
-        //$survey->plan()->associate($plan);
-        //$survey->template_id = $data['template_id'];
-        //$survey->save();
-
+        /* Create a response in JSON */
         if ($request->ajax()) {
             return response()->json([
                 'response' => 200,
-                'msg' => 'DMP created!'
+                'msg' => 'DMP with Survey created!'
             ]);
         };
     }
