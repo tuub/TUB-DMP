@@ -36,7 +36,7 @@ class Answer extends Model
      *
      * @return null
      */
-    public static function check( Question $question, Plan $plan )
+    public static function check( Question $question, Survey $plan )
     {
         $result = Answer::where([
             'plan_id' => $plan->id,
@@ -57,17 +57,17 @@ class Answer extends Model
      *
      * @return array|Collection|string
      */
-    public static function getAnswer( Plan $plan = null, Question $question = null, $format = 'html' )
+    public static function getAnswer( Survey $survey = null, Question $question = null, $format = 'html' )
     {
         switch( $format ) {
             case 'html':
-                $output = new HtmlOutputFilter($plan, $question);
+                $output = new HtmlOutputFilter($survey, $question);
                 break;
             case 'form':
-                $output = new FormOutputFilter($plan, $question);
+                $output = new FormOutputFilter($survey, $question);
                 break;
             case 'pdf':
-                $output = new PdfOutputFilter($plan, $question);
+                $output = new PdfOutputFilter($survey, $question);
                 break;
         }
         return $output->render();
@@ -80,10 +80,10 @@ class Answer extends Model
      *
      * @return array|Collection
      */
-    public static function getAnswerObject( Plan $plan = null, Question $question = null )
+    public static function getAnswerObject( Survey $survey = null, Question $question = null )
     {
         $result = new Collection;
-        $answers = Answer::check( $question, $plan );
+        $answers = Answer::check( $question, $survey );
         if( $answers ) {
             foreach( $answers as $answer ) {
                 $result->push($answer);

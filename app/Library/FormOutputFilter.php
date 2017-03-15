@@ -4,22 +4,23 @@ namespace App\Library;
 use App\Plan;
 use App\Question;
 use App\Answer;
+use App\Survey;
 
 class FormOutputFilter implements OutputInterface
 {
-    protected $plan;
+    protected $survey;
     protected $question;
 
 
-    public function __construct( Plan $plan, Question $question )
+    public function __construct( Survey $survey, Question $question )
     {
-        $this->plan = $plan;
+        $this->survey   = $survey;
         $this->question = $question;
     }
 
     public function render()
     {
-        $output = Answer::getAnswerObject($this->plan, $this->question);
+        $output = Answer::getAnswerObject($this->survey, $this->question);
         return $output;
     }
 }

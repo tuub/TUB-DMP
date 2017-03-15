@@ -76,7 +76,7 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'survey.edit'
     ]);
     /* UPDATE */
-    Route::put('/survey/update', [
+    Route::put('/survey/{id}/update', [
         'uses' => 'SurveyController@update',
         'as' => 'survey.update'
     ]);

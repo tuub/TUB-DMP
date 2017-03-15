@@ -22,11 +22,6 @@ class Survey extends Model
         return $this->belongsTo(Template::class);
     }
 
-    public function questions()
-    {
-        return $this->hasManyThrough(Question::class, Template::class);
-    }
-
     public function answers()
     {
         return $this->hasManyThrough(Answer::class, Question::class);

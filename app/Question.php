@@ -44,9 +44,9 @@ class Question extends Node
         return $this->belongsTo(Section::class);
     }
 
-    public function input_type()
+    public function content_type()
     {
-        return $this->belongsTo(InputType::class);
+        return $this->belongsTo(ContentType::class);
     }
 
     public function answers()

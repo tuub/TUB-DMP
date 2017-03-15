@@ -28,7 +28,7 @@
         @if( $question->guidance )
             <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($question->guidance) !!}</span>
         @endif
-        {{-- Form::input_type_constructor( $plan, $question ) --}}
+        {{ Form::content_type( $survey, $question ) }}
         @if( $question->hint )
             <span class="hint-block">
                 <a href="#" class="expander" style="padding-left: 12px;">Click here for more information</a>

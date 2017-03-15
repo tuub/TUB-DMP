@@ -51,11 +51,13 @@
         })
     </script>
 
-    {!! Form::open(array('route' => array('survey.update'), 'method' => 'put', 'class' => 'form-horizontal', 'id' => 'save_plan'))  !!}
+    {!! Form::open(['route' => ['survey.update', $survey->id], 'method' => 'put', 'class' => 'form-horizontal', 'id' => 'save_plan'])  !!}
 
     <div>
         <div class="progress col-md-20 col-sm-24 nopadding">
-            <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $survey->getQuestionAnswerPercentage() }}"></div>
+            @if( false )
+                <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $survey->getQuestionAnswerPercentage() }}"></div>
+            @endif
         </div>
         <div class=" col-md-4 col-sm-24 nopadding">
             {!! Form::button('<i class="fa fa-floppy-o"></i><span class="hidden-xs"> Plan speichern</span>', array('type' => 'submit', 'name' => 'save', 'class' => 'btn btn-success pull-right', 'style' => 'font-size: 17px')) !!}

@@ -83,9 +83,8 @@ class SurveyController extends Controller
     // TODO: render method?
     public function edit($id) {
         $survey = $this->survey->with('plan', 'template')->findOrFail($id);
-        //$question_count = Template::with('questions')->withCount('questions')->get();
-        //dd($question_count);
-        return view('survey.edit', compact('survey'))->render();
+        $questions = $this->survey->with('template', 'template.questions', 'template.questions.content_type')->get();
+        return view('survey.edit', compact('survey', 'questions'))->render();
     }
 
 

@@ -34,8 +34,16 @@ class Template extends Model
 
     public function questions()
     {
+        return $this->hasMany(Question::class);
+    }
+
+
+    /*
+    public function questions()
+    {
         return $this->hasManyThrough(Question::class, Section::class);
     }
+    */
 
     public function institution()
     {
