@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\HtmlOutputFilter;
+use App\Template;
 use Request;
-use App\Http\Requests\PlanRequest;
-use App\Http\Requests\EmailPlanRequest;
-use App\Http\Requests\VersionPlanRequest;
-
+use App\Http\Requests\SurveyRequest;
 use App\Survey;
 
 //use PhpSpec\Process\Shutdown\UpdateConsoleAction;
@@ -38,7 +36,8 @@ class SurveyController extends Controller
     }
 
 
-    public function show($id) {
+    public function show($id)
+    {
         $survey = $this->survey->with('plan', 'template')->findOrFail($id);
         $plan = $survey->plan;
         $questions = $survey->template->questions;
@@ -52,7 +51,7 @@ class SurveyController extends Controller
         throw new NotFoundHttpException;
     }
 
-
+    /*
     public function store(PlanRequest $request)
     {
         $data = array_filter($request->all(), 'strlen');
@@ -66,7 +65,7 @@ class SurveyController extends Controller
         };
     }
 
-    /*
+
     public function store(PlanRequest $request)
     {
         if($this->plan->createPlan($request)) {
@@ -81,25 +80,26 @@ class SurveyController extends Controller
     */
 
 
-
-
-
+    // TODO: render method?
     public function edit($id) {
         $survey = $this->survey->with('plan', 'template')->findOrFail($id);
+        $question_count = Template::with('questions')->withCount('questions')->get();
+        dd($question_count);
         return view('survey.edit', compact('survey'))->render();
     }
 
 
-    public function update(PlanRequest $request)
+    public function update(SurveyRequest $request)
     {
-        $plan = $this->plan->findOrFail($request->id);
+        $survey = $this->survey->findOrFail($request->id);
         $data = array_filter($request->all(), 'strlen');
+        dd($data);
         /*
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
         */
-        $plan->update($data);
+        //$plan->update($data);
         if ($request->ajax()) {
             return response()->json([
                 'response' => 200,

@@ -33,6 +33,17 @@ class Section extends \Eloquent
         return $this->hasMany(Question::class)->orderBy('order');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('sections.is_active', true);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->keynumber . '.' . $this->name;
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | Model Methods

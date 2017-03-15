@@ -22,6 +22,8 @@ class CreateSectionsTable extends Migration
             $table->string('keynumber')->nullable();
             $table->integer('order')->default(1);
             $table->text('guidance')->nullable();
+            $table->boolean('is_mandatory')->default(0);
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }

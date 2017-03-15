@@ -17,7 +17,8 @@ class SectionTableSeeder extends Seeder
             'template_id' => 1,
             'keynumber' => '1',
             'order' => 1,
-            'name' => 'General Project Information'
+            'name' => 'General Project Information',
+            'is_active' => 0,
         ]);
 
         Section::create([

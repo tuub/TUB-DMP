@@ -59,19 +59,21 @@ class Question extends Node
         return $this->hasMany(QuestionOption::class);
     }
 
+
     public function scopeParent($query)
     {
         return $query->where('parent_id', null);
     }
 
+
     public function scopeMandatory($query)
     {
-        return $query->where('is_mandatory', true);
+        return $query->where('questions.is_mandatory', true);
     }
 
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('questions.is_active', true);
     }
 
 
