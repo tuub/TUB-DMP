@@ -9,6 +9,10 @@ use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\VersionPlanRequest;
 
+use Event;
+use App\Events\PlanCreated;
+use App\Events\PlanUpdated;
+
 use App\IvmcMapping;
 use App\Plan;
 use App\User;
@@ -45,13 +49,14 @@ class PlanController extends Controller
         $this->plan = $plan;
     }
 
+    // TODO: Check! Everything necessary? GetPlans necessary?
     public function index()
     {
         $internal_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
         $external_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
-        //$template_selector = [ 'TU Berlin' => $internal_templates ] + [ 'Other Organisations' => $external_templates ];
-        $template_selector = $internal_templates;
-        $user_selector = User::active()->pluck('real_name','id')->toArray();
+        $template_selector = [ 'TU Berlin' => $internal_templates ] + [ 'Other Organisations' => $external_templates ];
+        //$template_selector = $internal_templates;
+        $user_selector = User::active()->pluck('real_name','id');
         $plans = $this->plan->getPlans();
         return view('dashboard', compact('plans', 'template_selector', 'user_selector'));
     }
@@ -74,6 +79,9 @@ class PlanController extends Controller
         $survey->plan()->associate($plan);
         $survey->template_id = $data['template_id'];
         $survey->save();
+
+        /* Fire plan create event */
+        Event::fire(new PlanCreated($plan));
 
         /* Create a response in JSON */
         if ($request->ajax()) {
@@ -128,6 +136,10 @@ class PlanController extends Controller
             $item = ($item == '') ? null : $item;
         });
         */
+
+        /* Fire plan create event */
+        Event::fire(new PlanUpdated($plan));
+
         $plan->update($data);
         if ($request->ajax()) {
             return response()->json([

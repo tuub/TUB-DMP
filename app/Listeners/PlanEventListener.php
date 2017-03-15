@@ -11,15 +11,17 @@ class PlanEventListener{
 
     public function onPlanCreate($event)
     {
-        $content = 'Plan created!';
-        $content .= $event->plan->project->identifier;
-        File::append(storage_path() . '/plans.log', $content);
+        $content = 'PLAN CREATED: ';
+        $content .= $event->plan->title . ' in ' . $event->plan->project->identifier;
+        $content .= PHP_EOL;
+            File::append(storage_path() . '/plans.log', $content);
     }
 
     public function onPlanUpdate($event)
     {
-        $content = 'Plan updated!';
-        $content .= $event->plan->title;
+        $content = 'PLAN UPDATED: ';
+        $content .= $event->plan->title . ' in ' . $event->plan->project->identifier;
+        $content .= PHP_EOL ;
         File::append(storage_path() . '/plans.log', $content);
     }
 
