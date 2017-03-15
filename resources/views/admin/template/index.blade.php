@@ -34,8 +34,6 @@
                         <th>Name</th>
                         <th>Institution</th>
                         <th>Active</th>
-                        <th>Created</th>
-                        <th>Updated</th>
                         <th>Tools</th>
                     </tr>
                     </thead>
