@@ -50,49 +50,44 @@
 <!--<header class="navbar navbar-static-top">-->
 
 <header>
-@section('header')
-@include('partials.header')
-@show
+    @section('header')
+        @include('partials.header')
+    @show
 </header>
 
 <main class="main">
-<div class="container">
+    <div class="container">
 
-@section('headline')
-    <div class="text-center">
-        <h3>Create your Data Management Plan</h3>
+    @section('headline')
+        <div class="text-center">
+            <h3>Create your Data Management Plan</h3>
+        </div>
+    @show
+
+    @yield('body')
+
     </div>
-@show
-
-@yield('body')
-
-</div>
 </main>
 
 <footer class="footer">
-<div class="container">
-<div class="text-center">
-    &copy; {{ date("Y") }}
-    <a href="http://www.szf.tu-berlin.de/" target="_blank">Servicezentrum Forschungsdaten und Publikationen</a>
-</div>
-<div class="text-center">
-    <a href="http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/" target="_blank">About TUB-DMP</a> |
-    <!--Policy |-->
-    <a href="http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/" target="_blank">Contact</a> |
-    <a href="http://www.szf.tu-berlin.de/servicemenue/impressum/" target="_blank">Imprint</a> |
-    <a href="http://www.tu-berlin.de/allgemeine_seiten/datenschutz/" target="_blank">Privacy Statement</a>
-</div>
-</div>
+    <div class="container">
+        <div class="text-center">
+            &copy; {{ date("Y") }}
+            <a href="http://www.szf.tu-berlin.de/" target="_blank">Servicezentrum Forschungsdaten und Publikationen</a>
+        </div>
+        <div class="text-center">
+            <a href="http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/" target="_blank">About TUB-DMP</a> |
+            <!--Policy |-->
+            <a href="http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/" target="_blank">Contact</a> |
+            <a href="http://www.szf.tu-berlin.de/servicemenue/impressum/" target="_blank">Imprint</a> |
+            <a href="http://www.tu-berlin.de/allgemeine_seiten/datenschutz/" target="_blank">Privacy Statement</a>
+        </div>
+    </div>
 </footer>
 
 @if( Auth::check() )
-@include('partials.modal')
+    @include('partials.modal')
 @endif
-
-<!-- This is only necessary if you do Flash::overlay('...') -->
-<script>
-$('#flash-overlay-modal').modal();
-</script>
 
 <!-- JS
 via Laravel-Elixir

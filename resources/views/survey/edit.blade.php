@@ -38,7 +38,6 @@
                 enablePagination: false,
                 titleTemplate: '#title#',
                 stepsOrientation: 1,
-                transitionEffect: 1,
                 transitionEffectSpeed: 100,
                 onStepChanging: function (event, currentIndex, newIndex) {
                     if($(window).scrollTop() > 0) {
@@ -52,27 +51,38 @@
         })
     </script>
 
-    {!! Form::open(array('route' => array('survey.update'), 'method' => 'post', 'class' => 'form-horizontal', 'id' => 'save_plan'))  !!}
+    {!! Form::open(array('route' => array('survey.update'), 'method' => 'put', 'class' => 'form-horizontal', 'id' => 'save_plan'))  !!}
 
     <div>
-        <div class="progress col-md-10 col-sm-12 nopadding">
+        <div class="progress col-md-20 col-sm-24 nopadding">
             <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $survey->getQuestionAnswerPercentage() }}"></div>
         </div>
-        <div class=" col-md-2 col-sm-12 nopadding">
+        <div class=" col-md-4 col-sm-24 nopadding">
             {!! Form::button('<i class="fa fa-floppy-o"></i><span class="hidden-xs"> Plan speichern</span>', array('type' => 'submit', 'name' => 'save', 'class' => 'btn btn-success pull-right', 'style' => 'font-size: 17px')) !!}
         </div>
     </div>
     <br/><br/><br/>
     <div id="plan-section-steps">
-        @foreach( $survey->template->sections as $section )
-            <h4 style="font-weight: bold;">{!! HTML::decode( $section->keynumber . '. ' . $section->name ) !!}</h4>
+
+        @foreach( $survey->template->sections()->active()->get() as $section )
+            <h4 style="font-weight: bold;">
+                {{ $section->full_name }}
+            </h4>
             <section id="section-{{ $section->keynumber }}">
-                <h4 style="font-weight: bold;">{!! HTML::decode( $section->keynumber . '. ' . $section->name ) !!}</h4>
+                <h4 style="font-weight: bold;">
+                    {{ $section->full_name }}
+                </h4>
                 @if( $section->guidance )
-                    <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($section->guidance) !!}</span>
+                    <span class="help-block">
+                        <strong>Guidance:</strong>
+                        {{ $section->guidance }}
+                    </span>
                 @endif
-                @foreach( $section->questions()->active()->parent()->get() as $question )
-                    @include('partials.question.edit', $question)
+
+                @foreach( $section->questions()->active()->get() as $question )
+                    @if( $question->isRoot() )
+                        @include('partials.question.edit', $question)
+                    @endif
                 @endforeach
             </section>
         @endforeach

@@ -18,7 +18,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if( Auth::check() )
                         <li>
-                            <a href="/"><i class="fa fa-home" aria-hidden="true"></i>{{-- Auth::user()->real_name --}}Home</a>
+                            <a href="/"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
                         </li>
                     @endif
                     @if( Auth::check() )
@@ -36,15 +36,13 @@
                             <a href="#" data-toggle="modal" data-target="#feedback" title="Feedback"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a>
                         </li>
                     @endif
-                    @if( Auth::check() )
-                        @if( Auth::user()->is_admin )
-                            <li>
-                                <a href="/admin"><i class="fa fa-wrench" aria-hidden="true"></i>Admin</a>
-                            </li>
-                        @endif
-                    @endif
+                    @if( Auth::check() and Auth::user()->is_admin )
+                        <li>
+                            <a href="/admin"><i class="fa fa-wrench" aria-hidden="true"></i>Admin</a>
+                        </li>
+                @endif
                 </ul>
-            </div><!--/.nav-collapse -->
+            </div>
         </div>
     </nav>
 
