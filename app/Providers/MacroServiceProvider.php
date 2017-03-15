@@ -2,19 +2,20 @@
 
 namespace App\Providers;
 
-use App\InputType;
-use Illuminate\Support\ServiceProvider;
+use App\ContentType;
+//use Illuminate\Support\ServiceProvider;
+use Collective\Html\HtmlServiceProvider;
 use App\Question;
-use App\QuestionAnswerRelation;
 use App\QuestionOption;
 use App\Plan;
 use App\Answer;
 
 use Auth;
 use Form;
-use Illuminate\Database\Eloquent\Collection;
+//use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
-class MacroServiceProvider extends ServiceProvider
+class MacroServiceProvider extends HtmlServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -23,16 +24,18 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Form::macro('input_type_constructor', function( $plan, $question )
+        Form::macro('content_type', function( $survey, $question )
         {
-            $macro_method = 'question_' . $question->input_type->method;
+            $macro = 'question_' . $question->content_type->identifier;
+            //echo $macro;
             $input_name = $question->id;
             $default_value = QuestionOption::getDefaultValue( $question );
-            $answer = Answer::getAnswer($plan, $question, 'form');
+            //$answer = Answer::getAnswer($survey, $question, 'form');
+            $answer = collect([]);
             //echo '<pre>';
             //var_dump( $answer );
             //echo '</pre>';
-            $html = Form::$macro_method( $question, $input_name, $answer, $default_value );
+            $html = Form::$macro( $question, $input_name, $answer, $default_value );
             return $html;
         });
 
