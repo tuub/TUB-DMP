@@ -28,8 +28,7 @@ class CreateQuestionsTable extends Migration
             $table->integer('order')->default(1);
             $table->text('text');
             $table->text('output_text')->default(null)->nullable();
-            $table->integer('input_type_id')->unsigned()->default(1);
-            $table->foreign('input_type_id')->references('id')->on('input_types');
+            $table->integer('content_type_id')->unsigned()->default(1);
             $table->text('value')->nullable();
             $table->text('default')->nullable();
             $table->text('prepend')->nullable();
@@ -42,6 +41,8 @@ class CreateQuestionsTable extends Migration
             $table->boolean('is_active')->default(1);
             $table->boolean('read_only')->default(0);
             $table->timestamps();
+
+            $table->foreign('content_type_id')->references('id')->on('content_types');
         });
     }
 
