@@ -27,12 +27,15 @@ class MacroServiceProvider extends ServiceProvider
     {
         Form::macro('content_type', function( $survey, $question )
         {
+            /*
             $html           = '';
             $macro          = 'text'; //$question->content_type->identifier;
             $input_name     = $question->id;
             //$default_value  = QuestionOption::getDefaultValue( $question );
 
             $html .= $question->prepend;
+            $answer = $question->answer()->where('user_id', Auth::user()->id);
+            var_dump($answer);
 
             //$answer = Answer::getAnswer($survey, $question, 'form');
             $answer = collect([]);
@@ -40,14 +43,28 @@ class MacroServiceProvider extends ServiceProvider
             //var_dump( $answer );
             //echo '</pre>';
             $html .= $macro;
-            //Form::$macro( $question, $input_name, $answer, $default_value );
+            //$html .= Form::macro( $macro, $input_name, $question, $input_name, $answer );
+            $html .= Form::$macro('foo', 'bar');
             $html .= $question->append;
 
             return $html;
+            */
+
+            $macro_method = 'question_' . $question->content_type->method;
+            $input_name = $question->id;
+            $default_value = QuestionOption::getDefaultValue( $question );
+            //$answer = Answer::getAnswer($plan, $question, 'form');
+            $answer = collect([]);
+            //echo '<pre>';
+            //var_dump( $answer );
+            //echo '</pre>';
+            $html = Form::$macro_method( $question, $input_name, $answer, $default_value );
+            return $html;
+
         });
 
         /* ID 1: Text */
-        Form::macro('text', function( $question, $input_name, Collection $answer = null, $default_value = null )
+        Form::macro('question_text', function( $question, $input_name, Collection $answer = null, $default_value = null )
         {
             $read_only = '';
             $value = null;
@@ -64,7 +81,7 @@ class MacroServiceProvider extends ServiceProvider
             $html = '';
             $html .= $question->prepend;
             //$html .= Form::hidden( $input_name . '[]', 'text' );
-            $html .= Form::Text( $input_name . '[]', $value, array('data-type' => 'text', 'class' => 'question form-control', 'title' => $question->guidance, $read_only ));
+            $html .= Form::text( $input_name . '[]', $value, array('data-type' => 'text', 'class' => 'question form-control', 'title' => $question->guidance, $read_only ));
             $html .= $question->append;
             return $html;
         });

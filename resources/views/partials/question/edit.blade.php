@@ -35,8 +35,7 @@
         @endif
     </label>
     <div class="col-md-16 col-xs-24">
-
-        {{ Form::content_type( $survey, $question ) }}
+        {!! Form::component( 'content_type', 'partials.question.form.content_type', [$survey, $question] ) !!}
         @if( $question->hint )
             <span class="hint-block">
                 <a href="#" class="expander" style="padding-left: 12px;">Click here for more information</a>
