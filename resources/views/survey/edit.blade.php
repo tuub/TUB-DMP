@@ -48,6 +48,33 @@
                     return true;
                 },
             });
+
+            /*
+            $('a.show-question-info').bind('click', function (e) {
+                e.preventDefault();
+
+                var div     = $('#show-question-info');
+
+                $.ajax({
+                    type    : 'GET',
+                    url     : '/question/' + $(this).data('rel') + '/show',
+                    dataType: 'json',
+                    success : function (json) {
+                        $.each(json, function (field, value) {
+                            var headline = $('<h2></h2>').html(field).css('text-transform', 'capitalize');
+                            var element = div.find('#question-' + field);
+                            console.log(element.size())
+                                //element.html(headline + value);
+
+                        });
+                        div.modal();
+                    }
+                });
+            });
+            */
+
+
+
         })
     </script>
 

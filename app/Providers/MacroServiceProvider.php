@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use App\ContentType;
-//use Illuminate\Support\ServiceProvider;
-use Collective\Html\HtmlServiceProvider;
+use Illuminate\Support\ServiceProvider;
+//use Collective\Html\HtmlServiceProvider;
+use Illuminate\Html;
 use App\Question;
 use App\QuestionOption;
 use App\Plan;
@@ -15,7 +16,7 @@ use Form;
 //use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection;
 
-class MacroServiceProvider extends HtmlServiceProvider
+class MacroServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -26,33 +27,37 @@ class MacroServiceProvider extends HtmlServiceProvider
     {
         Form::macro('content_type', function( $survey, $question )
         {
-            $macro = 'question_' . $question->content_type->identifier;
-            //echo $macro;
-            $input_name = $question->id;
-            $default_value = QuestionOption::getDefaultValue( $question );
+            $html           = '';
+            $macro          = 'text'; //$question->content_type->identifier;
+            $input_name     = $question->id;
+            //$default_value  = QuestionOption::getDefaultValue( $question );
+
+            $html .= $question->prepend;
+
             //$answer = Answer::getAnswer($survey, $question, 'form');
             $answer = collect([]);
             //echo '<pre>';
             //var_dump( $answer );
             //echo '</pre>';
-            $html = Form::$macro( $question, $input_name, $answer, $default_value );
+            $html .= $macro;
+            //Form::$macro( $question, $input_name, $answer, $default_value );
+            $html .= $question->append;
+
             return $html;
         });
 
         /* ID 1: Text */
-        Form::macro('question_text', function( $question, $input_name, Collection $answer = null, $default_value = null )
+        Form::macro('text', function( $question, $input_name, Collection $answer = null, $default_value = null )
         {
             $read_only = '';
             $value = null;
-            foreach( $answer as $output ) {
+            foreach ($answer as $output) {
                 $value = $output->value;
             }
 
-            if( $question->read_only == true )
-            {
+            if ($question->read_only == true) {
                 $read_only = 'readonly';
-                if( !empty($question->value) )
-                {
+                if (!empty($question->value)) {
                     $value = $question->value;
                 }
             }
@@ -65,7 +70,7 @@ class MacroServiceProvider extends HtmlServiceProvider
         });
 
         /* ID 2: Textarea */
-        Form::macro('question_textarea', function( $question, $input_name, Collection $answer = null, $default_value = null )
+        Form::macro('textarea', function( $question, $input_name, Collection $answer = null, $default_value = null )
         {
             $read_only = '';
             $value = null;

@@ -34,7 +34,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'begin',
             'title' => 'Project Begin',
             'description' => 'The begin date of the research project.',
-            'content_type_id' => 2,
+            'content_type_id' => 3,
         ]);
 
         MetadataRegistry::create([
@@ -43,7 +43,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'end',
             'title' => 'Project End',
             'description' => 'The end date of the research project.',
-            'content_type_id' => 2,
+            'content_type_id' => 3,
         ]);
 
         MetadataRegistry::create([
@@ -61,7 +61,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'leader',
             'title' => 'Principal Investigator',
             'description' => 'The principal investigator of the research project.',
-            'content_type_id' => 3,
+            'content_type_id' => 4,
         ]);
 
         MetadataRegistry::create([
@@ -70,7 +70,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'members',
             'title' => 'Other Principal Investigator(s)',
             'description' => 'Other principal investigator(s) of the research project.',
-            'content_type_id' => 3,
+            'content_type_id' => 4,
         ]);
 
         MetadataRegistry::create([
@@ -79,7 +79,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'partner',
             'title' => 'External Project Partner(s)',
             'description' => 'The external project partner(s) of the research project.',
-            'content_type_id' => 4,
+            'content_type_id' => 5,
         ]);
 
         MetadataRegistry::create([

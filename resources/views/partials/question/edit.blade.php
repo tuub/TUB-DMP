@@ -16,6 +16,16 @@
                 </span>
             @endif
         </span>
+        @if( $question->guidance or $question->comment or $question->reference or $question->hint )
+            <a href="#" class="show-question-info" data-rel="{{  $question->id }}"
+               data-toggle="modal" data-target="#show-question-info-{{ $question->id }}" title="Show Question Info">
+               <i class="fa fa fa-info-circle " aria-hidden="true"> More Info</i>
+            </a>
+            @include('partials.question.modal', $question)
+            <!--
+            <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($question->guidance) !!}</span>
+            -->
+        @endif
         @if( $question->reference )
             <br/><span class="reference">{!! HTML::decode($question->reference) !!}</span>
         @endif
@@ -25,9 +35,7 @@
         @endif
     </label>
     <div class="col-md-16 col-xs-24">
-        @if( $question->guidance )
-            <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($question->guidance) !!}</span>
-        @endif
+
         {{ Form::content_type( $survey, $question ) }}
         @if( $question->hint )
             <span class="hint-block">
