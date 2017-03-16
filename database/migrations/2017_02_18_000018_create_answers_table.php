@@ -14,14 +14,13 @@ class CreateAnswersTable extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('plan_id')->unsigned();
-            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
+            $table->integer('survey_id')->unsigned();
             $table->integer('question_id')->unsigned();
-            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->text('value');
+            $table->json('value');
             $table->timestamps();
+
+            $table->foreign('survey_id')->references('id')->on('surveys')->onDelete('cascade');
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 
