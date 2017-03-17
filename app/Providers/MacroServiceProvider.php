@@ -25,10 +25,33 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Form::macro('content_type', function( $survey, $question )
+        //Form::macro('content_type', function( $survey, $question )
+        Form::macro('input_type_constructor', function( $survey, $question )
         {
+            //return $survey->plan->project->identifier;
+            //return '<input type="awesome">';
+
+            //return Form::foo( $survey, $question );
+            return Form::component( 'question_foo', 'partials.components.form.textarea', ['name', 'answer', 'default'] );
+
+
+            $html    = '';
+            $options = [
+                'macro'     => 'question_' . $question->content_type->identifier,
+                'name'      => $question->id,
+                'default'   => QuestionOption::getDefaultValue( $question ),
+                'answer'    => collect([]), // Answer::getAnswer($plan, $question, 'form')
+            ];
+
+            var_dump($options);
+
+            $macro = $options['macro'];
+
+            //$html = Form::$macro( $question, $options['name'], $options['answer'], $options['default'] );
+            //$html = Form::macro( 'foo' );
+            //$html = Form::component( $macro, $question, [$options['name'], $options['answer'], $options['default']] );
+
             /*
-            $html           = '';
             $macro          = 'text'; //$question->content_type->identifier;
             $input_name     = $question->id;
             //$default_value  = QuestionOption::getDefaultValue( $question );
@@ -50,17 +73,13 @@ class MacroServiceProvider extends ServiceProvider
             return $html;
             */
 
-            $macro_method = 'question_' . $question->content_type->method;
-            $input_name = $question->id;
-            $default_value = QuestionOption::getDefaultValue( $question );
-            //$answer = Answer::getAnswer($plan, $question, 'form');
-            $answer = collect([]);
-            //echo '<pre>';
-            //var_dump( $answer );
-            //echo '</pre>';
-            $html = Form::$macro_method( $question, $input_name, $answer, $default_value );
             return $html;
 
+        });
+
+        Form::macro('foo', function( $question )
+        {
+            return 'FOOBAR!';
         });
 
         /* ID 1: Text */
