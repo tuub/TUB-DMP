@@ -299,4 +299,16 @@ Route::group(['middleware' => 'auth'], function()
 
 
     });
+
+    Route::get('/test5', function(){
+        $survey = \App\Survey::find(1);
+        $question = \App\Question::find(121);
+        $answers = \App\Answer::check($survey, $question);
+
+        foreach( $answers as $answer ) {
+            $foo = json_decode($answer->value, true);
+            var_dump($foo[0]);
+        }
+
+    });
 });

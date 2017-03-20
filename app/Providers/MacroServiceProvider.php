@@ -25,112 +25,23 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //Form::macro('content_type', function( $survey, $question )
-        Form::macro('input_type_constructor', function( $survey, $question )
+        Form::macro('content_type', function( $survey, $question )
         {
-            //return $survey->plan->project->identifier;
-            //return '<input type="awesome">';
-
-            //return Form::foo( $survey, $question );
-            return Form::component( 'question_foo', 'partials.components.form.textarea', ['name', 'answer', 'default'] );
-
-
-            $html    = '';
             $options = [
-                'macro'     => 'question_' . $question->content_type->identifier,
-                'name'      => $question->id,
-                'default'   => QuestionOption::getDefaultValue( $question ),
-                'answer'    => collect([]), // Answer::getAnswer($plan, $question, 'form')
+                'macro'         => 'question_' . $question->content_type->identifier,
+                'input_type'    => $question->content_type->input_type->identifier,
+                'name'          => $question->id,
+                'default'       => QuestionOption::getDefaultValue( $question ),
+                'answers'       => Answer::get($survey, $question, 'form'),
+                'read_only'     => $question->readonly ? 'readonly' : ''
             ];
 
-            var_dump($options);
+            //var_dump($options['answers']);
 
             $macro = $options['macro'];
+            Form::component( $options['macro'], 'partials.components.form.' . $options['input_type'], ['question', 'name', 'answers' => null, 'default' => null, 'read_only' => null] );
 
-            //$html = Form::$macro( $question, $options['name'], $options['answer'], $options['default'] );
-            //$html = Form::macro( 'foo' );
-            //$html = Form::component( $macro, $question, [$options['name'], $options['answer'], $options['default']] );
-
-            /*
-            $macro          = 'text'; //$question->content_type->identifier;
-            $input_name     = $question->id;
-            //$default_value  = QuestionOption::getDefaultValue( $question );
-
-            $html .= $question->prepend;
-            $answer = $question->answer()->where('user_id', Auth::user()->id);
-            var_dump($answer);
-
-            //$answer = Answer::getAnswer($survey, $question, 'form');
-            $answer = collect([]);
-            //echo '<pre>';
-            //var_dump( $answer );
-            //echo '</pre>';
-            $html .= $macro;
-            //$html .= Form::macro( $macro, $input_name, $question, $input_name, $answer );
-            $html .= Form::$macro('foo', 'bar');
-            $html .= $question->append;
-
-            return $html;
-            */
-
-            return $html;
-
-        });
-
-        Form::macro('foo', function( $question )
-        {
-            return 'FOOBAR!';
-        });
-
-        /* ID 1: Text */
-        Form::macro('question_text', function( $question, $input_name, Collection $answer = null, $default_value = null )
-        {
-            $read_only = '';
-            $value = null;
-            foreach ($answer as $output) {
-                $value = $output->value;
-            }
-
-            if ($question->read_only == true) {
-                $read_only = 'readonly';
-                if (!empty($question->value)) {
-                    $value = $question->value;
-                }
-            }
-            $html = '';
-            $html .= $question->prepend;
-            //$html .= Form::hidden( $input_name . '[]', 'text' );
-            $html .= Form::text( $input_name . '[]', $value, array('data-type' => 'text', 'class' => 'question form-control', 'title' => $question->guidance, $read_only ));
-            $html .= $question->append;
-            return $html;
-        });
-
-        /* ID 2: Textarea */
-        Form::macro('textarea', function( $question, $input_name, Collection $answer = null, $default_value = null )
-        {
-            $read_only = '';
-            $value = null;
-            $rows = 2;
-            foreach( $answer as $output ) {
-                $value = $output->value;
-            }
-
-
-            if( !is_null($value) ) {
-                $rows = 6;
-            }
-
-            if( $question->read_only == true )
-            {
-                $read_only = 'readonly';
-            }
-
-            $html = '';
-            $html .= $question->prepend;
-            //$html .= Form::hidden( $input_name . '[]', 'text' );
-            $html .= Form::Textarea( $input_name . '[]', $value, array('data-type' => 'text', 'rows' => $rows, 'class' => 'question form-control', 'title' => $question->guidance, $read_only ) );
-            $html .= $question->append;
-            return $html;
+            return Form::$macro($question, $options['name'], $options['answers'], $options['default'], $options['read_only']);
         });
 
         /* ID 3: Auswahlbox, einzeilig */

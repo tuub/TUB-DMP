@@ -50,10 +50,17 @@ elixir(function(mix) {
     mix.copy(paths.fonts + 'fonts/**', 'public/fonts/');
     mix.copy(paths.images + '**', 'public/images/');
 
-    mix.copy(paths.jquery + 'dist/jquery.js', 'public/js/');
+    mix.copy(paths.jquery + 'dist/jquery.min.js', 'public/js/');
+    //mix.copy(paths.jquery_steps + 'build/jquery.steps.js',
     mix.copy(paths.js + 'env.js', 'public/js/');
-    mix.copy(paths.js + 'plan.js', 'public/js/');
+    //mix.copy(paths.js + 'plan.js', 'public/js/');
     mix.copy(paths.js + 'my.vue.js', 'public/js/');
+
+    mix.scripts([
+        paths.jquery_steps + 'build/jquery.steps.min.js',
+        paths.js + 'env.js', 'public/js/',
+        paths.js + 'plan.js', 'public/js/'
+    ], './public/js/survey.js');
 
     mix.scripts([
         paths.jqueryui + 'jquery-ui.js',
@@ -67,7 +74,7 @@ elixir(function(mix) {
         //paths.js_cookie + 'src/js.cookie.js',
         paths.jquery_cookie + 'jquery.cookie.js',
         paths.jquery_expander + 'jquery.expander.js',
-        paths.jquery_steps + 'build/jquery.steps.js',
+        //paths.jquery_steps + 'build/jquery.steps.js',
         paths.simple_expand + 'src/simple-expand.min.js'
 
     ], './public/js/vendor.js');

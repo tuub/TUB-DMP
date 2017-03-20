@@ -8,6 +8,8 @@ use App\Library\HtmlOutputFilter;
 use App\Library\FormOutputFilter;
 use App\Library\PdfOutputFilter;
 
+use App\Survey;
+
 /*
 use AnswerInterface;
 implements AnswerInterface
@@ -24,62 +26,77 @@ class Answer extends Model
         return $this->belongsTo(Question::class);
     }
 
-    public function user()
+    public function survey()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Survey::class);
     }
 
 
-    /**
-     * @param Question $question
-     * @param Plan     $plan
-     *
-     * @return null
-     */
-    public static function check( Question $question, Survey $plan )
+    public static function get( Survey $survey = null, Question $question = null, $format = 'html' )
     {
-        $result = Answer::where([
-            'plan_id' => $plan->id,
-            'question_id' => $question->id
-        ])->get();
+        $output = null;
+        $answers = Answer::check( $survey, $question );
 
-        if ( !$result->isEmpty() ) {
-            return $result;
+        if( $answers ) {
+            switch ($format) {
+                case 'html':
+                    $output = new HtmlOutputFilter($answers);
+                    break;
+                case 'form':
+                    $output = new FormOutputFilter($answers);
+                    break;
+                case 'pdf':
+                    $output = new PdfOutputFilter($answers);
+                    break;
+            }
         }
-        return null;
-    }
 
-
-    /**
-     * @param Plan|null     $plan
-     * @param Question|null $question
-     * @param string        $format
-     *
-     * @return array|Collection|string
-     */
-    public static function getAnswer( Survey $survey = null, Question $question = null, $format = 'html' )
-    {
-        switch( $format ) {
-            case 'html':
-                $output = new HtmlOutputFilter($survey, $question);
-                break;
-            case 'form':
-                $output = new FormOutputFilter($survey, $question);
-                break;
-            case 'pdf':
-                $output = new PdfOutputFilter($survey, $question);
-                break;
-        }
         return $output->render();
     }
 
 
-    /**
-     * @param Plan|null     $plan
-     * @param Question|null $question
-     *
-     * @return array|Collection
-     */
+    public static function check( Survey $survey, Question $question )
+    {
+        $result = Answer::where([
+            'survey_id' => $survey->id,
+            'question_id' => $question->id
+        ])->get();
+
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static function getAnswerObject( Survey $survey = null, Question $question = null )
     {
         $result = new Collection;

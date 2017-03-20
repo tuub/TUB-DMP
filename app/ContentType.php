@@ -15,4 +15,9 @@ class ContentType extends Model
         return $this->belongsTo(MetadataRegistry::class);
     }
 
+    public function input_type()
+    {
+        return $this->belongsTo(InputType::class);
+    }
+
 }

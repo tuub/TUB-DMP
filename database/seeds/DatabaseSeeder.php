@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MetadataRegistryTableSeeder::class);
         $this->call(ProjectMetadataTableSeeder::class);
         $this->call(SurveyTableSeeder::class);
+        $this->call(AnswerTableSeeder::class);
     }
 }

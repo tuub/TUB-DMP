@@ -1,26 +1,32 @@
 <?php
 namespace App\Library;
 
-use App\Plan;
 use App\Question;
 use App\Answer;
 use App\Survey;
+use Illuminate\Database\Eloquent\Collection;
+
 
 class FormOutputFilter implements OutputInterface
 {
-    protected $survey;
-    protected $question;
+    protected $answers;
 
 
-    public function __construct( Survey $survey, Question $question )
+    public function __construct( Collection $answers )
     {
-        $this->survey   = $survey;
-        $this->question = $question;
+        $this->answers = $answers;
     }
+
 
     public function render()
     {
-        $output = Answer::getAnswerObject($this->survey, $this->question);
+        $output = new Collection;
+        foreach ($this->answers as $answer) {
+            $foo = json_decode($answer->value, true);
+            foreach($foo as $bar) {
+                $output->push($bar);
+            }
+        }
         return $output;
     }
 }

@@ -24,14 +24,7 @@
             {!! HTML::style('css/vendor.css') !!}
             {!! HTML::style('css/my.style.css') !!}
 
-            <!-- Misc JS
-            ================================================== -->
-            {!! HTML::script('js/jquery.js') !!}
-            {!! HTML::script('js/vendor.js') !!}
-            {!! HTML::script('js/env.js') !!}
-            {!! HTML::script('js/my.jquery.js') !!}
-
-            {!! HTML::script('https://unpkg.com/vue') !!}
+                {!! HTML::script('js/jquery.js') !!}
         @show
 
 <style>
@@ -89,11 +82,18 @@
     @include('partials.modal')
 @endif
 
-<!-- JS
-via Laravel-Elixir
-================================================== -->
 
-{!! HTML::script('js/my.vue.js') !!}
+@section('footer_assets')
+
+    <!-- Misc JS
+    ================================================== -->
+
+    {!! HTML::script('js/vendor.js') !!}
+    {!! HTML::script('js/env.js') !!}
+    {!! HTML::script('js/my.jquery.js') !!}
+
+    {{-- HTML::script('https://unpkg.com/vue') --}}
+    {{-- HTML::script('js/my.vue.js') --}}
 
 </body>
 </html>

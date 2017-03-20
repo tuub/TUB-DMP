@@ -17,33 +17,26 @@
             @endif
         </span>
         @if( $question->guidance or $question->comment or $question->reference or $question->hint )
+            <br/>
             <a href="#" class="show-question-info" data-rel="{{  $question->id }}"
                data-toggle="modal" data-target="#show-question-info-{{ $question->id }}" title="Show Question Info">
-               <i class="fa fa fa-info-circle " aria-hidden="true"> More Info</i>
+               <i class="fa fa fa-info-circle " aria-hidden="true"></i>
+               More Info
             </a>
             @include('partials.question.modal', $question)
-            <!--
-            <span class="help-block"><strong>Guidance:</strong> {!! HTML::decode($question->guidance) !!}</span>
-            -->
-        @endif
-        @if( $question->reference )
-            <br/><span class="reference">{!! HTML::decode($question->reference) !!}</span>
-        @endif
-        @if( $question->comment )
-            <br/>
-            <span class="comment">{!! HTML::decode($question->comment) !!}</span>
         @endif
     </label>
     <div class="col-md-16 col-xs-24">
-        {{-- Form::component( 'content_type', 'partials.question.form.content_type', [$survey, $question] ) --}}
-        {!! Form::input_type_constructor( $survey, $question ) !!}
-        @if( $question->hint )
-            <span class="hint-block">
-                <a href="#" class="expander" style="padding-left: 12px;">Click here for more information</a>
-                <div class="content">
-                    {!! HTML::decode($question->hint) !!}
-                </div>
-            </span>
+        {!! Form::content_type( $survey, $question ) !!}
+        @if( false )
+            @if( $question->hint )
+                <span class="hint-block">
+                    <a href="#" class="expander" style="padding-left: 12px;">Click here for more information</a>
+                    <div class="content">
+                        {!! HTML::decode($question->hint) !!}
+                    </div>
+                </span>
+            @endif
         @endif
     </div>
     <div class="col-md-2 col-xs-24 text-md-left text-xs-left">
