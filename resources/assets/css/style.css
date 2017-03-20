@@ -67,6 +67,10 @@ a.btn {
     color: #000;
 }
 
+a.btn-success {
+    color: #fff;
+}
+
 .control-label {
     text-align: left !important;
     padding-top: 0px !important;
