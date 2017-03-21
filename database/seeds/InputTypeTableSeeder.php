@@ -104,6 +104,20 @@ class InputTypeTableSeeder extends Seeder
         ]);
 
         InputType::create([
+            'id' => 14,
+            'title' => 'Person List',
+            'identifier' => 'person_list',
+            'category' => 'listgroup'
+        ]);
+
+        InputType::create([
+            'id' => 15,
+            'title' => 'Organzation List',
+            'identifier' => 'organization_list',
+            'category' => 'listgroup'
+        ]);
+
+        InputType::create([
             'id' => 99,
             'title' => 'Frage als Überschrift',
             'identifier' => 'headline',

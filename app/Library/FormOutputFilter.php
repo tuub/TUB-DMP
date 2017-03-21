@@ -1,9 +1,6 @@
 <?php
 namespace App\Library;
 
-use App\Question;
-use App\Answer;
-use App\Survey;
 use Illuminate\Database\Eloquent\Collection;
 
 
@@ -22,11 +19,18 @@ class FormOutputFilter implements OutputInterface
     {
         $output = new Collection;
         foreach ($this->answers as $answer) {
-            $foo = json_decode($answer->value, true);
-            foreach($foo as $bar) {
-                $output->push($bar);
+            /* TODO: Cast JSON to Array in Answer Model */
+            $answer = json_decode($answer->value, true);
+            //var_dump($answer['value']);
+            if( is_array($answer['value']) ) {
+                foreach ($answer['value'] as $value) {
+                    $output->push($value);
+                }
+            } else {
+                $output->push($answer['value']);
             }
         }
+
         return $output;
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HtmlOutputFilter;
-use App\Template;
+use App\Answer;
 use Request;
 use App\Http\Requests\SurveyRequest;
 use App\Survey;
@@ -51,6 +51,39 @@ class SurveyController extends Controller
         throw new NotFoundHttpException;
     }
 
+
+    // TODO: render method?
+    public function edit($id) {
+        $survey = $this->survey->with('plan', 'template')->findOrFail($id);
+        $questions = $this->survey->with('template', 'template.questions', 'template.questions.content_type')->get();
+        return view('survey.edit', compact('survey', 'questions'))->render();
+    }
+
+
+    public function update(SurveyRequest $request)
+    {
+        $survey = $this->survey->findOrFail($request->id);
+        Answer::where('survey_id', $survey->id)->delete();
+        //TODO: do the array_filter already here and save the later if/else?
+        $data = $request->except(['_token', '_method', 'save']);
+        foreach( $data as $question_id => $answer_value ) {
+            if (array_filter($answer_value)) {
+                Answer::create([
+                    'survey_id'   => $survey->id,
+                    'question_id' => $question_id,
+                    'value'       => json_encode(['value' => $answer_value])
+                ]);
+            }
+        }
+        return Redirect::back();
+    }
+
+
+
+
+
+
+
     /*
     public function store(PlanRequest $request)
     {
@@ -80,59 +113,10 @@ class SurveyController extends Controller
     */
 
 
-    // TODO: render method?
-    public function edit($id) {
-        $survey = $this->survey->with('plan', 'template')->findOrFail($id);
-        $questions = $this->survey->with('template', 'template.questions', 'template.questions.content_type')->get();
-        return view('survey.edit', compact('survey', 'questions'))->render();
-    }
 
 
-    public function update(SurveyRequest $request)
-    {
-        $survey = $this->survey->findOrFail($request->id);
-        $data = array_filter($request->all(), 'strlen');
-        dd($data);
-        /*
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
-        */
-        //$plan->update($data);
-        if ($request->ajax()) {
-            return response()->json([
-                'response' => 200,
-                'msg' => 'DMP updated!'
-            ]);
-        };
-            /*
-            $input = Input::all();//Get all the old input.
-            $input['autoOpenModal'] = 'true';//Add the auto open indicator flag as an input.
-            return Redirect::back()
-                ->withErrors($this->messageBag)
-                ->withInput($input);//Passing the old input and the flag.
-            */
-            //return response()->json(['message' => 'OK']);
 
-        //return Redirect::route('dashboard');
-        /*
-        if($this->plan->updatePlan($request)) {
-            $msg = 'Save';
-            if ($request->ajax()) {
-                return response()->json(['message' => $msg]);
-            }
-            Notifier::success($msg)->flash()->create();
-        } else {
-            $msg = 'Not saved!';
-            if ($request->ajax()) {
-                return response()->json(['message' => $msg]);
-            }
-            Notifier::error($msg)->flash()->create();
-        }
-        return Redirect::back();
-        */
-        //return $request->ajax();
-    }
+
 
 
     public function toggle($id)

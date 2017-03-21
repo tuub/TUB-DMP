@@ -17,9 +17,12 @@ implements AnswerInterface
 
 class Answer extends Model
 {
-    protected $table = 'answers';
-    public $timestamps = true;
-    protected $guarded = [];
+    protected $table    = 'answers';
+    public $timestamps  = true;
+    protected $guarded  = [];
+    protected $casts    = [
+        'value' => 'array',
+    ];
 
     public function question()
     {
@@ -37,7 +40,7 @@ class Answer extends Model
         $output = null;
         $answers = Answer::check( $survey, $question );
 
-        if( $answers ) {
+        if ($answers) {
             switch ($format) {
                 case 'html':
                     $output = new HtmlOutputFilter($answers);
@@ -64,9 +67,6 @@ class Answer extends Model
 
         return $result;
     }
-
-
-
 
 
 

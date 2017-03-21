@@ -294,10 +294,6 @@ Route::group(['middleware' => 'auth'], function()
         $survey->template_id = 1;
         $survey->save();
 
-
-
-
-
     });
 
     Route::get('/test5', function(){
@@ -309,6 +305,21 @@ Route::group(['middleware' => 'auth'], function()
             $foo = json_decode($answer->value, true);
             var_dump($foo[0]);
         }
+
+    });
+
+    Route::get('/test6', function(){
+        $answer = new \App\Answer;
+        $answer->survey_id = 1;
+        $answer->question_id = 122;
+        $answer->value = json_encode(['value' => 'Goo Goo Gjoob!']);
+        $answer->save();
+
+        $answer = new \App\Answer;
+        $answer->survey_id = 1;
+        $answer->question_id = 130;
+        $answer->value = json_encode(['value' => ['0' => 'Goo Goo Gjoob!', '1' => 'Across The Universe']]);
+        $answer->save();
 
     });
 });

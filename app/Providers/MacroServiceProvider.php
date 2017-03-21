@@ -27,16 +27,18 @@ class MacroServiceProvider extends ServiceProvider
     {
         Form::macro('content_type', function( $survey, $question )
         {
+            $answers = Answer::get($survey, $question, 'form');
+
+            //var_dump($answers);
+            //exit();
             $options = [
                 'macro'         => 'question_' . $question->content_type->identifier,
                 'input_type'    => $question->content_type->input_type->identifier,
                 'name'          => $question->id,
                 'default'       => QuestionOption::getDefaultValue( $question ),
-                'answers'       => Answer::get($survey, $question, 'form'),
+                'answers'       => $answers,
                 'read_only'     => $question->readonly ? 'readonly' : ''
             ];
-
-            //var_dump($options['answers']);
 
             $macro = $options['macro'];
             Form::component( $options['macro'], 'partials.components.form.' . $options['input_type'], ['question', 'name', 'answers' => null, 'default' => null, 'read_only' => null] );
