@@ -29,7 +29,6 @@ class CreateQuestionsTable extends Migration
             $table->text('text');
             $table->text('output_text')->default(null)->nullable();
             $table->integer('content_type_id')->unsigned()->default(1);
-            $table->text('value')->nullable();
             $table->text('default')->nullable();
             $table->text('prepend')->nullable();
             $table->text('append')->nullable();

@@ -27,6 +27,25 @@ class Survey extends Model
         return $this->hasManyThrough(Answer::class, Question::class);
     }
 
+    public function setDefaults()
+    {
+        $questions = $this->template->questions()->active()->get();
+        foreach ($questions as $question) {
+            if ($question->default) {
+                Answer::create([
+                    'survey_id' => $this->id,
+                    'question_id' => $question->id,
+                    'value' => ['value' => $question->default],
+                ]);
+            }
+        }
+
+        return true;
+    }
+
+
+
+
     public function getQuestionCount()
     {
         $count = $this->template->questions()->active()->mandatory()->count();
