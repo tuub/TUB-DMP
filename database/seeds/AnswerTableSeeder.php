@@ -12,14 +12,14 @@ class AnswerTableSeeder extends Seeder
     {
         Answer::create([
             'survey_id' => 1,
-            'question_id' => 121,
-            'value' => '{ "0": "Lorem Ipsum" }',
+            'question_id' => 122,
+            'value' => json_decode('{ "value": "Lorem Ipsum" }', JSON_UNESCAPED_SLASHES),
         ]);
 
         Answer::create([
             'survey_id' => 1,
             'question_id' => 130,
-            'value' => '{ "0": "Video Data", "1": "Awesome Data", "2": "Freaky Data" }',
+            'value' => json_decode('{ "value": ["Video Data", "Awesome Data", "Freaky Data"] }', JSON_UNESCAPED_SLASHES),
         ]);
     }
 }

@@ -80,6 +80,10 @@ class PlanController extends Controller
         $survey->template_id = $data['template_id'];
         $survey->save();
 
+        /* Set default answers */
+        $survey->setDefaults();
+
+
         /* Fire plan create event */
         Event::fire(new PlanCreated($plan));
 

@@ -69,11 +69,21 @@ class SurveyController extends Controller
         $data = $request->except(['_token', '_method', 'save']);
         foreach( $data as $question_id => $answer_value ) {
             if (array_filter($answer_value)) {
+
+                if(is_array($answer_value)) {
+                    $answer = $answer_value;
+                } else {
+                    $answer = $answer_value[0];
+                }
+
+                var_dump(gettype($answer));
+                /*
                 Answer::create([
                     'survey_id'   => $survey->id,
                     'question_id' => $question_id,
-                    'value'       => json_encode(['value' => $answer_value])
+                    'value'       => ['value' => $answer]
                 ]);
+                */
             }
         }
         return Redirect::back();
