@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Question;
 use App\Template;
 use App\Section;
-use App\InputType;
+use App\ContentType;
 
 use App\Http\Requests\Admin\CreateQuestionRequest;
 use App\Http\Requests\Admin\UpdateQuestionRequest;
@@ -21,14 +21,14 @@ class QuestionController extends Controller {
     protected $question;
     protected $template;
     protected $section;
-    protected $input_type;
+    protected $content_type;
 
-    public function __construct( Question $question, Template $template, Section $section, InputType $input_type )
+    public function __construct( Question $question, Template $template, Section $section, ContentType $content_type )
     {
         $this->question = $question;
         $this->template = $template;
         $this->section = $section;
-        $this->input_type = $input_type;
+        $this->content_type = $content_type;
     }
 
 
@@ -54,7 +54,7 @@ class QuestionController extends Controller {
         $questions = $this->question->all()->pluck('text', 'id');
         $templates = $this->template->all()->pluck('name', 'id');
         $sections = $this->section->all()->pluck('name', 'id');
-        $input_types = $this->input_type->all()->pluck('name', 'id');
+        $content_types = $this->content_type->all()->pluck('name', 'id');
         return View::make('admin.question.new', compact('question','questions','templates','sections','input_types'));
     }
 
@@ -72,10 +72,9 @@ class QuestionController extends Controller {
         $question->order = $request->get('order');
         $question->template_id      = $request->get('template_id');
         $question->section_id      = $request->get('section_id');
-        $question->parent_question_id      = $request->get('parent_question_id');
+        $question->parent_id      = $request->get('parent_id');
         $question->output_text      = $request->get('output_text');
-        $question->input_type_id      = $request->get('input_type_id');
-        $question->value      = $request->get('value');
+        $question->content_type_id      = $request->get('content_type_id');
         $question->default      = $request->get('default');
         $question->prepend      = $request->get('prepend');
         $question->append      = $request->get('append');
@@ -116,8 +115,8 @@ class QuestionController extends Controller {
         $questions = $this->question->all()->pluck('text', 'id');
         $templates = $this->template->all()->pluck('name', 'id');
         $sections = $this->section->all()->pluck('name', 'id');
-        $input_types = $this->input_type->all()->pluck('name', 'id');
-        return View::make('admin.question.edit', compact('question','questions','templates','sections','input_types'));
+        $content_types = $this->content_type->all()->pluck('name', 'id');
+        return View::make('admin.question.edit', compact('question','questions','templates','sections','content_types'));
     }
 
     /**

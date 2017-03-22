@@ -47,10 +47,10 @@
                     </div>
                     <div class="form-group row container">
                         <div class="col-md-2">
-                            {!! Form::Label( 'parent_question_id', 'Parent' ) !!}
+                            {!! Form::Label( 'parent_id', 'Parent' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('parent_question_id', [null => 'None'] + $questions->toArray(), $question->question_parent_id, array('class' => 'form-control')) !!}
+                            {!! Form::select('parent_id', [null => 'None'] + $questions->toArray(), $question->parent_id, array('class' => 'form-control')) !!}
                             <span class="help-block {{ ($errors->first('parent_question_id') ? 'form-error' : '') }}">{{ $errors->first('parent_question_id') }}</span>
                         </div>
                     </div>
@@ -74,12 +74,12 @@
                     </div>
                     <div class="form-group row container" id="vue-instance">
                         <div class="col-md-2">
-                            {!! Form::Label( 'input_type_id', 'Input Type' ) !!}
+                            {!! Form::Label( 'content_type_id', 'Content Type' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('input_type_id', [null => 'None'] + $input_types->toArray(), $question->input_type_id, array('class' => 'form-control', 'v-model' => 'input_type',  'v-on:change' => 'showOptions')) !!}
+                            {!! Form::select('content_type_id', [null => 'None'] + $content_types->toArray(), $question->input_type_id, array('class' => 'form-control', 'v-model' => 'input_type',  'v-on:change' => 'showOptions')) !!}
                             <pre>@{{ $data | json }}</pre>
-                            <span class="help-block {{ ($errors->first('input_type_id') ? 'form-error' : '') }}">{{ $errors->first('input_type_id') }}</span>
+                            <span class="help-block {{ ($errors->first('content_type_id') ? 'form-error' : '') }}">{{ $errors->first('content_type_id') }}</span>
                         </div>
                     </div>
                     <div class="form-group row container">
@@ -102,23 +102,14 @@
                     </div>
                     <div class="form-group row container">
                         <div class="col-md-2">
-                            {!! Form::Label( 'value', 'Value' ) !!}
+                            {!! Form::Label( 'default', 'Default Value' ) !!}
                         </div>
                         <div class="col-md-10">
-                            @if( strlen( $question->value ) > 75 )
-                                {!! Form::Textarea( 'value', $question->value, array('class' => 'form-control') ) !!}
+                            @if( strlen( $question->default ) > 75 )
+                                {!! Form::Textarea( 'default', $question->default, array('class' => 'form-control') ) !!}
                             @else
-                                {!! Form::Text( 'value', $question->value, array('class' => 'form-control') ) !!}
+                                {!! Form::Text( 'default', $question->default, array('class' => 'form-control') ) !!}
                             @endif
-                            <span class="help-block {{ ($errors->first('value') ? 'form-error' : '') }}">{{ $errors->first('value') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
-                            {!! Form::Label( 'default', 'Default' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::Text( 'default', $question->default, array('class' => 'form-control') ) !!}
                             <span class="help-block {{ ($errors->first('default') ? 'form-error' : '') }}">{{ $errors->first('default') }}</span>
                         </div>
                     </div>
