@@ -23,7 +23,7 @@ class HtmlOutputFilter implements OutputInterface
             if (is_array($answer->value)) {
                 foreach ($answer->value as $value) {
                     if (is_array($value)) {
-                        $output = implode(';', $value);
+                        $output = nl2br(implode(';', $value));
                     } else {
                         //$output->push($value);
                     }
