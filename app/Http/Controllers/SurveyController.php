@@ -72,8 +72,10 @@ class SurveyController extends Controller
 
         Answer::saveAll($survey, $data);
 
-        $survey->completion = $survey->calculateCompletion();
-        $survey->save();
+        $survey->setCompletionRate();
+
+        //$survey->completion = $survey->calculateCompletion();
+        //$survey->save();
 
         return Redirect::back();
     }

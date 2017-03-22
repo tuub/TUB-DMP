@@ -9,7 +9,7 @@ class Survey extends Model
     public $timestamps = true;
     protected $table = 'surveys';
     protected $dates = ['created_at', 'updated_at'];
-    protected $fillable = ['plan_id', 'template_id'];
+    protected $fillable = ['plan_id', 'template_id', 'completion'];
 
 
     public function plan()
@@ -31,6 +31,16 @@ class Survey extends Model
     public function calculateCompletion()
     {
         return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
+    }
+
+
+    public function setCompletionRate()
+    {
+        $this->update([
+            'completion' => $this->calculateCompletion()
+        ]);
+
+        return true;
     }
 
 
