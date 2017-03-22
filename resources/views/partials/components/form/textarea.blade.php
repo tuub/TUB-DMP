@@ -2,7 +2,7 @@
 
 @if( $answers->count() )
     @foreach( $answers as $answer )
-        {{ Form::Textarea( $name . '[]', null, [
+        {{ Form::Textarea( $name . '[]', $answer, [
             'data-type' => 'text',
             'rows' => 6,
             'class' => 'question form-control',

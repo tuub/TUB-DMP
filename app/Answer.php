@@ -2,7 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection as Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Library\HtmlOutputFilter;
 use App\Library\FormOutputFilter;
@@ -68,6 +69,34 @@ class Answer extends Model
         return $result;
     }
 
+
+    public static function formatForOutput( EloquentCollection $answers, ContentType $content_type )
+    {
+        $result = null;
+        switch($content_type->identifier) {
+            case 'list':
+                $result = collect([$answers->implode(',', 'value')]);
+                break;
+            default:
+                $result = $answers;
+        }
+
+        return $result;
+    }
+
+    public static function formatForInput( Collection $answers, ContentType $content_type )
+    {
+        $result = null;
+        switch($content_type->identifier) {
+            case 'list':
+                $result = explode(',', $answers[0]);
+                break;
+            default:
+                $result = $answers;
+        }
+
+        return $result;
+    }
 
 
 

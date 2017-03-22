@@ -21,5 +21,13 @@ class AnswerTableSeeder extends Seeder
             'question_id' => 130,
             'value' => json_decode('{ "value": ["Video Data", "Awesome Data", "Freaky Data"] }', JSON_UNESCAPED_SLASHES),
         ]);
+
+        Answer::create([
+            'survey_id' => 1,
+            'question_id' => 133,
+            'value' => json_decode('{ "value": {"alpha": 5, "omega": 125} }', JSON_UNESCAPED_SLASHES),
+        ]);
+
+
     }
 }

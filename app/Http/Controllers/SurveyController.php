@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\HtmlOutputFilter;
 use App\Answer;
+use App\Question;
+
 use Request;
 use App\Http\Requests\SurveyRequest;
 use App\Survey;
@@ -69,24 +71,27 @@ class SurveyController extends Controller
         $data = $request->except(['_token', '_method', 'save']);
         foreach( $data as $question_id => $answer_value ) {
             if (array_filter($answer_value)) {
-
                 if(is_array($answer_value)) {
-                    $answer = $answer_value;
+                    //echo 'ARRAY';
+                    $answer = Answer::formatForInput(
+                        collect($answer_value),
+                        Question::find($question_id)->content_type
+                    );
                 } else {
+                    //echo 'NO ARRAY';
                     $answer = $answer_value[0];
                 }
 
-                var_dump(gettype($answer));
-                /*
+
                 Answer::create([
                     'survey_id'   => $survey->id,
                     'question_id' => $question_id,
                     'value'       => ['value' => $answer]
                 ]);
-                */
+
             }
         }
-        return Redirect::back();
+        //return Redirect::back();
     }
 
 

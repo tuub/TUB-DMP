@@ -28,9 +28,9 @@ class MacroServiceProvider extends ServiceProvider
         Form::macro('content_type', function( $survey, $question )
         {
             $answers = Answer::get($survey, $question, 'form');
+            // Convert Answer Data according to content type
+            $answers = Answer::formatForOutput($answers, $question->content_type);
 
-            //var_dump($answers);
-            //exit();
             $options = [
                 'macro'         => 'question_' . $question->content_type->identifier,
                 'input_type'    => $question->content_type->input_type->identifier,

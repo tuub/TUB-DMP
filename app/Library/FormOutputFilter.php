@@ -20,14 +20,15 @@ class FormOutputFilter implements OutputInterface
         $output = new Collection;
         foreach ($this->answers as $answer) {
             /* TODO: Cast JSON to Array in Answer Model */
-            var_dump(gettype($answer->value));
-            foreach ($answer->value as $value) {
-                if( is_array($value) ) {
-                    foreach ($value as $k => $v) {
-                        $output->push([$k => $v]);
+            if (is_array($answer->value)) {
+                foreach ($answer->value as $value) {
+                    if (is_array($value)) {
+                        foreach($value as $k => $v) {
+                            $output->put($k, $v);
+                        }
+                    } else {
+                        $output->push($value);
                     }
-                } else {
-                    $output->push($value);
                 }
             }
         }
