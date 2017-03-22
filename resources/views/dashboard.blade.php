@@ -29,6 +29,25 @@
                 }
             });
 
+            $('a.edit-project').bind('click', function (e) {
+                e.preventDefault();
+
+                var form    = $('#edit-project-form');
+                var div     = form.parent();
+
+                $.ajax({
+                    type    : 'GET',
+                    url     : '/my/project/' + $(this).data('rel') + '/show',
+                    dataType: 'json',
+                    success : function (json) {
+                        $.each(json, function (field, value) {
+                            form.find('#' + field).val(value);
+                        });
+                        div.modal();
+                    }
+                });
+            });
+
             $('a.show-plans').bind('click', function (e) {
                 e.preventDefault();
                 //console.log($(this).data('href'));
@@ -71,7 +90,7 @@
 
                 $.ajax({
                     type    : 'GET',
-                    url     : '/project/' + $(this).data('rel') + '/show',
+                    url     : '/my/project/' + $(this).data('rel') + '/show',
                     dataType: 'json',
                     success : function (json) {
                         form.find('#project_id').val(json.id);
@@ -196,6 +215,7 @@
                             <th style="width: 5%;">Projects</th>
                             <th style="width: 15%;">Data Source</th>
                             <th>Status</th>
+                            <th style="width: 10%;">Tools</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -209,6 +229,7 @@
         </div>
     </div>
 
+    @include('partials.project.modal')
     @include('partials.plan.modal')
 
 @stop

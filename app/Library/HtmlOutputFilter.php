@@ -1,23 +1,39 @@
 <?php
 namespace App\Library;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Plan;
 use App\Question;
 use App\Answer;
 
 class HtmlOutputFilter implements OutputInterface
 {
-    protected $plan;
-    protected $question;
+    protected $answers;
 
-    public function __construct( Plan $plan, Question $question )
+
+    public function __construct( Collection $answers )
     {
-        $this->plan = $plan;
-        $this->question = $question;
+        $this->answers = $answers;
     }
 
     public function render()
     {
+        $output = ' --- ';
+        foreach ($this->answers as $answer) {
+            if (is_array($answer->value)) {
+                foreach ($answer->value as $value) {
+                    if (is_array($value)) {
+                        $output = implode(';', $value);
+                    } else {
+                        //$output->push($value);
+                    }
+                }
+            }
+        }
+
+        return $output;
+
+        /*
         $output = '';
         $answers = Answer::getAnswerObject($this->plan, $this->question);
         if( count($answers) > 0 ) {
@@ -38,6 +54,8 @@ class HtmlOutputFilter implements OutputInterface
         } else {
             $output .= ' - ';
         }
+
         return $output;
+        */
     }
 }

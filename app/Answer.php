@@ -2,14 +2,13 @@
 
 namespace App;
 
+use App\Survey;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Library\HtmlOutputFilter;
 use App\Library\FormOutputFilter;
 use App\Library\PdfOutputFilter;
-
-use App\Survey;
 
 /*
 use AnswerInterface;
@@ -67,6 +66,35 @@ class Answer extends Model
         ])->get();
 
         return $result;
+    }
+
+
+    public static function saveAll( Survey $survey, $data )
+    {
+        self::where('survey_id', $survey->id)->delete();
+
+        foreach( $data as $question_id => $answer_value ) {
+            if (array_filter($answer_value)) {
+                if(is_array($answer_value)) {
+                    //echo 'ARRAY';
+                    $answer = self::formatForInput(
+                        collect($answer_value),
+                        Question::find($question_id)->content_type
+                    );
+                } else {
+                    //echo 'NO ARRAY';
+                    $answer = $answer_value[0];
+                }
+
+                self::create([
+                    'survey_id'   => $survey->id,
+                    'question_id' => $question_id,
+                    'value'       => ['value' => $answer]
+                ]);
+            }
+        }
+
+        return true;
     }
 
 

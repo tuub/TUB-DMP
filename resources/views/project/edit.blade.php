@@ -1,34 +1,22 @@
-@extends('layouts.bootstrap')
 
-@section('navigation')
-    <li>{{ link_to_route( 'dashboard', 'Zurück' ) }}</li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Datenmanagementplan <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li>{{ link_to_route( 'dashboard', 'Zurück zur Übersicht' ) }}</li>
-        </ul>
-    </li>
-@stop
+<!-- Modal -->
 
-@section('headline')
-    <h1>Edit Project</h1>
-@stop
+<div class="modal fade" id="edit-project" tabindex="-1" role="dialog" aria-labelledby="edit-project">
 
-@section('title')
-    {{ $project->identifier }}
-@stop
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h1 class="modal-title">Project Metadata {{ $project->identifier }}</h1>
+            </div>
+            <div class="modal-body">
+                {!! BootForm::open()->class('')->action( route('project.update', $project->id) )->put() !!}
+                {!! BootForm::bind($project) !!}
+                {!! BootForm::text('ID', 'id') !!}
+                {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
+                {{-- BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) --}}
 
-@section('body')
-
-    <div class="panel panel-default">
-        <div class="panel-heading text-center">
-            Edit Project "{{ $project->identifier }}"
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                {!! Form::open(['method' => 'PUT', 'route' => ['project.update', $project->id], 'class' => '', 'role' => 'form']) !!}
-
-                @foreach( $metadata_fields as $metadata_field )
+                @foreach( $project->metadata_fields as $metadata_field )
                     <div class="form-group row container">
                         <div class="col-md-2">
                             {!! Form::Label( $metadata_field->identifier, $metadata_field->name ) !!}
@@ -39,16 +27,12 @@
                         </div>
                     </div>
                 @endforeach
-                <div class="form-group row container">
-                    <div class="col-md-2">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-10">
-                        {!! Form::submit('Update', array('class' => 'button btn btn-success')) !!}
-                    </div>
-                </div>
-                {!! Form::close() !!}
+            </div>
+            <div class="modal-footer">
+                <a href="" class="btn btn-default" data-dismiss="modal">OK</a>
+                {!! BootForm::submit('Save')->class('btn btn-success') !!}
+                {!! BootForm::close() !!}
             </div>
         </div>
     </div>
-@stop
+</div>

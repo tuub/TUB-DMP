@@ -49,7 +49,8 @@ class ProjectController extends Controller
     }
 
     public function show($id) {
-        $project = $this->project->findOrFail($id);
+        $project = $this->project->with('metadata.metadata_registry')->findOrFail($id);
+        //dd($project->metadata->load('metadata_registry')->toJson());
         if( $project) {
             if (Request::ajax()) {
                 return $project->toJson();

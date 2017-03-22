@@ -88,7 +88,7 @@ Route::group(['middleware' => 'auth'], function()
     /* SHOW */
     Route::get('/plan/{id}/show',[
         'uses' => 'PlanController@show',
-        'as' => 'show_plan'
+        'as' => 'plan.show'
     ]);
     /* STORE */
     Route::put('/plan/store', [
@@ -128,20 +128,22 @@ Route::group(['middleware' => 'auth'], function()
 
     /* Project */
 
-
-    /* EDIT */
-    Route::get('/project/{id}/show', [
+    /* SHOW */
+    Route::get('/my/project/{id}/show',[
         'uses' => 'ProjectController@show',
         'as' => 'project.show'
     ]);
-
+    /* STORE */
+    Route::put('/my/project/store', [
+        'uses' => 'ProjectController@store',
+        'as' => 'project.store'
+    ]);
     /* EDIT */
     Route::get('/my/project/{id}/edit', [
         'uses' => 'ProjectController@edit',
         'as' => 'project.edit'
     ]);
-    /* UPDATE */
-    Route::post('/my/project/{id}/update', [
+    Route::put('/my/project/update', [
         'uses' => 'ProjectController@update',
         'as' => 'project.update'
     ]);

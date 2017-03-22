@@ -54,6 +54,10 @@
         <span class="text-info">{{ $project->status }}</span>
     </td>
     <td>
+        <a href="{{ route('project.show', $project->id)}}" class="show-project" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#show-project-{{$project->id}}" title="Show Project"><i class="fa fa-eye"></i></a>
+        <a href="{{ route('project.edit', $project->id)}}" class="edit-project" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#edit-plan-{{$project->id}}" title="Edit Project"><i class="fa fa-pencil"></i></a>
+    </td>
+    <td>
         <a href="#" class="show-plans" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
         <a href="#" class="hide-plans" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
     </td>

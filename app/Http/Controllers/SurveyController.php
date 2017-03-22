@@ -45,7 +45,7 @@ class SurveyController extends Controller
         $questions = $survey->template->questions;
         if( $survey ) {
             if (Request::ajax()) {
-                return $questions->toJson();
+            //    return $questions->toJson();
             } else {
                 return view('survey.show', compact('survey'));
             }
@@ -66,32 +66,14 @@ class SurveyController extends Controller
     public function update(SurveyRequest $request)
     {
         $survey = $this->survey->findOrFail($request->id);
-        Answer::where('survey_id', $survey->id)->delete();
+
         //TODO: do the array_filter already here and save the later if/else?
         $data = $request->except(['_token', '_method', 'save']);
-        foreach( $data as $question_id => $answer_value ) {
-            if (array_filter($answer_value)) {
-                if(is_array($answer_value)) {
-                    //echo 'ARRAY';
-                    $answer = Answer::formatForInput(
-                        collect($answer_value),
-                        Question::find($question_id)->content_type
-                    );
-                } else {
-                    //echo 'NO ARRAY';
-                    $answer = $answer_value[0];
-                }
+
+        Answer::saveAll(survey, $data);
 
 
-                Answer::create([
-                    'survey_id'   => $survey->id,
-                    'question_id' => $question_id,
-                    'value'       => ['value' => $answer]
-                ]);
-
-            }
-        }
-        //return Redirect::back();
+        return Redirect::back();
     }
 
 

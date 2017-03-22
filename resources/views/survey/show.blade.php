@@ -16,15 +16,16 @@
 
 @section('body')
         <ol id="plan-toc">
-            @foreach( $survey->template->sections as $section )
+            @foreach( $survey->template->sections()->active()->get() as $section )
                 <li><a href="#{{ $section->keynumber }}">{{ $section->name }}</a></li>
             @endforeach
         </ol>
 
-        @foreach( $survey->template->sections as $section )
+        @foreach( $survey->template->sections()->active()->get() as $section )
             <div class="col-md-24">
                 <h3>
-                    <a class="anchor" name="{{ $section->keynumber }}"></a>{{ $section->keynumber }}. {{ $section->name }}
+                    <a class="anchor" name="{{ $section->keynumber }}"></a>
+                    {{ $section->full_name }}
                 </h3>
                 <div class="section-text">
                     @foreach( $section->questions()->active()->parent()->get() as $question )

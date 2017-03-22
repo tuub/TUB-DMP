@@ -30,6 +30,16 @@ class Survey extends Model
     public function setDefaults()
     {
         $questions = $this->template->questions()->active()->get();
+        $answers = [];
+        foreach( $questions as $question ) {
+            if( $question->default ) {
+                $answers[$question->id] = [$question->default];
+            }
+        }
+        Answer::saveAll( $this, $answers );
+
+        //TODO: Refactor to Answer::saveAll ?
+        /*
         foreach ($questions as $question) {
             if ($question->default) {
                 Answer::create([
@@ -39,6 +49,7 @@ class Survey extends Model
                 ]);
             }
         }
+        */
 
         return true;
     }

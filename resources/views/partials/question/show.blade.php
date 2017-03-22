@@ -20,6 +20,7 @@
     <div class="col-md-24">
         <span class="question-answer-text">
             @if( $question->input_type != 'headline')
+                {!! App\Answer::get( $survey, $question, 'html' ) !!}
                 <?php
                 //$answers = App\Answer::getAnswer( $plan, $question );
                 ?>
