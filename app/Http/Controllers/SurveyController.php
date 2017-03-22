@@ -70,8 +70,10 @@ class SurveyController extends Controller
         //TODO: do the array_filter already here and save the later if/else?
         $data = $request->except(['_token', '_method', 'save']);
 
-        Answer::saveAll(survey, $data);
+        Answer::saveAll($survey, $data);
 
+        $survey->completion = $survey->calculateCompletion();
+        $survey->save();
 
         return Redirect::back();
     }

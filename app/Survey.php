@@ -27,6 +27,13 @@ class Survey extends Model
         return $this->hasManyThrough(Answer::class, Question::class);
     }
 
+
+    public function calculateCompletion()
+    {
+        return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
+    }
+
+
     public function setDefaults()
     {
         $questions = $this->template->questions()->active()->get();
@@ -75,15 +82,9 @@ class Survey extends Model
             /* See: http://stackoverflow.com/questions/28651727/laravel-eloquent-distinct-and-count-not-working-properly-together */
             /* Does not work */ //$counter[] = Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupBy( 'question_id' )->count();
             /* Works as well */ //$counter[] = count(Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupby('question_id')->distinct()->get());
-            $counter[] = Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->distinct('question_id')->count('question_id');
+            $counter[] = Answer::where('question_id', $question->id)->where('survey_id', $this->id)->distinct('question_id')->count('question_id');
         }
         $count = array_sum( $counter );
         return $count;
     }
-
-    public function getQuestionAnswerPercentage()
-    {
-        return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
-    }
-
 }
