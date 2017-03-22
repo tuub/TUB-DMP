@@ -33,7 +33,9 @@
             </div>
             <div class="modal-body">
                 {!! BootForm::hidden('id')->id('id') !!}
-                @if (true)
+                {!! BootForm::text('Project ID', 'identifier')->value($project->identifier)->readonly('readonly') !!}
+
+            @if (true)
                     @foreach( $project->metadata->load('metadata_registry') as $metadata_field )
                         <?php //var_dump($metadata_field->metadata_registry->title) ?>
                         <?php //var_dump($metadata_field->language) ?>
@@ -44,13 +46,12 @@
                                 {!! Form::Label( $metadata_field->metadata_registry->identifier, $metadata_field->metadata_registry->name ) !!}
                             </div>
                             <div class="col-md-10">
-                                {!! Form::Text( $metadata_field->metadata_registry->identifier, $metadata_field->content, array('class' => 'form-control xs') ) !!}
+                                {!! Form::Text( $metadata_field->metadata_registry->identifier . '[' . $metadata_field->language . ']', $metadata_field->content, array('class' => 'form-control xs') ) !!}
                             </div>
                         </div>
                     @endforeach
                 @endif
 
-                {!! BootForm::text('DMP Title', 'title') !!}
                 {!! BootForm::text('DMP Version', 'version') !!}
             </div>
             <div class="modal-footer">

@@ -6,7 +6,7 @@
                     <i class="fa fa-file-text-o fa-1x"></i>
                 </div>
                 <div class="col-md-20 col-sm-17 col-xs-18">
-                    {{ $plan->title }}
+                    <span class="plan-title">{{ $plan->title }}</span>
                     <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
                         <i class="fa fa-pencil"></i>
                     </a>
@@ -15,8 +15,8 @@
                     @if( $plan->is_final )
                         <i class="fa fa-check-square-o fa-1x" aria-hidden="true"></i><span class="hidden-xs"></span>
                     @else
-                        @if (false)
-                            <span class="plan-status">{{ $plan->getQuestionAnswerPercentage() }}&nbsp;%</span>
+                        @if (true)
+                            <span class="plan-status">{{ $plan->survey->completion }}&nbsp;%</span>
                         @endif
                     @endif
                 </div>
@@ -35,7 +35,7 @@
                     <div class="tools">
                         @unless( $plan->is_final )
                             <a href="{{ URL::route('survey.edit', [$plan->id]) }}" class="btn btn-default btn-xs" title="Edit Survey">
-                                <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit Survey</span>
+                                <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit</span>
                             </a>
                         @endunless
                         <a href="{{ URL::route('survey.show', [$plan->id]) }}" class="btn btn-default btn-xs" title="View">

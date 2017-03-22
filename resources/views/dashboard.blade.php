@@ -216,7 +216,7 @@
                             <th style="width: 15%;">Data Source</th>
                             <th>Status</th>
                             <th style="width: 10%;">Tools</th>
-                            <th>&nbsp;</th>
+                            <th style="width: 5%;">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -54,12 +54,16 @@
         <span class="text-info">{{ $project->status }}</span>
     </td>
     <td>
-        <a href="{{ route('project.show', $project->id)}}" class="show-project" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#show-project-{{$project->id}}" title="Show Project"><i class="fa fa-eye"></i></a>
-        <a href="{{ route('project.edit', $project->id)}}" class="edit-project" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#edit-plan-{{$project->id}}" title="Edit Project"><i class="fa fa-pencil"></i></a>
+        <a href="{{ route('project.show', $project->id)}}" class="show-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#show-project-{{$project->id}}" title="Show Project">
+            <i class="fa fa-eye"></i></a><!--<span class="hidden-sm hidden-xs"> Show</span>-->
+        </a>
+        <a href="{{ route('project.edit', $project->id)}}" class="edit-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#edit-project-{{$project->id}}" title="Edit Project">
+            <i class="fa fa-pencil"></i></a><!--<span class="hidden-sm hidden-xs"> Edit</span>-->
+        </a>
     </td>
     <td>
-        <a href="#" class="show-plans" data-href="{{  $project->id }}"><i class="fa fa-plus-square" aria-hidden="true"></i></a>
-        <a href="#" class="hide-plans" data-href="{{  $project->id }}"><i class="fa fa-minus-square" aria-hidden="true"></i></a>
+        <a href="#" class="show-plans btn btn-default btn-xs" data-href="{{  $project->id }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        <a href="#" class="hide-plans btn btn-default btn-xs" data-href="{{  $project->id }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
     </td>
 </tr>
     <tr class="dashboard-project-plans hidden" data-content="{{  $project->id }}">

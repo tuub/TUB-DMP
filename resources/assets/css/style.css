@@ -283,8 +283,14 @@ ul.plan-details li {
     list-style: none;
 }
 
+span.plan-title {
+    font-size: 1.1em;
+    font-weight: normal;
+}
+
+
 span.plan-status {
-    font-size: 1.3em;
+    font-size: 1.1em;
     font-weight: bold;
 }
 
