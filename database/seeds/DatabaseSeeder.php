@@ -20,14 +20,14 @@ class DatabaseSeeder extends Seeder
         $this->call(ProjectTableSeeder::class);
         $this->call(TemplateTableSeeder::class);
         $this->call(SectionTableSeeder::class);
-        $this->call(PlanTableSeeder::class);
+        //$this->call(PlanTableSeeder::class);
         $this->call(QuestionTableSeeder::class);
         $this->call(QuestionOptionTableSeeder::class);
         $this->call(IvmcFieldTypeTableSeeder::class);
         $this->call(IvmcMappingTableSeeder::class);
         $this->call(MetadataRegistryTableSeeder::class);
         $this->call(ProjectMetadataTableSeeder::class);
-        $this->call(SurveyTableSeeder::class);
-        $this->call(AnswerTableSeeder::class);
+        //$this->call(SurveyTableSeeder::class);
+        //$this->call(AnswerTableSeeder::class);
     }
 }
