@@ -55,6 +55,20 @@ class ContentTypeTableSeeder extends Seeder
         ]);
 
         ContentType::create([
+            'id' => 7,
+            'identifier' => 'value',
+            'title' => 'Value',
+            'input_type_id' => 10,
+        ]);
+
+        ContentType::create([
+            'id' => 8,
+            'identifier' => 'value_range',
+            'title' => 'Value Range',
+            'input_type_id' => 11,
+        ]);
+
+        ContentType::create([
             'id' => 99,
             'identifier' => 'plain',
             'title' => 'Plain Text',

@@ -1,8 +1,14 @@
 {{ $question->prepend }}
 
-{{ var_dump($answers) }}
+@if( $answers->count() )
+    <ul>
+    @foreach( $answers as $k => $v )
+        <li>{{ $k }} {{ $v }}</li>
+    @endforeach
+    </ul>
+@endif
 
-@if( false )
+
     @if( $answers->count() )
         @foreach( $answers as $answer )
             {{ Form::text( $name . '[]', $answer, [
@@ -22,5 +28,5 @@
                 $read_only
             ]) }}
     @endif
-@endif
+
 {{ $question->append }}

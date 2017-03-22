@@ -21,8 +21,8 @@ var paths = {
     'jquery': bowerpath + 'jquery/',
     'jqueryui': bowerpath + 'jquery-ui/',
     'progressbar': bowerpath + 'bootstrap-progressbar/',
-    'slider': bowerpath + 'bootstrap-slider/',
-    'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
+    'slider': bowerpath + 'seiyria-bootstrap-slider/',
+    //'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
     'tagsinput': bowerpath + 'bootstrap-tagsinput/',
     'typeahead': bowerpath + 'typeahead.js/',
     'amaranjs': bowerpath + 'AmaranJS/',
@@ -67,8 +67,8 @@ elixir(function(mix) {
         paths.bootstrap + 'dist/js/bootstrap.js',
         paths.progressbar + 'bootstrap-progressbar.js',
         paths.tagsinput + 'dist/bootstrap-tagsinput.js',
-        paths.slider + 'bootstrap-slider.js',
-        paths.bootstrap_modal_form + 'src/laravel-bootstrap-modal-form.js',
+        paths.slider + 'dist/bootstrap-slider.min.js',
+        //paths.bootstrap_modal_form + 'src/laravel-bootstrap-modal-form.js',
         paths.typeahead + 'dist/typeahead.jquery.js',
         paths.amaranjs + 'dist/js/jquery.amaran.js',
         //paths.js_cookie + 'src/js.cookie.js',
@@ -91,7 +91,7 @@ elixir(function(mix) {
     mix.styles([
         paths.tagsinput + 'dist/bootstrap-tagsinput.css',
         paths.amaranjs + 'dist/css/amaran.min.css',
-        paths.slider + 'slider.css',
+        paths.slider + 'dist/css/bootstrap-slider.css',
         //paths.jquery_steps + 'demo/css/jquery.steps.css'
     ], './public/css/vendor.css');
 });
