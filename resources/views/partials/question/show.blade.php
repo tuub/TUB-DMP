@@ -11,7 +11,11 @@
                 {{ $question->keynumber }}
             @endif
 
-            {!! HTML::decode($question->text) !!}
+            @if( $question->output_text )
+                {{ $question->output_text }}
+            @else
+                {{ $question->text }}
+            @endif
             @if( $question->input_type == 'headline')
                 </span>
             @endif
