@@ -29,24 +29,6 @@
                 }
             });
 
-            $('a.edit-project').bind('click', function (e) {
-                e.preventDefault();
-
-                var form    = $('#edit-project-form');
-                var div     = form.parent();
-
-                $.ajax({
-                    type    : 'GET',
-                    url     : '/my/project/' + $(this).data('rel') + '/show',
-                    dataType: 'json',
-                    success : function (json) {
-                        $.each(json, function (field, value) {
-                            form.find('#' + field).val(value);
-                        });
-                        div.modal();
-                    }
-                });
-            });
 
             $('a.show-plans').bind('click', function (e) {
                 e.preventDefault();
@@ -81,6 +63,52 @@
                 $('tr[data-content=' + project_id + ']').addClass('hidden');
                 setVisibleProjects();
             });
+
+
+            $('a.edit-project').bind('click', function (e) {
+                e.preventDefault();
+
+                var form    = $('#edit-project-form');
+                var div     = form.parent();
+
+                $.ajax({
+                    type    : 'GET',
+                    url     : '/my/project/' + $(this).data('rel') + '/show',
+                    dataType: 'json',
+                    success : function (json) {
+                        $.each(json, function (field, value) {
+                            form.find('#' + field).val(value);
+                        });
+                        div.modal();
+                    }
+                });
+            });
+
+            /*
+            $('#edit-project-form').bind('submit', function (e) {
+                e.preventDefault();
+
+                var form    = $(this);
+                var div     = $(this).parent();
+
+                $.ajax({
+                    url     : form.attr('action'),
+                    type    : form.attr('method'),
+                    data    : form.serialize(),
+                    dataType: 'json',
+                    error   : function (json) {
+                        console.log(json.responseJSON);
+                        div.modal();
+                    },
+                    success : function (json) {
+                        if (json.response == '200') {
+                            div.modal('hide');
+                            location.reload();
+                        }
+                    }
+                })
+            });
+            */
 
             $('a.create-plan').bind('click', function (e) {
                 e.preventDefault();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\MetadataRegistry;
 use App\Project;
+use App\ProjectMetadata;
 use App\Template;
 use Auth;
 use Request;
@@ -73,14 +74,34 @@ class ProjectController extends Controller
         throw new NotFoundHttpException;
     }
 
-    public function update(ProjectRequest $request, $id)
+    public function update(ProjectRequest $request)
     {
-        $project = $this->project->findOrFail($id);
-        $data = $request->all();
+        $project = $this->project->findOrFail($request->id);
+        $data = $request->except(['_token', '_method', 'save']);
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
+
+        foreach ($data as $metadata_field => $metadata_value) {
+            $registry = ProjectMetadata::findByIdentifier($metadata_field);
+
+            if (is_array($metadata_value)) {
+                $metadatum = ProjectMetadata::where([
+                    'project_id' => $project->id,
+                    'metadata_registry_id'=> $registry->id
+                ]);
+                $metadatum->update([
+                    'content' => $metadata_value
+                ]);
+            }
+        }
+
+        //dd($data);
+
+
+        /*
         $project->update($data);
         return Redirect::route('dashboard');
+        */
     }
 }

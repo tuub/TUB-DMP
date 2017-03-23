@@ -153,10 +153,46 @@ class Project extends Node
         }
 
         foreach( $results as $result ) {
+            if(is_array($result->content)) {
+                foreach ($result->content as $value) {
+                    if (is_array($value)) {
+                        foreach($value as $k => $v) {
+                            if(is_numeric($k)) {
+                                $data->push($v);
+                            } else {
+                                $data->put($k, $v);
+                            }
+                            //$data->put($k, $v);
+                        }
+                    } else {
+                        $data->push($value);
+                    }
+                }
+            }
+            $content_type = ContentType::where('identifier', $result->content_type)->first();
+
+            return ProjectMetadata::formatForOutput($data, $content_type);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*
             if( !empty($result->content) ) {
+
                 switch ($result->content_type) {
                     case 'date':
-                        $data->push(Carbon::parse($result->content));
+                        //$data->push(Carbon::parse($result->content));
                         break;
                     case 'person':
                         $data->push($result->content);
@@ -169,6 +205,7 @@ class Project extends Node
                         break;
                 };
             };
+            */
         }
 
         if($attribute == 'begin') {

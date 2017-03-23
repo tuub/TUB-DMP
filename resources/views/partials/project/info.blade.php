@@ -12,13 +12,19 @@
             @endforeach
         @endunless
 
-        @unless( $project->getMetadata('begin')->isEmpty() )
-            @date( $project->getMetadata('begin')->first() ) -
-            @unless( $project->getMetadata('end')->isEmpty() )
-                @date( $project->getMetadata('end')->first() )
+        <?php var_dump($project->getMetadata('begin')); ?>
+
+
+
+        @if( false )
+            @unless( $project->getMetadata('begin')->isEmpty() )
+                @date( $project->getMetadata('begin')->first() ) -
+                @unless( $project->getMetadata('end')->isEmpty() )
+                    @date( $project->getMetadata('end')->first() )
+                @endunless
+                <br/>
             @endunless
-            <br/>
-        @endunless
+        @endif
         @unless( $project->getMetadata('funding_source')->isEmpty() )
             Funded by
             {{ $project->getMetadata('funding_source')->implode(', ') }}

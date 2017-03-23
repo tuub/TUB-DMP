@@ -17,7 +17,7 @@ class CreateProjectMetadataTable extends Migration
             $table->increments('id');
             $table->integer('project_id')->unsigned();
             $table->integer('metadata_registry_id')->unsigned();
-            $table->text('content')->nullable();
+            $table->json('content')->nullable();
             $table->string('language')->nullable();
             $table->timestamps();
 

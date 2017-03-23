@@ -83,6 +83,9 @@ class PlanController extends Controller
         /* Set default answers */
         $survey->setDefaults();
 
+        /* Set completion rate */
+        $survey->setCompletionRate();
+
 
         /* Fire plan create event */
         Event::fire(new PlanCreated($plan));

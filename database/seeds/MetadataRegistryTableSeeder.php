@@ -88,7 +88,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'funding_source',
             'title' => 'Funding Source',
             'description' => 'The funding source of the research project.',
-            'content_type_id' => 1,
+            'content_type_id' => 5,
         ]);
 
         MetadataRegistry::create([

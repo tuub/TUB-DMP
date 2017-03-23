@@ -14,61 +14,31 @@ class ProjectMetadataTableSeeder extends Seeder
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 1,
-            'content' => 'SFB 1026 - Sustainable Manufacturing',
-            'language' => 'de'
-        ]);
-
-        ProjectMetadata::create([
-            'project_id' => 1,
-            'metadata_registry_id' => 1,
-            'content' => 'SFB 1026 - Sustainable Manufacturing',
-            'language' => 'en'
+            'content' => ['value' => ['de' => 'SFB 1026 - Sustainable Manufacturing', 'en' => 'SFB 1026 - Sustainable Manufacturing']],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 3,
-            'content' => '2015-01-01'
+            'content' => ['value' => '2015-01-01'],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 4,
-            'content' => '2017-12-31'
+            'content' => ['value' => '2017-12-31'],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 7,
-            'content' => 'Rainer Rauball'
-        ]);
-
-        ProjectMetadata::create([
-            'project_id' => 1,
-            'metadata_registry_id' => 7,
-            'content' => 'Winnie Schäfer'
-        ]);
-
-        ProjectMetadata::create([
-            'project_id' => 1,
-            'metadata_registry_id' => 7,
-            'content' => 'Laurenz-Günther Köstner'
+            'content' => ['value' => ['Rainer Rauball','Winnie Schäfer','Laurenz-Günther Köstner']],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 9,
-            'content' => 'DFG'
+            'content' => ['value' => ['DFG', 'BMBF']],
         ]);
-
-        ProjectMetadata::create([
-            'project_id' => 1,
-            'metadata_registry_id' => 9,
-            'content' => 'BMBF'
-        ]);
-
-
-
-
     }
 }

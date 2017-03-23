@@ -3,10 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class ProjectMetadata extends Model
 {
     protected $table = 'project_metadata';
+    protected $fillable = ['content'];
+    protected $casts = ['content' => 'array'];
+
 
     public function project()
     {
@@ -30,4 +35,41 @@ class ProjectMetadata extends Model
         }
         return $query;
     }
+
+    public static function findByIdentifier($identifier)
+    {
+        $foo = self::with('metadata_registry')->whereHas('metadata_registry', function($q) use ($identifier) {
+            $q->where('identifier', $identifier);
+        })->first();
+        if($foo) {
+            return $foo->metadata_registry;
+        }
+        return null;
+    }
+
+    public static function formatForOutput( Collection $metadata, ContentType $content_type )
+    {
+        $result = null;
+        switch($content_type->identifier) {
+            case 'date':
+                $result = collect(Carbon::parse($metadata->implode(',', 'value')));
+                break;
+            case 'list':
+                $result = collect($metadata->implode(',', 'value'));
+                break;
+            case 'organization':
+                $result = collect($metadata->implode(' & ', 'value'));
+                break;
+            case 'person':
+                $result = collect($metadata->implode(' AND ', 'value'));
+                break;
+            default:
+                $result = $metadata;
+        }
+
+        return $result;
+    }
+
+
+
 }
