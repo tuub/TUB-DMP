@@ -6,13 +6,7 @@
         @endif
     </td>
     <td>
-        @unless( $project->getMetadata('title', 'de')->isEmpty() )
-            @foreach( $project->getMetadata('title', 'de') as $title )
-                {{ $title }}<br/>
-            @endforeach
-        @endunless
 
-        <?php var_dump($project->getMetadata('begin')); ?>
 
         @if( false )
             @unless( $project->getMetadata('begin')->isEmpty() )
@@ -22,20 +16,22 @@
                 @endunless
                 <br/>
             @endunless
+            @unless( $project->getMetadata('funding_source')->isEmpty() )
+                Funded by
+                {{ $project->getMetadata('funding_source')->implode(', ') }}
+            @endunless
         @endif
-        @unless( $project->getMetadata('funding_source')->isEmpty() )
-            Funded by
-            {{ $project->getMetadata('funding_source')->implode(', ') }}
-        @endunless
     </td>
     <td>
         {{ $project->user->name }}
         <br/>
-        @unless( $project->getMetadata('members')->isEmpty() )
-            @foreach( $project->getMetadata('members') as $member )
-                {{ $member }}<br/>
-            @endforeach
-        @endunless
+        @if( false )
+            @unless( $project->getMetadata('members')->isEmpty() )
+                @foreach( $project->getMetadata('members') as $member )
+                    {{ $member }}<br/>
+                @endforeach
+            @endunless
+        @endif
     </td>
     <td>
         {{ $project->plans_count }}
@@ -55,7 +51,9 @@
         @endif
     </td>
     <td>
+        @if( false )
         <span class="text-info">{{ $project->status }}</span>
+            @endif
     </td>
     <td>
         <a href="{{ route('project.show', $project->id)}}" class="show-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#show-project-{{$project->id}}" title="Show Project">
@@ -72,7 +70,7 @@
 </tr>
     <tr class="dashboard-project-plans hidden" data-content="{{  $project->id }}">
         <td colspan="8">
-            @foreach ($project->plans()->ordered()->get() as $plan)
+            @foreach ($project->plans as $plan)
                 @include('partials.plan.info', $plan)
             @endforeach
 

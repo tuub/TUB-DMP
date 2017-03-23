@@ -14,6 +14,7 @@ class Project extends Node
     protected $dates = ['created_at', 'updated_at', 'prefilled_at'];
     protected $fillable = ['identifier','parent_id','user_id','data_source_id','is_prefilled','prefilled_at'];
     protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
+    protected $appends = ['title'];
 
     /* Nested Sets */
     protected $parentColumn = 'parent_id';
@@ -49,7 +50,7 @@ class Project extends Node
 
     public function plans()
     {
-        return $this->hasMany(Plan::class);
+        return $this->hasMany(Plan::class)->orderBy('updated_at', 'desc');
     }
 
     public function data_source()
@@ -70,6 +71,11 @@ class Project extends Node
     public function scopePrefilled($query)
     {
         return $query->where('is_prefilled', true);
+    }
+
+    public function getTitleAttribute()
+    {
+        return $this->getMetadata('title')->first()->content;
     }
 
     public function getMetadataViaRelation($attribute = null, $language = null, $format = 'html')
@@ -112,6 +118,29 @@ class Project extends Node
     }
 
     public function getMetadata($attribute = null, $language = null, $format = 'html')
+    {
+        $data = collect([$attribute => null]);
+
+        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
+            $q->where('identifier', $attribute);
+            if( !is_null($language) ) {
+                $q->where('project_metadata.language', $language);
+            }
+        });
+        $results = $metadata_query->get();
+
+        /*
+
+        $foobar = collect([]);
+        $foo = $this->with('metadata', 'metadata.metadata_registry')->get();
+        foreach( $this->metadata as $md ) {
+            $foobar->put($md->metadata_registry->identifier, $md->content['value']);
+        }
+        */
+        return $results;
+    }
+
+    public function getMetadataViaJoin($attribute = null, $language = null, $format = 'html')
     {
         /*
         SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
@@ -170,7 +199,6 @@ class Project extends Node
                 }
             }
             $content_type = ContentType::where('identifier', $result->content_type)->first();
-
             return ProjectMetadata::formatForOutput($data, $content_type);
 
 

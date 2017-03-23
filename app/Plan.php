@@ -46,11 +46,14 @@ class Plan extends Model
     public static function getPlans()
     {
         /* 27.04.2016: Reduced Query Number via Eager Loading */
-        $plans = Plan::with('template','project')
+        $plans = Plan::with('template','project','surveys')
             // See Constraints: https://laravel.com/docs/5.1/eloquent-relationships#querying-relations
             //->where( 'user_id', Auth::user()->id )
             ->orderBy( 'updated_at', 'desc' )
             ->get();
+
+        dd($plans);
+
         return $plans;
     }
 

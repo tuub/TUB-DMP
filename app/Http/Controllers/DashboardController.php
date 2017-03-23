@@ -39,6 +39,7 @@ class DashboardController extends Controller
                     $message->replyTo( $feedback['email'], $feedback['name'] );
                 } );
         Notifier::success( 'Your Feedback has been sent.' )->flash()->create();
+
         return Redirect::back();
 
     }

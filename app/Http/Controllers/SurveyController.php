@@ -40,40 +40,35 @@ class SurveyController extends Controller
 
     public function show($id)
     {
-        $survey = $this->survey->with('plan', 'template')->findOrFail($id);
-        $plan = $survey->plan;
-        $questions = $survey->template->questions;
+        $survey = $this->survey
+            ->with('plan', 'plan.project.user', 'template', 'template.questions', 'template.questions.answers')
+            ->findOrFail($id);
+
         if( $survey ) {
-            if (Request::ajax()) {
-            //    return $questions->toJson();
-            } else {
-                return view('survey.show', compact('survey'));
-            }
+            return view('survey.show', compact('survey'));
         }
-        throw new NotFoundHttpException;
     }
 
 
-    // TODO: render method?
     public function edit($id)
     {
-        $survey = $this->survey->with('plan', 'template')->findOrFail($id);
+        $survey = $this->survey->with('plan', 'template', 'template.questions', 'template.questions.answers')->findOrFail($id);
         $questions = $survey->template->questions()->with('section', 'answers')->orderBy('questions.order')->get();
-        return view('survey.edit', compact('survey', 'questions'))->render();
+        return view('survey.edit', compact('survey', 'questions'));
     }
 
 
     public function update(SurveyRequest $request)
     {
+        /* Get the survey */
         $survey = $this->survey->findOrFail($request->id);
 
-        //TODO: do the array_filter already here and save the later if/else?
+        /* Get the request data */
+        /* TODO: Do the array_filter already here and save the later if/else? */
         $data = $request->except(['_token', '_method', 'save']);
 
-        //TODO: Change to survey->saveAnswers($data) and then call Answer::saveAll there
-        Answer::saveAll($survey, $data);
-
-        $survey->setCompletionRate();
+        /* Save the answers */
+        $survey->saveAnswers($data);
 
         return Redirect::back();
     }

@@ -22,7 +22,7 @@ class PlanController extends Controller
 
     public function index()
     {
-        $plans = $this->plan->all();
+        $plans = $this->plan->get();
         return view('admin.plan.index', compact('plans'));
     }
 
@@ -30,8 +30,8 @@ class PlanController extends Controller
     {
         $plan = $this->plan;
         $plan->title = "Data Management Plan";
-        $projects = Project::all()->pluck('identifier','id')->prepend('Select a project',null);
-        $templates = Template::all()->pluck('name','id')->prepend('Select a template',null);
+        $projects = Project::get()->pluck('identifier','id')->prepend('Select a project',null);
+        $templates = Template::get()->pluck('name','id')->prepend('Select a template',null);
         $versions = ['1' => 1, '2' => 2, '3' => 3];
         return view('admin.plan.new', compact('plan','projects','templates','versions'));
     }

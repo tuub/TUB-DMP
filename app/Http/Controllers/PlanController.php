@@ -50,7 +50,8 @@ class PlanController extends Controller
     }
 
     // TODO: Check! Everything necessary? GetPlans necessary?
-    public function index()
+
+    /*public function index()
     {
         $internal_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
         $external_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
@@ -60,6 +61,7 @@ class PlanController extends Controller
         $plans = $this->plan->getPlans();
         return view('dashboard', compact('plans', 'template_selector', 'user_selector'));
     }
+    */
 
     public function store(PlanRequest $request)
     {
@@ -70,8 +72,8 @@ class PlanController extends Controller
         $plan = new $this->plan;
         $plan = $plan->create([
             'project_id' => $data['project_id'],
-            'title' => $data['title'],
-            'version' => $data['version'],
+            'title'      => $data['title'],
+            'version'    => $data['version'],
         ]);
 
         /* Create a new survey instance and attach plan to it */
@@ -83,35 +85,17 @@ class PlanController extends Controller
         /* Set default answers */
         $survey->setDefaults();
 
-        /* Set completion rate */
-        $survey->setCompletionRate();
-
-
         /* Fire plan create event */
         Event::fire(new PlanCreated($plan));
 
         /* Create a response in JSON */
         if ($request->ajax()) {
             return response()->json([
-                'response' => 200,
-                'msg' => 'DMP with Survey created!'
+                'response'  => 200,
+                'msg'       => 'DMP with Survey created!'
             ]);
         };
     }
-
-    /*
-    public function store(PlanRequest $request)
-    {
-        if($this->plan->createPlan($request)) {
-            $msg = 'Plan created successfully!';
-            Notifier::success( $msg )->flash()->create();
-        } else {
-            $msg = 'There is already a plan with this project number / version!';
-            Notifier::error( $msg )->flash()->create();
-        }
-        return Redirect::route( 'dashboard' );
-    }
-    */
 
 
     public function show($id) {
@@ -126,12 +110,13 @@ class PlanController extends Controller
         throw new NotFoundHttpException;
     }
 
-
+    /*
     public function edit($id) {
         $plan = $this->plan->findOrFail($id);
         $templates = collect([]);
-        return view('plan.edit', compact('plan','templates'))->render();
+        return view('plan.edit', compact('plan','templates'));
     }
+    */
 
 
     public function update(PlanRequest $request)
@@ -144,10 +129,12 @@ class PlanController extends Controller
         });
         */
 
+        $plan->update($data);
+
         /* Fire plan create event */
         Event::fire(new PlanUpdated($plan));
 
-        $plan->update($data);
+        /* Response */
         if ($request->ajax()) {
             return response()->json([
                 'response' => 200,

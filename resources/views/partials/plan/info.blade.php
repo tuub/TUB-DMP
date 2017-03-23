@@ -15,9 +15,7 @@
                     @if( $plan->is_final )
                         <i class="fa fa-check-square-o fa-1x" aria-hidden="true"></i><span class="hidden-xs"></span>
                     @else
-                        @if (true)
-                            <span class="plan-status">{{ $plan->survey->completion }}&nbsp;%</span>
-                        @endif
+                        <span class="plan-status">{{ $plan->survey->completion }}&nbsp;%</span>
                     @endif
                 </div>
             </div>
@@ -25,9 +23,6 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-12 col-sm-14 col-xs-12">
-                    @if (false)
-                        {{ $plan->getAnswerCount() }} of {{ $plan->getQuestionCount() }} answered<br/>
-                    @endif
                     <strong>Created:</strong> @date( $plan->created_at ) at @time( $plan->created_at )<br/>
                     <strong>Updated:</strong> @date( $plan->updated_at ) at @time( $plan->updated_at )<br/>
                 </div>

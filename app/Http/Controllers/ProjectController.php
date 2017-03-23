@@ -21,21 +21,11 @@ class ProjectController extends Controller
         $this->metadata_registry = $metadata_registry;
     }
 
+
     public function index()
     {
-        //$project = $this->project->create(['identifier' => 'COURTNEY-123', 'user_id' => 1]);
-        //$subproject1 = $project->children()->create(['identifier' => 'COURTNEY-123-01', 'user_id' => 1]);
-        //$subproject2 = $project->children()->create(['identifier' => 'COURTNEY-123-02', 'user_id' => 1]);
-        //$subproject3 = $project->children()->create(['identifier' => 'COURTNEY-123-03', 'user_id' => 1]);
-
-        //$parent = $project->parent()->get();
-        //$children = $project->children()->get();
-
-        //$nestedList = $this->project->getNestedList('identifier','id','<li>');
-        //dd($nestedList);
-
         $projects = $this->project
-            ->with('metadata.metadata_registry')
+            ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template', 'metadata.metadata_registry')
             ->withCount('children')
             ->withCount('plans')
             ->where('user_id', Auth::id())
@@ -43,11 +33,21 @@ class ProjectController extends Controller
             ->get()
             ->toHierarchy();
 
+        foreach( $projects as $project ) {
+            if( $project->id == 1 ) {
+                dd($project->title);
+            }
+        }
+
+
+        //dd($projects);
+
         // For Modals
         $templates = Template::get();
 
         return view('dashboard', compact('projects', 'templates'));
     }
+
 
     public function show($id) {
         $project = $this->project->with('metadata.metadata_registry')->findOrFail($id);
@@ -59,19 +59,31 @@ class ProjectController extends Controller
                 return view('project.show', compact('project'));
             }
         }
-        throw new NotFoundHttpException;
+        //throw new NotFoundHttpException;
     }
+
 
     public function edit($id)
     {
         $project = $this->project->findOrFail($id);
+
         if( $project ) {
-            $projects = $this->project->where('user_id', Auth::id())->get()->pluck('identifier','id')->prepend('Select a parent','');
-            $metadata_fields = $this->metadata_registry->where('namespace', 'project')->get();
+
+            $projects = $this->project
+                ->where('user_id', Auth::id())
+                ->get()
+                ->pluck('identifier','id')
+                ->prepend('Select a parent','');
+
+            $metadata_fields = $this->metadata_registry
+                ->where('namespace', 'project')
+                ->get();
+
             //dd($metadata_fields);
+
             return view('project.edit', compact('project','projects','metadata_fields'));
         }
-        throw new NotFoundHttpException;
+        //throw new NotFoundHttpException;
     }
 
     public function update(ProjectRequest $request)
@@ -83,13 +95,16 @@ class ProjectController extends Controller
         });
 
         foreach ($data as $metadata_field => $metadata_value) {
+
             $registry = ProjectMetadata::findByIdentifier($metadata_field);
 
             if (is_array($metadata_value)) {
+
                 $metadatum = ProjectMetadata::where([
                     'project_id' => $project->id,
                     'metadata_registry_id'=> $registry->id
                 ]);
+
                 $metadatum->update([
                     'content' => $metadata_value
                 ]);

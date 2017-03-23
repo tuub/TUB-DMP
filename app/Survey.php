@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Answer;
 
 class Survey extends Model
 {
@@ -10,6 +11,7 @@ class Survey extends Model
     protected $table = 'surveys';
     protected $dates = ['created_at', 'updated_at'];
     protected $fillable = ['plan_id', 'template_id', 'completion'];
+    protected $touches = ['plan'];
 
 
     public function plan()
@@ -28,7 +30,7 @@ class Survey extends Model
     }
 
 
-    public function calculateCompletion()
+    public function calculateCompletionRate()
     {
         return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
     }
@@ -37,8 +39,20 @@ class Survey extends Model
     public function setCompletionRate()
     {
         $this->update([
-            'completion' => $this->calculateCompletion()
+            'completion' => $this->calculateCompletionRate()
         ]);
+
+        return true;
+    }
+
+
+    public function saveAnswers($data)
+    {
+        if ($data) {
+            $data = array_filter(array_map('array_filter', $data));
+            Answer::saveAll($this, $data);
+            $this->setCompletionRate();
+        }
 
         return true;
     }
@@ -47,26 +61,13 @@ class Survey extends Model
     public function setDefaults()
     {
         $questions = $this->template->questions()->active()->get();
-        $answers = [];
+        $data = [];
         foreach( $questions as $question ) {
             if( $question->default ) {
-                $answers[$question->id] = [$question->default];
+                $data[$question->id] = [$question->default];
             }
         }
-        Answer::saveAll( $this, $answers );
-
-        //TODO: Refactor to Answer::saveAll ?
-        /*
-        foreach ($questions as $question) {
-            if ($question->default) {
-                Answer::create([
-                    'survey_id' => $this->id,
-                    'question_id' => $question->id,
-                    'value' => ['value' => $question->default],
-                ]);
-            }
-        }
-        */
+        $this->saveAnswers($data);
 
         return true;
     }
