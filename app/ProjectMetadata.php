@@ -52,7 +52,9 @@ class ProjectMetadata extends Model
         $result = null;
         switch($content_type->identifier) {
             case 'date':
-                $result = collect(Carbon::parse($metadata->implode(',', 'value')));
+                $result = $metadata->map(function ($item, $key) {
+                    return Carbon::parse($item);
+                });
                 break;
             case 'list':
                 $result = collect($metadata->implode(',', 'value'));

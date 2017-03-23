@@ -14,8 +14,6 @@
 
         <?php var_dump($project->getMetadata('begin')); ?>
 
-
-
         @if( false )
             @unless( $project->getMetadata('begin')->isEmpty() )
                 @date( $project->getMetadata('begin')->first() ) -
