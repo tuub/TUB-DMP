@@ -6,7 +6,11 @@
         @endif
     </td>
     <td>
-
+        @if( $project->title )
+            @foreach($project->title as $title)
+                {{ $title }}
+            @endforeach
+        @endif
 
         @if( false )
             @unless( $project->getMetadata('begin')->isEmpty() )

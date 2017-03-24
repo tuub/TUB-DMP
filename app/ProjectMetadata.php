@@ -12,21 +12,24 @@ class ProjectMetadata extends Model
     protected $fillable = ['content'];
     protected $casts = ['content' => 'array'];
 
-
+    // 1 Project Metadata belongs to 1 Project.
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
+    // 1 Project Metadata belongs to 1 Metadata Field in the Registry.
     public function metadata_registry()
     {
         return $this->belongsTo(MetadataRegistry::class);
     }
 
+    /*
     public function scopeOfField($query, $field)
     {
         return $query->where('metadata_registry.identifier', $field);
     }
+
 
     public function scopeOfLanguage($query, $language = null)
     {
@@ -35,6 +38,8 @@ class ProjectMetadata extends Model
         }
         return $query;
     }
+    */
+
 
     public static function findByIdentifier($identifier)
     {
@@ -46,6 +51,7 @@ class ProjectMetadata extends Model
         }
         return null;
     }
+
 
     public static function formatForOutput( Collection $metadata, ContentType $content_type )
     {

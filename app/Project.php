@@ -1,8 +1,9 @@
 <?php
 
+// TODO: CLEANUP!!! GET THOSE EAGER LOADED RELATIONS RUNNING!
+
 namespace App;
 
-//use App\MetadataRegistry;
 use Baum\Node;
 use Carbon\Carbon;
 use DB;
@@ -14,7 +15,6 @@ class Project extends Node
     protected $dates = ['created_at', 'updated_at', 'prefilled_at'];
     protected $fillable = ['identifier','parent_id','user_id','data_source_id','is_prefilled','prefilled_at'];
     protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
-    protected $appends = ['title'];
 
     /* Nested Sets */
     protected $parentColumn = 'parent_id';
@@ -73,74 +73,17 @@ class Project extends Node
         return $query->where('is_prefilled', true);
     }
 
-    public function getTitleAttribute()
+
+    public function getMetadata($attribute)
     {
-        return $this->getMetadata('title')->first()->content;
-    }
-
-    public function getMetadataViaRelation($attribute = null, $language = null, $format = 'html')
-    {
-        $data = collect([]);
-
-        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
-            $q->where('identifier', $attribute);
-            if( !is_null($language) ) {
-                $q->where('project_metadata.language', $language);
-            }
-        });
-        $results = $metadata_query->get();
-
-        dd($results);
-
-        if($results->isEmpty()) {
-            return $data;
+        $result = $this->queryRelation($attribute);
+        if($result->isNotEmpty()) {
+            return $result;
         }
-
-        foreach( $results as $result ) {
-            if( !empty($result->content) ) {
-                switch ($result->content_type) {
-                    case 'date':
-                        $content = Carbon::parse($result->content)->format('Y/d/m');
-                        $data = $content;
-                        break;
-                    case 'organization':
-                        break;
-                    case 'person':
-                        $data->push($result->content);
-                        break;
-                    default:
-                        $data->push($result->content);
-                        break;
-                };
-            };
-        };
-        return $data;
     }
 
-    public function getMetadata($attribute = null, $language = null, $format = 'html')
-    {
-        $data = collect([$attribute => null]);
 
-        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
-            $q->where('identifier', $attribute);
-            if( !is_null($language) ) {
-                $q->where('project_metadata.language', $language);
-            }
-        });
-        $results = $metadata_query->get();
-
-        /*
-
-        $foobar = collect([]);
-        $foo = $this->with('metadata', 'metadata.metadata_registry')->get();
-        foreach( $this->metadata as $md ) {
-            $foobar->put($md->metadata_registry->identifier, $md->content['value']);
-        }
-        */
-        return $results;
-    }
-
-    public function getMetadataViaJoin($attribute = null, $language = null, $format = 'html')
+    public function queryRelation($attribute = null, $language = null, $format = 'html')
     {
         /*
         SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
@@ -201,20 +144,6 @@ class Project extends Node
             $content_type = ContentType::where('identifier', $result->content_type)->first();
             return ProjectMetadata::formatForOutput($data, $content_type);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             /*
             if( !empty($result->content) ) {
 
@@ -234,10 +163,6 @@ class Project extends Node
                 };
             };
             */
-        }
-
-        if($attribute == 'begin') {
-            //dd($data);
         }
 
         /*
@@ -313,5 +238,73 @@ class Project extends Node
 
         return $data;
     }
+
+
+    public function getMetadataViaRelation($attribute = null, $language = null, $format = 'html')
+    {
+        $data = collect([]);
+
+        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
+            $q->where('identifier', $attribute);
+            if( !is_null($language) ) {
+                $q->where('project_metadata.language', $language);
+            }
+        });
+        $results = $metadata_query->get();
+
+        //dd($results);
+
+        if($results->isEmpty()) {
+            return $data;
+        }
+
+        foreach( $results as $result ) {
+            if( !empty($result->content) ) {
+                switch ($result->content_type) {
+                    case 'date':
+                        $content = Carbon::parse($result->content)->format('Y/d/m');
+                        $data = $content;
+                        break;
+                    case 'organization':
+                        break;
+                    case 'person':
+                        $data->push($result->content);
+                        break;
+                    default:
+                        $data->push($result->content);
+                        break;
+                };
+            };
+        };
+        return $data;
+    }
+
+    public function getMetadataViaFoo($attribute = null, $language = null, $format = 'html')
+    {
+        $data = collect([]);
+
+        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
+            $q->where('identifier', $attribute);
+            if( !is_null($language) ) {
+                $q->where('project_metadata.language', $language);
+            }
+        });
+        $results = $metadata_query->get();
+
+        //dd($results);
+
+
+
+        //$foobar = collect([]);
+        //$foo = $this->with('metadata', 'metadata.metadata_registry')->get();
+        //foreach( $this->metadata as $md ) {
+        //    $foobar->put($md->metadata_registry->identifier, $md->content['value']);
+        //}
+
+return $results;
+}
+
+
+
     */
 }

@@ -25,22 +25,13 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = $this->project
-            ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template', 'metadata.metadata_registry')
+            ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template', 'metadata', 'metadata.metadata_registry')
             ->withCount('children')
             ->withCount('plans')
             ->where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get()
             ->toHierarchy();
-
-        foreach( $projects as $project ) {
-            if( $project->id == 1 ) {
-                dd($project->title);
-            }
-        }
-
-
-        //dd($projects);
 
         // For Modals
         $templates = Template::get();
@@ -79,11 +70,8 @@ class ProjectController extends Controller
                 ->where('namespace', 'project')
                 ->get();
 
-            //dd($metadata_fields);
-
             return view('project.edit', compact('project','projects','metadata_fields'));
         }
-        //throw new NotFoundHttpException;
     }
 
     public function update(ProjectRequest $request)
