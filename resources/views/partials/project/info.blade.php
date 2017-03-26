@@ -6,11 +6,17 @@
         @endif
     </td>
     <td>
-        @if( $project->title )
-            @foreach($project->title as $title)
+        @unless( $project->getMetadata('title')->isEmpty() )
+            @foreach( $project->getMetadata('title') as $title )
                 {{ $title }}
             @endforeach
-        @endif
+        @endunless
+        <?php var_dump($project->getMetadata('title')); ?>
+        <?php var_dump($project->getMetadata('begin')); ?>
+        <?php var_dump($project->getMetadata('end')); ?>
+        <?php var_dump($project->getMetadata('funding_source')); ?>
+        <?php var_dump($project->getMetadata('members')); ?>
+        <?php var_dump($project->getMetadata('membs')); ?>
 
         @if( false )
             @unless( $project->getMetadata('begin')->isEmpty() )
@@ -20,11 +26,12 @@
                 @endunless
                 <br/>
             @endunless
+            @endif
             @unless( $project->getMetadata('funding_source')->isEmpty() )
                 Funded by
                 {{ $project->getMetadata('funding_source')->implode(', ') }}
             @endunless
-        @endif
+
     </td>
     <td>
         {{ $project->user->name }}

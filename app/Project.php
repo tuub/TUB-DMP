@@ -7,6 +7,7 @@ namespace App;
 use Baum\Node;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Collection;
 
 class Project extends Node
 {
@@ -24,8 +25,6 @@ class Project extends Node
     protected $orderColumn = null;
     protected $scoped = [];
 
-    public $metadata_result;
-
     //////////////////////////////////////////////////////////////////////////////
     //
     // Baum makes available two model events to application developers:
@@ -40,8 +39,6 @@ class Project extends Node
     // Please refer the Laravel documentation for further instructions on how
     // to hook your own callbacks/observers into this events:
     // http://laravel.com/docs/5.0/eloquent#model-events
-
-
 
     public function user()
     {
@@ -73,14 +70,17 @@ class Project extends Node
         return $query->where('is_prefilled', true);
     }
 
-
     public function getMetadata($attribute)
     {
-        $result = $this->queryRelation($attribute);
-        if($result->isNotEmpty()) {
-            return $result;
+        $data = collect([]);
+        foreach( $this->metadata as $metadata ) {
+            if ($metadata->metadata_registry->identifier == $attribute) {
+                $data->push($metadata->content['value']);
+            }
         }
+        return $data;
     }
+
 
 
     public function queryRelation($attribute = null, $language = null, $format = 'html')
