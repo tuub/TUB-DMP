@@ -75,12 +75,23 @@ class Project extends Node
         $data = collect([]);
         foreach( $this->metadata as $metadata ) {
             if ($metadata->metadata_registry->identifier == $attribute) {
-                $data->push($metadata->content['value']);
+                $data->push(collect($metadata->content['value']));
             }
         }
+        //dd($data);
         return $data;
     }
 
+    public function getMetadataContentType($attribute)
+    {
+        $data = collect([]);
+        foreach( $this->metadata as $metadata ) {
+            if ($metadata->metadata_registry->identifier == $attribute) {
+                return $metadata->metadata_registry->content_type;
+
+            }
+        }
+    }
 
 
     public function queryRelation($attribute = null, $language = null, $format = 'html')

@@ -8,41 +8,39 @@
     <td>
         @unless( $project->getMetadata('title')->isEmpty() )
             @foreach( $project->getMetadata('title') as $title )
-                {{ $title }}
+                {{ App\ProjectMetadata::formatForOutput($title, $project->getMetadataContentType('title')) }}
+            @endforeach
+            <br/>
+        @endunless
+
+        @unless( $project->getMetadata('begin')->isEmpty() )
+            @foreach( $project->getMetadata('begin') as $begin )
+                @date( App\ProjectMetadata::formatForOutput($begin, $project->getMetadataContentType('begin')) )
+                -
+            @endforeach
+            @unless( $project->getMetadata('end')->isEmpty() )
+                @foreach( $project->getMetadata('end') as $end )
+                    @date( App\ProjectMetadata::formatForOutput($end, $project->getMetadataContentType('end')) )
+                @endforeach
+            @endunless
+            <br/>
+        @endunless
+
+        @unless( $project->getMetadata('funding_source')->isEmpty() )
+            Funded by
+            @foreach( $project->getMetadata('funding_source') as $funding_source )
+                {{ App\ProjectMetadata::formatForOutput($funding_source, $project->getMetadataContentType('funding_source')) }}
             @endforeach
         @endunless
-        <?php var_dump($project->getMetadata('title')); ?>
-        <?php var_dump($project->getMetadata('begin')); ?>
-        <?php var_dump($project->getMetadata('end')); ?>
-        <?php var_dump($project->getMetadata('funding_source')); ?>
-        <?php var_dump($project->getMetadata('members')); ?>
-        <?php var_dump($project->getMetadata('membs')); ?>
-
-        @if( false )
-            @unless( $project->getMetadata('begin')->isEmpty() )
-                @date( $project->getMetadata('begin')->first() ) -
-                @unless( $project->getMetadata('end')->isEmpty() )
-                    @date( $project->getMetadata('end')->first() )
-                @endunless
-                <br/>
-            @endunless
-            @endif
-            @unless( $project->getMetadata('funding_source')->isEmpty() )
-                Funded by
-                {{ $project->getMetadata('funding_source')->implode(', ') }}
-            @endunless
-
     </td>
     <td>
         {{ $project->user->name }}
         <br/>
-        @if( false )
-            @unless( $project->getMetadata('members')->isEmpty() )
-                @foreach( $project->getMetadata('members') as $member )
-                    {{ $member }}<br/>
-                @endforeach
-            @endunless
-        @endif
+        @unless( $project->getMetadata('members')->isEmpty() )
+            @foreach( $project->getMetadata('members') as $member )
+                {{ App\ProjectMetadata::formatForOutput($member, $project->getMetadataContentType('members')) }}
+            @endforeach
+        @endunless
     </td>
     <td>
         {{ $project->plans_count }}

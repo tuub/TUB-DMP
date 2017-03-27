@@ -25,7 +25,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = $this->project
-            ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template', 'metadata', 'metadata.metadata_registry')
+            ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template', 'metadata', 'metadata.metadata_registry', 'metadata.metadata_registry.content_type')
             ->withCount('children')
             ->withCount('plans')
             ->where('user_id', Auth::id())

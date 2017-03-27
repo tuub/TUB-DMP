@@ -60,19 +60,20 @@ class ProjectMetadata extends Model
             case 'date':
                 $result = $metadata->map(function ($item, $key) {
                     return Carbon::parse($item);
-                });
+                })->first();
                 break;
             case 'list':
-                $result = collect($metadata->implode(',', 'value'));
+                $result = $metadata->implode(',', 'value');
                 break;
             case 'organization':
-                $result = collect($metadata->implode(' & ', 'value'));
+                //$result = collect($metadata->implode(' & ', 'value'));
+                $result = $metadata->implode(' & ', 'value');
                 break;
             case 'person':
-                $result = collect($metadata->implode(' AND ', 'value'));
+                $result = $metadata->implode(', ', 'value');
                 break;
             default:
-                $result = $metadata;
+                $result = $metadata->implode(', ', 'value');
         }
 
         return $result;
