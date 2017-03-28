@@ -14,31 +14,34 @@ class ProjectMetadataTableSeeder extends Seeder
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 1,
-            'content' => ['value' => ['de' => 'SFB 1026 - Sustainable Manufacturing', 'en' => 'SFB 1026 - Sustainable Manufacturing']],
+            //'content' => ['value' => ['de' => 'SFB 1026 - Sustainable Manufacturing', 'en' => 'SFB 1026 - Sustainable Manufacturing']],
+            'content' => ['de' => 'SFB 1026 - Sustainable Manufacturing', 'en' => 'SFB 1026 - Sustainable Manufacturing'],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 3,
-            'content' => ['value' => '2015-01-01'],
+            //'content' => ['value' => '2015-01-01'],
+            'content' => ['2015-01-01'],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 4,
-            'content' => ['value' => '2017-12-31'],
+            //'content' => ['value' => '2017-12-31'],
+            'content' => ['2017-12-31'],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 7,
-            'content' => ['value' => ['Rainer Rauball','Winnie Schäfer','Laurenz-Günther Köstner']],
+            'content' => ['Rainer Rauball', 'Winnie Schäfer','Laurenz-Günther Köstner'],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 9,
-            'content' => ['value' => ['DFG', 'BMBF']],
+            'content' => ['DFG', 'BMBF'],
         ]);
     }
 }

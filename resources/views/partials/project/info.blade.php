@@ -6,12 +6,12 @@
         @endif
     </td>
     <td>
+
         @unless( $project->getMetadata('title')->isEmpty() )
-            @foreach( $project->getMetadata('title') as $title )
-                {{ App\ProjectMetadata::formatForOutput($title, $project->getMetadataContentType('title')) }}
-            @endforeach
+            {{ App\ProjectMetadata::formatForOutput($project->getMetadata('title'), $project->getMetadataContentType('title')) }}
             <br/>
         @endunless
+
 
         @unless( $project->getMetadata('begin')->isEmpty() )
             @foreach( $project->getMetadata('begin') as $begin )
@@ -26,21 +26,25 @@
             <br/>
         @endunless
 
-        @unless( $project->getMetadata('funding_source')->isEmpty() )
-            Funded by
-            @foreach( $project->getMetadata('funding_source') as $funding_source )
-                {{ App\ProjectMetadata::formatForOutput($funding_source, $project->getMetadataContentType('funding_source')) }}
-            @endforeach
-        @endunless
+
+            @unless( $project->getMetadata('funding_source')->isEmpty() )
+                Funded by
+                @foreach( $project->getMetadata('funding_source') as $funding_source )
+                    {{ App\ProjectMetadata::formatForOutput($funding_source, $project->getMetadataContentType('funding_source')) }}
+                @endforeach
+            @endunless
+
     </td>
     <td>
         {{ $project->user->name }}
         <br/>
-        @unless( $project->getMetadata('members')->isEmpty() )
-            @foreach( $project->getMetadata('members') as $member )
-                {{ App\ProjectMetadata::formatForOutput($member, $project->getMetadataContentType('members')) }}
-            @endforeach
-        @endunless
+
+            @unless( $project->getMetadata('members')->isEmpty() )
+                @foreach( $project->getMetadata('members') as $member )
+                    {{ App\ProjectMetadata::formatForOutput($member, $project->getMetadataContentType('members')) }}
+                @endforeach
+            @endunless
+
     </td>
     <td>
         {{ $project->plans_count }}

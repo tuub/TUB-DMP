@@ -76,6 +76,11 @@ class Question extends Node
         return $query->where('questions.is_active', true);
     }
 
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('questions.order', 'asc');
+    }
+
 
 
     /**

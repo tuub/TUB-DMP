@@ -8,6 +8,9 @@ use Baum\Node;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Collection;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\String_;
+
 
 class Project extends Node
 {
@@ -40,58 +43,144 @@ class Project extends Node
     // to hook your own callbacks/observers into this events:
     // http://laravel.com/docs/5.0/eloquent#model-events
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+
+    /**
+     * @return mixed
+     */
     public function plans()
     {
         return $this->hasMany(Plan::class)->orderBy('updated_at', 'desc');
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function data_source()
     {
         return $this->belongsTo(DataSource::class);
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function metadata()
     {
         return $this->hasMany(ProjectMetadata::class);
     }
 
-    public function scopeUnprefilled($query)
+
+    /**
+     * @param $query
+     * @param $flag
+     *
+     * @return mixed
+     */
+    public function scopeIsPrefilled($query, $flag)
     {
-        return $query->where('is_prefilled', false);
+        return $query->where('is_prefilled', $flag);
     }
 
-    public function scopePrefilled($query)
-    {
-        return $query->where('is_prefilled', true);
-    }
 
+    /**
+     * @param $attribute
+     *
+     * @return Collection
+     */
     public function getMetadata($attribute)
     {
         $data = collect([]);
+
         foreach( $this->metadata as $metadata ) {
+
             if ($metadata->metadata_registry->identifier == $attribute) {
-                $data->push(collect($metadata->content['value']));
+                $data = collect($metadata->content);
             }
         }
-        //dd($data);
+
         return $data;
     }
 
+
+    /**
+     * @param $attribute
+     *
+     * @return Collection
+     */
     public function getMetadataContentType($attribute)
     {
         $data = collect([]);
+
         foreach( $this->metadata as $metadata ) {
             if ($metadata->metadata_registry->identifier == $attribute) {
-                return $metadata->metadata_registry->content_type;
+                $data = $metadata->metadata_registry->content_type;
+            }
+        }
 
+        return $data;
+    }
+
+
+    // TODO: View Composer to the rescue?
+    public function getStatusAttribute()
+    {
+        if( $this->getMetadata('begin')->isEmpty() ) {
+            return 'Unknown';
+        } else {
+            if( $this->getMetadata('end')->isEmpty() || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
+                return 'Running';
+            } else {
+                return 'Ended';
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public function queryRelation($attribute = null, $language = null, $format = 'html')
@@ -184,19 +273,7 @@ class Project extends Node
         return $data;
     }
 
-    // TODO: View Composer to the rescue?
-    public function getStatusAttribute()
-    {
-        if( $this->getMetadata('begin')->isEmpty() ) {
-            return 'Unknown';
-        } else {
-            if( $this->getMetadata('end')->isEmpty() || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
-                return 'Running';
-            } else {
-                return 'Ended';
-            }
-        }
-    }
+
 
     /*
     public function getTitleAttribute()

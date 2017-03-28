@@ -10,11 +10,18 @@ class ContentType extends Model
     public $timestamps = false;
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function metadata_registry()
     {
         return $this->belongsTo(MetadataRegistry::class);
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function input_type()
     {
         return $this->belongsTo(InputType::class);

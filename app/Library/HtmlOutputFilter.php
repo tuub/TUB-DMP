@@ -1,61 +1,57 @@
 <?php
 namespace App\Library;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\ContentType;
+use App\ProjectMetadata;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection as Collection;
 use App\Plan;
 use App\Question;
 use App\Answer;
 
 class HtmlOutputFilter implements OutputInterface
 {
-    protected $answers;
+    protected $inputs;
+    protected $content_type;
 
 
-    public function __construct( Collection $answers )
+    public function __construct( Collection $inputs, ContentType $content_type )
     {
-        $this->answers = $answers;
+        $this->inputs = $inputs;
+        $this->content_type = $content_type;
     }
 
     public function render()
     {
-        $output = ' --- ';
-        foreach ($this->answers as $answer) {
-            if (is_array($answer->value)) {
-                foreach ($answer->value as $value) {
-                    if (is_array($value)) {
-                        $output = nl2br(implode(';', $value));
-                    } else {
-                        //$output->push($value);
+        $output = collect([]);
+
+        foreach ($this->inputs as $input) {
+
+            if(is_array($input)) {
+                $output->push($input);
+            } else {
+                $output->push(collect([$input]));
+            }
+
+            if($input instanceof Answer) {
+                foreach( $input->value as $value ) {
+                    switch($this->content_type->identifier) {
+                        case 'list':
+                            $output = $value->implode(', ', $value);
+                            break;
+                        default:
+                            $output = nl2br($value);
+                            break;
                     }
                 }
             }
-        }
 
-        return $output;
 
-        /*
-        $output = '';
-        $answers = Answer::getAnswerObject($this->plan, $this->question);
-        if( count($answers) > 0 ) {
-            $answer_type = $this->question->input_type->category;
-            switch( $answer_type ) {
-                case 'range':
-                    $output .= $answers->implode('value', ' - ');
-                    break;
-                case 'list':
-                    $output .= $answers->implode('value', '<br/>');
-                    break;
-                default:
-                    foreach( $answers as $answer ) {
-                        $output .= nl2br( $answer->value );
-                    }
-                    break;
+            if($input instanceof Collection || $input instanceof ProjectMetadata) {
+                $output = $input;
             }
-        } else {
-            $output .= ' - ';
         }
 
         return $output;
-        */
     }
 }

@@ -28,8 +28,10 @@
                     {{ $section->full_name }}
                 </h3>
                 <div class="section-text">
-                    @foreach( $section->questions()->active()->parent()->get() as $question )
-                        @include('partials.question.show', $question)
+                    @foreach( $section->questions()->active()->ordered()->get() as $question )
+                        @if( $question->isRoot() )
+                            @include('partials.question.show', $question)
+                        @endif
                     @endforeach
                 </div>
             </div>

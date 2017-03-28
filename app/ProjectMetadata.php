@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Library\HtmlOutputFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
@@ -24,22 +25,6 @@ class ProjectMetadata extends Model
         return $this->belongsTo(MetadataRegistry::class);
     }
 
-    /*
-    public function scopeOfField($query, $field)
-    {
-        return $query->where('metadata_registry.identifier', $field);
-    }
-
-
-    public function scopeOfLanguage($query, $language = null)
-    {
-        if( !is_null($language) ) {
-            return $query->where('language', $language);
-        }
-        return $query;
-    }
-    */
-
 
     public static function findByIdentifier($identifier)
     {
@@ -53,30 +38,12 @@ class ProjectMetadata extends Model
     }
 
 
-    public static function formatForOutput( Collection $metadata, ContentType $content_type )
+    public static function formatForOutput( $metadata, ContentType $content_type )
     {
-        $result = null;
-        switch($content_type->identifier) {
-            case 'date':
-                $result = $metadata->map(function ($item, $key) {
-                    return Carbon::parse($item);
-                })->first();
-                break;
-            case 'list':
-                $result = $metadata->implode(',', 'value');
-                break;
-            case 'organization':
-                //$result = collect($metadata->implode(' & ', 'value'));
-                $result = $metadata->implode(' & ', 'value');
-                break;
-            case 'person':
-                $result = $metadata->implode(', ', 'value');
-                break;
-            default:
-                $result = $metadata->implode(', ', 'value');
-        }
+        $output = collect([]);
+        $output = new HtmlOutputFilter(collect([$metadata]), $content_type);
 
-        return $result;
+        return $output->render();
     }
 
 

@@ -53,6 +53,6 @@
         </div>
     </div>
 </div>
-@foreach($question->getChildren() as $question)
+@foreach($question->children()->ordered()->get() as $question)
     @include('partials.question.edit', $question)
 @endforeach

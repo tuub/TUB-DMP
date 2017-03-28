@@ -108,7 +108,7 @@
                     </span>
                 @endif
 
-                @foreach( $section->questions()->active()->get() as $question )
+                @foreach( $section->questions()->active()->ordered()->get() as $question )
                     @if( $question->isRoot() )
                         @include('partials.question.edit', $question)
                     @endif

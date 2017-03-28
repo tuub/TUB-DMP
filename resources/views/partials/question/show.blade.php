@@ -34,6 +34,6 @@
 </div>
 <br/>
 
-@foreach($question->getChildren() as $question)
+@foreach($question->children()->ordered()->get() as $question)
     @include('partials.question.show', $question)
 @endforeach

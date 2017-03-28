@@ -30,7 +30,7 @@ class Section extends \Eloquent
 
     public function questions()
     {
-        return $this->hasMany(Question::class)->orderBy('order');
+        return $this->hasMany(Question::class);
     }
 
     public function scopeActive($query)

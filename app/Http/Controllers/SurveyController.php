@@ -53,7 +53,8 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = $this->survey->with('plan', 'template', 'template.questions', 'template.questions.answers')->findOrFail($id);
-        $questions = $survey->template->questions()->with('section', 'answers')->orderBy('questions.order')->get();
+        $questions = $survey->template->questions()->with('section', 'answers')->get();
+        //dd($questions);
         return view('survey.edit', compact('survey', 'questions'));
     }
 

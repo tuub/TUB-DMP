@@ -44,13 +44,13 @@ class Answer extends Model
         if ($answers) {
             switch ($format) {
                 case 'html':
-                    $output = new HtmlOutputFilter($answers);
+                    $output = new HtmlOutputFilter($answers, $question->content_type);
                     break;
                 case 'form':
-                    $output = new FormOutputFilter($answers);
+                    $output = new FormOutputFilter($answers, $question->content_type);
                     break;
                 case 'pdf':
-                    $output = new PdfOutputFilter($answers);
+                    $output = new PdfOutputFilter($answers, $question->content_type);
                     break;
             }
         }
@@ -92,7 +92,7 @@ class Answer extends Model
             self::create([
                 'survey_id'   => $survey->id,
                 'question_id' => $question_id,
-                'value'       => ['value' => $answer]
+                'value'       => $answer
             ]);
 
         }

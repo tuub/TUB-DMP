@@ -13,19 +13,20 @@ class AnswerTableSeeder extends Seeder
         Answer::create([
             'survey_id' => 1,
             'question_id' => 122,
-            'value' => json_decode('{ "value": "Lorem Ipsum" }', JSON_UNESCAPED_SLASHES),
+            //'value' => json_decode('{ "value": "Lorem Ipsum" }', JSON_UNESCAPED_SLASHES),
+            'value' => ['Lorem Ipsum'],
         ]);
 
         Answer::create([
             'survey_id' => 1,
             'question_id' => 130,
-            'value' => json_decode('{ "value": ["Video Data", "Awesome Data", "Freaky Data"] }', JSON_UNESCAPED_SLASHES),
+            'value' => ['Video Data', 'Awesome Data', 'Freaky Data'],
         ]);
 
         Answer::create([
             'survey_id' => 1,
             'question_id' => 133,
-            'value' => json_decode('{ "value": {"alpha": 5, "omega": 125} }', JSON_UNESCAPED_SLASHES),
+            'value' => [ 'alpha' => 5, 'omega' => 125],
         ]);
 
 
