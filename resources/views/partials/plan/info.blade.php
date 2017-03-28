@@ -45,14 +45,18 @@
                     </div>
                     <div class="version">
                         @if( $plan->is_final )
-                            @if( !$plan->hasVersion($plan->id) )
-                                <a href="{{ URL::route('toggle_plan', [$plan->id, $plan->version]) }}" class="btn btn-default btn-xs" title="Reopen"><i class="fa fa-unlock"></i><span class="hidden-xs"> Reopen</span></a>
-                                <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#version-option-for-{{ $plan->id }}" title="Make new Version {{ $plan->version+1 }}"><i class="fa fa-step-forward-o"></i><span class="hidden-xs"> Create version {{ $plan->version+1 }}</span></a>
+                            @unless( $plan->hasNextVersion($plan->id, $plan->version) )
+                                <a href="{{ URL::route('plan.toggle', [$plan->id, $plan->version]) }}" class="btn btn-default btn-xs" title="Reopen"><i class="fa fa-unlock"></i><span class="hidden-xs"> Reopen</span></a>
+
+                                <a href="#" class="create-plan-version btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#create-plan-version" title="Make new Version {{ $plan->version+1 }}">
+                                    <i class="fa fa-fast-forward"></i><span class="hidden-sm hidden-xs"> Create version {{ $plan->version+1 }}</span>
+                                </a>
+
                             @else
                                 This DMP is finished and already has a version {{ $plan->version+1 }}.
                             @endif
                         @else
-                            <a href="{{ URL::route('toggle_plan', [$plan->id]) }}" class="btn btn-default btn-xs" title="Finish"><i class="fa fa-lock"></i><span class="hidden-xs"> Finish DMP</span></a>
+                            <a href="{{ URL::route('plan.toggle', [$plan->id]) }}" class="btn btn-default btn-xs" title="Finish"><i class="fa fa-lock"></i><span class="hidden-xs"> Finish DMP</span></a>
                         @endif
                     </div>
                 </div>

@@ -45,6 +45,94 @@
     {!! BootForm::close() !!}
 </div>
 
+<!-- Create Plan Version Modal -->
+<div class="modal fade" id="create-plan-version" tabindex="-1" role="dialog" aria-labelledby="create-plan-version">
+    {!! BootForm::open()->id('create-plan-version-form')->action( route('plan.version') )->post() !!}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create DMP Version <span id="next-version">{{-- $plan->getNextVersion($plan->version) --}}</span></h4>
+            </div>
+            <div class="modal-body">
+                <strong>
+                    Once you created version <span id="current-version">{{-- $plan->version+1 --}}</span> of your DMP, you will not be able to edit
+                    the data of your current version.
+                </strong>
+                {!! BootForm::hidden('id')->id('id') !!}
+                {!! BootForm::hidden('project_id')->id('project_id') !!}
+                {!! BootForm::text('DMP Title', 'title') !!}
+                {!! BootForm::checkbox('Clone current plan', 'clone_current')->checked() !!}
+            </div>
+            <div class="modal-footer">
+                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit('Create Version')->class('btn btn-success') !!}
+            </div>
+        </div>
+    </div>
+    {!! BootForm::close() !!}
+</div>
+
+
+
+@if( false )
+<div class="modal fade" id="version-option-for-{{ $plan->id }}" tabindex="-1" role="dialog" aria-labelledby="version-option-for-{{ $plan->id }}">
+    {!! Form::open(array('route' => array('version_plan'), 'method' => 'post', 'class' => 'form-horizontal', 'id' => 'version_plan'))  !!}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirm new version</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure that you want to create the next version of your DMP?<br/><br/>
+                <strong>Once you created version {{ $plan->version+1 }} of your DMP, you will not be able to edit the data of your current version.</strong>
+                {!! Form::hidden( 'project_number', $plan->project_number) !!}
+                {!! Form::hidden( 'version', $plan->version) !!}
+                {!! csrf_field() !!}
+            </div>
+            <div class="modal-footer">
+                {!! Form::submit('Yes', array('class' => 'btn btn-success' )) !!}
+                {!! Form::reset('No', array('class' => 'btn btn-danger', 'data-dismiss' => 'modal' )) !!}
+            </div>
+        </div>
+    </div>
+    {!! Form::close() !!}
+</div>
+@endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @if( false )
     <div class="bootstrap-modal-form modal fade" id="create-plan" tabindex="-1" role="dialog" aria-labelledby="create-option">
         {!! Form::open(['route' => ['store_plan'], 'method' => 'post', 'class' => 'form', 'id' => 'create_plan'])  !!}

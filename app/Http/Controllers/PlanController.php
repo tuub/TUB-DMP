@@ -6,7 +6,10 @@ use App\HtmlOutputFilter;
 use App\Survey;
 use Request;
 use App\Http\Requests\PlanRequest;
+use App\Http\Requests\VersionRequest;
+
 use App\Http\Requests\EmailPlanRequest;
+
 use App\Http\Requests\VersionPlanRequest;
 
 use Event;
@@ -174,6 +177,7 @@ class PlanController extends Controller
     public function toggle($id)
     {
         $plan = $this->plan->findOrFail($id);
+
         if( $plan ) {
             if ( $plan->isFinal() ) {
                 $plan->setFinalFlag(false);
@@ -185,7 +189,33 @@ class PlanController extends Controller
         } else {
             Notifier::error( 'Error while finalizing plan!' )->flash()->create();
         }
+
         return Redirect::route( 'dashboard' );
+    }
+
+
+    public function version(VersionRequest $request)
+    {
+        $data = $request->except(['_token']);
+        if($this->plan->createNextVersion($data)) {
+            $msg = 'New version added!';
+            Notifier::success( $msg )->flash()->create();
+        } else {
+            $msg = 'Versioning failed!';
+            Notifier::error( $msg )->flash()->create();
+        }
+
+
+        /*
+        if($this->plan->createNextVersion($request)) {
+            $msg = 'New version added!';
+            Notifier::success( $msg )->flash()->create();
+        } else {
+            $msg = 'Versioning failed!';
+            Notifier::error( $msg )->flash()->create();
+        }
+        return Redirect::route('dashboard');
+        */
     }
 
 
@@ -223,17 +253,7 @@ class PlanController extends Controller
     }
 
 
-    public function version(VersionPlanRequest $request)
-    {
-        if($this->plan->createVersion($request)) {
-            $msg = 'New version added!';
-            Notifier::success( $msg )->flash()->create();
-        } else {
-            $msg = 'Versioning failed!';
-            Notifier::error( $msg )->flash()->create();
-        }
-        return Redirect::route('dashboard');
-    }
+
 
 
     public function destroy( $id ) {

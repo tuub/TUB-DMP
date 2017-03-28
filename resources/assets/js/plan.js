@@ -16,24 +16,30 @@ $(window).load(function()
         }
     });
 
+    $("#plan-section-steps").steps({
+        headerTag: "h4",
+        bodyTag: "section",
+        transitionEffect: "slideLeft",
+        autoFocus: true,
+        enableAllSteps: true,
+        saveState: true,
+        enablePagination: false,
+        titleTemplate: '#title#',
+        stepsOrientation: 1,
+        transitionEffectSpeed: 100,
+        onStepChanging: function (event, currentIndex, newIndex) {
+            if($(window).scrollTop() > 0) {
+                $('html, body').animate({
+                    scrollTop:0
+                }, 300);
+            }
+            return true;
+        },
+    });
+
     $("div.tagsinput select").tagsinput('items');
 
     $('div.bootstrap-tagsinput').css('width', '100%');
-
-    /* Show Guidance Help Snippets */
-    /*
-     $('.help-block').expander({
-     slicePoint: 500,
-     preserveWords: true,
-     expandText: 'Read More',
-     expandPrefix: ' &hellip; ',
-     expandEffect: 'fadeIn',
-     expandSpeed: 250,
-     userCollapseText: 'Read Less',
-     collapseEffect: 'fadeOut',
-     collapseSpeed: 100
-     });
-     */
 
     $('a.expander').simpleexpand({
         'defaultTarget': '.content',

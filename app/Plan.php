@@ -37,25 +37,7 @@ class Plan extends Model
         return $query->orderBy( 'updated_at', 'desc' );
     }
 
-    /**
-     * Get all plans for the authenticated user
-     * To-DO: maybe rename to all()
-     *
-     * @return mixed
-     */
-    public static function getPlans()
-    {
-        /* 27.04.2016: Reduced Query Number via Eager Loading */
-        $plans = Plan::with('template','project','surveys')
-            // See Constraints: https://laravel.com/docs/5.1/eloquent-relationships#querying-relations
-            //->where( 'user_id', Auth::user()->id )
-            ->orderBy( 'updated_at', 'desc' )
-            ->get();
 
-        dd($plans);
-
-        return $plans;
-    }
 
 
     /**
@@ -81,71 +63,27 @@ class Plan extends Model
     }
 
 
-
-
-
-
-
-
-
-
-    /**
-     * @return string
-     */
-    public function getColoredQuestionAnswerPercentage()
-    {
-        $step = 2.55;
-        $percentage = $this->getQuestionAnswerPercentage();
-        $green = $percentage;
-        $red = 100 - $green;
-        $color = sprintf( '#%02X%02X00', round($red * $step), round($green * $step));
-        return $color;
-    }
-
-
-    /**
-     * @return bool
-     */
     public function isComplete() {
-        if( $this->getQuestionAnswerPercentage() == 100 ) {
+        if( $this->survey->completion == 100 ) {
             return true;
         }
+
         return false;
     }
 
 
-    /**
-     * @return bool
-     */
     public function isFinal() {
         if( $this->is_final ) {
             return true;
         }
+
         return false;
     }
 
 
-    /**
-     * @return bool
-     */
-    public function setDefaultValues()
+    public function setFinalFlag($status)
     {
-        foreach( $this->template->questions as $question )
-        {
-            $question->setDefaultValue( $this );
-        }
-        $this->touch();
-        return true;
-    }
-
-
-    /**
-     * @param bool $status
-     * @return bool
-     */
-    public function setFinalFlag( $status )
-    {
-        if( is_bool($status) ) {
+        if (is_bool($status)) {
             $this->is_final = $status;
             $this->save();
             return true;
@@ -163,6 +101,103 @@ class Plan extends Model
         */
         return false;
     }
+
+
+    public function getNextVersion($current_version)
+    {
+        $result = Plan::where([
+            'project_id' => $this->project->id,
+            'version'    => $current_version + 1
+        ])->get(['version']);
+
+        return $result;
+    }
+
+
+    public function hasNextVersion($current_version)
+    {
+        if ($this->getNextVersion($current_version)->count()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // TODO!!!
+    public function createWithSurvey() {}
+
+    public function createNextVersion($data)
+    {
+        $current_plan = $this->find($data['id']);
+        $current_version = $this->where('project_id', $data['project_id'])->max('version');
+        $next_version = $current_version + 1;
+
+        $this->create([
+            'title' => $data['title'],
+            'project_id' => $data['project_id'],
+            'version' => $next_version,
+        ]);
+
+        var_dump($this->id);
+        exit();
+
+        /* Create a new survey instance and attach plan to it */
+        $survey = new Survey;
+        $survey->plan()->associate($plan);
+        $survey->template_id = $current_plan->survey->template_id;
+        $survey->save();
+
+        if ($data['clone_current']) {
+            $cloned_answers = collect([]);
+            foreach ( $current_plan->template->questions as $question ) {
+                $answers = Answer::check( $current_plan->survey, $question );
+                foreach ( $answers as $answer ) {
+                    $cloned_answers->put($question->id, $answer);
+                }
+            }
+            var_dump($cloned_answers);
+        }
+
+        /* Set default answers */
+        $survey->setDefaults();
+
+        return true;
+    }
+
+    /* TODO: Experimental, not in use */
+    public function getColoredCompletionRate()
+    {
+        $step = 2.55;
+        $percentage = $this->survey->completion;
+        $green = $percentage;
+        $red = 100 - $green;
+        $color = sprintf( '#%02X%02X00', round($red * $step), round($green * $step));
+        return $color;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
@@ -345,18 +380,8 @@ class Plan extends Model
     }
 
 
-    /**
-     * @param $project_number
-     * @param $version
-     * @return bool
-     */
-    public static function hasVersion( $project_number, $version ) {
-        $result = Plan::where( 'project_number', $project_number )->where( 'version', $version )->first();
-        if ( $result ) {
-            return true;
-        }
-        return false;
-    }
+
+
 
 
 

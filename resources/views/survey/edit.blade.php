@@ -28,26 +28,7 @@
 
     <script>
         $(document).ready(function(){
-            $("#plan-section-steps").steps({
-                headerTag: "h4",
-                bodyTag: "section",
-                transitionEffect: "slideLeft",
-                autoFocus: true,
-                enableAllSteps: true,
-                saveState: true,
-                enablePagination: false,
-                titleTemplate: '#title#',
-                stepsOrientation: 1,
-                transitionEffectSpeed: 100,
-                onStepChanging: function (event, currentIndex, newIndex) {
-                    if($(window).scrollTop() > 0) {
-                        $('html, body').animate({
-                            scrollTop:0
-                        }, 300);
-                    }
-                    return true;
-                },
-            });
+
 
             /*
             $('a.show-question-info').bind('click', function (e) {
@@ -82,12 +63,10 @@
 
     <div>
         <div class="progress col-md-20 col-sm-24 nopadding">
-            @if( false )
-                <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $survey->getQuestionAnswerPercentage() }}"></div>
-            @endif
+            <div class="progress-bar" role="progressbar" data-transitiongoal="{{ $survey->completion }}"></div>
         </div>
         <div class=" col-md-4 col-sm-24 nopadding">
-            {!! Form::button('<i class="fa fa-floppy-o"></i><span class="hidden-xs"> Plan speichern</span>', array('type' => 'submit', 'name' => 'save', 'class' => 'btn btn-success pull-right', 'style' => 'font-size: 17px')) !!}
+            {!! Form::button('<i class="fa fa-floppy-o"></i><span class="hidden-xs"> Plan speichern</span>', ['type' => 'submit', 'name' => 'save', 'class' => 'btn btn-success pull-right', 'style' => 'font-size: 17px']) !!}
         </div>
     </div>
     <br/><br/><br/>

@@ -105,6 +105,19 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@update',
         'as' => 'plan.update'
     ]);
+    /* TOGGLE FINAL STATE */
+    Route::get('/plan/{id}/toggle', [
+        'uses' => 'PlanController@toggle',
+        'as' => 'plan.toggle'
+    ]);
+    /* VERSION */
+    Route::post('/plan/version', [
+        'uses' => 'PlanController@version',
+        'as' => 'plan.version'
+    ]);
+
+
+
     /* EXPORT */
     Route::get('/plan/{id}/export/{format?}', [
         'uses' => 'PlanController@export',
@@ -114,16 +127,6 @@ Route::group(['middleware' => 'auth'], function()
     Route::post('/plan/email', [
         'uses' => 'PlanController@email',
         'as' => 'email_plan'
-    ]);
-    /* TOGGLE FINAL STATE */
-    Route::get('/plan/{id}/toggle', [
-        'uses' => 'PlanController@toggle',
-        'as' => 'toggle_plan'
-    ]);
-    /* VERSION */
-    Route::post('/plan/version', [
-        'uses' => 'PlanController@version',
-        'as' => 'version_plan'
     ]);
 
     /* Project */

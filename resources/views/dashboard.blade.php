@@ -193,6 +193,51 @@
                     }
                 })
             });
+
+            $('a.create-plan-version').bind('click', function (e) {
+                e.preventDefault();
+
+                var form    = $('#create-plan-version-form');
+                var div     = form.parent();
+
+                $.ajax({
+                    type    : 'GET',
+                    url     : '/plan/' + $(this).data('rel') + '/show',
+                    dataType: 'json',
+                    success : function (json) {
+                        form.find('#id').val(json.id);
+                        form.find('#project_id').val(json.project_id);
+                        form.find('#next_version_id').val(json.version + 1);
+                        form.find('span#current-version').html(json.version);
+                        form.find('span#next-version').html(json.version + 1);
+                        div.modal();
+                    }
+                });
+            });
+
+            $('#create-plan-version-form').bind('submit', function (e) {
+                e.preventDefault();
+
+                var form    = $(this);
+                var div     = $(this).parent();
+
+                $.ajax({
+                    url     : form.attr('action'),
+                    type    : form.attr('method'),
+                    data    : form.serialize(),
+                    dataType: 'json',
+                    error   : function (json) {
+                        console.log(json.responseJSON);
+                        div.modal();
+                    },
+                    success : function (json) {
+                        if (json.response == '200') {
+                            div.modal('hide');
+                            location.reload();
+                        }
+                    }
+                })
+            });
         });
     </script>
 
