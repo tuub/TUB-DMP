@@ -10,7 +10,7 @@ use App\Library\HtmlOutputFilter;
 use App\Library\FormOutputFilter;
 use App\Library\PdfOutputFilter;
 
-use Log;
+use Illuminate\Support\Facades\Log;
 /*
 use AnswerInterface;
 implements AnswerInterface
@@ -86,7 +86,7 @@ class Answer extends Model
                 );
             } else {
                 //echo 'NO ARRAY';
-                $answer = $answer_value[0];
+                $answer = $answer_value;
             }
 
             self::create([

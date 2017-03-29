@@ -5,15 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Requests\VersionPlanRequest;
-use App\Http\Requests\CreatePlanRequest;
-use App\Http\Requests\UpdatePlanRequest;
+//use App\Http\Requests\CreatePlanRequest;
+//use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 
-use Auth;
+use Illuminate\Support\Facades\Event;
+use App\Events\PlanCreated;
+
 use Carbon\Carbon;
-use Storage;
+//use Storage;
 use Exporters;
-use Mail;
+//use Mail;
+use Illuminate\Support\Facades\Log;
 
 class Plan extends Model
 {
@@ -123,43 +126,53 @@ class Plan extends Model
         return false;
     }
 
-    // TODO!!!
-    public function createWithSurvey() {}
+
+    public function createWithSurvey($title, $project_id, $version, $template_id, $answer_data = null)
+    {
+        /* Create a new plan instance */
+        $plan = $this->create([
+            'title' => $title,
+            'project_id' => $project_id,
+            'version' => $version,
+        ]);
+
+        /* Create a new survey instance and attach plan to it */
+        $survey = new Survey;
+        $survey->plan()->associate($plan);
+        $survey->template_id = $template_id;
+        $survey->save();
+
+        /* Depending on answer data, set answers or default values */
+        if( is_null($answer_data) ) {
+            $survey->setDefaults();
+        } else {
+            $survey->saveAnswers($answer_data);
+        }
+
+        /* Fire plan create event */
+        Event::fire(new PlanCreated($plan));
+
+        return true;
+    }
 
     public function createNextVersion($data)
     {
         $current_plan = $this->find($data['id']);
         $current_version = $this->where('project_id', $data['project_id'])->max('version');
         $next_version = $current_version + 1;
+        $answers = null;
 
-        $this->create([
-            'title' => $data['title'],
-            'project_id' => $data['project_id'],
-            'version' => $next_version,
-        ]);
-
-        var_dump($this->id);
-        exit();
-
-        /* Create a new survey instance and attach plan to it */
-        $survey = new Survey;
-        $survey->plan()->associate($plan);
-        $survey->template_id = $current_plan->survey->template_id;
-        $survey->save();
-
-        if ($data['clone_current']) {
-            $cloned_answers = collect([]);
-            foreach ( $current_plan->template->questions as $question ) {
-                $answers = Answer::check( $current_plan->survey, $question );
-                foreach ( $answers as $answer ) {
-                    $cloned_answers->put($question->id, $answer);
+        if (isset($data['clone_current'])) {
+            $cloned_answers = [];
+            foreach ( $current_plan->survey->template->questions as $question ) {
+                foreach ( Answer::check( $current_plan->survey, $question ) as $answer ) {
+                    $cloned_answers[$question->id] = $answer->value;
                 }
             }
-            var_dump($cloned_answers);
+            $answers = $cloned_answers;
         }
 
-        /* Set default answers */
-        $survey->setDefaults();
+        $this->createWithSurvey($data['title'], $data['project_id'], $next_version, $current_plan->survey->template_id, $answers);
 
         return true;
     }

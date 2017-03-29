@@ -231,6 +231,7 @@
                         div.modal();
                     },
                     success : function (json) {
+                        console.log(json.msg);
                         if (json.response == '200') {
                             div.modal('hide');
                             location.reload();

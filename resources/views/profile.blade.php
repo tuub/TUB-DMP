@@ -7,7 +7,7 @@
 @section('body')
 
     <br/><br/><br/>
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-12 col-md-offset-6 col-sm-24 col-xs-24">
         <div class="panel panel-default">
             <div class="panel-heading text-center">
                 {{ trans('profile.header') }}

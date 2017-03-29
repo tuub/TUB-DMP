@@ -52,44 +52,14 @@ class PlanController extends Controller
         $this->plan = $plan;
     }
 
-    // TODO: Check! Everything necessary? GetPlans necessary?
-
-    /*public function index()
-    {
-        $internal_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
-        $external_templates = $this->template->where( 'institution_id', 1 )->where('is_active', 1)->pluck( 'name', 'id' );
-        $template_selector = [ 'TU Berlin' => $internal_templates ] + [ 'Other Organisations' => $external_templates ];
-        //$template_selector = $internal_templates;
-        $user_selector = User::active()->pluck('real_name','id');
-        $plans = $this->plan->getPlans();
-        return view('dashboard', compact('plans', 'template_selector', 'user_selector'));
-    }
-    */
 
     public function store(PlanRequest $request)
     {
         /* Filter out all empty inputs */
         $data = array_filter($request->all(), 'strlen');
 
-        /* Create a new plan instance */
-        $plan = new $this->plan;
-        $plan = $plan->create([
-            'project_id' => $data['project_id'],
-            'title'      => $data['title'],
-            'version'    => $data['version'],
-        ]);
-
-        /* Create a new survey instance and attach plan to it */
-        $survey = new Survey;
-        $survey->plan()->associate($plan);
-        $survey->template_id = $data['template_id'];
-        $survey->save();
-
-        /* Set default answers */
-        $survey->setDefaults();
-
-        /* Fire plan create event */
-        Event::fire(new PlanCreated($plan));
+        /* Create Plan with corresponding Survey */
+        $this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id']);
 
         /* Create a response in JSON */
         if ($request->ajax()) {
@@ -110,31 +80,16 @@ class PlanController extends Controller
                 return view('plan.show', compact('plan'));
             }
         }
-        throw new NotFoundHttpException;
+        //throw new NotFoundHttpException;
     }
-
-    /*
-    public function edit($id) {
-        $plan = $this->plan->findOrFail($id);
-        $templates = collect([]);
-        return view('plan.edit', compact('plan','templates'));
-    }
-    */
 
 
     public function update(PlanRequest $request)
     {
         $plan = $this->plan->findOrFail($request->id);
         $data = array_filter($request->all(), 'strlen');
-        /*
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
-        */
 
         $plan->update($data);
-
-        /* Fire plan create event */
         Event::fire(new PlanUpdated($plan));
 
         /* Response */
@@ -144,37 +99,10 @@ class PlanController extends Controller
                 'msg' => 'DMP updated!'
             ]);
         };
-            /*
-            $input = Input::all();//Get all the old input.
-            $input['autoOpenModal'] = 'true';//Add the auto open indicator flag as an input.
-            return Redirect::back()
-                ->withErrors($this->messageBag)
-                ->withInput($input);//Passing the old input and the flag.
-            */
-            //return response()->json(['message' => 'OK']);
-
-        //return Redirect::route('dashboard');
-        /*
-        if($this->plan->updatePlan($request)) {
-            $msg = 'Save';
-            if ($request->ajax()) {
-                return response()->json(['message' => $msg]);
-            }
-            Notifier::success($msg)->flash()->create();
-        } else {
-            $msg = 'Not saved!';
-            if ($request->ajax()) {
-                return response()->json(['message' => $msg]);
-            }
-            Notifier::error($msg)->flash()->create();
-        }
-        return Redirect::back();
-        */
-        //return $request->ajax();
     }
 
 
-    public function toggle($id)
+    public function toggleState($id)
     {
         $plan = $this->plan->findOrFail($id);
 
@@ -198,12 +126,22 @@ class PlanController extends Controller
     {
         $data = $request->except(['_token']);
         if($this->plan->createNextVersion($data)) {
-            $msg = 'New version added!';
-            Notifier::success( $msg )->flash()->create();
+            $code = 200;
+            $msg = 'New version created!';
+            //Notifier::success( $msg )->flash()->create();
         } else {
+            $code = 500;
             $msg = 'Versioning failed!';
-            Notifier::error( $msg )->flash()->create();
+            //Notifier::error( $msg )->flash()->create();
         }
+
+        /* Response */
+        if ($request->ajax()) {
+            return response()->json([
+                'response' => $code,
+                'msg' => $msg
+            ]);
+        };
 
 
         /*
@@ -256,7 +194,7 @@ class PlanController extends Controller
 
 
 
-    public function destroy( $id ) {
-        //
+    public function destroy($id) {
+
     }
 }

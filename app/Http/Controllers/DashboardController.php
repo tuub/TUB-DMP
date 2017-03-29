@@ -2,21 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Question;
-use App\QuestionAnswerRelation;
-use App\Template;
-use App\Plan;
-use App\User;
-
 use App\Http\Requests\FeedbackRequest;
-
-
-use View;
-use Auth;
-use Session;
-use Mail;
 use Notifier;
-use Redirect;
+use Illuminate\Support\Facades\Mail;
+
 
 class DashboardController extends Controller
 {
@@ -25,8 +14,8 @@ class DashboardController extends Controller
         //$this->beforeFilter('auth');
     }
 
-    public function feedback( FeedbackRequest $request ) {
-
+    public function feedback( FeedbackRequest $request )
+    {
         $feedback['name'] = $request->get( 'name' );
         $feedback['email'] = $request->get( 'email' );
         $feedback['message'] = $request->get( 'message' );
@@ -40,7 +29,14 @@ class DashboardController extends Controller
                 } );
         Notifier::success( 'Your Feedback has been sent.' )->flash()->create();
 
-        return Redirect::back();
+        // check for failures
+        if (Mail::failures()) {
+            var_dump('Mail error!');
+        } else {
+            var_dump('Mail sent!');
+        }
+
+        //return Redirect::back();
 
     }
 

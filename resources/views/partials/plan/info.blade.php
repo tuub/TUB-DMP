@@ -7,9 +7,11 @@
                 </div>
                 <div class="col-md-20 col-sm-17 col-xs-18">
                     <span class="plan-title">{{ $plan->title }}</span>
-                    <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
-                        <i class="fa fa-pencil"></i>
-                    </a>
+                    @unless( $plan->is_final )
+                        <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    @endunless
                 </div>
                 <div class="col-md-3 col-sm-5 col-xs-4 text-right">
                     @if( $plan->is_final )
@@ -45,15 +47,14 @@
                     </div>
                     <div class="version">
                         @if( $plan->is_final )
-                            @unless( $plan->hasNextVersion($plan->id, $plan->version) )
+                            @if( $plan->hasNextVersion($plan->version) )
+                                This DMP is finished and already has a version {{ $plan->version+1 }}.
+                            @else
                                 <a href="{{ URL::route('plan.toggle', [$plan->id, $plan->version]) }}" class="btn btn-default btn-xs" title="Reopen"><i class="fa fa-unlock"></i><span class="hidden-xs"> Reopen</span></a>
 
                                 <a href="#" class="create-plan-version btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#create-plan-version" title="Make new Version {{ $plan->version+1 }}">
                                     <i class="fa fa-fast-forward"></i><span class="hidden-sm hidden-xs"> Create version {{ $plan->version+1 }}</span>
                                 </a>
-
-                            @else
-                                This DMP is finished and already has a version {{ $plan->version+1 }}.
                             @endif
                         @else
                             <a href="{{ URL::route('plan.toggle', [$plan->id]) }}" class="btn btn-default btn-xs" title="Finish"><i class="fa fa-lock"></i><span class="hidden-xs"> Finish DMP</span></a>

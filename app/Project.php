@@ -98,12 +98,11 @@ class Project extends Node
      */
     public function getMetadata($attribute)
     {
-        $data = collect([]);
+        $data = null;
 
         foreach( $this->metadata as $metadata ) {
-
             if ($metadata->metadata_registry->identifier == $attribute) {
-                $data = collect($metadata->content);
+                $data = $metadata->content;
             }
         }
 
@@ -118,7 +117,7 @@ class Project extends Node
      */
     public function getMetadataContentType($attribute)
     {
-        $data = collect([]);
+        $data = new ContentType();
 
         foreach( $this->metadata as $metadata ) {
             if ($metadata->metadata_registry->identifier == $attribute) {

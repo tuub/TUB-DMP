@@ -107,7 +107,7 @@ Route::group(['middleware' => 'auth'], function()
     ]);
     /* TOGGLE FINAL STATE */
     Route::get('/plan/{id}/toggle', [
-        'uses' => 'PlanController@toggle',
+        'uses' => 'PlanController@toggleState',
         'as' => 'plan.toggle'
     ]);
     /* VERSION */
