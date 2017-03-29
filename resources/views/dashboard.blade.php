@@ -18,10 +18,21 @@
 
             function getVisibleProjects()
             {
+                $('a.hide-plans').addClass('hidden');
+
                 var opened = $.cookie('tub-dmp_dashboard' );
                 var projects = opened.split(',');
+
                 $('.dashboard-project-plans').filter(function() {
                     return $.inArray($(this).attr('data-content'), projects) > -1;
+                }).removeClass('hidden');
+
+                $('a.show-plans').filter(function() {
+                    return $.inArray($(this).attr('data-href'), projects) > -1;
+                }).addClass('hidden');
+
+                $('a.hide-plans').filter(function() {
+                    return $.inArray($(this).attr('data-href'), projects) > -1;
                 }).removeClass('hidden');
             }
 
@@ -79,8 +90,8 @@
                     return $(this).data('href') === project_id
                 });
 
-                show_link.hide();
-                hide_link.show();
+                //show_link.hide();
+                //hide_link.show();
                 $('tr[data-content=' + project_id + ']').removeClass('hidden');
                 setVisibleProjects();
             });
@@ -327,7 +338,7 @@
     <style>
 
         a.hide-plans {
-            display: none;
+            /*display: none;*/
         }
 
         .hidden {
