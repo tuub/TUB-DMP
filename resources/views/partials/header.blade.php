@@ -33,7 +33,11 @@
                     @endif
                     @if( Auth::check() )
                         <li>
-                            <a href="#" data-toggle="modal" data-target="#feedback" title="Feedback"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a>
+                            <a href="#" class="feedback" data-toggle="modal" data-target="#feedback" title="Feedback">
+                                <i class="fa fa-comment" aria-hidden="true"></i>Feedback</a>
+                            </a>
+
+
                         </li>
                     @endif
                     @if( Auth::check() and Auth::user()->is_admin )

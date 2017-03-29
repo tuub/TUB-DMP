@@ -74,6 +74,32 @@
 </div>
 
 
+<!-- Email Plan Modal -->
+<div class="modal fade" id="email-plan" tabindex="-1" role="dialog" aria-labelledby="email-plan">
+    {!! BootForm::open()->id('email-plan-form')->action( route('plan.email') )->post() !!}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Email DMP <span id="plan-title"></span></h4>
+            </div>
+            <div class="modal-body">
+                Let your colleagues know about your DMP.
+                {!! BootForm::hidden('id')->id('id') !!}
+                {!! BootForm::hidden('project_id')->id('project_id') !!}
+                {!! BootForm::hidden('version')->id('version') !!}
+                {!! BootForm::text('Name', 'name')->placeholder('John Doe') !!}
+                {!! BootForm::text('Email', 'email')->placeholder('john.doe@example.org') !!}
+                {!! BootForm::textarea('Your Message', 'message') !!}
+            </div>
+            <div class="modal-footer">
+                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit('Send')->class('btn btn-success') !!}
+            </div>
+        </div>
+    </div>
+    {!! BootForm::close() !!}
+</div>
 
 @if( false )
 <div class="modal fade" id="version-option-for-{{ $plan->id }}" tabindex="-1" role="dialog" aria-labelledby="version-option-for-{{ $plan->id }}">
@@ -100,12 +126,6 @@
     {!! Form::close() !!}
 </div>
 @endif
-
-
-
-
-
-
 
 
 

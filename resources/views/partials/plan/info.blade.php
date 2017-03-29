@@ -38,7 +38,7 @@
                         <a href="{{ URL::route('survey.show', [$plan->id]) }}" class="btn btn-default btn-xs" title="View">
                             <i class="fa fa-eye"></i><span class="hidden-sm hidden-xs"> View</span>
                         </a>
-                        <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#email-option-for-{{ $plan->id }}" title="Email">
+                        <a href="#" class="email-plan btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#email-plan" title="Email Plan">
                             <i class="fa fa-envelope-o"></i><span class="hidden-sm hidden-xs"> Email</span>
                         </a>
                         <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#export-option-for-{{ $plan->id }}" title="PDF">

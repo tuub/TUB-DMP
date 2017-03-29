@@ -24,7 +24,7 @@ class EmailPlanRequest extends Request
     public function rules()
     {
         return [
-            'project_number' => 'required',
+            'project_id' => 'required',
             'version' => 'required',
             'name' => 'required',
             'email' => 'required|email',

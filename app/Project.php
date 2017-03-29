@@ -92,26 +92,33 @@ class Project extends Node
 
 
     /**
-     * @param $attribute
+     * @param String $attribute
      *
      * @return Collection
      */
     public function getMetadata($attribute)
     {
-        $data = null;
+        $data = collect([]);
+        $content_type = new ContentType();
 
         foreach( $this->metadata as $metadata ) {
             if ($metadata->metadata_registry->identifier == $attribute) {
-                $data = $metadata->content;
+                $data = collect($metadata->content);
+                $content_type = $metadata->metadata_registry->content_type()->first();
             }
         }
 
-        return $data;
+        //var_dump($data);
+        //var_dump($content_type);
+
+
+        $result = ProjectMetadata::formatForOutput($data, $content_type);
+        return $result;
     }
 
 
     /**
-     * @param $attribute
+     * @param String $attribute
      *
      * @return Collection
      */
@@ -132,10 +139,10 @@ class Project extends Node
     // TODO: View Composer to the rescue?
     public function getStatusAttribute()
     {
-        if( $this->getMetadata('begin')->isEmpty() ) {
+        if( is_null($this->getMetadata('begin')) ) {
             return 'Unknown';
         } else {
-            if( $this->getMetadata('end')->isEmpty() || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
+            if( is_null($this->getMetadata('end')) || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
                 return 'Running';
             } else {
                 return 'Ended';

@@ -122,15 +122,15 @@ class PlanController extends Controller
     }
 
 
-    public function version(VersionRequest $request)
+    public function version(VersionPlanRequest $request)
     {
         $data = $request->except(['_token']);
-        if($this->plan->createNextVersion($data)) {
-            $code = 200;
+        if ($this->plan->createNextVersion($data)) {
+            $response = 200;
             $msg = 'New version created!';
             //Notifier::success( $msg )->flash()->create();
         } else {
-            $code = 500;
+            $response = 500;
             $msg = 'Versioning failed!';
             //Notifier::error( $msg )->flash()->create();
         }
@@ -138,46 +138,41 @@ class PlanController extends Controller
         /* Response */
         if ($request->ajax()) {
             return response()->json([
-                'response' => $code,
+                'response' => $response,
                 'msg' => $msg
             ]);
         };
-
-
-        /*
-        if($this->plan->createNextVersion($request)) {
-            $msg = 'New version added!';
-            Notifier::success( $msg )->flash()->create();
-        } else {
-            $msg = 'Versioning failed!';
-            Notifier::error( $msg )->flash()->create();
-        }
-        return Redirect::route('dashboard');
-        */
     }
+
+
+
 
 
     public function email(EmailPlanRequest $request)
     {
-        if($this->plan->emailPlan($request)) {
-            $msg = 'Emailed successfully!';
-            Notifier::success($msg)->flash()->create();
+        $data = $request->except(['_token']);
+        if ($this->plan->emailToRecipient($data)) {
+            $response = 200;
+            $msg = 'Mail sent!';
         } else {
-            $msg = 'Emailing failed!';
-            Notifier::error($msg)->flash()->create();
+            $response = 500;
+            $msg = 'Mail not sent!';
         }
-        return Redirect::route('dashboard');
+
+        /* Response */
+        if ($request->ajax()) {
+            return response()->json([
+                'response' => $response,
+                'msg' => $msg,
+            ]);
+        };
     }
 
 
-    /**
-     * @param $project_number
-     * @param $version
-     * @param $format
-     * @param $download
-     *
-     * @return Redirect
-     */
+
+
+
+
     public function export($id, $format = null, $download = true)
     {
         if($this->plan->exportPlan($id, $format, $download)) {

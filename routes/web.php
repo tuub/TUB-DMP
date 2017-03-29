@@ -115,7 +115,11 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@version',
         'as' => 'plan.version'
     ]);
-
+    /* EMAIL */
+    Route::post('/plan/email', [
+        'uses' => 'PlanController@email',
+        'as' => 'plan.email'
+    ]);
 
 
     /* EXPORT */
@@ -123,11 +127,7 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@export',
         'as' => 'export_plan'
     ]);
-    /* EMAIL */
-    Route::post('/plan/email', [
-        'uses' => 'PlanController@email',
-        'as' => 'email_plan'
-    ]);
+
 
     /* Project */
 

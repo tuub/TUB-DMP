@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 {!! BootForm::text('Name', 'name')->placeholder('John Doe')->value( auth()->user()->name ) !!}
-                {!! BootForm::text('Email', 'name')->placeholder('john.doe@example.org')->value( auth()->user()->email ) !!}
+                {!! BootForm::text('Email', 'email')->placeholder('john.doe@example.org')->value( auth()->user()->email ) !!}
                 {!! BootForm::textarea('Your Feedback message', 'message') !!}
             </div>
             <div class="modal-footer">

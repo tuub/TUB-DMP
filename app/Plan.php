@@ -15,7 +15,7 @@ use App\Events\PlanCreated;
 use Carbon\Carbon;
 //use Storage;
 use Exporters;
-//use Mail;
+use Mail;
 use Illuminate\Support\Facades\Log;
 
 class Plan extends Model
@@ -173,6 +173,45 @@ class Plan extends Model
         }
 
         $this->createWithSurvey($data['title'], $data['project_id'], $next_version, $current_plan->survey->template_id, $answers);
+
+        return true;
+    }
+
+    public function emailToRecipient($data)
+    {
+        $sender['name'] = auth()->user()->name;
+        $sender['email'] = auth()->user()->email;
+        $sender['message'] = $data['message'];
+        $recipient['name'] = $data['name'];
+        $recipient['email'] = $data['email'];
+        $plan = $this->find($data['id']);
+        $project = Project::find($data['project_id']);
+        if( $project ) {
+            $project_id = $project->identifier;
+        } else {
+            $project_id = null;
+        }
+
+        Mail::send(['text' => 'emails.plan'], ['plan' => $plan, 'recipient' => $recipient, 'sender' => $sender ],
+            function($email) use ($sender, $recipient, $plan, $project_id) {
+                $subject = 'Data Management Plan "' . $plan->title . '"';
+                if (isset($project_id)) {
+                    $subject .= ' for TUB project ' . $project_id;
+                }
+                $subject .= ' / Version ' . $plan->version;
+                $email->from(env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP'));
+                if ($recipient['name']) {
+                    $email->to($recipient['email'], $recipient['name'])->subject($subject);
+                } else {
+                    $email->to($recipient['email'])->subject($subject);
+                }
+                $email->replyTo($sender['email'], $sender['name']);
+            }
+        );
+
+        if( Mail::failures() ) {
+            return false;
+        }
 
         return true;
     }
@@ -340,7 +379,7 @@ class Plan extends Model
      *
      * @return bool
      */
-    public function emailPlan( EmailPlanRequest $request )
+    public function emailoPlan( EmailPlanRequest $request )
     {
         $sender['name'] = Auth::user()->name;
         $sender['email'] = Auth::user()->email;
@@ -362,8 +401,7 @@ class Plan extends Model
                     }
                     $message->replyTo($sender['email'], $sender['name']);
                     $message->attachData($pdf, $pdf_filename);
-                }
-            );
+                });
             return true;
         };
         return false;

@@ -38,13 +38,9 @@ class ProjectMetadata extends Model
     }
 
 
-    public static function formatForOutput( $metadata, ContentType $content_type )
+    public static function formatForOutput( Collection $metadata, ContentType $content_type )
     {
         $output = collect([]);
-
-        //if( $content_type->identifier == 'date' ) {
-        //    dd($metadata);
-        //}
         $output = new HtmlOutputFilter($metadata, $content_type);
 
         return $output->render();

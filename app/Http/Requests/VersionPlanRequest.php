@@ -24,7 +24,8 @@ class VersionPlanRequest extends Request
     public function rules()
     {
         return [
-            //
+            'project_id' => 'required',
+            'title' => 'required',
         ];
     }
 }

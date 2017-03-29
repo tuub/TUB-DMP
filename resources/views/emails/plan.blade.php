@@ -1,13 +1,18 @@
 @if( $recipient['name'] )
-    Dear Mrs./Mr. {!! $recipient['name'] !!},
+    Dear {!! $recipient['name'] !!},
 @else
     Hello,
 @endif
 
-in the attachment please find the Data Management Plan for TUB project "{!! $plan->getTitle() !!}" (Version {!! $plan->version !!}).
+In the attachment please find the Data Management Plan "{!! $plan->title !!}" (Version {!! $plan->version !!}).
+
+@if( $sender['message'] )
+Additional Message:
+{!! $sender['message'] !!}
+@endif
 
 Best regards,
-{!! Auth::user()->name !!}
+{!! $sender['name'] !!} ({!! $sender['email'] !!})
 
 
 ---
