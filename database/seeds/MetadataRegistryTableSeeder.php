@@ -67,8 +67,8 @@ class MetadataRegistryTableSeeder extends Seeder
         MetadataRegistry::create([
             'id' => 7,
             'namespace' => 'project',
-            'identifier' => 'members',
-            'title' => 'Other Principal Investigator(s)',
+            'identifier' => 'member',
+            'title' => 'Other Principal Investigator',
             'description' => 'Other principal investigator(s) of the research project.',
             'content_type_id' => 4,
         ]);
@@ -77,7 +77,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'id' => 8,
             'namespace' => 'project',
             'identifier' => 'partner',
-            'title' => 'External Project Partner(s)',
+            'title' => 'External Project Partner',
             'description' => 'The external project partner(s) of the research project.',
             'content_type_id' => 5,
         ]);

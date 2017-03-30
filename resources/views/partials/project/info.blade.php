@@ -6,14 +6,16 @@
         @endif
     </td>
     <td>
-
         @if( $project->getMetadata('title') )
+            <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
+            <br/>
             @foreach( $project->getMetadata('title') as $key => $value )
                 {{ $value }} ({{ $key  }})<br/>
             @endforeach
         @endif
 
         @if( $project->getMetadata('begin') )
+            <label>Duration:</label>
             @foreach( $project->getMetadata('begin') as $begin )
                 @date($begin) -
                 @if( $project->getMetadata('end') )
@@ -25,14 +27,13 @@
         @endif
         <br/>
         @if( $project->getMetadata('funding_source') )
-            Funded by {{ $project->getMetadata('funding_source')->implode(', ') }}
+            <label>Funded by:</label>
+            {{ $project->getMetadata('funding_source')->implode(', ') }}
         @endif
     </td>
     <td>
-        {{ $project->user->name }}
-        <br/>
-        @if( $project->getMetadata('members') )
-            {!! $project->getMetadata('members')->implode('<br/>') !!}
+        @if( $project->getMetadata('member') )
+            {!! $project->getMetadata('member')->implode('<br/>') !!}
         @endif
     </td>
     <td>
@@ -55,7 +56,7 @@
         <span class="text-info">{{ $project->status }}</span>
     </td>
     <td>
-        <a href="{{ route('project.show', $project->id)}}" class="show-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#show-project-{{$project->id}}" title="Show Project">
+        <a href="{{ route('project.show', $project->id)}}" class="show-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#show-project-{{$project->id}}" title="Show Project">
             <i class="fa fa-eye"></i></a><!--<span class="hidden-sm hidden-xs"> Show</span>-->
         </a>
         <a href="{{ route('project.edit', $project->id)}}" class="edit-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#edit-project-{{$project->id}}" title="Edit Project">
@@ -63,8 +64,7 @@
         </a>
     </td>
     <td>
-        <a href="#" class="show-plans btn btn-default btn-xs" data-href="{{  $project->id }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-        <a href="#" class="hide-plans btn btn-default btn-xs" data-href="{{  $project->id }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
+        <a href="#" class="toggle-plans btn btn-default btn-xs" data-href="{{  $project->id }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
     </td>
 </tr>
 <tr class="dashboard-project-plans hidden" data-content="{{  $project->id }}">

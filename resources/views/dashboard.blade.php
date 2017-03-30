@@ -27,13 +27,9 @@
                     return $.inArray($(this).attr('data-content'), projects) > -1;
                 }).removeClass('hidden');
 
-                $('a.show-plans').filter(function() {
+                $('a.toggle-plans').filter(function() {
                     return $.inArray($(this).attr('data-href'), projects) > -1;
-                }).addClass('hidden');
-
-                $('a.hide-plans').filter(function() {
-                    return $.inArray($(this).attr('data-href'), projects) > -1;
-                }).removeClass('hidden');
+                }).find('i').toggleClass('fa-plus fa-minus');
             }
 
 
@@ -66,11 +62,15 @@
                     dataType: 'json',
                     error   : function (json) {
                         console.log(json.responseJSON);
+                        $.each(json.responseJSON, function (field, value) {
+                            form.find('#' + field).css('outline', '1px red solid').parent().append('<span class="error">' + value + '</span>');
+                        });
                         div.modal();
                     },
                     success : function (json) {
                         console.log(json);
                         if (json.response === 200) {
+                            // http://stackoverflow.com/questions/13177426/how-to-destroy-bootstrap-modal-window-completely/18169689
                             div.modal('hide');
                             form.find("#message").val('').end();
                         }
@@ -78,39 +78,46 @@
                 })
             });
 
-
-            $('a.show-plans').bind('click', function (e) {
+            $('a.toggle-plans').bind('click', function (e) {
                 e.preventDefault();
-                //console.log($(this).data('href'));
                 var project_id  = $(this).data('href');
-                var show_link   = $(this).filter(function(){
-                    return $(this).data('href') === project_id
-                });
-                var hide_link   = $('a.hide-plans').filter(function(){
-                    return $(this).data('href') === project_id
-                });
+                var toggleState = ($(this).find('i').hasClass('fa-plus')) ? 'open' : 'closed';
 
-                //show_link.hide();
-                //hide_link.show();
-                $('tr[data-content=' + project_id + ']').removeClass('hidden');
+                if( toggleState === 'open' ) {
+                    $(this).find('i').removeClass('fa-plus').addClass('fa-minus');
+                    $('tr[data-content=' + project_id + ']').removeClass('hidden');
+                } else {
+                    $(this).find('i').removeClass('fa-minus').addClass('fa-plus');
+                    $('tr[data-content=' + project_id + ']').addClass('hidden');
+                }
+
                 setVisibleProjects();
             });
 
-            $('a.hide-plans').bind('click', function (e) {
+
+            $('a.show-project').bind('click', function (e) {
                 e.preventDefault();
-                var project_id = $(this).data('href');
-                var show_link   = $('a.show-plans').filter(function(){
-                    return $(this).data('href') === project_id
-                });
-                var hide_link   = $(this).filter(function(){
-                    return $(this).data('href') === project_id
-                });
 
-                hide_link.hide();
-                show_link.show();
+                //var form    = $('#show-project-form');
+                var project_id  = $(this).data('rel');//form.parent();
+                var div         = $('#show-project-' + project_id);//form.parent();
 
-                $('tr[data-content=' + project_id + ']').addClass('hidden');
-                setVisibleProjects();
+                $.ajax({
+                    type    : 'GET',
+                    url     : '/my/project/' + project_id + '/show',
+                    dataType: 'json',
+                    error   : function (json) {
+                        //console.log(json);
+                        div.modal();
+                    },
+                    success : function (json) {
+                        //console.log(json);
+                        //$.each(json, function (field, value) {
+                        //    form.find('#' + field).val(value);
+                        //});
+                        div.modal();
+                    }
+                });
             });
 
 
@@ -124,6 +131,10 @@
                     type    : 'GET',
                     url     : '/my/project/' + $(this).data('rel') + '/show',
                     dataType: 'json',
+                    error   : function (json) {
+                        console.log(json);
+                        div.modal();
+                    },
                     success : function (json) {
                         $.each(json, function (field, value) {
                             form.find('#' + field).val(value);
@@ -389,6 +400,7 @@
                     <tbody>
                         @foreach ($projects as $project)
                             @include('partials.project.info', $project)
+                            @include('partials.project.modal', $project)
                         @endforeach
                     </tbody>
                 </table>
@@ -396,7 +408,7 @@
         </div>
     </div>
 
-    @include('partials.project.modal')
+
     @include('partials.plan.modal')
 
 @stop

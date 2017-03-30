@@ -1,4 +1,4 @@
-<!-- Create Plan Modal -->
+<!-- Feedback Modal -->
 <div class="modal fade" id="feedback" tabindex="-1" role="dialog" aria-labelledby="feedback">
     {!! BootForm::open()->id('feedback-form')->action( route('feedback') )->post() !!}
     <div class="modal-dialog" role="document">

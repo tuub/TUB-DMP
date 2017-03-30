@@ -104,13 +104,9 @@ class Project extends Node
         foreach( $this->metadata as $metadata ) {
             if ($metadata->metadata_registry->identifier == $attribute) {
                 $data = collect($metadata->content);
-                $content_type = $metadata->metadata_registry->content_type()->first();
+                $content_type = $metadata->metadata_registry->content_type;
             }
         }
-
-        //var_dump($data);
-        //var_dump($content_type);
-
 
         $result = ProjectMetadata::formatForOutput($data, $content_type);
         return $result;
@@ -122,13 +118,12 @@ class Project extends Node
      *
      * @return Collection
      */
-    public function getMetadataContentType($attribute)
+    public function getMetadataLabel($attribute)
     {
-        $data = new ContentType();
-
+        $data = null;
         foreach( $this->metadata as $metadata ) {
             if ($metadata->metadata_registry->identifier == $attribute) {
-                $data = $metadata->metadata_registry->content_type;
+                $data = $metadata->metadata_registry->title;
             }
         }
 
@@ -148,6 +143,25 @@ class Project extends Node
                 return 'Ended';
             }
         }
+    }
+
+
+    /**
+     * @param String $attribute
+     *
+     * @return Collection
+     */
+    public function getMetadataContentType($attribute)
+    {
+        $data = new ContentType();
+
+        foreach( $this->metadata as $metadata ) {
+            if ($metadata->metadata_registry->identifier == $attribute) {
+                $data = $metadata->metadata_registry->content_type;
+            }
+        }
+
+        return $data;
     }
 
 

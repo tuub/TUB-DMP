@@ -1,3 +1,58 @@
+<!-- Show Project Modal -->
+<div class="modal fade" id="show-project-{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="show-project-{{ $project->id }}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Project Metadata</h4>
+            </div>
+            <div class="modal-body">
+                <label>Project Number</label>
+                {{ $project->identifier }}
+                <br/>
+                <label>{{ str_plural('Plan', $project->plans_count) }}:</label>
+                {{ $project->plans_count }}
+                <br/>
+                <label>{{ str_plural('Sub Project', $project->children_count) }}:</label>
+                {{ $project->children_count }}
+                <br/>
+                <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
+                <br/>
+                @if( $project->getMetadata('title') )
+                    @foreach( $project->getMetadata('title') as $key => $value )
+                        {{ $value }} ({{ $key  }})<br/>
+                    @endforeach
+                @endif
+                <br/>
+                <label>Duration:</label>
+                @if( $project->getMetadata('begin') )
+                    @foreach( $project->getMetadata('begin') as $begin )
+                        @date($begin) -
+                        @if( $project->getMetadata('end') )
+                            @foreach( $project->getMetadata('end') as $end )
+                                @date($end)
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endif
+                <br/>
+                <label>{{ str_plural($project->getMetadataLabel('member'), $project->getMetadata('member')->count()) }}:</label>
+                @if( $project->getMetadata('member') )
+                    {!! $project->getMetadata('member')->implode(', ') !!}
+                @endif
+                <br/>
+                <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>
+                @if( $project->getMetadata('funding_source') )
+                    {!! $project->getMetadata('funding_source')->implode(', ') !!}
+                @endif
+            </div>
+            <div class="modal-footer">
+                {{ Form::button('OK', ['class' => 'btn btn-success', 'data-dismiss' => 'modal']) }}
+            </div>
+        </div>
+    </div>
+</div>
+
 @if( false )
     <!-- Create Project Modal -->
     <div class="modal fade" id="create-project" tabindex="-1" role="dialog" aria-labelledby="create-project">
