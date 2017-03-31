@@ -37,7 +37,8 @@
         },
         "files": [
             "app/Helpers/notifier.php",
-            "app/Helpers/exporters.php"
+            "app/Helpers/exporters.php",
+            "app/Helpers/AppHelper.php"
         ]
     },
     "autoload-dev": {
