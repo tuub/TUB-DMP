@@ -32,11 +32,7 @@
     <td>
         @if( $project->getMetadata('member') )
             @foreach( $project->getMetadata('member') as $member )
-                {{ get_class($member) }}
-                {{ $member['firstname'] }} {{ $member['lastname'] }}
-                {{ $member['email'] }}
-                {{ $member['uri'] }}
-                <?php \AppHelper::varDump($member); ?>
+                {!! \App\ProjectMetadata::getProjectMemberOutput($member) !!}<br/>
             @endforeach
         @endif
     </td>
