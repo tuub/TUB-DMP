@@ -165,7 +165,34 @@ class Project extends Node
     }
 
 
+    /**
+     * @param String $attribute
+     *
+     * @return Collection
+     */
+    public function getMetadataRegistryIdByIdentifier($identifier)
+    {
+        $data = null;
 
+        foreach( $this->metadata as $metadata ) {
+            if ($metadata->metadata_registry->identifier == $identifier) {
+                $data = $metadata->metadata_registry->id;
+            }
+        }
+        //\AppHelper::varDump($data);
+        return $data;
+    }
+
+
+    public function saveMetadata($data)
+    {
+        if ($data) {
+            //$data = array_filter(array_map('array_filter', $data));
+            ProjectMetadata::saveAll($this, $data);
+        }
+
+        return true;
+    }
 
 
 

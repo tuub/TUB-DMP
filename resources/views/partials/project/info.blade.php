@@ -7,8 +7,8 @@
     </td>
     <td>
         @if( $project->getMetadata('title') )
-            @foreach( $project->getMetadata('title') as $key => $value )
-                {{ $value }} ({{ $key  }})<br/>
+            @foreach( $project->getMetadata('title') as $title )
+                <label>{{ strtoupper($title['language']) }}:</label> {{ $title['content'] }}<br/>
             @endforeach
         @endif
 
@@ -59,7 +59,7 @@
         <a href="{{ route('project.show', $project->id)}}" class="show-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#show-project-{{$project->id}}" title="Show Project">
             <i class="fa fa-eye"></i></a><!--<span class="hidden-sm hidden-xs"> Show</span>-->
         </a>
-        <a href="{{ route('project.edit', $project->id)}}" class="edit-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-toggle="modal" data-target="#edit-project-{{$project->id}}" title="Edit Project">
+        <a href="{{ route('project.edit', $project->id)}}" class="edit-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#edit-project-{{$project->id}}" title="Edit Project">
             <i class="fa fa-pencil"></i></a><!--<span class="hidden-sm hidden-xs"> Edit</span>-->
         </a>
     </td>

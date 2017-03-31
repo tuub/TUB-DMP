@@ -146,6 +146,7 @@
                         div.modal();
                     },
                     success : function (json) {
+                        console.log(json);
                         $.each(json, function (field, value) {
                             form.find('#' + field).val(value);
                         });
@@ -154,9 +155,9 @@
                 });
             });
 
-            /*
+
             $('#edit-project-form').bind('submit', function (e) {
-                e.preventDefault();
+                //e.preventDefault();
 
                 var form    = $(this);
                 var div     = $(this).parent();
@@ -171,14 +172,17 @@
                         div.modal();
                     },
                     success : function (json) {
+                        console.log(json);
+                        /*
                         if (json.response == 200) {
                             div.modal('hide');
                             location.reload();
                         }
+                        */
                     }
                 })
             });
-            */
+
 
             $('a.create-plan').bind('click', function (e) {
                 e.preventDefault();

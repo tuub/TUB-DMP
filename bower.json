@@ -19,6 +19,7 @@
     "simple-expand": "sylvain-hamel/simple-expand",
     "laravel-bootstrap-modal-form": "jerseymilker/laravel-bootstrap-modal-form",
     "js-cookie": "^2.1.3",
-    "seiyria-bootstrap-slider": "^9.7.2"
+    "seiyria-bootstrap-slider": "^9.7.2",
+    "bootstrap-select": "^1.12.2"
   }
 }

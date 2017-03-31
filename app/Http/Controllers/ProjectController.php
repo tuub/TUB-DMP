@@ -77,35 +77,15 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request)
     {
+        /* Get the project */
         $project = $this->project->findOrFail($request->id);
-        $data = $request->except(['_token', '_method', 'save']);
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
 
-        foreach ($data as $metadata_field => $metadata_value) {
+        /* Get the request data */
+        $data = $request->except(['_token', '_method']);
 
-            $registry = ProjectMetadata::findByIdentifier($metadata_field);
-
-            if (is_array($metadata_value)) {
-
-                $metadatum = ProjectMetadata::where([
-                    'project_id' => $project->id,
-                    'metadata_registry_id'=> $registry->id
-                ]);
-
-                $metadatum->update([
-                    'content' => $metadata_value
-                ]);
-            }
-        }
-
-        //dd($data);
+        /* Save the metadata */
+        $project->saveMetadata($data);
 
 
-        /*
-        $project->update($data);
-        return Redirect::route('dashboard');
-        */
     }
 }

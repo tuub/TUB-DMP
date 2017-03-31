@@ -11,16 +11,17 @@ class ProjectMetadataTableSeeder extends Seeder
     public function run()
     {
         //TestDummy::times(1)->create('App\Project');
+
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 1,
-            'content' => ['de' => 'SFB 1026 - Sustainable Manufacturing', 'en' => 'SFB 1026 - Sustainable Manufacturing'],
+            'content' => [['content' => 'SFB 1026 - Sustainable Manufacturing', 'language' => 'de'], ['content' => 'SFB 1026 - Sustainable Manufacturing', 'language' => 'en']],
         ]);
 
         ProjectMetadata::create([
             'project_id' => 1,
             'metadata_registry_id' => 2,
-            'content' => ['de' => 'Lorem Ipsum', 'en' => 'Foo Bar Foobar'],
+            'content' => [['content' => 'Lorem Ipsum', 'language' => 'de'], ['content' => 'Foo Bar Foobar', 'language' => 'en']],
         ]);
 
         ProjectMetadata::create([

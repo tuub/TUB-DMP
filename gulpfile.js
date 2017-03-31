@@ -24,6 +24,7 @@ var paths = {
     'slider': bowerpath + 'seiyria-bootstrap-slider/',
     //'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
     'tagsinput': bowerpath + 'bootstrap-tagsinput/',
+    'select': bowerpath + 'bootstrap-select/',
     'typeahead': bowerpath + 'typeahead.js/',
     'amaranjs': bowerpath + 'AmaranJS/',
     'jquery_expander': bowerpath + 'jquery.expander/',
@@ -68,6 +69,7 @@ elixir(function(mix) {
         paths.progressbar + 'bootstrap-progressbar.js',
         paths.tagsinput + 'dist/bootstrap-tagsinput.js',
         paths.slider + 'dist/bootstrap-slider.min.js',
+        paths.select + 'dist/js/bootstrap-select.min.js',
         //paths.bootstrap_modal_form + 'src/laravel-bootstrap-modal-form.js',
         paths.typeahead + 'dist/typeahead.jquery.js',
         paths.amaranjs + 'dist/js/jquery.amaran.js',
@@ -92,7 +94,7 @@ elixir(function(mix) {
         paths.tagsinput + 'dist/bootstrap-tagsinput.css',
         paths.amaranjs + 'dist/css/amaran.min.css',
         paths.slider + 'dist/css/bootstrap-slider.css',
+        paths.select + 'dist/css/bootstrap-select.css',
         //paths.jquery_steps + 'demo/css/jquery.steps.css'
     ], './public/css/vendor.css');
 });
-

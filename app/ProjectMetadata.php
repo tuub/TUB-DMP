@@ -11,7 +11,7 @@ use HTML;
 class ProjectMetadata extends Model
 {
     protected $table = 'project_metadata';
-    protected $fillable = ['content'];
+    protected $fillable = ['project_id', 'metadata_registry_id', 'content'];
     protected $casts = ['content' => 'array'];
 
     // 1 Project Metadata belongs to 1 Project.
@@ -47,7 +47,7 @@ class ProjectMetadata extends Model
         }
 
         if ($data['uri']) {
-            $output .= ' (' . HTML::link( $data['uri'], 'Link', ['target' => '_blank']) . ')';
+            $output .= ' (' . HTML::link( $data['uri'], 'www', ['target' => '_blank']) . ')';
         }
 
 
@@ -55,15 +55,19 @@ class ProjectMetadata extends Model
     }
 
 
-    public static function findByIdentifier($identifier)
+    public function findRegistryIdByIdentifier($identifier)
     {
-        $foo = self::with('metadata_registry')->whereHas('metadata_registry', function($q) use ($identifier) {
-            $q->where('identifier', $identifier);
-        })->first();
-        if($foo) {
-            return $foo->metadata_registry;
+        $data = null;
+
+        foreach( $this->metadata_registry as $registry ) {
+            if ($registry->identifier == $identifier) {
+                $data = $registry->id;
+            }
         }
-        return null;
+
+        echo $data;
+
+        return $data;
     }
 
 
@@ -73,6 +77,54 @@ class ProjectMetadata extends Model
         $output = new HtmlOutputFilter($metadata, $content_type);
 
         return $output->render();
+    }
+
+
+    public static function saveAll( Project $project, $metadata)
+    {
+        $data = collect([]);
+        $input_data = collect([]);
+
+        foreach( $metadata as $field => $content ) {
+
+            $metadata_registry_id = $project->getMetadataRegistryIdByIdentifier($field);
+
+            if (!is_null($metadata_registry_id)) {
+                $input_data = [
+                    'project_id' => $project->id,
+                    'metadata_registry_id' => $metadata_registry_id,
+                    'content' => $content
+                ];
+
+                $data->push($input_data);
+            }
+            /*
+            self::create([
+                'project_id'   => $project->id,
+                'metadata_registry_id' => $metadata_registry_id,
+                'content'       => $metadata
+            ]);
+            */
+            /*
+            if( is_array($metadata) ) {
+                foreach ($metadata as $metadatum => $values) {
+                    if (is_array($values)) {
+                        $result->put($field, $metadata);
+                    }
+                }
+            }
+            */
+        };
+
+        self::where('project_id', $project->id)->delete();
+
+        foreach ($data as $datum) {
+            \AppHelper::varDump($datum);
+            self::create($datum);
+        }
+
+        return true;
+
     }
 
 
