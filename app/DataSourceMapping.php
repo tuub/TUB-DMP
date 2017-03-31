@@ -8,6 +8,10 @@ class DataSourceMapping extends Model
 {
     protected $table = 'data_source_mappings';
     public $timestamps = false;
+    protected $casts = [
+        'data_source_entity' => 'array',
+        'target_entity' => 'array',
+    ];
 
     public function datasource()
     {
