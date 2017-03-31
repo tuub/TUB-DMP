@@ -7,8 +7,6 @@
     </td>
     <td>
         @if( $project->getMetadata('title') )
-            <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
-            <br/>
             @foreach( $project->getMetadata('title') as $key => $value )
                 {{ $value }} ({{ $key  }})<br/>
             @endforeach
@@ -33,7 +31,13 @@
     </td>
     <td>
         @if( $project->getMetadata('member') )
-            {!! $project->getMetadata('member')->implode('<br/>') !!}
+            @foreach( $project->getMetadata('member') as $member )
+                {{ get_class($member) }}
+                {{ $member['firstname'] }} {{ $member['lastname'] }}
+                {{ $member['email'] }}
+                {{ $member['uri'] }}
+                <?php \AppHelper::varDump($member); ?>
+            @endforeach
         @endif
     </td>
     <td>

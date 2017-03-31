@@ -34,6 +34,16 @@ class HtmlOutputFilter implements OutputInterface
                         return Carbon::parse($input);
                     });
                     break;
+                case 'person':
+                    foreach ($this->inputs as $person) {
+                        $person_data = collect();
+                        $person_data->put('firstname', $person['firstname']);
+                        $person_data->put('lastname', $person['lastname']);
+                        $person_data->put('email', $person['email']);
+                        $person_data->put('uri', $person['uri']);
+                        $output->push($person_data);
+                    }
+                    break;
                 default:
                     $output = $this->inputs;
                     break;
@@ -46,6 +56,9 @@ class HtmlOutputFilter implements OutputInterface
                             case 'list':
                                 $output = $value->implode(', ', $value);
                                 break;
+                            case 'person':
+                                var_dump($value);
+                                break;
                             default:
                                 $output = nl2br($value);
                                 break;
@@ -53,10 +66,14 @@ class HtmlOutputFilter implements OutputInterface
                     }
                 }
 
+                /*
                 if ($input instanceof Collection || $input instanceof ProjectMetadata) {
                     $output = $this->inputs;
                 }
+                */
             }
+
+            //\AppHelper::varDump($output);
 
             return $output;
         }
