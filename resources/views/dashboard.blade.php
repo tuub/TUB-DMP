@@ -11,10 +11,15 @@
 @section('body')
 
     <script>
-
-        $(document).ready(function () {
-
+        $(document).ready(function ()
+        {
+            /* Read open state of project's plan panel from cookie value */
             getVisibleProjects();
+
+            /* Gets the state of project's plan panel based on project_id from
+            *  cookie values and toggles the plus/minus buttons, located in
+            *  partials/project/info.php
+            * */
 
             function getVisibleProjects()
             {
@@ -32,6 +37,11 @@
                 }).find('i').toggleClass('fa-plus fa-minus');
             }
 
+
+            /* Sets the state of project's plan panel based on project_id from
+             *  cookie values and toggles the plus/minus buttons, located in
+             *  partials/project/info.php
+             * */
 
             function setVisibleProjects()
             {
