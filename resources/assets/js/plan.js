@@ -50,7 +50,7 @@ $(window).load(function()
     /* Prevent Form Submission by Enter Key, except for ENTERs in Tags Input Fields */
     $('form input').not('div.tagsinput input').on('keyup keypress', function(e) {
         var code = e.keyCode || e.which;
-        if (code == 13) {
+        if (code === 13) {
             e.preventDefault();
             return false;
         }
@@ -61,7 +61,7 @@ $(window).load(function()
 
     $text_inputs.each(function() {
         var id = $(this).attr('name').slice(0,-2);
-        if( $(this).val() != '' )
+        if( $(this).val() !== '' )
         {
             var id = $(this).attr('name').slice(0,-2);
             $('form div.question-status[id=' + id + ']').find('div.saved').show();
@@ -118,5 +118,5 @@ $(window).load(function()
                 console.log(e);
             }
         });
-    })
+    });
 });
