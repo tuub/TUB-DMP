@@ -102,7 +102,7 @@ class ProjectMetadata extends Model
         self::where('project_id', $project->id)->delete();
 
         foreach ($data as $datum) {
-            \AppHelper::varDump($datum);
+            //\AppHelper::varDump($datum);
             self::create($datum);
         }
 

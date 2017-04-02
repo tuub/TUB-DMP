@@ -173,12 +173,12 @@
                     },
                     success : function (json) {
                         console.log(json);
-                        /*
+
                         if (json.response == 200) {
                             div.modal('hide');
                             location.reload();
                         }
-                        */
+
                     }
                 })
             });
@@ -358,6 +358,7 @@
                 })
             });
 
+            /*
             $('div.modal-body').on('click', '.add-form-group', function(){
                 console.log('Triggered!');
                 var current_form_group = $(this).closest('.form-group');
@@ -376,6 +377,7 @@
                 $(this).parent().remove();
                 next_form_group.appendTo('#edit-project-form');
             })
+            */
         });
     </script>
 
