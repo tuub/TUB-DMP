@@ -16,25 +16,16 @@ use Event;
 use App\Events\PlanCreated;
 use App\Events\PlanUpdated;
 
-use App\IvmcMapping;
 use App\Plan;
-use App\User;
-use App\Question;
-use App\Answer;
 use App\Template;
 
-//use PhpSpec\Process\Shutdown\UpdateConsoleAction;
 use Jenssegers\Optimus\Optimus;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Laracasts\Flash\Flash;
 
-use Auth;
-//use Exporters;
 use Redirect;
-use Log;
-use Mail;
 use Notifier;
-use View;
+
+use Gate;
 
 /**
  * Class PlanController
@@ -73,32 +64,41 @@ class PlanController extends Controller
 
     public function show($id) {
         $plan = $this->plan->findOrFail($id);
+
         if( $plan ) {
             if (Request::ajax()) {
                 return $plan->toJson();
-            } else {
-                return view('plan.show', compact('plan'));
             }
         }
-        //throw new NotFoundHttpException;
     }
 
 
     public function update(PlanRequest $request)
     {
         $plan = $this->plan->findOrFail($request->id);
-        $data = array_filter($request->all(), 'strlen');
 
-        $plan->update($data);
-        Event::fire(new PlanUpdated($plan));
-
-        /* Response */
         if ($request->ajax()) {
-            return response()->json([
-                'response' => 200,
-                'msg' => 'DMP updated!'
-            ]);
-        };
+            if (Gate::denies('update', $plan, auth()->user())) {
+                return response()->json([
+                    'response' => 403,
+                    'msg' => 'Forbidden!'
+                ]);
+                //abort(403);
+            }
+
+            $data = array_filter($request->all(), 'strlen');
+
+            $plan->update($data);
+            Event::fire(new PlanUpdated($plan));
+
+            /* Response */
+            if ($request->ajax()) {
+                return response()->json([
+                    'response' => 200,
+                    'msg' => 'DMP updated!'
+                ]);
+            };
+        }
     }
 
 

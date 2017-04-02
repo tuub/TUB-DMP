@@ -73,7 +73,6 @@ class ProjectMetadata extends Model
 
     public static function formatForOutput( Collection $metadata, ContentType $content_type )
     {
-        $output = collect([]);
         $output = new HtmlOutputFilter($metadata, $content_type);
 
         return $output->render();
@@ -98,22 +97,6 @@ class ProjectMetadata extends Model
 
                 $data->push($input_data);
             }
-            /*
-            self::create([
-                'project_id'   => $project->id,
-                'metadata_registry_id' => $metadata_registry_id,
-                'content'       => $metadata
-            ]);
-            */
-            /*
-            if( is_array($metadata) ) {
-                foreach ($metadata as $metadatum => $values) {
-                    if (is_array($values)) {
-                        $result->put($field, $metadata);
-                    }
-                }
-            }
-            */
         };
 
         self::where('project_id', $project->id)->delete();
@@ -126,7 +109,4 @@ class ProjectMetadata extends Model
         return true;
 
     }
-
-
-
 }

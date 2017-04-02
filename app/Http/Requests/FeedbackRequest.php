@@ -16,6 +16,7 @@ class FeedbackRequest extends Request
         return true;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -30,6 +31,7 @@ class FeedbackRequest extends Request
         ];
 
     }
+
 
     public function messages()
     {

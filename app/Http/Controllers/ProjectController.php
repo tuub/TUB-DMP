@@ -43,7 +43,6 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = $this->project->with('metadata.metadata_registry')->findOrFail($id);
-        //dd($project->metadata->load('metadata_registry')->toJson());
         if( $project) {
             if (Request::ajax()) {
                 return $project->toJson();
@@ -51,7 +50,6 @@ class ProjectController extends Controller
                 return view('project.show', compact('project'));
             }
         }
-        //throw new NotFoundHttpException;
     }
 
 
@@ -77,6 +75,8 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request)
     {
+        return response()->json( $request->all() );
+
         /* Get the project */
         $project = $this->project->findOrFail($request->id);
 

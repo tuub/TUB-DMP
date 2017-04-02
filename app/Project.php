@@ -131,7 +131,11 @@ class Project extends Node
     }
 
 
-    // TODO: View Composer to the rescue?
+    /**
+     * Renders a status string based on begin and end date.
+     * TODO: View Composer to the rescue?
+     * @return string
+     */
     public function getStatusAttribute()
     {
         if( is_null($this->getMetadata('begin')) ) {
@@ -184,6 +188,10 @@ class Project extends Node
     }
 
 
+    /**
+     * @param $data
+     * @return bool
+     */
     public function saveMetadata($data)
     {
         if ($data) {

@@ -419,6 +419,12 @@ a.anchor {
     }
 }
 
+@media (min-width: 1024px) {
+    .modal-dialog {
+        width: 900px;
+    }
+}
+
 .modal-body p {
     word-wrap: break-word;
 }

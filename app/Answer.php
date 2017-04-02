@@ -76,16 +76,13 @@ class Answer extends Model
 
         foreach( $data as $question_id => $answer_value ) {
             if(is_array($answer_value)) {
-
                 $answer_value = array_filter($answer_value, 'strlen');
-
-                //echo 'ARRAY';
                 $answer = self::formatForInput(
                     collect($answer_value),
                     Question::find($question_id)->content_type
                 );
             } else {
-                //echo 'NO ARRAY';
+                // TODO: Ever the case?
                 $answer = $answer_value;
             }
 
@@ -138,109 +135,5 @@ class Answer extends Model
         }
 
         return $result;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static function getAnswerObject( Survey $survey = null, Question $question = null )
-    {
-        $result = new Collection;
-        $answers = Answer::check( $question, $survey );
-        if( $answers ) {
-            foreach( $answers as $answer ) {
-                $result->push($answer);
-            }
-        }
-        return $result;
-    }
-
-
-    /**
-     *
-     */
-    public function renderAnswer()
-    {
-        //$foo = new Foo($this);
-        //$foo->render();
-    }
-
-
-    /**
-     * @param Plan|null     $plan
-     * @param Question|null $question
-     * @param User|null     $user
-     * @param array         $values
-     *
-     * @return bool
-     */
-    public static function setAnswer( Plan $plan = null, Question $question = null, User $user = null, Array $values )
-    {
-        $values = array_filter($values);
-
-        if( !empty($values) ) {
-            if($question->input_type->method == 'list') {
-                $values = explode( ',', trim($values[0]) );
-            }
-
-            /* first delete the existing answer(s) for this specific question ID */
-            Answer::where([
-                'plan_id' => $plan->id,
-                'question_id' => $question->id,
-                'user_id' => $plan->user_id
-            ])->delete();
-
-            /* then insert the new answer(s) for this specific question ID */
-            foreach ( $values as $value ) {
-                $a = new Answer([
-                    'plan_id' => $plan->id,
-                    'question_id' => $question->id,
-                    'user_id' => $plan->user_id,
-                    'value' => $value
-                ]);
-                $a->save();
-            }
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
-     * @param $plan
-     *
-     * @return bool
-     */
-    public function copyToPlan( $plan )
-    {
-        $answer = Answer::find($this->id)->replicate();
-        $answer->plan_id = $plan->id;
-        $answer->save();
-        return true;
     }
 }
