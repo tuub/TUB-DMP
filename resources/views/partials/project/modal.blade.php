@@ -16,17 +16,6 @@
                 <label>{{ str_plural('Sub Project', $project->children_count) }}:</label>
                 {{ $project->children_count }}
                 <br/>
-                @if( $project->getMetadata('title') )
-                    <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
-                    <br/>
-                    @foreach( $project->getMetadata('title') as $title )
-                        {{ strtoupper($title['language']) }}: {{ $title['content'] }}
-                        @unless( $loop->last )
-                            <br/>
-                        @endunless
-                    @endforeach
-                @endif
-                <br/>
                 <label>Duration:</label>
                 @if( $project->getMetadata('begin') )
                     @foreach( $project->getMetadata('begin') as $begin )
@@ -39,6 +28,17 @@
                     @endforeach
                 @endif
                 <br/>
+                @if( $project->getMetadata('title') )
+                    <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
+                    <br/>
+                    @foreach( $project->getMetadata('title') as $title )
+                        {{ strtoupper($title['language']) }}: {{ $title['content'] }}
+                        @unless( $loop->last )
+                            <br/>
+                        @endunless
+                    @endforeach
+                @endif
+                <br/><br/>
                 @if( $project->getMetadata('abstract') )
                     <label>{{ str_plural($project->getMetadataLabel('abstract'), $project->getMetadata('abstract')->count()) }}:</label>
                     <br/>
@@ -49,7 +49,7 @@
                         @endunless
                     @endforeach
                 @endif
-                <br/>
+                <br/><br/>
                 @if( $project->getMetadata('member') )
                     <label>{{ str_plural($project->getMetadataLabel('member'), $project->getMetadata('member')->count()) }}:</label>
                     <br/>
@@ -60,7 +60,7 @@
                         @endunless
                     @endforeach
                 @endif
-                <br/>
+                <br/><br/>
                 <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>
                 @if( $project->getMetadata('funding_source') )
                     {!! $project->getMetadata('funding_source')->implode(', ') !!}
@@ -127,21 +127,27 @@
                 <label>{{ str_plural($project->getMetadataLabel('member'), $project->getMetadata('member')->count()) }}:</label>
                 @if( $project->getMetadata('member') )
                     @foreach( $project->getMetadata('member') as $member )
-                        <div class="form-group row">
-                            <div class="col-md-6">
+                        <div class="form-group row" data-rel="{{ $loop->index }}">
+                            <div class="col-md-4">
                                 {!! Form::text('member[' . $loop->index . '][firstname]', $member['firstname'], ['class' => 'form-control']) !!}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 {!! Form::text('member[' . $loop->index . '][lastname]', $member['lastname'], ['class' => 'form-control']) !!}
                             </div>
                             <div class="col-md-6">
                                 {!! Form::text('member[' . $loop->index . '][email]', $member['email'], ['class' => 'form-control']) !!}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 {!! Form::text('member[' . $loop->index . '][uri]', $member['uri'], ['class' => 'form-control']) !!}
                             </div>
+                            @if( $loop->last )
+                                <div class="col-md-2">
+                                    {!! Form::button('<i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'add-form-group btn btn-default']) !!}
+                                </div>
+                            @endif
                         </div>
                     @endforeach
+                    Add more
                 @endif
 
                 <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>
@@ -155,80 +161,9 @@
             </div>
             <div class="modal-footer">
                 {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit('Send')->class('btn btn-success') !!}
+                {!! BootForm::submit('Update')->class('btn btn-success') !!}
             </div>
         </div>
     </div>
     {!! BootForm::close() !!}
 </div>
-
-
-
-
-
-@if( false )
-    <!-- Create Project Modal -->
-    <div class="modal fade" id="create-project" tabindex="-1" role="dialog" aria-labelledby="create-project">
-        {!! BootForm::open()->id('create-project-form')->action( route('project.store') )->put() !!}
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Create Project</h4>
-                </div>
-                <div class="modal-body">
-                    {!! BootForm::hidden('project_id')->id('project_id') !!}
-                    {!! BootForm::text('DMP Title', 'title')->placeholder('My Research Project') !!}
-                    {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
-                    {!! BootForm::text('DMP Version', 'version') !!}
-                </div>
-                <div class="modal-footer">
-                    {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                    {!! BootForm::submit('Create')->class('btn btn-success') !!}
-                </div>
-            </div>
-        </div>
-        {!! BootForm::close() !!}
-    </div>
-
-    <!-- Edit Project Modal -->
-    <div class="modal fade" id="edit-project" tabindex="-1" role="dialog" aria-labelledby="edit-project">
-        {!! BootForm::open()->id('edit-project-form')->action( route('project.update') )->put() !!}
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Edit Project {{ $project->identifier }}</h4>
-                </div>
-                <div class="modal-body">
-                    {!! BootForm::hidden('id')->id('id') !!}
-                    {!! BootForm::text('Project ID', 'identifier')->value($project->identifier)->readonly('readonly') !!}
-
-                @if (true)
-                        @foreach( $project->metadata->load('metadata_registry') as $metadata_field )
-                            <?php //var_dump($metadata_field->metadata_registry->title) ?>
-                            <?php //var_dump($metadata_field->language) ?>
-                            <?php //var_dump($metadata_field->content) ?>
-
-                            <div class="form-group row container">
-                                <div class="col-md-2">
-                                    {!! Form::Label( $metadata_field->metadata_registry->identifier, $metadata_field->metadata_registry->name ) !!}
-                                </div>
-                                <div class="col-md-10">
-                                    {!! Form::Text( $metadata_field->metadata_registry->identifier . '[' . $metadata_field->language . ']', $metadata_field->content, array('class' => 'form-control xs') ) !!}
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-
-                    {!! BootForm::text('DMP Version', 'version') !!}
-                </div>
-                <div class="modal-footer">
-                    {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                    {!! BootForm::submit('Save')->class('btn btn-success') !!}
-                </div>
-            </div>
-        </div>
-        {!! BootForm::close() !!}
-    </div>
-@endif

@@ -157,7 +157,7 @@
 
 
             $('#edit-project-form').bind('submit', function (e) {
-                //e.preventDefault();
+                e.preventDefault();
 
                 var form    = $(this);
                 var div     = $(this).parent();
@@ -357,6 +357,25 @@
                     }
                 })
             });
+
+            $('div.modal-body').on('click', '.add-form-group', function(){
+                console.log('Triggered!');
+                var current_form_group = $(this).closest('.form-group');
+                var next_form_group = current_form_group.clone();
+                var current_index = current_form_group.data('rel');
+                var next_index = current_index + 1;
+
+                next_form_group.attr('data-rel', next_index);
+
+                next_form_group.children().find('input').each(function(index, element) {
+                    //$(element).attr('name').replace(current_index, next_index);
+                    //this.name = this.name.replace(current_index, next_index);
+                    this.name = 'Razzmatazz';
+                    $(element).val('');
+                });
+                $(this).parent().remove();
+                next_form_group.appendTo('#edit-project-form');
+            })
         });
     </script>
 
