@@ -76,9 +76,9 @@
 
 <!-- Edit Project Modal -->
 <div class="modal fade" id="edit-project-{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="edit-project-{{ $project->id }}">
-    {!! BootForm::open()->id('edit-project-form')->action( route('project.update') )->put() !!}
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            {!! BootForm::open()->id('edit-project-form')->action( route('project.update') )->put() !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit Project Metadata for {{ $project->identifier }}</h4>
@@ -163,7 +163,8 @@
                 {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
                 {!! BootForm::submit('Update')->class('btn btn-success') !!}
             </div>
+            {!! BootForm::close() !!}
         </div>
     </div>
-    {!! BootForm::close() !!}
+
 </div>

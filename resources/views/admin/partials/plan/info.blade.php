@@ -4,7 +4,7 @@
     <td>{{ $plan->title }}</td>
     <td>{{ $plan->version }}</td>
     <td>{{ $plan->survey->template->name }}</td>
-    <td>{{-- $plan->getQuestionAnswerPercentage() --}} %</td>
+    <td>{{ $plan->survey->completion }} %</td>
     <td>@date( $plan->created_at ) @time( $plan->created_at )</td>
     <td>
         @if( $plan->updated_at )

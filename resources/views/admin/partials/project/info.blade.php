@@ -6,7 +6,7 @@
         @endif
     </td>
     <td>{{ $project->user->name_with_email }}</td>
-    <td>{{ $project->plans()->count() }}</td>
+    <td>{{ $project->plans_count }}</td>
     <td>
         {{ $project->children()->count() }}
         @if( $project->children()->count() > 0 )

@@ -42,7 +42,7 @@
                 var errors = json.responseJSON;
                 var errorsHtml = '<ul>';
                 $.each( errors , function( key, value ) {
-                    errorsHtml += '<li>' + value[0] + '</li>';
+                    errorsHtml += '<li class="alert alert-danger">' + value[0] + '</li>';
                 });
                 errorsHtml += '</ul>';
                 return errorsHtml;
@@ -143,7 +143,10 @@
                 e.preventDefault();
 
                 var form    = $('#edit-project-form');
-                var div     = form.parent();
+                var div     = form.closest('.modal');
+
+                //console.log(form);
+                //console.log(div);
 
                 $.ajax({
                     type    : 'GET',
@@ -168,7 +171,9 @@
                 e.preventDefault();
 
                 var form    = $(this);
-                var div     = $(this).parent();
+                var div     = $(this).closest('modal');
+
+                console.log(div);
 
                 $.ajax({
                     url     : form.attr('action'),
@@ -176,11 +181,12 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        form.children().find('.errors').html( showAjaxErrors(json) );
+                        //form.children().find('.errors').html( showAjaxErrors(json) );
+                        console.log(json);
                         div.modal();
                     },
                     success : function (json) {
-                        //console.log(json);
+                        console.log(json);
 
                         if (json.response == 200) {
                             div.modal('hide');
@@ -366,10 +372,11 @@
                 })
             });
 
-            /*
-            TODO: NOT WORKING!!! AAARGH! NOT BINDING TO FORM! WHERE'S THE FORM!?
-            $('.add-form-group').on('click', function(e){
+
+            //TODO: NOT WORKING!!! AAARGH! NOT BINDING TO FORM! WHERE'S THE FORM!?
+            $('.modal').on('click', '.add-form-group', function(e){
                 e.preventDefault();
+                var form = $(this.form);
                 var current_form_group = $(this).closest('.form-group');
                 var next_form_group = current_form_group.clone();
                 var current_index = current_form_group.data('rel');
@@ -384,11 +391,16 @@
 
                 $(this).parent().remove();
 
-                console.log($(this).closest('form'));
+                console.log(current_form_group.parent().siblings());
 
-                //$('form#edit-project-form').insertAfter(current_form_group).append(next_form_group);
+                /* Works, but position is wrong (top) */
+                //next_form_group.insertAfter(current_form_group);
+                //form.append(next_form_group);
+
+
+
             })
-            */
+
 
         });
     </script>
