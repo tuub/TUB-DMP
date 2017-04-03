@@ -11,7 +11,7 @@
 @section('body')
 
     <script>
-        $(document).ready(function ()
+        $(window).ready(function ()
         {
             /* Read open state of project's plan panel from cookie value */
             getVisibleProjects();
@@ -35,6 +35,17 @@
                 $('a.toggle-plans').filter(function() {
                     return $.inArray($(this).attr('data-href'), projects) > -1;
                 }).find('i').toggleClass('fa-plus fa-minus');
+            }
+
+            function showAjaxErrors(json)
+            {
+                var errors = json.responseJSON;
+                var errorsHtml = '<ul>';
+                $.each( errors , function( key, value ) {
+                    errorsHtml += '<li>' + value[0] + '</li>';
+                });
+                errorsHtml += '</ul>';
+                return errorsHtml;
             }
 
 
@@ -71,10 +82,7 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json.responseJSON);
-                        $.each(json.responseJSON, function (field, value) {
-                            form.find('#' + field).css('outline', '1px red solid').parent().append('<span class="error">' + value + '</span>');
-                        });
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
@@ -168,11 +176,11 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json.responseJSON);
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
-                        console.log(json);
+                        //console.log(json);
 
                         if (json.response == 200) {
                             div.modal('hide');
@@ -213,7 +221,7 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json.responseJSON);
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
@@ -256,7 +264,7 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json.responseJSON);
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
@@ -301,7 +309,7 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json.responseJSON);
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
@@ -345,7 +353,7 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json.responseJSON);
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
@@ -359,8 +367,9 @@
             });
 
             /*
-            $('div.modal-body').on('click', '.add-form-group', function(){
-                console.log('Triggered!');
+            TODO: NOT WORKING!!! AAARGH! NOT BINDING TO FORM! WHERE'S THE FORM!?
+            $('.add-form-group').on('click', function(e){
+                e.preventDefault();
                 var current_form_group = $(this).closest('.form-group');
                 var next_form_group = current_form_group.clone();
                 var current_index = current_form_group.data('rel');
@@ -369,15 +378,18 @@
                 next_form_group.attr('data-rel', next_index);
 
                 next_form_group.children().find('input').each(function(index, element) {
-                    //$(element).attr('name').replace(current_index, next_index);
-                    //this.name = this.name.replace(current_index, next_index);
-                    this.name = 'Razzmatazz';
-                    $(element).val('');
+                    $(element).attr('name', $(element).attr('name').replace(current_index, next_index));
+                    $(element).val = '';
                 });
+
                 $(this).parent().remove();
-                next_form_group.appendTo('#edit-project-form');
+
+                console.log($(this).closest('form'));
+
+                //$('form#edit-project-form').insertAfter(current_form_group).append(next_form_group);
             })
             */
+
         });
     </script>
 
@@ -433,10 +445,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($projects as $project)
-                            @include('partials.project.info', $project)
-                            @include('partials.project.modal', $project)
-                        @endforeach
+                        <tr>
+                            <td>
+                                @foreach ($projects as $project)
+                                    @include('partials.project.info', $project)
+                                    @include('partials.project.modal', $project)
+                                @endforeach
+
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

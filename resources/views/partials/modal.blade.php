@@ -8,6 +8,7 @@
                 <h4 class="modal-title">Leave us a Feedback</h4>
             </div>
             <div class="modal-body">
+                <div class="errors"></div>
                 {!! BootForm::text('Name', 'name')->placeholder('John Doe')->value( auth()->user()->name ) !!}
                 {!! BootForm::text('Email', 'email')->placeholder('john.doe@example.org')->value( auth()->user()->email ) !!}
                 {!! BootForm::textarea('Your Feedback message', 'message') !!}
