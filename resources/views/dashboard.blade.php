@@ -28,16 +28,20 @@
             {
                 $('a.hide-plans').addClass('hidden');
 
-                var opened = $.cookie('tub-dmp_dashboard' );
-                var projects = opened.split(',');
+                if (!$.cookie('tub-dmp_dashboard')) {
+                    setVisibleProjects();
+                } else {
+                    var opened = $.cookie('tub-dmp_dashboard');
+                    var projects = opened.split(',');
 
-                $('.dashboard-project-plans').filter(function() {
-                    return $.inArray($(this).attr('data-content'), projects) > -1;
-                }).removeClass('hidden');
+                    $('.dashboard-project-plans').filter(function () {
+                        return $.inArray($(this).attr('data-content'), projects) > -1;
+                    }).removeClass('hidden');
 
-                $('a.toggle-plans').filter(function() {
-                    return $.inArray($(this).attr('data-href'), projects) > -1;
-                }).find('i').toggleClass('fa-plus fa-minus');
+                    $('a.toggle-plans').filter(function () {
+                        return $.inArray($(this).attr('data-href'), projects) > -1;
+                    }).find('i').toggleClass('fa-plus fa-minus');
+                }
             }
 
 
@@ -385,6 +389,7 @@
                 var next_form_group = current_form_group.clone();
                 var current_index = current_form_group.data('rel');
                 var next_index = current_index + 1;
+                var button = current_form_group.children().last();
 
                 next_form_group.attr('data-rel', next_index);
 
@@ -393,7 +398,9 @@
                     $(element).attr('value', '');
                 });
 
-                $(this).parent().remove();
+                //$(this).parent().remove();
+                console.log(current_form_group.find('i.btn'));
+                //current_form_group.children().find('i.btn').removeClass('fa-plus').addClass('fa-minus');
                 next_form_group.insertAfter(current_form_group);
             })
 
