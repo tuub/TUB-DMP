@@ -13,13 +13,16 @@
     <script>
         $(window).ready(function ()
         {
-            /* Read open state of project's plan panel from cookie value */
+           /**
+            * Read open state of project's plan panel from cookie value
+            */
             getVisibleProjects();
 
-            /* Gets the state of project's plan panel based on project_id from
-            *  cookie values and toggles the plus/minus buttons, located in
-            *  partials/project/info.php
-            * */
+           /**
+            * Gets the state of project's plan panel based on project_id from
+            * cookie values and toggles the plus/minus buttons, located in
+            * partials/project/info.php
+            */
 
             function getVisibleProjects()
             {
@@ -37,6 +40,12 @@
                 }).find('i').toggleClass('fa-plus fa-minus');
             }
 
+
+           /**
+            * Reads in JSON error messages and returns them as unordered alert-styled list
+            * @param {Json} json
+            * @return {String} errorsHtml
+            */
             function showAjaxErrors(json)
             {
                 var errors = json.responseJSON;
@@ -48,12 +57,11 @@
                 return errorsHtml;
             }
 
-
-            /* Sets the state of project's plan panel based on project_id from
-             *  cookie values and toggles the plus/minus buttons, located in
-             *  partials/project/info.php
-             * */
-
+           /**
+            * Sets the state of project's plan panel based on project_id from
+            * cookie values and toggles the plus/minus buttons, located in
+            * partials/project/info.php
+            */
             function setVisibleProjects()
             {
                 var open = [];
@@ -167,13 +175,11 @@
             });
 
 
-            $('#edit-project-form').bind('submit', function (e) {
+            $('#edit-project-form').on('submit', function (e) {
                 e.preventDefault();
 
                 var form    = $(this);
                 var div     = $(this).closest('modal');
-
-                console.log(div);
 
                 $.ajax({
                     url     : form.attr('action'),
@@ -181,8 +187,7 @@
                     data    : form.serialize(),
                     dataType: 'json',
                     error   : function (json) {
-                        //form.children().find('.errors').html( showAjaxErrors(json) );
-                        console.log(json);
+                        form.children().find('.errors').html( showAjaxErrors(json) );
                         div.modal();
                     },
                     success : function (json) {
@@ -192,9 +197,9 @@
                             div.modal('hide');
                             location.reload();
                         }
-
                     }
                 })
+
             });
 
 
@@ -373,7 +378,6 @@
             });
 
 
-            //TODO: NOT WORKING!!! AAARGH! NOT BINDING TO FORM! WHERE'S THE FORM!?
             $('.modal').on('click', '.add-form-group', function(e){
                 e.preventDefault();
                 var form = $(this.form);
@@ -386,20 +390,20 @@
 
                 next_form_group.children().find('input').each(function(index, element) {
                     $(element).attr('name', $(element).attr('name').replace(current_index, next_index));
-                    $(element).val = '';
+                    $(element).attr('value', '');
                 });
 
                 $(this).parent().remove();
-
-                console.log(current_form_group.parent().siblings());
-
-                /* Works, but position is wrong (top) */
-                //next_form_group.insertAfter(current_form_group);
-                //form.append(next_form_group);
-
-
-
+                next_form_group.insertAfter(current_form_group);
             })
+
+            $('.modal').on('click', '.remove-form-group', function(e){
+                e.preventDefault();
+                var form = $(this.form);
+                var current_form_group = $(this).closest('.form-group');
+                current_form_group.remove();
+            })
+
 
 
         });
@@ -441,6 +445,11 @@
             {{ trans('dashboard.my-plans-header') }}
         </div>
         <div class="panel-body">
+
+            @foreach ($projects as $project)
+                @include('partials.project.modal', $project)
+            @endforeach
+
             <div class="table-responsive">
                 <table class="table table-fixed">
                     <thead>
@@ -461,7 +470,6 @@
                             <td>
                                 @foreach ($projects as $project)
                                     @include('partials.project.info', $project)
-                                    @include('partials.project.modal', $project)
                                 @endforeach
 
                             </td>

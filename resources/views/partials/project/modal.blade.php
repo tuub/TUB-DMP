@@ -140,14 +140,15 @@
                             <div class="col-md-7">
                                 {!! Form::text('member[' . $loop->index . '][uri]', $member['uri'], ['class' => 'form-control']) !!}
                             </div>
-                            @if( $loop->last )
-                                <div class="col-md-2">
+                            <div class="col-md-2">
+                                @if( $loop->last )
                                     {!! Form::button('<i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'add-form-group btn btn-default']) !!}
-                                </div>
-                            @endif
+                                @else
+                                    {!! Form::button('<i class="fa fa-minus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'remove-form-group btn btn-default']) !!}
+                                @endif
+                            </div>
                         </div>
                     @endforeach
-                    Add more
                 @endif
 
                 <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>

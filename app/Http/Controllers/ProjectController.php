@@ -75,7 +75,7 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request)
     {
-        return response()->json($request->all());
+        //return response()->json($request->all());
 
         /* Get the project */
         $project = $this->project->findOrFail($request->id);
@@ -90,6 +90,11 @@ class ProjectController extends Controller
             return response()->json([
                 'response' => 200,
                 'msg' => 'Updated!'
+            ]);
+        } else {
+            return response()->json([
+                'response' => 500,
+                'msg' => 'Error!'
             ]);
         }
     }
