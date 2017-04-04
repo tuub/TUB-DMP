@@ -411,6 +411,14 @@
 
     <style>
 
+        .input-with-language .form-control {
+            width: 50%;
+        }
+
+
+
+
+
         a.hide-plans {
             /*display: none;*/
         }

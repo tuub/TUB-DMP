@@ -88,14 +88,22 @@
                 @if( $project->getMetadata('title') )
                     {!! Form::label('title[]', $project->getMetadataLabel('title')) !!}
                     @foreach( $project->getMetadata('title') as $title )
-                        <div class="form-group row">
-                            <div class="col-md-20">
-                                {!! Form::text('title[' . $loop->index . '][content]', $title['content'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div>
-                                {!! Form::select('title[' . $loop->index . '][language]', ['de' => 'DE', 'en' => 'EN'], $title['language'], ['class' => 'col-md-4']) !!}
-                            </div>
+
+
+                        <div class="input-group input-with-language">
+                            {!! Form::text('title[' . $loop->index . '][content]', $title['content'], ['class' => 'form-control']) !!}
+                            {!! Form::select('title[' . $loop->index . '][language]', ['de' => 'DE', 'en' => 'EN'], $title['language'], ['class' => 'selectpicker form-control']) !!}
                         </div>
+                        @if( false )
+                            <div class="form-group row">
+                                <div class="col-md-20">
+                                    {!! Form::text('title[' . $loop->index . '][content]', $title['content'], ['class' => 'form-control']) !!}
+                                </div>
+                                <div>
+                                    {!! Form::select('title[' . $loop->index . '][language]', ['de' => 'DE', 'en' => 'EN'], $title['language'], ['class' => 'col-md-4']) !!}
+                                </div>
+                            </div>
+                        @endif
                     @endforeach
                 @endif
 
