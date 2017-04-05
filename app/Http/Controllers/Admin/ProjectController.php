@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\MetadataRegistry;
+use App\ProjectMetadata;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Http\Requests\Admin\ProjectRequest;
@@ -40,7 +42,7 @@ class ProjectController extends Controller
     public function store(ProjectRequest $request)
     {
         $data = array_filter($request->all(), 'strlen');
-        $this->project->create($data);
+        $project = $this->project->create($data);
         return Redirect::route('admin.project.index');
     }
 
@@ -64,7 +66,6 @@ class ProjectController extends Controller
     public function update(ProjectRequest $request, $id)
     {
         $project = $this->project->findOrFail($id);
-        // TODO: field just does not get updated
         // $data = array_filter($request->all(), 'strlen');
         $data = $request->all();
         array_walk($data, function (&$item) {

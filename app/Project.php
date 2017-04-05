@@ -101,15 +101,19 @@ class Project extends Node
         $data = collect([]);
         $content_type = new ContentType();
 
-        foreach( $this->metadata as $metadata ) {
-            if ($metadata->metadata_registry->identifier == $attribute) {
-                $data = collect($metadata->content);
-                $content_type = $metadata->metadata_registry->content_type;
+        if($this->metadata->count()) {
+            foreach ($this->metadata as $metadata) {
+                if ($metadata->metadata_registry->identifier == $attribute) {
+                    $data = collect($metadata->content);
+                    $content_type = $metadata->metadata_registry->content_type;
+                }
             }
-        }
 
-        $result = ProjectMetadata::formatForOutput($data, $content_type);
-        return $result;
+            $result = ProjectMetadata::formatForOutput($data, $content_type);
+            return $result;
+        } else {
+            return $data;
+        }
     }
 
 
@@ -121,10 +125,14 @@ class Project extends Node
     public function getMetadataLabel($attribute)
     {
         $data = null;
-        foreach( $this->metadata as $metadata ) {
-            if ($metadata->metadata_registry->identifier == $attribute) {
-                $data = $metadata->metadata_registry->title;
+        if ($this->metadata->count()) {
+            foreach ($this->metadata as $metadata) {
+                if ($metadata->metadata_registry->identifier == $attribute) {
+                    $data = $metadata->metadata_registry->title;
+                }
             }
+        } else {
+            $data = trans('project.metadata.' . $attribute);
         }
 
         return $data;
@@ -138,14 +146,14 @@ class Project extends Node
      */
     public function getStatusAttribute()
     {
-        if( is_null($this->getMetadata('begin')) ) {
-            return 'Unknown';
-        } else {
+        if( $this->getMetadata('begin')->count() ) {
             if( is_null($this->getMetadata('end')) || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
                 return 'Running';
             } else {
                 return 'Ended';
             }
+        } else {
+            return 'Unknown';
         }
     }
 
@@ -178,12 +186,19 @@ class Project extends Node
     {
         $data = null;
 
-        foreach( $this->metadata as $metadata ) {
-            if ($metadata->metadata_registry->identifier == $identifier) {
-                $data = $metadata->metadata_registry->id;
+        if ($this->metadata->count()) {
+            foreach ($this->metadata as $metadata) {
+                if ($metadata->metadata_registry->identifier == $identifier) {
+                    $data = $metadata->metadata_registry->id;
+                }
             }
+        } else {
+            $data = MetadataRegistry::where([
+                'namespace' => 'project',
+                'identifier' => $identifier,
+            ])->first()['id'];
         }
-        //\AppHelper::varDump($data);
+
         return $data;
     }
 
@@ -195,7 +210,6 @@ class Project extends Node
     public function saveMetadata($data)
     {
         if ($data) {
-            //$data = array_filter(array_map('array_filter', $data));
             ProjectMetadata::saveAll($this, $data);
         }
 

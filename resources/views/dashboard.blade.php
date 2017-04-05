@@ -98,7 +98,6 @@
                         div.modal();
                     },
                     success : function (json) {
-                        console.log(json);
                         if (json.response === 200) {
                             // http://stackoverflow.com/questions/13177426/how-to-destroy-bootstrap-modal-window-completely/18169689
                             div.modal('hide');
@@ -141,7 +140,6 @@
                         div.modal();
                     },
                     success : function (json) {
-                        //console.log(json);
                         //$.each(json, function (field, value) {
                         //    form.find('#' + field).val(value);
                         //});
@@ -154,22 +152,23 @@
             $('a.edit-project').bind('click', function (e) {
                 e.preventDefault();
 
-                var form    = $('#edit-project-form');
-                var div     = form.closest('.modal');
+                var project_id  = $(this).data('rel');
+                var div     = $('#edit-project-' + project_id);
+                var form    = div.find('#edit-project-form');
 
-                //console.log(form);
-                //console.log(div);
+                console.log(project_id);
+                console.log(div);
+                console.log(form);
 
                 $.ajax({
                     type    : 'GET',
                     url     : '/my/project/' + $(this).data('rel') + '/show',
                     dataType: 'json',
                     error   : function (json) {
-                        console.log(json);
                         div.modal();
                     },
                     success : function (json) {
-                        console.log(json);
+                        //form.find("input, textarea, select").val('').end();
                         $.each(json, function (field, value) {
                             form.find('#' + field).val(value);
                         });
@@ -179,11 +178,13 @@
             });
 
 
-            $('#edit-project-form').on('submit', function (e) {
+            $('form.edit-project-form').on('submit', function (e) {
                 e.preventDefault();
 
                 var form    = $(this);
                 var div     = $(this).closest('modal');
+
+                console.log(form.serialize());
 
                 $.ajax({
                     url     : form.attr('action'),
@@ -196,10 +197,11 @@
                     },
                     success : function (json) {
                         console.log(json);
-
                         if (json.response == 200) {
-                            div.modal('hide');
-                            location.reload();
+                            console.log(json);
+                            //div.modal('hide');
+                            //form.find("input, textarea, select").val('').end();
+                            //location.reload();
                         }
                     }
                 })
@@ -384,25 +386,37 @@
 
             $('.modal').on('click', '.add-form-group', function(e){
                 e.preventDefault();
-                var form = $(this.form);
+                //var form = $(this.form);
                 var current_form_group = $(this).closest('.form-group');
                 var next_form_group = current_form_group.clone();
                 var current_index = current_form_group.data('rel');
                 var next_index = current_index + 1;
                 var button = current_form_group.children().last();
 
+                var form = $('div#edit-project-' + current_index + ' form');
+
                 next_form_group.attr('data-rel', next_index);
 
                 next_form_group.children().find('input').each(function(index, element) {
                     $(element).attr('name', $(element).attr('name').replace(current_index, next_index));
                     $(element).attr('value', '');
+                    $(element).val('');
                 });
 
+                console.log(current_form_group);
+                console.log(next_form_group);
+
+                //console.log(current_index);
+                //console.log(current_form_group);
+                //console.log(next_index);
+                //console.log(next_form_group);
+                //console.log(button);
+
                 //$(this).parent().remove();
-                console.log(current_form_group.find('i.btn'));
-                //current_form_group.children().find('i.btn').removeClass('fa-plus').addClass('fa-minus');
+                current_form_group.find('button.add-form-group').removeClass('add-form-group').addClass('remove-form-group');
+                current_form_group.find('i.fa').removeClass('fa-plus').addClass('fa-minus');
                 next_form_group.insertAfter(current_form_group);
-            })
+            });
 
             $('.modal').on('click', '.remove-form-group', function(e){
                 e.preventDefault();
@@ -418,7 +432,7 @@
 
     <style>
 
-        .input-with-language .form-control {
+        .input-with-language > .form-control {
             width: 50%;
         }
 
@@ -486,7 +500,6 @@
                                 @foreach ($projects as $project)
                                     @include('partials.project.info', $project)
                                 @endforeach
-
                             </td>
                         </tr>
                     </tbody>

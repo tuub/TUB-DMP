@@ -24,4 +24,13 @@ class MetadataRegistry extends Model
         //return $this->belongsTo(ProjectMetadata::class, 'metadata_registry_id');
         return $this->hasMany(ProjectMetadata::class);
     }
+
+
+    public static function getFieldList($namespace)
+    {
+        if ($namespace) {
+            return self::where('namespace', $namespace)->get(['id', 'identifier']);
+        }
+        return null;
+    }
 }

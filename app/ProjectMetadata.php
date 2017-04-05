@@ -79,6 +79,25 @@ class ProjectMetadata extends Model
     }
 
 
+    /*
+    public static function setInitials($project)
+    {
+        $metadata_fields = MetadataRegistry::getFieldList('project');
+        if ($metadata_fields) {
+            foreach ($metadata_fields as $metadata_registry_id => $identifier) {
+                self::create([
+                    'project_id' => $project->id,
+                    'metadata_registry_id' => $metadata_registry_id,
+                    'content' => []
+                ]);
+            }
+            return true;
+        }
+        return false;
+    }
+    */
+
+
     public static function saveAll( Project $project, $metadata)
     {
         $data = collect([]);
@@ -99,14 +118,16 @@ class ProjectMetadata extends Model
             }
         };
 
-        self::where('project_id', $project->id)->delete();
+        if ($data->count()) {
+            self::where('project_id', $project->id)->delete();
 
-        foreach ($data as $datum) {
-            //\AppHelper::varDump($datum);
-            self::create($datum);
+            foreach ($data as $datum) {
+                self::create($datum);
+            }
+
+            return true;
         }
 
-        return true;
-
+        return false;
     }
 }

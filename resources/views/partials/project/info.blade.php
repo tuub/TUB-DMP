@@ -1,4 +1,4 @@
-<tr v-show={{ $project->isRoot() ? "true" : "false" }}>
+<tr>
     <td>
         {{ $project->identifier }}
         @if( $project->isRoot() )
@@ -6,13 +6,13 @@
         @endif
     </td>
     <td>
-        @if( $project->getMetadata('title') )
+        @if( $project->getMetadata('title')->count() )
             @foreach( $project->getMetadata('title') as $title )
                 <label>{{ strtoupper($title['language']) }}:</label> {{ $title['content'] }}<br/>
             @endforeach
         @endif
 
-        @if( $project->getMetadata('begin') )
+        @if( $project->getMetadata('begin')->count() )
             <label>Duration:</label>
             @foreach( $project->getMetadata('begin') as $begin )
                 @date($begin) -
@@ -24,13 +24,13 @@
             @endforeach
         @endif
         <br/>
-        @if( $project->getMetadata('funding_source') )
+        @if( $project->getMetadata('funding_source')->count() )
             <label>Funded by:</label>
             {{ $project->getMetadata('funding_source')->implode(', ') }}
         @endif
     </td>
     <td>
-        @if( $project->getMetadata('member') )
+        @if( $project->getMetadata('member')->count() )
             @foreach( $project->getMetadata('member') as $member )
                 {!! \App\ProjectMetadata::getProjectMemberOutput($member) !!}<br/>
             @endforeach
@@ -85,4 +85,5 @@
 
 @foreach ($project->children as $project)
     @include('partials.project.info', $project)
+    @include('partials.project.modal', $project)
 @endforeach
