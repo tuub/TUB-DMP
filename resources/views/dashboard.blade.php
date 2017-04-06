@@ -156,10 +156,6 @@
                 var div     = $('#edit-project-' + project_id);
                 var form    = div.find('#edit-project-form');
 
-                console.log(project_id);
-                console.log(div);
-                console.log(form);
-
                 $.ajax({
                     type    : 'GET',
                     url     : '/my/project/' + $(this).data('rel') + '/show',
@@ -184,7 +180,7 @@
                 var form    = $(this);
                 var div     = $(this).closest('modal');
 
-                console.log(form.serialize());
+                console.log(form);
 
                 $.ajax({
                     url     : form.attr('action'),
@@ -386,14 +382,17 @@
 
             $('.modal').on('click', '.add-form-group', function(e){
                 e.preventDefault();
-                //var form = $(this.form);
+                var project_id = $(this).data('rel');
+                //console.log( project_id );
+
+                var form = $(this).parents('div#edit-project-' + project_id).find('form');
                 var current_form_group = $(this).closest('.form-group');
                 var next_form_group = current_form_group.clone();
                 var current_index = current_form_group.data('rel');
                 var next_index = current_index + 1;
                 var button = current_form_group.children().last();
 
-                var form = $('div#edit-project-' + current_index + ' form');
+                //var form = $('div#edit-project-' + current_index + ' form');
 
                 next_form_group.attr('data-rel', next_index);
 
@@ -403,8 +402,7 @@
                     $(element).val('');
                 });
 
-                console.log(current_form_group);
-                console.log(next_form_group);
+                console.log(form);
 
                 //console.log(current_index);
                 //console.log(current_form_group);
