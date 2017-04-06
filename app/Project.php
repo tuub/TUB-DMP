@@ -135,7 +135,7 @@ class Project extends Node
             $data = trans('project.metadata.' . $attribute);
         }
 
-        return $data;
+        return trans('project.metadata.' . $attribute);
     }
 
 
@@ -146,7 +146,7 @@ class Project extends Node
      */
     public function getStatusAttribute()
     {
-        if( $this->getMetadata('begin')->count() ) {
+        if( $this->getMetadata('begin') ) {
             if( is_null($this->getMetadata('end')) || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
                 return 'Running';
             } else {
@@ -165,15 +165,19 @@ class Project extends Node
      */
     public function getMetadataContentType($attribute)
     {
-        $data = new ContentType();
+        $data = DB::table('content_types')
+                ->join('metadata_registry', function ($join) use($attribute) {
+                    $join->on('content_types.id', '=', 'metadata_registry.content_type_id')
+                        ->where([
+                            'metadata_registry.namespace' => 'project',
+                            'metadata_registry.identifier' =>  $attribute
+                        ]);
+                })
+                ->select('content_types.id')
+                ->first();
 
-        foreach( $this->metadata as $metadata ) {
-            if ($metadata->metadata_registry->identifier == $attribute) {
-                $data = $metadata->metadata_registry->content_type;
-            }
-        }
-
-        return $data;
+        $content_type = ContentType::find($data->id);
+        return $content_type;
     }
 
 

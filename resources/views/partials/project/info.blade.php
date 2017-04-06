@@ -6,17 +6,17 @@
         @endif
     </td>
     <td>
-        @if( $project->getMetadata('title')->count() )
+        @if( $project->getMetadata('title') and $project->getMetadata('title')->count() )
             @foreach( $project->getMetadata('title') as $title )
                 <label>{{ strtoupper($title['language']) }}:</label> {{ $title['content'] }}<br/>
             @endforeach
         @endif
 
-        @if( $project->getMetadata('begin')->count() )
+        @if( $project->getMetadata('begin') and $project->getMetadata('begin')->count() )
             <label>Duration:</label>
             @foreach( $project->getMetadata('begin') as $begin )
                 @date($begin) -
-                @if( $project->getMetadata('end') )
+                @if( $project->getMetadata('end') and $project->getMetadata('end')->count() )
                     @foreach( $project->getMetadata('end') as $end )
                         @date($end)
                     @endforeach
@@ -24,13 +24,13 @@
             @endforeach
         @endif
         <br/>
-        @if( $project->getMetadata('funding_source')->count() )
+        @if( $project->getMetadata('funding_source') and $project->getMetadata('funding_source')->count() )
             <label>Funded by:</label>
             {{ $project->getMetadata('funding_source')->implode(', ') }}
         @endif
     </td>
     <td>
-        @if( $project->getMetadata('member')->count() )
+        @if( $project->getMetadata('member') and $project->getMetadata('member')->count() )
             @foreach( $project->getMetadata('member') as $member )
                 {!! \App\ProjectMetadata::getProjectMemberOutput($member) !!}<br/>
             @endforeach

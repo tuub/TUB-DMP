@@ -118,6 +118,20 @@ class InputTypeTableSeeder extends Seeder
         ]);
 
         InputType::create([
+            'id' => 16,
+            'title' => 'Text with Language Selection',
+            'identifier' => 'text_with_language',
+            'category' => 'inputgroup'
+        ]);
+
+        InputType::create([
+            'id' => 17,
+            'title' => 'Textarea with Language Selection',
+            'identifier' => 'textarea_with_language',
+            'category' => 'inputgroup'
+        ]);
+
+        InputType::create([
             'id' => 99,
             'title' => 'Frage als Überschrift',
             'identifier' => 'headline',

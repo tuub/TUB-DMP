@@ -14,4 +14,24 @@ class AppHelper {
 
         echo $output;
     }
+
+    public static function isEmptyArray($array)
+    {
+        foreach($array as $key => $value) {
+            if (!empty($value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function hasEmptyValues($array)
+    {
+        foreach($array as $value) {
+            if (empty($value) || strlen($value) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

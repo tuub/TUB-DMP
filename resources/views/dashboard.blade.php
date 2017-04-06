@@ -180,8 +180,6 @@
                 var form    = $(this);
                 var div     = $(this).closest('modal');
 
-                console.log(form);
-
                 $.ajax({
                     url     : form.attr('action'),
                     type    : form.attr('method'),
@@ -194,10 +192,10 @@
                     success : function (json) {
                         console.log(json);
                         if (json.response == 200) {
-                            console.log(json);
-                            //div.modal('hide');
+                            //console.log(json);
+                            div.modal('hide');
                             //form.find("input, textarea, select").val('').end();
-                            //location.reload();
+                            location.reload();
                         }
                     }
                 })
@@ -392,6 +390,8 @@
                 var next_index = current_index + 1;
                 var button = current_form_group.children().last();
 
+                console.log(current_form_group);
+
                 //var form = $('div#edit-project-' + current_index + ' form');
 
                 next_form_group.attr('data-rel', next_index);
@@ -413,7 +413,11 @@
                 //$(this).parent().remove();
                 current_form_group.find('button.add-form-group').removeClass('add-form-group').addClass('remove-form-group');
                 current_form_group.find('i.fa').removeClass('fa-plus').addClass('fa-minus');
-                next_form_group.insertAfter(current_form_group);
+
+                /*  */
+
+                //next_form_group.insertAfter(current_form_group);
+                form.append(next_form_group);
             });
 
             $('.modal').on('click', '.remove-form-group', function(e){
@@ -433,9 +437,6 @@
         .input-with-language > .form-control {
             width: 50%;
         }
-
-
-
 
 
         a.hide-plans {

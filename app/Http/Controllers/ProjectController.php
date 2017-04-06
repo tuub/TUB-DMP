@@ -8,6 +8,7 @@ use App\Project;
 use App\ProjectMetadata;
 use App\Template;
 use Auth;
+use Carbon\Carbon;
 use Request;
 
 class ProjectController extends Controller
@@ -75,13 +76,13 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request)
     {
-        return response()->json($request->all());
+        //return response()->json($request->all());
 
         /* Get the project */
         $project = $this->project->findOrFail($request->id);
 
         /* Get the request data */
-        $data = $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method', 'id']);
 
         /* Save the metadata */
         $project->saveMetadata($data);

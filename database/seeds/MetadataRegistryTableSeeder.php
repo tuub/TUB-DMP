@@ -16,7 +16,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'title',
             'title' => 'Project Title',
             'description' => 'The title of the research project.',
-            'content_type_id' => 1,
+            'content_type_id' => 10,
         ]);
 
         MetadataRegistry::create([
@@ -25,7 +25,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'abstract',
             'title' => 'Project Abstract',
             'description' => 'The desription of the research project.',
-            'content_type_id' => 1,
+            'content_type_id' => 11,
         ]);
 
         MetadataRegistry::create([
@@ -52,7 +52,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'identifier' => 'stage',
             'title' => 'Project Stage',
             'description' => 'The stage of the research project.',
-            'content_type_id' => 1,
+            'content_type_id' => 10,
         ]);
 
         MetadataRegistry::create([

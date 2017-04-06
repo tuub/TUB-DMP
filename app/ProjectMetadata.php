@@ -71,6 +71,22 @@ class ProjectMetadata extends Model
     }
 
 
+    public function getContentTypeByIdentifier($identifier)
+    {
+        $data = null;
+
+        foreach( $this->metadata_registry as $registry ) {
+            if ($registry->identifier == $identifier) {
+                $data = $registry->content_type_id;
+            }
+        }
+
+        echo $data;
+
+        return $data;
+    }
+
+
     public static function formatForOutput( Collection $metadata, ContentType $content_type )
     {
         $output = new HtmlOutputFilter($metadata, $content_type);
@@ -79,55 +95,111 @@ class ProjectMetadata extends Model
     }
 
 
-    /*
-    public static function setInitials($project)
+    /**
+     * @param Collection $metadata
+     * @param ContentType $content_type
+     * @return array|Collection
+     */
+    public static function formatForInput( Collection $metadata, ContentType $content_type )
     {
-        $metadata_fields = MetadataRegistry::getFieldList('project');
-        if ($metadata_fields) {
-            foreach ($metadata_fields as $metadata_registry_id => $identifier) {
-                self::create([
-                    'project_id' => $project->id,
-                    'metadata_registry_id' => $metadata_registry_id,
-                    'content' => []
-                ]);
-            }
-            return true;
+        $result = collect([]);
+        switch($content_type->identifier) {
+            case 'list':
+                $result = explode(',', $metadata->first());
+                break;
+            default:
+                $result = $metadata;
         }
-        return false;
+
+        return $result;
     }
-    */
 
 
-    public static function saveAll( Project $project, $metadata)
+    public static function saveAll( Project $project, $data)
     {
-        $data = collect([]);
-        $input_data = collect([]);
+        ProjectMetadata::where('project_id', $project->id)->delete();
 
-        foreach( $metadata as $field => $content ) {
+        foreach($data as $field => $values) {
 
-            $metadata_registry_id = $project->getMetadataRegistryIdByIdentifier($field);
+            $input_data = collect([]);
+            $content_type = $project->getMetadataContentType($field)->identifier;
 
-            if (!is_null($metadata_registry_id)) {
-                $input_data = [
-                    'project_id' => $project->id,
-                    'metadata_registry_id' => $metadata_registry_id,
-                    'content' => $content
-                ];
+            if(is_array($values)) {
+                switch($content_type) {
+                    case 'person':
+                        // Save me as PERSON JSON
+                        $value = [];
+                        foreach( $values as $foo ) {
+                            if(!\AppHelper::isEmptyArray($foo)) {
+                                array_push($value, $foo);
+                            }
+                        }
+                        $input_data->push($value);
+                        break;
+                    case 'organization':
+                        // Save me as ORGANIZATION JSON
+                        if(!\AppHelper::isEmptyArray($values)) {
+                            $value = $values;
+                            $input_data->push($value);
+                        }
+                        break;
+                    case 'date':
+                        // Save me as DATE STRING
+                        if(!\AppHelper::isEmptyArray($values)) {
+                            $value = $values;
+                            $input_data->push($value);
+                        }
+                        break;
+                    case 'text_with_language':
+                        $value = [];
+                        foreach( $values as $foo ) {
+                            if(!\AppHelper::hasEmptyValues($foo)) {
+                                array_push($value, $foo);
+                            }
+                        }
+                        if(count($value)) {
+                            $input_data->push($value);
+                        }
+                        break;
+                    case 'textarea_with_language':
+                        $value = [];
+                        foreach( $values as $foo ) {
+                            if(!\AppHelper::hasEmptyValues($foo)) {
+                                array_push($value, $foo);
+                            }
+                        }
+                        if(count($value)) {
+                            $input_data->push($value);
+                        }
+                        break;
 
-                $data->push($input_data);
+                    default:
+                        // Save me as TEXT THING
+                        $value = $values;
+                        $input_data->push($value);
+                        break;
+                }
+            } else {
+                // Save me as REGULAR TEXT
+                $value = $values;
+                $input_data->push($value);
             }
-        };
 
-        if ($data->count()) {
-            self::where('project_id', $project->id)->delete();
-
-            foreach ($data as $datum) {
-                self::create($datum);
+            if($input_data->isNotEmpty()) {
+                foreach ($input_data as $index => $value) {
+                    $metadata_registry_id = $project->getMetadataRegistryIdByIdentifier($field);
+                    if($metadata_registry_id) {
+                        ProjectMetadata::create([
+                            'project_id' => $project->id,
+                            'metadata_registry_id' => $metadata_registry_id,
+                            'content' => $value
+                        ]);
+                    }
+                }
             }
-
-            return true;
+            unset($input_data);
         }
 
-        return false;
+        return true;
     }
 }

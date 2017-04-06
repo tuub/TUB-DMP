@@ -38,20 +38,6 @@ class ProjectMetadataTableSeeder extends Seeder
 
         ProjectMetadata::create([
             'project_id' => 1,
-            'metadata_registry_id' => 5,
-            'content' => ['First Draft'],
-        ]);
-
-        ProjectMetadata::create([
-            'project_id' => 1,
-            'metadata_registry_id' => 6,
-            'content' => [
-                ['firstname' => 'José', 'lastname' => 'Mourinho', 'email' => 'jose@mourinho.org', 'uri' => 'http://chelseafc.co.uk'],
-            ],
-        ]);
-
-        ProjectMetadata::create([
-            'project_id' => 1,
             'metadata_registry_id' => 7,
             'content' => [
                 ['firstname' => 'Rainer', 'lastname' => 'Rauball', 'email' => 'rainer@rauball.de', 'uri' => 'http://www.schwatzgelb.de'],

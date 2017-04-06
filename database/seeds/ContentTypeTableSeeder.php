@@ -76,6 +76,20 @@ class ContentTypeTableSeeder extends Seeder
         ]);
 
         ContentType::create([
+            'id' => 10,
+            'identifier' => 'text_with_language',
+            'title' => 'Text with language selector',
+            'input_type_id' => 16,
+        ]);
+
+        ContentType::create([
+            'id' => 11,
+            'identifier' => 'textarea_with_language',
+            'title' => 'Textarea with language selector',
+            'input_type_id' => 17,
+        ]);
+
+        ContentType::create([
             'id' => 99,
             'identifier' => 'plain',
             'title' => 'Plain Text',
