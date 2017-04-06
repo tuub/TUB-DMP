@@ -134,7 +134,9 @@ class ProjectMetadata extends Model
                                 array_push($value, $foo);
                             }
                         }
-                        $input_data->push($value);
+                        if(count($value)) {
+                            $input_data->push($value);
+                        }
                         break;
                     case 'organization':
                         // Save me as ORGANIZATION JSON
@@ -175,8 +177,10 @@ class ProjectMetadata extends Model
 
                     default:
                         // Save me as TEXT THING
-                        $value = $values;
-                        $input_data->push($value);
+                        if(!\AppHelper::isEmptyArray($values)) {
+                            $value = $values;
+                            $input_data->push($value);
+                        }
                         break;
                 }
             } else {
