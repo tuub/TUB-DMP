@@ -27,17 +27,7 @@
         @endif
     </label>
     <div class="col-md-16 col-xs-24">
-        {!! Form::content_type( $survey, $question ) !!}
-        @if( false )
-            @if( $question->hint )
-                <span class="hint-block">
-                    <a href="#" class="expander" style="padding-left: 12px;">Click here for more information</a>
-                    <div class="content">
-                        {!! HTML::decode($question->hint) !!}
-                    </div>
-                </span>
-            @endif
-        @endif
+        {!! Form::answer( $survey, $question ) !!}
     </div>
     <div class="col-md-2 col-xs-24 text-md-left text-xs-left">
         <div class="question-status" id="{{ $question->id }}">

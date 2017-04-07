@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use HTML;
+use DB;
 
 class ProjectMetadata extends Model
 {
@@ -71,6 +72,53 @@ class ProjectMetadata extends Model
     }
 
 
+    /**
+     * @param String $identifier
+     *
+     * @return ContentType
+     */
+    public static function getMetadataContentType($identifier)
+    {
+        $data = DB::table('content_types')
+            ->join('metadata_registry', function ($join) use($identifier) {
+                $join->on('content_types.id', '=', 'metadata_registry.content_type_id')
+                    ->where([
+                        'metadata_registry.namespace' => 'project',
+                        'metadata_registry.identifier' =>  $identifier
+                    ]);
+            })
+            ->select('content_types.id')
+            ->first();
+
+        $content_type = ContentType::find($data->id);
+        return $content_type;
+    }
+
+
+    /**
+     * @param String $identifier
+     *
+     * @return ContentType
+     */
+    public static function getMetadataInputType($content_type)
+    {
+        $data = DB::table('input_types')
+            ->join('content_types', function ($join) use($content_type) {
+                $join->on('input_types.id', '=', 'content_types.input_type_id')
+                    ->where([
+                        'content_types.id' =>  $content_type->id
+                    ]);
+            })
+            ->select('input_types.id')
+            ->first();
+
+        $input_type = InputType::find($data->id);
+        return $input_type;
+    }
+
+
+
+    /*
     public function getContentTypeByIdentifier($identifier)
     {
         $data = null;
@@ -81,13 +129,12 @@ class ProjectMetadata extends Model
             }
         }
 
-        echo $data;
-
         return $data;
     }
+    */
 
 
-    public static function formatForOutput( Collection $metadata, ContentType $content_type )
+    public static function formatForOutput( Collection $metadata = null, ContentType $content_type = null )
     {
         $output = new HtmlOutputFilter($metadata, $content_type);
 
@@ -100,7 +147,7 @@ class ProjectMetadata extends Model
      * @param ContentType $content_type
      * @return array|Collection
      */
-    public static function formatForInput( Collection $metadata, ContentType $content_type )
+    public static function formatForInput( Collection $metadata = null, ContentType $content_type = null )
     {
         $result = collect([]);
         switch($content_type->identifier) {
@@ -122,7 +169,7 @@ class ProjectMetadata extends Model
         foreach($data as $field => $values) {
 
             $input_data = collect([]);
-            $content_type = $project->getMetadataContentType($field)->identifier;
+            $content_type = ProjectMetadata::getMetadataContentType($field)->identifier;
 
             if(is_array($values)) {
                 switch($content_type) {
@@ -154,8 +201,9 @@ class ProjectMetadata extends Model
                         break;
                     case 'text_with_language':
                         $value = [];
+                        $required = ['content', 'language'];
                         foreach( $values as $foo ) {
-                            if(!\AppHelper::hasEmptyValues($foo)) {
+                            if(!\AppHelper::hasEmptyValues($foo) && \AppHelper::hasKeys($foo, $required)) {
                                 array_push($value, $foo);
                             }
                         }
@@ -165,8 +213,9 @@ class ProjectMetadata extends Model
                         break;
                     case 'textarea_with_language':
                         $value = [];
+                        $required = ['content', 'language'];
                         foreach( $values as $foo ) {
-                            if(!\AppHelper::hasEmptyValues($foo)) {
+                            if(!\AppHelper::hasEmptyValues($foo) && \AppHelper::hasKeys($foo, $required)) {
                                 array_push($value, $foo);
                             }
                         }

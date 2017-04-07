@@ -98,7 +98,7 @@ class Project extends Node
      */
     public function getMetadata($attribute)
     {
-        $data = collect([]);
+        $data = null;
         $content_type = new ContentType();
 
         if($this->metadata->count()) {
@@ -109,11 +109,9 @@ class Project extends Node
                 }
             }
 
-            $result = ProjectMetadata::formatForOutput($data, $content_type);
-            return $result;
-        } else {
-            return $data;
+            $data = ProjectMetadata::formatForOutput($data, $content_type);
         }
+        return $data;
     }
 
 
@@ -146,38 +144,17 @@ class Project extends Node
      */
     public function getStatusAttribute()
     {
-        if( $this->getMetadata('begin') ) {
-            if( is_null($this->getMetadata('end')) || Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
-                return 'Running';
-            } else {
-                return 'Ended';
+        if ($this->getMetadata('begin') && $this->getMetadata('begin')->count()) {
+            if ($this->getMetadata('end')  && $this->getMetadata('end')->count()) {
+                if (Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
+                    return 'Running';
+                } else {
+                    return 'Ended';
+                }
             }
         } else {
             return 'Unknown';
         }
-    }
-
-
-    /**
-     * @param String $attribute
-     *
-     * @return Collection
-     */
-    public function getMetadataContentType($attribute)
-    {
-        $data = DB::table('content_types')
-                ->join('metadata_registry', function ($join) use($attribute) {
-                    $join->on('content_types.id', '=', 'metadata_registry.content_type_id')
-                        ->where([
-                            'metadata_registry.namespace' => 'project',
-                            'metadata_registry.identifier' =>  $attribute
-                        ]);
-                })
-                ->select('content_types.id')
-                ->first();
-
-        $content_type = ContentType::find($data->id);
-        return $content_type;
     }
 
 

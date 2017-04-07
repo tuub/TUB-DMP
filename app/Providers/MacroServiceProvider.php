@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\ContentType;
+use App\ProjectMetadata;
 use Illuminate\Support\ServiceProvider;
 //use Collective\Html\HtmlServiceProvider;
 use Illuminate\Html;
@@ -25,14 +26,15 @@ class MacroServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Form::macro('content_type', function( $survey, $question )
+        Form::macro('answer', function( $survey, $question )
         {
             $answers = Answer::get($survey, $question, 'form');
             // Convert Answer Data according to content type
             $answers = Answer::formatForOutput($answers, $question->content_type);
 
+            $macro = 'question_' . $question->content_type->identifier;
+
             $options = [
-                'macro'         => 'question_' . $question->content_type->identifier,
                 'input_type'    => $question->content_type->input_type->identifier,
                 'name'          => $question->id,
                 'default'       => QuestionOption::getDefaultValue( $question ),
@@ -40,10 +42,29 @@ class MacroServiceProvider extends ServiceProvider
                 'read_only'     => $question->readonly ? 'readonly' : ''
             ];
 
-            $macro = $options['macro'];
-            Form::component( $options['macro'], 'partials.components.form.' . $options['input_type'], ['question', 'name', 'answers' => null, 'default' => null, 'read_only' => null] );
+            Form::component( $macro, 'partials.components.form.' . $options['input_type'], ['question', 'name', 'answers' => null, 'default' => null, 'read_only' => null] );
 
             return Form::$macro($question, $options['name'], $options['answers'], $options['default'], $options['read_only']);
+        });
+
+        Form::macro('metadata', function( $project, $field )
+        {
+            $values = $project->getMetadata($field);
+            $label = $project->getMetadataLabel($field);
+            $content_type = ProjectMetadata::getMetadataContentType($field);
+            $input_type = ProjectMetadata::getMetadataInputType($content_type);
+
+            $macro = $content_type->identifier;
+
+            $options = [
+                'input_type'    => $input_type->identifier,
+                'name'          => $field,
+                'values'        => $values,
+            ];
+
+            Form::component( $macro, 'partials.components.form.metadata.' . $options['input_type'], ['project', 'field', 'label', 'name', 'values' => null] );
+
+            return Form::$macro($project, $field, $label, $options['name'], $options['values']);
         });
 
         /* ID 3: Auswahlbox, einzeilig */

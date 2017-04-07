@@ -175,7 +175,7 @@
 
 
             $('form.edit-project-form').on('submit', function (e) {
-                e.preventDefault();
+                //e.preventDefault();
 
                 var form    = $(this);
                 var div     = $(this).closest('modal');
@@ -390,13 +390,14 @@
                 var next_index = current_index + 1;
                 var button = current_form_group.children().last();
 
-                console.log(current_form_group);
+                console.log(current_index);
+                console.log(next_index);
 
                 //var form = $('div#edit-project-' + current_index + ' form');
 
                 next_form_group.attr('data-rel', next_index);
 
-                next_form_group.children().find('input').each(function(index, element) {
+                next_form_group.children().find('input,select,textarea').each(function(index, element) {
                     $(element).attr('name', $(element).attr('name').replace(current_index, next_index));
                     $(element).attr('value', '');
                     $(element).val('');
