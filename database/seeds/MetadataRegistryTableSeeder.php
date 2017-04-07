@@ -35,6 +35,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'title' => 'Project Begin',
             'description' => 'The begin date of the research project.',
             'content_type_id' => 3,
+            'is_multiple' => 0,
         ]);
 
         MetadataRegistry::create([
@@ -44,6 +45,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'title' => 'Project End',
             'description' => 'The end date of the research project.',
             'content_type_id' => 3,
+            'is_multiple' => 0,
         ]);
 
         MetadataRegistry::create([
@@ -116,6 +118,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'title' => 'Project Management Organisation',
             'description' => 'The project management organisation of the research project.',
             'content_type_id' => 1,
+            'is_multiple' => 0,
         ]);
 
         MetadataRegistry::create([
@@ -125,6 +128,7 @@ class MetadataRegistryTableSeeder extends Seeder
             'title' => 'Project Data Contact',
             'description' => 'The project data contact of the research project.',
             'content_type_id' => 1,
+            'is_multiple' => 0,
         ]);
     }
 }

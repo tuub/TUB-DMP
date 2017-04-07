@@ -93,10 +93,7 @@ class ProjectController extends Controller
                 'msg' => 'Updated!'
             ]);
         } else {
-            return response()->json([
-                'response' => 500,
-                'msg' => 'Error!'
-            ]);
+            return redirect()->back();
         }
     }
 }

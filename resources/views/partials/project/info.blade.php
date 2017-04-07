@@ -62,6 +62,9 @@
         <a href="{{ route('project.edit', $project->id)}}" class="edit-project btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#edit-project-{{$project->id}}" title="Edit Project">
             <i class="fa fa-pencil"></i></a><!--<span class="hidden-sm hidden-xs"> Edit</span>-->
         </a>
+        <a href="{{ route('project.edit', $project->id)}}" class="edit-project-without-modal btn btn-default btn-xs" title="Edit Project">
+            <i class="fa fa-beer"></i></a><!--<span class="hidden-sm hidden-xs"> Edit</span>-->
+        </a>
     </td>
     <td>
         <a href="#" class="toggle-plans btn btn-default btn-xs" data-href="{{  $project->id }}"><i class="fa fa-plus" aria-hidden="true"></i></a>

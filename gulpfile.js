@@ -55,13 +55,14 @@ elixir(function(mix) {
     //mix.copy(paths.jquery_steps + 'build/jquery.steps.js',
     mix.copy(paths.js + 'env.js', 'public/js/');
     //mix.copy(paths.js + 'plan.js', 'public/js/');
-    mix.copy(paths.js + 'my.vue.js', 'public/js/');
+    //mix.copy(paths.js + 'my.vue.js', 'public/js/');
 
     mix.scripts([
         paths.jquery_steps + 'build/jquery.steps.min.js',
         paths.js + 'env.js', 'public/js/',
+        paths.js + 'project.js', 'public/js/',
         paths.js + 'plan.js', 'public/js/'
-    ], './public/js/survey.js');
+    ], './public/js/app.js');
 
     mix.scripts([
         paths.jqueryui + 'jquery-ui.js',

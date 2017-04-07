@@ -105,9 +105,9 @@ class InputTypeTableSeeder extends Seeder
 
         InputType::create([
             'id' => 14,
-            'title' => 'Person List',
-            'identifier' => 'person_list',
-            'category' => 'listgroup'
+            'title' => 'Person',
+            'identifier' => 'person',
+            'category' => 'inputgroup'
         ]);
 
         InputType::create([

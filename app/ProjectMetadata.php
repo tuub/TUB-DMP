@@ -56,19 +56,11 @@ class ProjectMetadata extends Model
     }
 
 
-    public function findRegistryIdByIdentifier($identifier)
+    public static function getMetadataFieldByIdentifier($identifier)
     {
-        $data = null;
+        $field = MetadataRegistry::where('identifier', $identifier)->first();
 
-        foreach( $this->metadata_registry as $registry ) {
-            if ($registry->identifier == $identifier) {
-                $data = $registry->id;
-            }
-        }
-
-        echo $data;
-
-        return $data;
+        return $field;
     }
 
 
@@ -95,12 +87,24 @@ class ProjectMetadata extends Model
     }
 
 
-    /**
-     * @param String $identifier
-     *
-     * @return ContentType
-     */
     public static function getMetadataInputType($content_type)
+    {
+        $data = DB::table('input_types')
+            ->join('content_types', function ($join) use($content_type) {
+                $join->on('input_types.id', '=', 'content_types.input_type_id')
+                    ->where([
+                        'content_types.id' =>  $content_type->id
+                    ]);
+            })
+            ->select('input_types.id')
+            ->first();
+
+        $input_type = InputType::find($data->id);
+        return $input_type;
+    }
+
+
+    public static function isMultipleField($content_type)
     {
         $data = DB::table('input_types')
             ->join('content_types', function ($join) use($content_type) {
@@ -187,8 +191,13 @@ class ProjectMetadata extends Model
                         break;
                     case 'organization':
                         // Save me as ORGANIZATION JSON
-                        if(!\AppHelper::isEmptyArray($values)) {
-                            $value = $values;
+                        $value = [];
+                        foreach( $values as $foo ) {
+                            if(!\AppHelper::isEmpty($foo)) {
+                                array_push($value, $foo);
+                            }
+                        }
+                        if(count($value)) {
                             $input_data->push($value);
                         }
                         break;

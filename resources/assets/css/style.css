@@ -133,7 +133,8 @@ a.btn-success {
 }
 
 .errors {
-    background-color: firebrick !important;
+    font-weight: bold;
+    color: firebrick;
 }
 
 span.headline_question {

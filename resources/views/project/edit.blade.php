@@ -1,38 +1,81 @@
+@extends('layouts.bootstrap')
 
-<!-- Modal -->
+@section('navigation')
+    <li>{!! link_to_route( 'dashboard', 'Dashboard' ) !!}</li>
+@stop
 
-<div class="modal fade" id="edit-project" tabindex="-1" role="dialog" aria-labelledby="edit-project">
+@section('headline')
+    <!--<h1>Ihre Datenmanagementpläne</h1>-->
+@stop
 
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+@section('body')
+
+<div class="edit-project-without-modal">
+    <div id="edit-project-{{ $project->id }}">
+        {!! BootForm::open()->class('edit-project-form')->role('form')->data(['rel' => $project->id])->action( route('project.update') )->put() !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h1 class="modal-title">Project Metadata {{ $project->identifier }}</h1>
+                <h4 class="modal-title">Edit Project Metadata for {{ $project->identifier }}</h4>
             </div>
             <div class="modal-body">
-                {!! BootForm::open()->class('')->action( route('project.update', $project->id) )->put() !!}
-                {!! BootForm::bind($project) !!}
-                {!! BootForm::text('ID', 'id') !!}
-                {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
-                {{-- BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) --}}
+                <!-- PROJECT_ID -->
+            {!! BootForm::hidden('id')->id('id')->value($project->id) !!}
 
-                @foreach( $project->metadata_fields as $metadata_field )
-                    <div class="form-group row container">
-                        <div class="col-md-2">
-                            {!! Form::Label( $metadata_field->identifier, $metadata_field->name ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::Text( $metadata_field->identifier, $project->title, array('class' => 'form-control xs') ) !!}
-                            <span class="help-block {{ ($errors->first($metadata_field->identifier) ? 'form-error' : '') }}">{{ $errors->first($metadata_field->identifier) }}</span>
-                        </div>
+            <!-- PROJECT TITLE -->
+            {!! Form::metadata( $project, 'title' ) !!}
+
+            <!-- PROJECT DURATION -->
+                <label>{{ $project->getMetadataLabel('begin') }} / {{ $project->getMetadataLabel('end') }}:</label>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        @if( $project->getMetadata('begin') )
+                            {!! Form::date('begin[]', $project->getMetadata('begin')->first(), ['class' => 'form-control']) !!}
+                        @else
+                            {!! Form::date('begin[]', null, ['class' => 'form-control']) !!}
+                        @endif
                     </div>
-                @endforeach
+                    <div class="col-md-1">-</div>
+                    <div class="col-md-6">
+                        @if( $project->getMetadata('end') and $project->getMetadata('end')->count() )
+                            {!! Form::date('end[]', $project->getMetadata('end')->first(), ['class' => 'form-control']) !!}
+                        @else
+                            {!! Form::date('end[]', null, ['class' => 'form-control']) !!}
+                        @endif
+                    </div>
+                </div>
+
+                <!-- PROJECT STAGE -->
+            {!! Form::metadata( $project, 'stage' ) !!}
+
+            <!-- PROJECT ABSTRACT -->
+            {!! Form::metadata( $project, 'abstract' ) !!}
+
+            <!-- PROJECT LEADER -->
+            {!! Form::metadata( $project, 'leader' ) !!}
+
+            <!-- PROJECT MEMBERS -->
+            {!! Form::metadata( $project, 'member' ) !!}
+
+            <!-- FUNDING SOURCE -->
+            {!! Form::metadata( $project, 'funding_source' ) !!}
+
+            <!-- FUNDING PROGRAM -->
+            {!! Form::metadata( $project, 'funding_program' ) !!}
+
+            <!-- GRANT REFERENCE NUMBER -->
+            {!! Form::metadata( $project, 'grant_reference_number' ) !!}
+
+            <!-- PROJECT MANAGEMENT ORGANISATION -->
+            {!! Form::metadata( $project, 'project_management_organisation' ) !!}
+
+            <!-- PROJECT DATA CONTACT -->
+                {!! Form::metadata( $project, 'project_data_contact' ) !!}
+
             </div>
             <div class="modal-footer">
-                <a href="" class="btn btn-default" data-dismiss="modal">OK</a>
-                {!! BootForm::submit('Save')->class('btn btn-success') !!}
-                {!! BootForm::close() !!}
+                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit('Update')->class('btn btn-success') !!}
             </div>
-        </div>
+        {!! BootForm::close() !!}
     </div>
 </div>

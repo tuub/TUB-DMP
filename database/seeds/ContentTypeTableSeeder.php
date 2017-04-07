@@ -14,14 +14,14 @@ class ContentTypeTableSeeder extends Seeder
     {
         ContentType::create([
             'id' => 1,
-            'identifier' => 'text',
+            'identifier' => 'text_simple',
             'title' => 'Text',
             'input_type_id' => 1,
         ]);
 
         ContentType::create([
             'id' => 2,
-            'identifier' => 'textarea',
+            'identifier' => 'textarea_simple',
             'title' => 'Textarea',
             'input_type_id' => 2,
         ]);

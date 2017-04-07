@@ -90,6 +90,11 @@
                     <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>
                     {!! $project->getMetadata('funding_source')->implode(', ') !!}
                 @endif
+
+                @if( $project->getMetadata('funding_program') )
+                    <label>{{ str_plural($project->getMetadataLabel('funding_program'), $project->getMetadata('funding_program')->count()) }}:</label>
+                    {!! $project->getMetadata('funding_program')->implode(', ') !!}
+                @endif
             </div>
             <div class="modal-footer">
                 {{ Form::button('OK', ['class' => 'btn btn-success', 'data-dismiss' => 'modal']) }}
@@ -103,7 +108,7 @@
 <div class="modal fade" id="edit-project-{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="edit-project-{{ $project->id }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            {!! BootForm::open()->class('edit-project-form form-horizontal')->role('form')->action( route('project.update') )->put() !!}
+            {!! BootForm::open()->class('edit-project-form')->role('form')->data(['rel' => $project->id])->action( route('project.update') )->put() !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit Project Metadata for {{ $project->identifier }}</h4>
@@ -142,111 +147,25 @@
                 {!! Form::metadata( $project, 'abstract' ) !!}
 
                 <!-- PROJECT LEADER -->
-                <label>{{ $project->getMetadataLabel('leader') }}</label>
-                @if( $project->getMetadata('leader') )
-                    @foreach( $project->getMetadata('leader') as $leader )
-                        <div class="form-group row" data-rel="{{ $loop->index }}">
-                            <div class="col-md-4">
-                                {!! Form::text('member[' . $loop->index . '][firstname]', $leader['firstname'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-5">
-                                {!! Form::text('member[' . $loop->index . '][lastname]', $leader['lastname'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-6">
-                                {!! Form::text('member[' . $loop->index . '][email]', $leader['email'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-7">
-                                {!! Form::text('member[' . $loop->index . '][uri]', $leader['uri'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-2">
-                                @if( $loop->last )
-                                    {!! Form::button('<i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'add-form-group btn btn-default', 'data-rel' => $project->id]) !!}
-                                @else
-                                    {!! Form::button('<i class="fa fa-minus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'remove-form-group btn btn-default', 'data-rel' => $project->id]) !!}
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="form-group row" data-rel="0">
-                        <div class="col-md-4">
-                            {!! Form::text('leader[0][firstname]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-5">
-                            {!! Form::text('leader[0][lastname]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-6">
-                            {!! Form::text('leader[0][email]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-7">
-                            {!! Form::text('leader[0][uri]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-2">
-                            {!! Form::button('<i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'add-form-group btn btn-default', 'data-rel' => $project->id]) !!}
-                        </div>
-                    </div>
-                @endif
+                {!! Form::metadata( $project, 'leader' ) !!}
 
                 <!-- PROJECT MEMBERS -->
-                <label>{{ $project->getMetadataLabel('member') }}</label>
-                @if( $project->getMetadata('member') )
-                    @foreach( $project->getMetadata('member') as $member )
-                        <div class="form-group row" data-rel="{{ $loop->index }}">
-                            <div class="col-md-4">
-                                {!! Form::text('member[' . $loop->index . '][firstname]', $member['firstname'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-5">
-                                {!! Form::text('member[' . $loop->index . '][lastname]', $member['lastname'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-6">
-                                {!! Form::text('member[' . $loop->index . '][email]', $member['email'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-7">
-                                {!! Form::text('member[' . $loop->index . '][uri]', $member['uri'], ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="col-md-2">
-                                @if( $loop->last )
-                                    {!! Form::button('<i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'add-form-group btn btn-default', 'data-rel' => $project->id]) !!}
-                                @else
-                                    {!! Form::button('<i class="fa fa-minus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'remove-form-group btn btn-default', 'data-rel' => $project->id]) !!}
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="form-group row" data-rel="0">
-                        <div class="col-md-4">
-                            {!! Form::text('member[0][firstname]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-5">
-                            {!! Form::text('member[0][lastname]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-6">
-                            {!! Form::text('member[0][email]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-7">
-                            {!! Form::text('member[0][uri]', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-2">
-                            {!! Form::button('<i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"></span>', ['class' => 'add-form-group btn btn-default', 'data-rel' => $project->id]) !!}
-                        </div>
-                    </div>
-                @endif
+                {!! Form::metadata( $project, 'member' ) !!}
 
                 <!-- FUNDING SOURCE -->
                 {!! Form::metadata( $project, 'funding_source' ) !!}
 
                 <!-- FUNDING PROGRAM -->
-                {{-- Form::metadata( $project, 'funding_program' ) --}}
+                {!! Form::metadata( $project, 'funding_program' ) !!}
 
                 <!-- GRANT REFERENCE NUMBER -->
-                {{-- Form::metadata( $project, 'grant_reference_number' ) --}}
+                {!! Form::metadata( $project, 'grant_reference_number' ) !!}
 
                 <!-- PROJECT MANAGEMENT ORGANISATION -->
-                {{-- Form::metadata( $project, 'grant_reference_number' ) --}}
+                {!! Form::metadata( $project, 'project_management_organisation' ) !!}
 
                 <!-- PROJECT DATA CONTACT -->
-                {{-- Form::metadata( $project, 'grant_reference_number' ) --}}
+                {!! Form::metadata( $project, 'project_data_contact' ) !!}
 
             </div>
             <div class="modal-footer">
