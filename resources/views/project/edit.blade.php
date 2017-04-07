@@ -10,10 +10,14 @@
 
 @section('body')
 
-<div class="edit-project-without-modal">
+<div class="edit-project-without-modal panel panel-default">
+    <div class="panel-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Project Metadata for {{ $project->identifier }}</h4>
+    </div>
     <div id="edit-project-{{ $project->id }}">
-        {!! BootForm::open()->class('edit-project-form')->role('form')->data(['rel' => $project->id])->action( route('project.update') )->put() !!}
-            <div class="modal-header">
+        {!! BootForm::open()->class('edit-project-form-without-modal')->role('form')->data(['rel' => $project->id])->action( route('project.update') )->put() !!}
+            <div class="panel-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit Project Metadata for {{ $project->identifier }}</h4>
             </div>

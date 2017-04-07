@@ -62,14 +62,23 @@ class PlanController extends Controller
     }
 
 
-    public function show($id) {
+    public function show($id)
+    {
         $plan = $this->plan->findOrFail($id);
 
-        if( $plan ) {
-            if (Request::ajax()) {
+        if (Request::ajax()) {
+            if ($plan) {
                 return $plan->toJson();
+            } else {
+                return response()->json([
+                    'response' => 404,
+                    'message' => 'Plan was not found.'
+                ]);
             }
+        } else {
+            abort(403, 'Direct access is not allowed.');
         }
+
     }
 
 
@@ -77,45 +86,58 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($request->id);
 
+        if (Gate::denies('update', [auth()->user(), $plan])) {
+            return response()->json([
+                'response' => 403,
+                'msg' => 'Forbidden!'
+            ]);
+        }
+
         if ($request->ajax()) {
-            if (Gate::denies('update', $plan, auth()->user())) {
-                return response()->json([
-                    'response' => 403,
-                    'msg' => 'Forbidden!'
-                ]);
-                abort(403);
-            }
 
             $data = array_filter($request->all(), 'strlen');
 
-            $plan->update($data);
-            Event::fire(new PlanUpdated($plan));
+            if ($plan->update($data)) {
+                $response = 200;
+                $message = 'Plan was successfully updated!';
+                Event::fire(new PlanUpdated($plan));
+            }
 
             /* Response */
-            if ($request->ajax()) {
-                return response()->json([
-                    'response' => 200,
-                    'msg' => 'DMP updated!'
-                ]);
-            };
+            return response()->json([
+                'response' => $response,
+                'message' => $message,
+            ]);
+        } else {
+            abort(403, 'Direct access is not allowed.');
         }
     }
 
 
+    /**
+     * Sets the final flag.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function toggleState($id)
     {
         $plan = $this->plan->findOrFail($id);
 
-        if( $plan ) {
-            if ( $plan->isFinal() ) {
+        if ($plan) {
+            if ($plan->isFinal()) {
                 $plan->setFinalFlag(false);
-                Notifier::success('Plan unfinalized successfully!')->flash()->create();
+                // TODO: Replace?
+                //Notifier::success('Plan unfinalized successfully!')->flash()->create();
             } else {
                 $plan->setFinalFlag(true);
-                Notifier::success('Plan finalized successfully!')->flash()->create();
+                // TODO: Replace?
+                //Notifier::success('Plan finalized successfully!')->flash()->create();
             }
         } else {
-            Notifier::error( 'Error while finalizing plan!' )->flash()->create();
+            abort(404, 'Plan was not found.');
+            // TODO: Replace?
+            //Notifier::error( 'Error while finalizing plan!' )->flash()->create();
         }
 
         return Redirect::route( 'dashboard' );
@@ -125,38 +147,39 @@ class PlanController extends Controller
     public function version(VersionPlanRequest $request)
     {
         $data = $request->except(['_token']);
+
         if ($this->plan->createNextVersion($data)) {
             $response = 200;
-            $msg = 'New version created!';
+            $message = 'New version created!';
             //Notifier::success( $msg )->flash()->create();
         } else {
             $response = 500;
-            $msg = 'Versioning failed!';
+            $message = 'Versioning failed!';
             //Notifier::error( $msg )->flash()->create();
         }
 
-        /* Response */
+        /* Render the response */
         if ($request->ajax()) {
             return response()->json([
                 'response' => $response,
-                'msg' => $msg
+                'message' => $message
             ]);
+        } else {
+            abort(403, 'Direct access is not allowed.');
         };
     }
-
-
-
 
 
     public function email(EmailPlanRequest $request)
     {
         $data = $request->except(['_token']);
+
         if ($this->plan->emailToRecipient($data)) {
             $response = 200;
-            $msg = 'Mail sent!';
+            $msg = 'Mail was sent.';
         } else {
             $response = 500;
-            $msg = 'Mail not sent!';
+            $msg = 'Mail was not sent.';
         }
 
         /* Response */
@@ -165,14 +188,13 @@ class PlanController extends Controller
                 'response' => $response,
                 'msg' => $msg,
             ]);
-        };
+        } else {
+            abort(403, 'Direct access is not allowed.');
+        }
     }
 
 
-
-
-
-
+    // TODO: Snappy & WKHTML2PDF
     public function export($id, $format = null, $download = true)
     {
         if($this->plan->exportPlan($id, $format, $download)) {
@@ -186,10 +208,15 @@ class PlanController extends Controller
     }
 
 
+    // TODO!
+    public function destroy($id)
+    {
 
+    }
 
-
-    public function destroy($id) {
+    // TODO!
+    public function copy($id)
+    {
 
     }
 }

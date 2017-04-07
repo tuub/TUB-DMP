@@ -22,14 +22,20 @@
                     @endforeach
                 @endif
             @endforeach
+            <br/>
         @endif
-        <br/>
+
         @if( $project->getMetadata('funding_source') )
             <label>Funded by:</label>
             {{ $project->getMetadata('funding_source')->implode(', ') }}
         @endif
     </td>
     <td>
+        @if( $project->getMetadata('leader') )
+            @foreach( $project->getMetadata('leader') as $leader )
+                <strong>{!! \App\ProjectMetadata::getProjectMemberOutput($leader) !!}</strong><br/>
+            @endforeach
+        @endif
         @if( $project->getMetadata('member') )
             @foreach( $project->getMetadata('member') as $member )
                 {!! \App\ProjectMetadata::getProjectMemberOutput($member) !!}<br/>

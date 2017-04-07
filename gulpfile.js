@@ -60,7 +60,6 @@ elixir(function(mix) {
     mix.scripts([
         paths.jquery_steps + 'build/jquery.steps.min.js',
         paths.js + 'env.js', 'public/js/',
-        paths.js + 'project.js', 'public/js/',
         paths.js + 'plan.js', 'public/js/'
     ], './public/js/app.js');
 

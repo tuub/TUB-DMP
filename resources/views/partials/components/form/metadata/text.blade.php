@@ -3,7 +3,7 @@
     @foreach( $values as $value )
         <div class="form-group row" data-rel="{{ $loop->index }}">
             <div class="col-md-21">
-                {!! Form::text($name . '[' . $loop->index . '][content]', $value, ['class' => 'form-control']) !!}
+                {!! Form::text($name . '[' . $loop->index . ']', $value, ['class' => 'form-control']) !!}
             </div>
             <div class="col-md-3">
                 @if( $is_multiple )

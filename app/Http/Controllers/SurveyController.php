@@ -41,10 +41,10 @@ class SurveyController extends Controller
     public function show($id)
     {
         $survey = $this->survey
-            ->with('plan', 'plan.project.user', 'template', 'template.questions', 'template.questions.answers')
-            ->findOrFail($id);
+                ->with('plan', 'plan.project.user', 'template', 'template.questions', 'template.questions.answers')
+                ->findOrFail($id);
 
-        if( $survey ) {
+        if ($survey) {
             return view('survey.show', compact('survey'));
         }
     }
@@ -54,7 +54,7 @@ class SurveyController extends Controller
     {
         $survey = $this->survey->with('plan', 'template', 'template.questions', 'template.questions.answers')->findOrFail($id);
         $questions = $survey->template->questions()->with('section', 'answers')->get();
-        //dd($questions);
+
         return view('survey.edit', compact('survey', 'questions'));
     }
 
@@ -65,7 +65,6 @@ class SurveyController extends Controller
         $survey = $this->survey->findOrFail($request->id);
 
         /* Get the request data */
-        /* TODO: Do the array_filter already here and save the later if/else? */
         $data = $request->except(['_token', '_method', 'save']);
 
         /* Save the answers */
