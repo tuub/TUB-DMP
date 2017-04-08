@@ -61,7 +61,7 @@ elixir(function(mix) {
         paths.jquery_steps + 'build/jquery.steps.min.js',
         paths.js + 'env.js', 'public/js/',
         paths.js + 'plan.js', 'public/js/'
-    ], './public/js/app.js');
+    ], './public/js/survey.js');
 
     mix.scripts([
         paths.jqueryui + 'jquery-ui.js',

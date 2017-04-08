@@ -91,7 +91,7 @@
     {!! HTML::script('js/vendor.js') !!}
     {!! HTML::script('js/env.js') !!}
     {!! HTML::script('js/my.jquery.js') !!}
-    {!! HTML::script('js/app.js') !!}
+
 
     {{-- HTML::script('https://unpkg.com/vue') --}}
     {{-- HTML::script('js/my.vue.js') --}}
