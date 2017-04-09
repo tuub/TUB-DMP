@@ -433,17 +433,24 @@
                 minus_button.insertBefore(next_form_group.find('button.add-form-group'));
                 /* ... */
 
-                /* Finally add the fresh new form group after the last form group */
+                /* Finally, add the fresh new form group after the last form group */
                 next_form_group.insertAfter(current_form_group);
             });
 
             $('.modal').on('click', '.remove-form-group', function(e){
                 e.preventDefault();
+
+                /* Get the current form group and grep its buttons */
                 var current_form_group = $(this).closest('.form-group');
                 var buttons = current_form_group.find('button');
+                buttons.first().append('&nbsp;');
+
+                /* Get the previous form group, replace its buttons with the grepped buttons */
                 var previous_form_group = current_form_group.prev();
                 previous_form_group.find('button').remove();
                 previous_form_group.children().last().append(buttons);
+
+                /* Finally, remove the current form group */
                 current_form_group.remove();
             })
 
