@@ -19,7 +19,7 @@ class CreateContentTypesTable extends Migration
             $table->string('title', 255);
             $table->integer('input_type_id')->unsigned()->default(1);
 
-            $table->foreign('input_type_id')->references('id')->on('input_types');
+            //$table->foreign('input_type_id')->references('id')->on('input_types');
         });
     }
 

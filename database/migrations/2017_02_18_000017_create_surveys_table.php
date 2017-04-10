@@ -20,8 +20,8 @@ class CreateSurveysTable extends Migration
             $table->integer('completion')->default(0);
             $table->timestamps();
 
-            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
-            $table->foreign('template_id')->references('id')->on('templates');
+            //$table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
+            //$table->foreign('template_id')->references('id')->on('templates');
 
         });
     }

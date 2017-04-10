@@ -18,7 +18,6 @@ class CreateSectionsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('template_id')->unsigned();
-            $table->foreign('template_id')->references('id')->on('templates');
             $table->string('keynumber')->nullable();
             $table->integer('order')->default(1);
             $table->text('guidance')->nullable();

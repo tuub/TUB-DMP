@@ -27,7 +27,7 @@ class CreateDataSourceMappingsTable extends Migration
             //$table->integer('field_type')->unsigned()->default(1);
             //$table->integer('display_order')->default(1);
 
-            $table->foreign('data_source_namespace_id')->references('id')->on('data_source_namespaces')->onDelete('cascade');
+            //$table->foreign('data_source_namespace_id')->references('id')->on('data_source_namespaces')->onDelete('cascade');
         });
     }
 

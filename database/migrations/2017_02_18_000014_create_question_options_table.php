@@ -17,12 +17,13 @@ class CreateQuestionOptionsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('question_id')->unsigned();
-            $table->foreign('question_id')->references('id')->on('questions');
             $table->text('text');
             $table->text('value')->nullable();
             $table->boolean('default')->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
             $table->timestamps();
+
+            //$table->foreign('question_id')->references('id')->on('questions');
         });
     }
 

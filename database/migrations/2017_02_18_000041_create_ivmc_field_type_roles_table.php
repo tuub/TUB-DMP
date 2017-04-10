@@ -12,6 +12,7 @@ class CreateIvmcFieldTypeRolesTable extends Migration
      */
     public function up()
     {
+        /*
         Schema::dropIfExists('ivmc_field_type_roles');
         Schema::create('ivmc_field_type_roles', function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -22,6 +23,7 @@ class CreateIvmcFieldTypeRolesTable extends Migration
             $table->integer('order')->default(1);
             $table->timestamps();
         });
+        */
     }
 
     /**
@@ -31,6 +33,6 @@ class CreateIvmcFieldTypeRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ivmc_field_type_roles');
+        //Schema::drop('ivmc_field_type_roles');
     }
 }

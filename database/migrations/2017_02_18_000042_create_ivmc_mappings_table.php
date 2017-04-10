@@ -12,6 +12,7 @@ class CreateIvmcMappingsTable extends Migration
      */
     public function up()
     {
+        /*
         Schema::dropIfExists('ivmc_mappings');
         Schema::create('ivmc_mappings', function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -24,6 +25,7 @@ class CreateIvmcMappingsTable extends Migration
             $table->integer('display_order')->default(1);
             $table->timestamps();
         });
+        */
     }
 
     /**
@@ -33,6 +35,6 @@ class CreateIvmcMappingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ivmc_mappings');
+        //Schema::drop('ivmc_mappings');
     }
 }

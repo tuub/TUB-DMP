@@ -21,7 +21,7 @@ class CreateProjectMetadataTable extends Migration
             $table->string('language')->nullable();
             $table->timestamps();
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            // $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 

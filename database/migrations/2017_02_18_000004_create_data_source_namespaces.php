@@ -19,7 +19,7 @@ class CreateDataSourceNamespaces extends Migration
             $table->integer('data_source_id')->unsigned();
             $table->string('name', 255)->unique();
 
-            $table->foreign('data_source_id')->references('id')->on('data_sources')->onDelete('cascade');
+            //$table->foreign('data_source_id')->references('id')->on('data_sources')->onDelete('cascade');
         });
     }
 

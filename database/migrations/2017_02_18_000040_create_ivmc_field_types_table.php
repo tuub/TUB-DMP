@@ -12,6 +12,7 @@ class CreateIvmcFieldTypesTable extends Migration
      */
     public function up()
     {
+        /*
         Schema::dropIfExists('ivmc_field_types');
         Schema::create('ivmc_field_types', function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -20,6 +21,7 @@ class CreateIvmcFieldTypesTable extends Migration
             $table->string('description',255);
             $table->timestamps();
         });
+        */
     }
 
     /**
@@ -29,6 +31,6 @@ class CreateIvmcFieldTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ivmc_field_types');
+        //Schema::drop('ivmc_field_types');
     }
 }

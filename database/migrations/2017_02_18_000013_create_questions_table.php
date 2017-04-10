@@ -21,9 +21,7 @@ class CreateQuestionsTable extends Migration
             $table->integer('rgt')->nullable()->index();
             $table->integer('depth')->nullable();
             $table->integer('template_id')->unsigned();
-            $table->foreign('template_id')->references('id')->on('templates');
             $table->integer('section_id')->unsigned();
-            $table->foreign('section_id')->references('id')->on('sections');
             $table->string('keynumber')->nullable();
             $table->integer('order')->default(1);
             $table->text('text');
@@ -41,7 +39,9 @@ class CreateQuestionsTable extends Migration
             $table->boolean('read_only')->default(0);
             $table->timestamps();
 
-            $table->foreign('content_type_id')->references('id')->on('content_types');
+            //$table->foreign('template_id')->references('id')->on('templates');
+            //$table->foreign('content_type_id')->references('id')->on('content_types');
+            //$table->foreign('section_id')->references('id')->on('sections');
         });
     }
 

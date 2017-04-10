@@ -22,7 +22,7 @@ class CreateMetadataRegistryTable extends Migration
             $table->integer('content_type_id')->default(1);
             $table->boolean('is_multiple')->default(1);
 
-            $table->foreign('content_type_id')->references('id')->on('content_types');
+            //$table->foreign('content_type_id')->references('id')->on('content_types');
         });
     }
 

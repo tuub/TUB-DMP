@@ -32,7 +32,7 @@ class CreateProjectsTable extends Migration
             $table->dateTime('prefilled_at')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             //$table->foreign('data_source_id')->references('id')->on('data_sources');
 
         });

@@ -19,8 +19,8 @@ class CreateAnswersTable extends Migration
             $table->json('value');
             $table->timestamps();
 
-            $table->foreign('survey_id')->references('id')->on('surveys')->onDelete('cascade');
-            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
+            //$table->foreign('survey_id')->references('id')->on('surveys')->onDelete('cascade');
+            //$table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 

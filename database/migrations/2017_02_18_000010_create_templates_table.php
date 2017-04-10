@@ -18,7 +18,6 @@ class CreateTemplatesTable extends Migration
             $table->increments('id');
             $table->string('name', 255)->unique();
             $table->integer('institution_id')->unsigned();
-            $table->foreign('institution_id')->references('id')->on('institutions');
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
