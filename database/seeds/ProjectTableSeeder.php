@@ -84,7 +84,7 @@ class ProjectTableSeeder extends Seeder
 
         Project::create([
             'id' => 8,
-            'identifier' => 'DMP-2650722097',
+            'identifier' => 'DMP-1447596657',
             'user_id' => 12,
             'is_prefilled' => 1,
             'prefilled_at' => '2016-11-29 11:44:02',
@@ -131,29 +131,6 @@ class ProjectTableSeeder extends Seeder
             'prefilled_at' => '2017-03-13 12:50:02',
             'created_at' => '2017-03-13 12:49:15',
             'updated_at' => '2017-03-13 12:50:03',
-        ]);
-
-
-
-
-
-
-
-
-        Project::create([
-            'id' => 2,
-            'identifier' => 'DMP-123-01',
-            'parent_id' => 1,
-            'user_id' => 1,
-            'data_source_id' => 1,
-        ]);
-
-        Project::create([
-            'id' => 3,
-            'identifier' => 'DMP-123-02',
-            'parent_id' => 1,
-            'user_id' => 1,
-            'data_source_id' => 1,
         ]);
     }
 }
