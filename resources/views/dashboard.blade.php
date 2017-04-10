@@ -96,7 +96,6 @@
              * @param {Json} json
              * @return {String} errorsHtml
              */
-
             $('#feedback-form').bind('submit', function (e) {
                 e.preventDefault();
 
@@ -122,6 +121,12 @@
                 })
             });
 
+
+            /**
+             * Sets the state of project's plan panel based on project_id from
+             * cookie values and toggles the plus/minus buttons, located in
+             * partials/project/info.php
+             */
             $('a.toggle-plans').bind('click', function (e) {
                 e.preventDefault();
                 var project_id  = $(this).data('href');
@@ -225,6 +230,7 @@
                     }
                 })
             });
+
 
             $('a.create-plan-version').bind('click', function (e) {
                 e.preventDefault();
