@@ -54,15 +54,6 @@
                     <span class="help-block {{ ($errors->first('version') ? 'form-error' : '') }}">{{ $errors->first('version') }}</span>
                 </div>
             </div>
-            <div class="row form-group container">
-                <div class="col-md-2">
-                    {!! Form::label('template_id', 'Plan Template', array('class' => 'control-label')) !!}
-                </div>
-                <div class="col-md-10">
-                    {!! Form::select('template_id', $templates, null, array('class' => 'form-control') ) !!}
-                    <span class="help-block {{ ($errors->first('template_id') ? 'form-error' : '') }}">{{ $errors->first('template_id') }}</span>
-                </div>
-            </div>
             <div class="row form-group">
                 <div class="col-md-offset-4 col-md-8">
                     {!! Form::submit('Create', array('class' => 'button btn btn-success' )) !!}
@@ -71,5 +62,4 @@
             {!! Form::close() !!}
         </div>
     </div>
-
 @stop

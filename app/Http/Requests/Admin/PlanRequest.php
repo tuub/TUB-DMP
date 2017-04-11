@@ -29,7 +29,6 @@ class PlanRequest extends Request
         return [
             //'title' => 'required|max:255|unique:plans,title,project_id' . ($id ? ',' . $id : ''),
             'version' => 'required',
-            'template_id' => 'required'
         ];
     }
 }

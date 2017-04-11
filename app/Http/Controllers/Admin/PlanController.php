@@ -52,7 +52,6 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($id);
         $projects = Project::all()->pluck('identifier','id')->prepend('Select a project',null);
-        $templates = Template::all()->pluck('name','id')->prepend('Select a template',null);
         $versions = ['1' => 1, '2' => 2, '3' => 3];
         return view('admin.plan.edit', compact('plan','projects','templates','versions'));
     }
