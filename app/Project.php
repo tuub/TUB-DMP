@@ -145,16 +145,24 @@ class Project extends Node
     public function getStatusAttribute()
     {
         if ($this->getMetadata('begin') && $this->getMetadata('begin')->count()) {
+            if (Carbon::parse($this->getMetadata('begin')->first()) > (Carbon::now())) {
+                $status = 'Not started';
+            } else {
+                $status = 'Running';
+            }
+
             if ($this->getMetadata('end')  && $this->getMetadata('end')->count()) {
                 if (Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
-                    return 'Running';
+                    $status = 'Running';
                 } else {
-                    return 'Ended';
+                    $status = 'Ended';
                 }
             }
         } else {
-            return 'Unknown';
+            $status = 'Unknown';
         }
+
+        return $status;
     }
 
 
