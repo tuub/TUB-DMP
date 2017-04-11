@@ -1,19 +1,17 @@
 <tr>
     <td>
-        {{ $project->identifier }}
-        @if( $project->isRoot() )
-            <br/><i>Parent Project</i>
+        <strong>{{ $project->identifier }}</strong>
+        @if( $project->isChild() )
+            <br/>Parent Project: {{ $project->parent->identifier }}
         @endif
-    </td>
-    <td>
+        <br/>
         @if( $project->getMetadata('title') )
             @foreach( $project->getMetadata('title') as $title )
-                <label>{{ strtoupper($title['language']) }}:</label> {{ $title['content'] }}<br/>
+                {{ $title['content'] }} ({{ strtoupper($title['language']) }})<br/>
             @endforeach
         @endif
 
         @if( $project->getMetadata('begin') )
-            <label>Duration:</label>
             @foreach( $project->getMetadata('begin') as $begin )
                 @date($begin) -
                 @if( $project->getMetadata('end') )
@@ -23,11 +21,6 @@
                 @endif
             @endforeach
             <br/>
-        @endif
-
-        @if( $project->getMetadata('funding_source') )
-            <label>Funded by:</label>
-            {{ $project->getMetadata('funding_source')->implode(', ') }}
         @endif
     </td>
     <td>
@@ -46,9 +39,6 @@
         {{ $project->plans_count }}
     </td>
     <td>
-        {{ $project->children_count }}
-    </td>
-    <td>
         @if($project->data_source)
             {{ $project->data_source->identifier }}
             @if ($project->is_prefilled)
@@ -56,6 +46,8 @@
             @else
                 <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>
             @endif
+        @else
+            <i>None</i>
         @endif
     </td>
     <td>

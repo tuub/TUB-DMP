@@ -519,13 +519,11 @@
                 <table class="table table-fixed">
                     <thead>
                         <tr>
-                            <th style="width: 15%">Project</th>
-                            <th style="width: 35%">Metadata</th>
+                            <th style="width: 40%">Project</th>
                             <th style="width: 20%;">Members</th>
                             <th style="width: 5%;">Plans</th>
-                            <th style="width: 5%;">Projects</th>
                             <th style="width: 10%;">Data Source</th>
-                            <th>Status</th>
+                            <th style="width: 10%;">Status</th>
                             <th style="width: 10%;">Tools</th>
                             <th style="width: 5%;">&nbsp;</th>
                         </tr>
