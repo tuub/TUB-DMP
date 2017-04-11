@@ -86,15 +86,48 @@
                     <br/><br/>
                 @endif
 
+                @if( $project->getMetadata('partner') )
+                    <label>{{ str_plural($project->getMetadataLabel('partner'), $project->getMetadata('partner')->count()) }}:</label>
+                    <br/>
+                    @foreach( $project->getMetadata('partner') as $partner )
+                        {{ $partner }}
+                        @unless( $loop->last )
+                            <br/>
+                        @endunless
+                    @endforeach
+                    <br/><br/>
+                @endif
+
                 @if( $project->getMetadata('funding_source') )
                     <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>
                     {!! $project->getMetadata('funding_source')->implode(', ') !!}
+                    <br/><br/>
                 @endif
 
                 @if( $project->getMetadata('funding_program') )
                     <label>{{ str_plural($project->getMetadataLabel('funding_program'), $project->getMetadata('funding_program')->count()) }}:</label>
                     {!! $project->getMetadata('funding_program')->implode(', ') !!}
+                    <br/><br/>
                 @endif
+
+                @if( $project->getMetadata('grant_reference_number') )
+                    <label>{{ str_plural($project->getMetadataLabel('grant_reference_number'), $project->getMetadata('grant_reference_number')->count()) }}:</label>
+                    {!! $project->getMetadata('grant_reference_number')->implode(', ') !!}
+                    <br/><br/>
+                @endif
+
+                @if( $project->getMetadata('project_management_organisation') )
+                    <label>{{ str_plural($project->getMetadataLabel('project_management_organisation'), $project->getMetadata('project_management_organisation')->count()) }}:</label>
+                    {!! $project->getMetadata('project_management_organisation')->implode(', ') !!}
+                    <br/><br/>
+                @endif
+
+                @if( $project->getMetadata('project_data_contact') )
+                    <label>{{ str_plural($project->getMetadataLabel('project_data_contact'), $project->getMetadata('project_data_contact')->count()) }}:</label>
+                    {!! $project->getMetadata('project_data_contact')->implode(', ') !!}
+                    <br/><br/>
+                @endif
+
             </div>
             <div class="modal-footer">
                 {{ Form::button('OK', ['class' => 'btn btn-success', 'data-dismiss' => 'modal']) }}
@@ -151,6 +184,9 @@
 
                 <!-- PROJECT MEMBERS -->
                 {!! Form::metadata( $project, 'member' ) !!}
+
+                <!-- EXTERNAL PROJECT PARTNER -->
+                {!! Form::metadata( $project, 'partner' ) !!}
 
                 <!-- FUNDING SOURCE -->
                 {!! Form::metadata( $project, 'funding_source' ) !!}
