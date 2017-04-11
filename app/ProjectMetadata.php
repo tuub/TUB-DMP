@@ -47,10 +47,31 @@ class ProjectMetadata extends Model
             $output = $name;
         }
 
+        /*
         if ($data['uri']) {
             $output .= ' (' . HTML::link( $data['uri'], 'www', ['target' => '_blank']) . ')';
         }
+        */
 
+
+        return $output;
+    }
+
+
+    public static function getProjectMemberShortOutput($data) {
+        $output = null;
+        $name = '';
+        $email = null;
+
+        if ($data['lastname']) {
+            $output = $data['lastname'];
+        }
+
+        /*
+        if ($data['uri']) {
+            $output .= ' (' . HTML::link( $data['uri'], 'www', ['target' => '_blank']) . ')';
+        }
+        */
 
         return $output;
     }

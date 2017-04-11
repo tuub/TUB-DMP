@@ -134,10 +134,10 @@
 
                 if( toggleState === 'open' ) {
                     $(this).find('i').removeClass('fa-plus').addClass('fa-minus');
-                    $('tr[data-content=' + project_id + ']').removeClass('hidden');
+                    $('div[data-content=' + project_id + ']').removeClass('hidden');
                 } else {
                     $(this).find('i').removeClass('fa-minus').addClass('fa-plus');
-                    $('tr[data-content=' + project_id + ']').addClass('hidden');
+                    $('div[data-content=' + project_id + ']').addClass('hidden');
                 }
 
                 setVisibleProjects();
@@ -502,7 +502,7 @@
 
     </style>
 
-    <div class="panel panel-default">
+    <div class="panel">
         <div class="panel-heading text-center">
             {{ trans('dashboard.my-plans-header') }}
         </div>
@@ -510,16 +510,15 @@
 
             @foreach ($projects as $project)
                 @include('partials.project.modal', $project)
-                @foreach ($project->children as $project)
-                    @include('partials.project.modal', $project)
-                    @foreach ($project->children as $project)
-                        @include('partials.project.modal', $project)
-                        @foreach ($project->children as $project)
-                            @include('partials.project.modal', $project)
-                        @endforeach
-                    @endforeach
-                @endforeach
             @endforeach
+
+
+            @foreach ($projects as $project)
+                @include('partials.project.infocard', $project)
+            @endforeach
+
+
+
 
             <div class="table-responsive">
                 <table class="table table-fixed">
