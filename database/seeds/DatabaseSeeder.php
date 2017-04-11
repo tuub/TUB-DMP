@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         //$this->call(IvmcFieldTypeTableSeeder::class);
         //$this->call(IvmcMappingTableSeeder::class);
         $this->call(MetadataRegistryTableSeeder::class);
-        //$this->call(ProjectMetadataTableSeeder::class);
+        $this->call(ProjectMetadataTableSeeder::class);
         $this->call(DataSourceNamespaceTableSeeder::class);
         $this->call(DataSourceMappingTableSeeder::class);
 
