@@ -54,7 +54,8 @@ class HtmlOutputFilter implements OutputInterface
                     foreach ($input->value as $value) {
                         switch ($this->content_type->identifier) {
                             case 'list':
-                                $output = $value->implode(', ', $value);
+                                //$output = $value->implode(', ', $value);
+                                \AppHelper::varDump($value);
                                 break;
                             case 'person':
                                 var_dump($value);
