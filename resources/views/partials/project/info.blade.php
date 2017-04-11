@@ -7,7 +7,7 @@
         <br/>
         @if( $project->getMetadata('title') )
             @foreach( $project->getMetadata('title') as $title )
-                {{ $title['content'] }} ({{ strtoupper($title['language']) }})<br/>
+                "{{ $title['content'] }}" ({{ strtoupper($title['language']) }})<br/>
             @endforeach
         @endif
 

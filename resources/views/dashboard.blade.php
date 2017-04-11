@@ -512,6 +512,12 @@
                 @include('partials.project.modal', $project)
                 @foreach ($project->children as $project)
                     @include('partials.project.modal', $project)
+                    @foreach ($project->children as $project)
+                        @include('partials.project.modal', $project)
+                        @foreach ($project->children as $project)
+                            @include('partials.project.modal', $project)
+                        @endforeach
+                    @endforeach
                 @endforeach
             @endforeach
 
