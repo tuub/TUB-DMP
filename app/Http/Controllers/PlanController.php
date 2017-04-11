@@ -86,12 +86,14 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($request->id);
 
+        /*
         if (Gate::denies('update', [auth()->user(), $plan])) {
             return response()->json([
                 'response' => 403,
                 'msg' => 'Forbidden!'
             ]);
         }
+        */
 
         if ($request->ajax()) {
 
