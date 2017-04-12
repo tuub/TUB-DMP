@@ -120,12 +120,10 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@email',
         'as' => 'plan.email'
     ]);
-
-
     /* EXPORT */
-    Route::get('/plan/{id}/export/{format?}', [
+    Route::get('/plan/{id}/export', [
         'uses' => 'PlanController@export',
-        'as' => 'export_plan'
+        'as' => 'plan.export'
     ]);
 
 

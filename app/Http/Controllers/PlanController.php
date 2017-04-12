@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use App\HtmlOutputFilter;
 use App\Survey;
 use Request;
@@ -197,8 +199,22 @@ class PlanController extends Controller
 
 
     // TODO: Snappy & WKHTML2PDF
-    public function export($id, $format = null, $download = true)
+    public function export($id)
     {
+        $plan = $this->plan->findOrFail($id);
+        $project = $plan->project;
+        $survey = $plan->survey;
+
+        //$pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
+        //$pdf->setOption('encoding', 'UTF-8');
+        //$pdf->setOption('toc', true);
+        //return $pdf->stream();
+        return view('pdf.dmp', compact('plan', 'project', 'survey'));
+
+
+
+        /*
+
         if($this->plan->exportPlan($id, $format, $download)) {
             //$msg = 'Exported successfully!';
             //Notifier::success( $msg )->flash()->create();
@@ -207,6 +223,7 @@ class PlanController extends Controller
             //Notifier::error( $msg )->flash()->create();
         }
         return Redirect::route('dashboard');
+        */
     }
 
 

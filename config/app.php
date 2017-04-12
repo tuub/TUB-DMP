@@ -158,6 +158,7 @@ return [
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
         Baum\Providers\BaumServiceProvider::class,
         AdamWathan\BootForms\BootFormsServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
     ],
 
     /*
@@ -213,7 +214,9 @@ return [
         'Amaran'    => Xuma\Amaran\Facades\Amaran::class,
         'Debugbar'  => Barryvdh\Debugbar\Facade::class,
         'Flash'     => Laracasts\Flash\Flash::class,
-        'BootForm' => AdamWathan\BootForms\Facades\BootForm::class,
+        'BootForm'  => AdamWathan\BootForms\Facades\BootForm::class,
+        'PDF'       => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
     ],
 
 ];

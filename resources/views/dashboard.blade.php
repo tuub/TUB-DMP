@@ -325,6 +325,32 @@
                 })
             });
 
+
+            $('a.export-plan').bind('click', function (e) {
+                e.preventDefault();
+
+                //var form    = $('#export-plan-form');
+                var plan_id = $(this).data('rel');
+                var div     = $('div#export-plan-' + plan_id);
+
+                $.ajax({
+                    type    : 'GET',
+                    url     : '/plan/' + plan_id + '/show',
+                    dataType: 'json',
+                    error   : function (json) {
+                        //console.log(json);
+                        div.modal();
+                    },
+                    success : function (json) {
+                        //$.each(json, function (field, value) {
+                        //    form.find('#' + field).val(value);
+                        //});
+                        div.modal();
+                    }
+                });
+            });
+
+
             $('a.show-project').bind('click', function (e) {
                 e.preventDefault();
 
@@ -525,8 +551,5 @@
 
         </div>
     </div>
-
-
-    @include('partials.plan.modal')
 
 @stop

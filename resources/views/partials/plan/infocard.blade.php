@@ -40,7 +40,7 @@
                     <a href="#" class="email-plan btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#email-plan" title="Email Plan">
                         <i class="fa fa-envelope-o"></i><span class="hidden-sm hidden-xs"> Email</span>
                     </a>
-                    <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#export-option-for-{{ $plan->id }}" title="PDF">
+                    <a href="#" class="export-plan btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#export-plan" title="PDF">
                         <i class="fa fa-file-pdf-o"></i><span class="hidden-sm hidden-xs"> PDF</span>
                     </a>
                     @if( $plan->is_final )
@@ -66,3 +66,5 @@
             </div>
         </div>
     </div>
+
+    @include('partials.plan.modal')

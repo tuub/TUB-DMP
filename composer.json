@@ -13,7 +13,8 @@
         "laracasts/flash": "^2.0",
         "felixkiss/uniquewith-validator": "^2.0",
         "baum/baum": "^1.1",
-        "adamwathan/bootforms": "^0.8.4"
+        "adamwathan/bootforms": "^0.8.4",
+        "barryvdh/laravel-snappy": "^0.3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
