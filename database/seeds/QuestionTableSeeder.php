@@ -222,7 +222,7 @@ SZF developed a sustainable strategic concept to store the research data: In Dep
             'order' => 2,
             'parent_id' => 129,
             'text' => 'Type of data?',
-            'content_type_id' => 6,
+            'content_type_id' => 1,
             'default' => null,
             'prepend' => null,
             'append' => null,
