@@ -11,6 +11,7 @@
                 </div>
                 <div class="col-md-21 col-sm-20 col-xs-21">
                     <span class="plan-title">{{ $plan->title }}</span>
+                    (Version {{ $plan->version }})
                     @unless( $plan->is_final )
                         <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
                             <i class="fa fa-pencil"></i>
@@ -43,22 +44,24 @@
                         <i class="fa fa-file-pdf-o"></i><span class="hidden-sm hidden-xs"> PDF</span>
                     </a>
                     @if( $plan->is_final )
-                        @if( $plan->hasNextVersion($plan->version) )
-                            Has newer version {{ $plan->version+1 }}.
-                        @else
+                        @unless($plan->hasNextVersion($plan->version))
                             <a href="{{ URL::route('plan.toggle', [$plan->id, $plan->version]) }}" class="btn btn-default btn-xs" title="Reopen">
                                 <i class="fa fa-unlock"></i><span class="hidden-xs"> Reopen</span>
                             </a>
                             <a href="#" class="create-plan-version btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#create-plan-version" title="Make new Version {{ $plan->version+1 }}">
                                 <i class="fa fa-fast-forward"></i><span class="hidden-sm hidden-xs"> Create version {{ $plan->version+1 }}</span>
                             </a>
-                        @endif
+                        @endunless
                     @else
                         <a href="{{ URL::route('plan.toggle', [$plan->id]) }}" class="btn btn-default btn-xs" title="Finish"><i class="fa fa-lock"></i><span class="hidden-xs"> Finish DMP</span></a>
                     @endif
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
-                    <strong>Updated:</strong> @date( $plan->updated_at ) at @time( $plan->updated_at )
+                    @if( $plan->is_final )
+                        <strong>Finished:</strong> @date( $plan->updated_at ) at @time( $plan->updated_at )
+                    @else
+                        <strong>Updated:</strong> @date( $plan->updated_at ) at @time( $plan->updated_at )
+                    @endif
                 </div>
             </div>
         </div>

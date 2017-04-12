@@ -87,9 +87,6 @@ $status = $project->status;
                             <strong>Data Import:</strong>
                             @if($project->data_source)
                                 {{ $project->data_source->identifier }}
-                                @if ($project->is_prefilled)
-                                    <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>
-                                @endif
                             @else
                                 None
                             @endif
@@ -110,7 +107,7 @@ $status = $project->status;
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6 text-right">
                         <a href="#" class="toggle-plans card-link btn btn-success btn-xs" data-href="{{  $project->id }}">
-                            <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"> See Plans ({{ $project->plans_count }})</span>
+                            <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"> Plans ({{ $project->plans_count }})</span>
                         </a>
                     </div>
                 </div>
