@@ -51,7 +51,7 @@
             function setVisibleProjects()
             {
                 var open = [];
-                $('tr.dashboard-project-plans').not('.hidden').each(function(index, item){
+                $('div.dashboard-project-plans').not('.hidden').each(function(index, item){
                     open.push($(this).data('content'));
                 });
                 $.cookie('tub-dmp_dashboard', open);
@@ -131,6 +131,9 @@
                 e.preventDefault();
                 var project_id  = $(this).data('href');
                 var toggleState = ($(this).find('i').hasClass('fa-plus')) ? 'open' : 'closed';
+
+                console.log($(this).find('i'));
+                console.log(toggleState);
 
                 if( toggleState === 'open' ) {
                     $(this).find('i').removeClass('fa-plus').addClass('fa-minus');
@@ -468,6 +471,10 @@
 
     <style>
 
+        * {
+            outline: 0px #336699 dotted;
+        }
+
         .input-with-language > .form-control {
             width: 50%;
         }
@@ -512,38 +519,10 @@
                 @include('partials.project.modal', $project)
             @endforeach
 
-
             @foreach ($projects as $project)
                 @include('partials.project.infocard', $project)
             @endforeach
 
-
-
-
-            <div class="table-responsive">
-                <table class="table table-fixed">
-                    <thead>
-                        <tr>
-                            <th style="width: 40%">Project</th>
-                            <th style="width: 20%;">Members</th>
-                            <th style="width: 5%;">Plans</th>
-                            <th style="width: 10%;">Data Source</th>
-                            <th style="width: 10%;">Status</th>
-                            <th style="width: 10%;">Tools</th>
-                            <th style="width: 5%;">&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                @foreach ($projects as $project)
-                                    @include('partials.project.info', $project)
-                                @endforeach
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 

@@ -35,7 +35,7 @@
                 <span class="fa fa-check fa-2x" title="OK"></span>
             </div>
             <div class="unsaved">
-                <a href="#" class="btn btn-default btn-xs ajaxsave" data-rel="{{ $question->id }}" title="Quicksave"><i class="unsaved fa fa-floppy-o fa-2x"></i><span class="hidden-xs"></span></a>
+                <span class="fa fa-exclamation fa-2x" title="Unsaved"></span>
             </div>
             <div class="error">
                 <span class="fa fa-exclamation fa-2x" title="Error"></span>
