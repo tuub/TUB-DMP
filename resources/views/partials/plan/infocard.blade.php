@@ -66,5 +66,3 @@
             </div>
         </div>
     </div>
-
-    @include('partials.plan.modal')

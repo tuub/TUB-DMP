@@ -156,11 +156,14 @@
                 var form    = $('#create-plan-form');
                 var div     = form.parent();
 
+                console.log(div);
+
                 $.ajax({
                     type    : 'GET',
                     url     : '/my/project/' + $(this).data('rel') + '/show',
                     dataType: 'json',
                     success : function (json) {
+                        console.log(json);
                         form.find('#project_id').val(json.id);
                         div.modal();
                     }
@@ -529,10 +532,6 @@
             line-height:100px;
         }
 
-
-
-
-
     </style>
 
     <div class="panel">
@@ -542,11 +541,8 @@
         <div class="panel-body">
 
             @foreach ($projects as $project)
-                @include('partials.project.modal', $project)
-            @endforeach
-
-            @foreach ($projects as $project)
                 @include('partials.project.infocard', $project)
+                @include('partials.project.modal', $project)
             @endforeach
 
         </div>

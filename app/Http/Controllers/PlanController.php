@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\App;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+//use Barryvdh\DomPDF\Facade as PDF;
 use App\HtmlOutputFilter;
 use App\Survey;
 use Request;
@@ -205,11 +206,21 @@ class PlanController extends Controller
         $project = $plan->project;
         $survey = $plan->survey;
 
-        //$pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
-        //$pdf->setOption('encoding', 'UTF-8');
-        //$pdf->setOption('toc', true);
-        //return $pdf->stream();
-        return view('pdf.dmp', compact('plan', 'project', 'survey'));
+        $header_html = (string) view('pdf.header', compact('plan'));
+
+        \AppHelper::varDump($header_html);
+
+        $pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
+        $pdf->setOption('encoding', 'UTF-8');
+        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-top', '10mm');
+        $pdf->setOption('margin-bottom', '15mm');
+        $pdf->setOption('margin-left', '10mm');
+        $pdf->setOption('margin-right', '10mm');
+        $pdf->setOption('header-html', $header_html);
+        $pdf->setOption('footer-center','- [page] -');
+        return $pdf->stream();
+        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
 
 
 

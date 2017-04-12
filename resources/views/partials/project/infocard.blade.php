@@ -119,6 +119,7 @@ $status = $project->status;
         <div class="col-lg-24 col-md-offset-1 col-md-24 col-sm-24 col-xs-24">
             @foreach ($project->plans as $plan)
                 @include('partials.plan.infocard', $plan)
+                @include('partials.plan.modal', $plan)
             @endforeach
         </div>
         <div class="text-center">
