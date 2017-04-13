@@ -58,20 +58,22 @@ class Section extends \Eloquent
     }
     */
 
-    /**
-     * @param Plan $plan
-     *
-     * @return int
-     */
-    public function getAnswerCount( Plan $plan ) {
-        $questions = Question::where( 'template_id', $plan->template_id )->where( 'section_id', $this->id )->get();
+
+    public function getAnswerCount( Survey $survey ) {
+        $questions = Question::with('answers')->where([
+            'template_id' => $survey->template->id,
+            'section_id' => $this->id
+        ])->get();
+
         $count = 0;
+
         foreach( $questions as $question ) {
-            $answers = Answer::where('question_id', $question->id)->where('plan_id', $plan->id)->where('user_id', $plan->user_id)->distinct('question_id')->count('question_id');
+            $answers = Answer::where('question_id', $question->id)->where('survey_id', $survey->id)->distinct('question_id')->count('question_id');
             if( $answers > 0 ) {
                 $count++;
             }
         }
+
         return $count;
     }
 
@@ -81,9 +83,9 @@ class Section extends \Eloquent
      *
      * @return bool
      */
-    public function isEmpty( Plan $plan )
+    public function isEmpty( Survey $survey )
     {
-        if( $this->getAnswerCount( $plan ) > 0 ) {
+        if( $this->getAnswerCount( $survey ) > 0 ) {
             return false;
         }
         return true;

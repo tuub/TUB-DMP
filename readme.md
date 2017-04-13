@@ -60,6 +60,18 @@ Installation of additional components or changes to the Assets require calling o
 2. Create the database tables: php artisan migrate
 3. Insert data to the tables: php artisan db:seed
 
+### Activate PDF support
+```
+sudo apt-get update
+sudo apt-get install libxrender1 fontconfig xvfb
+wget http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz -P /tmp/
+cd /opt/
+sudo tar xf /tmp/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+sudo ln -s /opt/wkhtmltox/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
+```
+
+Then add the correct pathes in config/snappy.php.
+
 ### Activate Prefilling
 In order to prefill plans with predefined answers (and maybe with external data) you have to add a cronjob:
 ```sh

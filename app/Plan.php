@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use App\Http\Requests\VersionPlanRequest;
 //use App\Http\Requests\CreatePlanRequest;
 //use App\Http\Requests\UpdatePlanRequest;
@@ -51,17 +52,25 @@ class Plan extends Model
      */
     public static function getByCredentials( $project_number, $version, $user_id )
     {
-        if ( is_null( $project_number ) || is_null( $version ) ) {
+        if (is_null($project_number) || is_null($version))
+        {
             return null;
         }
+
         $query = Plan::where( 'project_number', $project_number )->where( 'version', $version );
-        if ( Auth::user()->is_admin === 0 ) {
+
+        if (auth()->user()->is_admin === 0)
+        {
             $query->where( 'user_id', $user_id );
         }
+
         $plan = $query->first();
-        if ( $plan ) {
+
+        if ($plan)
+        {
             return $plan;
         }
+
         return null;
     }
 
@@ -75,8 +84,10 @@ class Plan extends Model
     }
 
 
-    public function isFinal() {
-        if( $this->is_final ) {
+    public function isFinal()
+    {
+        if ($this->is_final)
+        {
             return true;
         }
 
@@ -86,22 +97,28 @@ class Plan extends Model
 
     public function setFinalFlag($status)
     {
-        if (is_bool($status)) {
+        if (is_bool($status))
+        {
             $this->is_final = $status;
             $this->save();
             return true;
         }
-        /* Uncomment if you want to finalize only 100% completed plans */
+
+        // Uncomment if you want to finalize only 100% completed plans */
         /*
-        if( $this->isComplete() ) {
-            if( is_bool($status) ) {
+        if ($this->isComplete())
+        {
+            if (is_bool($status))
+            {
                 $this->is_final = $status;
                 $this->save();
                 return true;
             }
+
             return false;
         }
         */
+
         return false;
     }
 
@@ -119,7 +136,8 @@ class Plan extends Model
 
     public function hasNextVersion($current_version)
     {
-        if ($this->getNextVersion($current_version)->count()) {
+        if ($this->getNextVersion($current_version)->count())
+        {
             return true;
         }
 
@@ -143,7 +161,8 @@ class Plan extends Model
         $survey->save();
 
         /* Depending on answer data, set answers or default values */
-        if( is_null($answer_data) ) {
+        if (is_null($answer_data))
+        {
             $survey->setDefaults();
         } else {
             $survey->saveAnswers($answer_data);
@@ -162,10 +181,14 @@ class Plan extends Model
         $next_version = $current_version + 1;
         $answers = null;
 
-        if (isset($data['clone_current'])) {
+        if (isset($data['clone_current']))
+        {
             $cloned_answers = [];
-            foreach ( $current_plan->survey->template->questions as $question ) {
-                foreach ( Answer::check( $current_plan->survey, $question ) as $answer ) {
+
+            foreach ($current_plan->survey->template->questions as $question)
+            {
+                foreach (Answer::check($current_plan->survey, $question) as $answer)
+                {
                     $cloned_answers[$question->id] = $answer->value;
                 }
             }
@@ -184,13 +207,18 @@ class Plan extends Model
         $sender['message'] = $data['message'];
         $recipient['name'] = $data['name'];
         $recipient['email'] = $data['email'];
+
         $plan = $this->find($data['id']);
-        $project = Project::find($data['project_id']);
-        if( $project ) {
-            $project_id = $project->identifier;
-        } else {
-            $project_id = null;
+
+        $project_id = null;
+
+        if($plan->project->id)
+        {
+            $project_id = $plan->project->identifier;
         }
+
+        $pdf = self::exportPlan($plan->project_number, $plan->version, 'pdf', false);
+        $pdf_filename = 'DMP_for_TUB_Project_' . $plan->project_number . '-' . $plan->version . '_' . $plan->updated_at->format( 'Ymd' ) . '.pdf';
 
         Mail::send(['text' => 'emails.plan'], ['plan' => $plan, 'recipient' => $recipient, 'sender' => $sender ],
             function($email) use ($sender, $recipient, $plan, $project_id) {
@@ -215,6 +243,39 @@ class Plan extends Model
 
         return true;
     }
+
+    public function exportPlan()
+    {
+        $plan = $this;
+        $project = $plan->project;
+        $survey = $plan->survey;
+
+        $header_html = (string) view('pdf.header');
+        $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
+
+        $pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
+        $pdf->setOption('encoding', 'UTF-8');
+        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-top', '10mm');
+        $pdf->setOption('margin-bottom', '20mm');
+        $pdf->setOption('margin-left', '20mm');
+        $pdf->setOption('margin-right', '20mm');
+        $pdf->setOption('header-html', $header_html);
+        $pdf->setOption('footer-font-size', '8');
+        $pdf->setOption('footer-right', $footer);
+        return $pdf->stream();
+        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
+
+        return true;
+    }
+
+
+
+
+
+
+
+
 
     /* TODO: Experimental, not in use */
     public function getColoredCompletionRate()
@@ -352,7 +413,7 @@ class Plan extends Model
         return false;
     }
 
-    public function exportPlan($project_number, $version, $format, $download)
+    public function exportPlan2($project_number, $version, $format, $download)
     {
         $plan = self::getByCredentials( $project_number, $version, Auth::user()->id );
         if( !is_null($plan) ) {
@@ -452,67 +513,4 @@ class Plan extends Model
         };
         return false;
     }
-
-    
-    public function getVersion() {
-        return $this->version;
-    }
-    
-
-
-    /**
-     * @return mixed
-     */
-    public function getProjectStage() {
-        /* TODO: This is so stupid! */
-        $question_id = 104;
-        return Answer::where('question_id', $question_id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->pluck('text');
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getProjectNumber() {
-        return $this->project_number;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getTitle() {
-        /* TODO: This is so stupid! */
-        $question_id = 102;
-        return Answer::where('question_id', $question_id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->pluck('value');
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getInvestigators() {
-        /* TODO: This is so stupid! */
-        $names = [];
-        $question_ids = [107,109];
-        foreach( $question_ids as $question_id ) {
-            $name = Answer::where('question_id', $question_id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->pluck('value');
-            if( $name ) {
-                $names[] = $name;
-            }
-        }
-        return implode(', ', $names );
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getLeadOrganization() {
-        /* TODO: This is so stupid! */
-        $question_id = 115;
-        return Answer::where('question_id', $question_id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->pluck('value');
-    }
-
-
 }

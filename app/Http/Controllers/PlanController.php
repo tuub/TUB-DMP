@@ -2,32 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
-//use Barryvdh\DomPDF\Facade as PDF;
-use App\HtmlOutputFilter;
-use App\Survey;
-use Request;
 use App\Http\Requests\PlanRequest;
-use App\Http\Requests\VersionRequest;
-
 use App\Http\Requests\EmailPlanRequest;
-
 use App\Http\Requests\VersionPlanRequest;
-
-use Event;
-use App\Events\PlanCreated;
 use App\Events\PlanUpdated;
-
 use App\Plan;
 use App\Template;
 
-use Jenssegers\Optimus\Optimus;
-use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\App;
+use App\Survey;
+use App\Events\PlanCreated;
+use App\Http\Requests\VersionRequest;
 
+use App\HtmlOutputFilter;
+use Event;
+use Request;
 use Redirect;
-use Notifier;
-
 use Gate;
 
 /**
@@ -56,7 +47,8 @@ class PlanController extends Controller
         $this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id']);
 
         /* Create a response in JSON */
-        if ($request->ajax()) {
+        if ($request->ajax())
+        {
             return response()->json([
                 'response'  => 200,
                 'msg'       => 'DMP with Survey created!'
@@ -69,19 +61,20 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($id);
 
-        if (Request::ajax()) {
-            if ($plan) {
-                return $plan->toJson();
-            } else {
+        if (Request::ajax())
+        {
+            if (!$plan)
+            {
                 return response()->json([
                     'response' => 404,
                     'message' => 'Plan was not found.'
                 ]);
             }
+            return $plan->toJson();
+
         } else {
             abort(403, 'Direct access is not allowed.');
         }
-
     }
 
 
@@ -98,11 +91,12 @@ class PlanController extends Controller
         }
         */
 
-        if ($request->ajax()) {
-
+        if ($request->ajax())
+        {
             $data = array_filter($request->all(), 'strlen');
 
-            if ($plan->update($data)) {
+            if($plan->update($data))
+            {
                 $response = 200;
                 $message = 'Plan was successfully updated!';
                 Event::fire(new PlanUpdated($plan));
@@ -113,6 +107,7 @@ class PlanController extends Controller
                 'response' => $response,
                 'message' => $message,
             ]);
+
         } else {
             abort(403, 'Direct access is not allowed.');
         }
@@ -129,8 +124,10 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($id);
 
-        if ($plan) {
-            if ($plan->isFinal()) {
+        if ($plan)
+        {
+            if ($plan->isFinal())
+            {
                 $plan->setFinalFlag(false);
                 // TODO: Replace?
                 //Notifier::success('Plan unfinalized successfully!')->flash()->create();
@@ -153,7 +150,8 @@ class PlanController extends Controller
     {
         $data = $request->except(['_token']);
 
-        if ($this->plan->createNextVersion($data)) {
+        if ($this->plan->createNextVersion($data))
+        {
             $response = 200;
             $message = 'New version created!';
             //Notifier::success( $msg )->flash()->create();
@@ -164,7 +162,8 @@ class PlanController extends Controller
         }
 
         /* Render the response */
-        if ($request->ajax()) {
+        if ($request->ajax())
+        {
             return response()->json([
                 'response' => $response,
                 'message' => $message
@@ -179,7 +178,8 @@ class PlanController extends Controller
     {
         $data = $request->except(['_token']);
 
-        if ($this->plan->emailToRecipient($data)) {
+        if ($this->plan->emailToRecipient($data))
+        {
             $response = 200;
             $msg = 'Mail was sent.';
         } else {
@@ -188,7 +188,8 @@ class PlanController extends Controller
         }
 
         /* Response */
-        if ($request->ajax()) {
+        if ($request->ajax())
+        {
             return response()->json([
                 'response' => $response,
                 'msg' => $msg,
@@ -203,26 +204,29 @@ class PlanController extends Controller
     public function export($id)
     {
         $plan = $this->plan->findOrFail($id);
+        return $plan->exportPlan();
+
+        /*
         $project = $plan->project;
         $survey = $plan->survey;
 
-        $header_html = (string) view('pdf.header', compact('plan'));
-
-        \AppHelper::varDump($header_html);
+        $header_html = (string) view('pdf.header');
+        $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
 
         $pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
         $pdf->setOption('encoding', 'UTF-8');
         $pdf->setOption('page-size', 'A4');
         $pdf->setOption('margin-top', '10mm');
-        $pdf->setOption('margin-bottom', '15mm');
-        $pdf->setOption('margin-left', '10mm');
-        $pdf->setOption('margin-right', '10mm');
+        $pdf->setOption('margin-bottom', '20mm');
+        $pdf->setOption('margin-left', '20mm');
+        $pdf->setOption('margin-right', '20mm');
         $pdf->setOption('header-html', $header_html);
-        $pdf->setOption('footer-center','- [page] -');
-        return $pdf->stream();
+        $pdf->setOption('footer-font-size', '8');
+        $pdf->setOption('footer-right',$footer);
+        //return $pdf->stream();
         //return view('pdf.dmp', compact('plan', 'project', 'survey'));
 
-
+        */
 
         /*
 
