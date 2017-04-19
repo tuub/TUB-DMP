@@ -17,14 +17,14 @@ use Carbon\Carbon;
 //use Storage;
 use Exporters;
 use Mail;
-use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Plan extends Model
 {
-    public $timestamps = true;
-    protected $table = 'plans';
-    protected $dates = ['created_at', 'updated_at'];
-    protected $fillable = ['title','project_id','version','template_id','is_active','is_final'];
+    public $timestamps  = true;
+    protected $table    = 'plans';
+    protected $dates    = ['created_at', 'updated_at'];
+    protected $fillable = ['title', 'project_id', 'version', 'template_id', 'is_active', 'is_final'];
 
     public function project()
     {
@@ -50,6 +50,7 @@ class Plan extends Model
      * @param $user_id
      * @return mixed
      */
+    /*
     public static function getByCredentials( $project_number, $version, $user_id )
     {
         if (is_null($project_number) || is_null($version)) {
@@ -70,10 +71,11 @@ class Plan extends Model
 
         return null;
     }
+    */
 
 
     public function isComplete() {
-        if( $this->survey->completion == 100 ) {
+        if ($this->survey->completion == 100) {
             return true;
         }
 
@@ -99,7 +101,7 @@ class Plan extends Model
             return true;
         }
 
-        // Uncomment if you want to finalize only 100% completed plans */
+        // Use this if you want to finalize only 100% completed plans */
         /*
         if ($this->isComplete())
         {
@@ -129,6 +131,12 @@ class Plan extends Model
     }
 
 
+    public function getGateInfo()
+    {
+        \AppHelper::varDump(Gate::forUser(auth()->user())->allows('update-plan', $this));
+    }
+
+
     public function hasNextVersion($current_version)
     {
         if ($this->getNextVersion($current_version)->count()) {
@@ -148,23 +156,29 @@ class Plan extends Model
             'version' => $version,
         ]);
 
-        /* Create a new survey instance and attach plan to it */
-        $survey = new Survey;
-        $survey->plan()->associate($plan);
-        $survey->template_id = $template_id;
-        $survey->save();
+        if ($plan) {
+            /* Create a new survey instance and attach plan to it */
+            $survey = new Survey;
+            $survey->plan()->associate($plan);
+            $survey->template_id = $template_id;
+            $survey->save();
 
-        /* Depending on answer data, set answers or default values */
-        if (is_null($answer_data)) {
-            $survey->setDefaults();
+            if ($survey) {
+                /* Depending on answer data, set answers or default values */
+                if (is_null($answer_data)) {
+                    $survey->setDefaults();
+                } else {
+                    $survey->saveAnswers($answer_data);
+                }
+
+                /* Fire plan create event */
+                Event::fire(new PlanCreated($plan));
+
+                return true;
+            }
         } else {
-            $survey->saveAnswers($answer_data);
+            throw new NotFoundHttpException;
         }
-
-        /* Fire plan create event */
-        Event::fire(new PlanCreated($plan));
-
-        return true;
     }
 
     public function createNextVersion($data)
@@ -200,14 +214,13 @@ class Plan extends Model
 
         $plan = $this->findOrFail($data['id']);
 
-
         if ($plan) {
             $project_id = null;
             $subject = 'Data Management Plan "' . $plan->title . '"';
 
             if ($plan->project->id) {
                 $project_id = $plan->project->identifier;
-                $subject .= ' for TUB project ' . $project_id;
+                $subject .= ' for project ' . $project_id;
             }
 
             $subject .= ' / Version ' . $plan->version;
@@ -221,23 +234,25 @@ class Plan extends Model
                 {
                     $email->from(env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP'));
                     if ($recipient['name']) {
-                        $email->to($recipient['email'], $recipient['name'])->subject($subject);
+                        $email->to($recipient['email'], $recipient['name']);
                     } else {
-                        $email->to($recipient['email'])->subject($subject);
+                        $email->to($recipient['email']);
                     }
+                    $email->subject($subject);
                     $email->replyTo($sender['email'], $sender['name']);
                     $email->attachData($pdf, $pdf_filename);
                 }
             );
 
-            if( Mail::failures() ) {
+            if (Mail::failures()) {
                 return false;
             }
 
             return true;
-        }
 
-        return false;
+        } else {
+            throw new NotFoundHttpException;
+        }
     }
 
     public function exportPlan()
@@ -259,10 +274,8 @@ class Plan extends Model
         $pdf->setOption('header-html', $header_html);
         $pdf->setOption('footer-font-size', '8');
         $pdf->setOption('footer-right', $footer);
-        return $pdf->stream();
-        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
-
-        return true;
+        //return $pdf->stream();
+        return view('pdf.dmp', compact('plan', 'project', 'survey'));
     }
 
 

@@ -19,10 +19,12 @@
                     @endunless
                 </div>
                 <div class="col-md-2 col-sm-3 col-xs-3 text-right">
-                    <span class="plan-status">{{ $plan->survey->completion }}&nbsp;%</span>
-                    @if( $plan->is_final )
-                        <i class="fa fa-check-square-o fa-1x" aria-hidden="true"></i><span class="hidden-xs"></span>
-                    @endif
+                    <span class="plan-status label label-as-badge {{ $plan->is_final ? 'label-success' : 'label-default' }}">
+                        @if( $plan->is_final)
+                            <i class="fa fa-lock"></i>&nbsp;
+                        @endif
+                        {{ $plan->survey->completion }}&nbsp;%
+                    </span>
                 </div>
             </div>
             <br/>
@@ -56,7 +58,7 @@
                         <a href="{{ URL::route('plan.toggle', [$plan->id]) }}" class="btn btn-default btn-xs" title="Finish"><i class="fa fa-lock"></i><span class="hidden-xs"> Finish DMP</span></a>
                     @endif
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+                <div class="col-lg-6 col-md-6 col-sm-24 col-xs-24 text-right text-lg-right text-md-right text-sm-left text-xs-left">
                     @if( $plan->is_final )
                         <strong>Finished:</strong> @date( $plan->updated_at ) at @time( $plan->updated_at )
                     @else

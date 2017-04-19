@@ -8,6 +8,7 @@ use App\Project;
 use App\Template;
 use Request;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProjectController extends Controller
 {
@@ -50,11 +51,6 @@ class ProjectController extends Controller
     }
 
 
-    /**
-     *
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
     public function show($id)
     {
         $project = $this->project->with('metadata.metadata_registry')->findOrFail($id);
@@ -64,8 +60,9 @@ class ProjectController extends Controller
             } else {
                 abort(403, 'Direct access is not allowed.');
             }
+        } else {
+            throw new NotFoundHttpException;
         }
-        abort(404, 'Project was not found.');
     }
 
 
@@ -86,44 +83,32 @@ class ProjectController extends Controller
 
         /* Save the metadata (or not) and assign response variables */
         if ($project->saveMetadata($data)) {
-            $response = 200;
-            $message = 'Project Metadata was successfully updated!';
+            $notification = [
+                'status'     => 200,
+                'message'    => 'Project Metadata was successfully updated!',
+                'alert-type' => 'success'
+            ];
         } else {
-            $response = 500;
-            $message = 'Project Metadata was not successfully updated!';
+            $notification = [
+                'status'     => 500,
+                'message'    => 'Project Metadata not updated!',
+                'alert-type' => 'error'
+            ];
         };
 
         /* Send the response*/
         if($request->ajax()) {
+
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
+
             return response()->json([
-                'response' => $response,
-                'message' => $message,
+                'response' => $notification['status'],
+                'message'  => $notification['message']
             ]);
+
         } else {
             abort(403, 'Direct access is not allowed.');
         }
     }
-
-
-    /*
-    public function edit($id)
-    {
-        $project = $this->project->findOrFail($id);
-
-        if( $project ) {
-
-            $projects = $this->project
-                        ->where('user_id', auth()->user()->id)
-                        ->get()
-                        ->pluck('identifier','id')
-                        ->prepend('Select a parent','');
-
-            $metadata_fields = $this->metadata_registry
-                        ->where('namespace', 'project')
-                        ->get();
-
-            return view('project.edit', compact('project','projects','metadata_fields'));
-        }
-    }
-    */
 }

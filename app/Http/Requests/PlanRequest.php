@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
+use Gate;
+use App\Plan;
 
 class PlanRequest extends Request
 {
@@ -13,6 +14,10 @@ class PlanRequest extends Request
      */
     public function authorize()
     {
+        /*
+        $plan = Plan::findOrFail($this->id);
+        return Gate::allows('update', $plan);
+        */
         return true;
     }
 

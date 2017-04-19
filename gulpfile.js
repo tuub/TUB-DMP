@@ -16,28 +16,27 @@ elixir.config.bowerDir = './resources/assets/bower/';
 var bowerpath = './resources/assets/bower/';
 
 var paths = {
-    //'bootstrap': bowerpath + 'bootstrap-sass/assets/',
     'bootstrap': bowerpath + 'bootstrap/',
     'jquery': bowerpath + 'jquery/',
     'jqueryui': bowerpath + 'jquery-ui/',
     'jquery_easing': bowerpath + 'jquery.easing/',
     'progressbar': bowerpath + 'bootstrap-progressbar/',
     'slider': bowerpath + 'seiyria-bootstrap-slider/',
-    //'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
     'tagsinput': bowerpath + 'bootstrap-tagsinput/',
     'select': bowerpath + 'bootstrap-select/',
     'typeahead': bowerpath + 'typeahead.js/',
-    //'amaranjs': bowerpath + 'AmaranJS/',
     'toastr': bowerpath + 'toastr/',
     'jquery_expander': bowerpath + 'jquery.expander/',
     'simple_expand': bowerpath + 'simple-expand/',
     'jquery_cookie': bowerpath + 'jquery.cookie/',
-    //'js_cookie': bowerpath + 'js-cookie/',
     'jquery_steps': bowerpath + 'jquery.steps/',
     'fonts': bowerpath + 'font-awesome/',
     'images': './resources/assets/images/',
     'css': './resources/assets/css/',
     'js': './resources/assets/js/'
+    //'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
+    //'js_cookie': bowerpath + 'js-cookie/',
+    //'amaranjs': bowerpath + 'AmaranJS/',
 };
 
 elixir(function(mix) {
@@ -55,10 +54,7 @@ elixir(function(mix) {
 
     mix.copy(paths.jquery + 'dist/jquery.min.js', 'public/js/');
     mix.copy(paths.toastr + 'toastr.min.js', 'public/js/');
-    //mix.copy(paths.jquery_steps + 'build/jquery.steps.js',
     mix.copy(paths.js + 'env.js', 'public/js/');
-    //mix.copy(paths.js + 'plan.js', 'public/js/');
-    //mix.copy(paths.js + 'my.vue.js', 'public/js/');
 
     mix.scripts([
         paths.jquery_steps + 'build/jquery.steps.min.js',
@@ -67,20 +63,16 @@ elixir(function(mix) {
     ], './public/js/survey.js');
 
     mix.scripts([
-        paths.jqueryui + 'jquery-ui.js',
+        paths.jqueryui + 'jquery-ui.min.js',
         paths.jquery_easing + 'js/jquery.easing.min.js',
-        paths.bootstrap + 'dist/js/bootstrap.js',
+        paths.bootstrap + 'dist/js/bootstrap.min.js',
         paths.progressbar + 'bootstrap-progressbar.js',
         paths.tagsinput + 'dist/bootstrap-tagsinput.js',
         paths.slider + 'dist/bootstrap-slider.min.js',
         paths.select + 'dist/js/bootstrap-select.min.js',
-        //paths.bootstrap_modal_form + 'src/laravel-bootstrap-modal-form.js',
         paths.typeahead + 'dist/typeahead.jquery.js',
-        //paths.amaranjs + 'dist/js/jquery.amaran.js',
-        //paths.js_cookie + 'src/js.cookie.js',
         paths.jquery_cookie + 'jquery.cookie.js',
         paths.jquery_expander + 'jquery.expander.js',
-        //paths.jquery_steps + 'build/jquery.steps.js',
         paths.simple_expand + 'src/simple-expand.min.js'
 
     ], './public/js/vendor.js');
@@ -97,9 +89,7 @@ elixir(function(mix) {
     mix.styles([
         paths.toastr + 'toastr.css',
         paths.tagsinput + 'dist/bootstrap-tagsinput.css',
-        //paths.amaranjs + 'dist/css/amaran.min.css',
         paths.slider + 'dist/css/bootstrap-slider.css',
         paths.select + 'dist/css/bootstrap-select.css',
-        //paths.jquery_steps + 'demo/css/jquery.steps.css'
     ], './public/css/vendor.css');
 });

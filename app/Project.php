@@ -10,6 +10,7 @@ use DB;
 use Illuminate\Support\Collection;
 use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\String_;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class Project extends Node
@@ -94,7 +95,7 @@ class Project extends Node
     /**
      * @param String $attribute
      *
-     * @return Collection
+     * @return Collection|null
      */
     public function getMetadata($attribute)
     {
@@ -139,7 +140,7 @@ class Project extends Node
 
     /**
      * Renders a status string based on begin and end date.
-     * TODO: View Composer to the rescue?
+     *
      * @return string
      */
     public function getStatusAttribute()
@@ -200,9 +201,12 @@ class Project extends Node
     {
         if ($data) {
             ProjectMetadata::saveAll($this, $data);
+            return true;
+        } else {
+            throw new NotFoundHttpException;
         }
 
-        return true;
+
     }
 
 

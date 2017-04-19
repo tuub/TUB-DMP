@@ -20,7 +20,7 @@ use App\HtmlOutputFilter;
 use Event;
 use Request;
 use Redirect;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 
 
 /**
@@ -60,14 +60,15 @@ class PlanController extends Controller
             ];
         }
 
+        /* Create Flash session with return values for notification */
         $request->session()->flash('message', $notification['message']);
         $request->session()->flash('alert-type', $notification['alert-type']);
 
-        /* Create a response in JSON */
+        /* Create the response in JSON */
         if ($request->ajax()) {
             return response()->json([
-                'response'  => 200,
-                'msg'       => 'DMP with Survey created!'
+                'response' => $notification['status'],
+                'message'  => $notification['message']
             ]);
         };
     }
@@ -76,6 +77,7 @@ class PlanController extends Controller
     public function show($id)
     {
         $plan = $this->plan->findOrFail($id);
+        $this->authorize('show', $plan);
 
         if (Request::ajax()) {
             if (!$plan) {
@@ -84,25 +86,16 @@ class PlanController extends Controller
                     'message' => 'Plan was not found.'
                 ]);
             }
+
             return $plan->toJson();
         } else {
             abort(403, 'Direct access is not allowed.');
         }
     }
 
-
     public function update(PlanRequest $request)
     {
         $plan = $this->plan->findOrFail($request->id);
-
-        /*
-        if (Gate::denies('update', [auth()->user(), $plan])) {
-            return response()->json([
-                'response' => 403,
-                'msg' => 'Forbidden!'
-            ]);
-        }
-        */
 
         if ($request->ajax()) {
             $data = array_filter($request->all(), 'strlen');
@@ -246,6 +239,7 @@ class PlanController extends Controller
     public function export($id)
     {
         $plan = $this->plan->findOrFail($id);
+
         return $plan->exportPlan();
 
         /*

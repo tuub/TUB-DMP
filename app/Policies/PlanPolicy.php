@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Plan;
+use App\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PlanPolicy
@@ -41,9 +42,10 @@ class PlanPolicy
      * @param  \App\Plan  $plan
      * @return bool
      */
-    public function create(User $user, Plan $plan)
+    public function create(User $user, Project $project)
     {
-        return $user->id === $plan->project->user_id;
+        //return $user->id === $project->user_id;
+        return tru;
     }
 
 
