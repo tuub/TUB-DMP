@@ -20,13 +20,15 @@ var paths = {
     'bootstrap': bowerpath + 'bootstrap/',
     'jquery': bowerpath + 'jquery/',
     'jqueryui': bowerpath + 'jquery-ui/',
+    'jquery_easing': bowerpath + 'jquery.easing/',
     'progressbar': bowerpath + 'bootstrap-progressbar/',
     'slider': bowerpath + 'seiyria-bootstrap-slider/',
     //'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
     'tagsinput': bowerpath + 'bootstrap-tagsinput/',
     'select': bowerpath + 'bootstrap-select/',
     'typeahead': bowerpath + 'typeahead.js/',
-    'amaranjs': bowerpath + 'AmaranJS/',
+    //'amaranjs': bowerpath + 'AmaranJS/',
+    'toastr': bowerpath + 'toastr/',
     'jquery_expander': bowerpath + 'jquery.expander/',
     'simple_expand': bowerpath + 'simple-expand/',
     'jquery_cookie': bowerpath + 'jquery.cookie/',
@@ -52,6 +54,7 @@ elixir(function(mix) {
     mix.copy(paths.images + '**', 'public/images/');
 
     mix.copy(paths.jquery + 'dist/jquery.min.js', 'public/js/');
+    mix.copy(paths.toastr + 'toastr.min.js', 'public/js/');
     //mix.copy(paths.jquery_steps + 'build/jquery.steps.js',
     mix.copy(paths.js + 'env.js', 'public/js/');
     //mix.copy(paths.js + 'plan.js', 'public/js/');
@@ -65,6 +68,7 @@ elixir(function(mix) {
 
     mix.scripts([
         paths.jqueryui + 'jquery-ui.js',
+        paths.jquery_easing + 'js/jquery.easing.min.js',
         paths.bootstrap + 'dist/js/bootstrap.js',
         paths.progressbar + 'bootstrap-progressbar.js',
         paths.tagsinput + 'dist/bootstrap-tagsinput.js',
@@ -72,7 +76,7 @@ elixir(function(mix) {
         paths.select + 'dist/js/bootstrap-select.min.js',
         //paths.bootstrap_modal_form + 'src/laravel-bootstrap-modal-form.js',
         paths.typeahead + 'dist/typeahead.jquery.js',
-        paths.amaranjs + 'dist/js/jquery.amaran.js',
+        //paths.amaranjs + 'dist/js/jquery.amaran.js',
         //paths.js_cookie + 'src/js.cookie.js',
         paths.jquery_cookie + 'jquery.cookie.js',
         paths.jquery_expander + 'jquery.expander.js',
@@ -91,8 +95,9 @@ elixir(function(mix) {
 
 
     mix.styles([
+        paths.toastr + 'toastr.css',
         paths.tagsinput + 'dist/bootstrap-tagsinput.css',
-        paths.amaranjs + 'dist/css/amaran.min.css',
+        //paths.amaranjs + 'dist/css/amaran.min.css',
         paths.slider + 'dist/css/bootstrap-slider.css',
         paths.select + 'dist/css/bootstrap-select.css',
         //paths.jquery_steps + 'demo/css/jquery.steps.css'

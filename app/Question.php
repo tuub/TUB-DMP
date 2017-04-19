@@ -104,13 +104,14 @@ class Question extends Node
         //$default_value = array_filter( $default_value );
         $user = User::find($plan->user_id);        
 
-        if ( count( $default_value ) > 0 ) {
-            if( is_null(Answer::check($this, $plan)) ) {
+        if (count($default_value) > 0) {
+            if (is_null(Answer::check($this, $plan))) {
                 Answer::setAnswer( $plan, $this, $user, $default_value );
-                return true;
             }
 
+            return true;
         }
+
         return false;
     }
 

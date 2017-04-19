@@ -9,6 +9,7 @@ use App\Http\Requests\VersionPlanRequest;
 use App\Events\PlanUpdated;
 use App\Plan;
 use App\Template;
+use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\App;
 use App\Survey;
@@ -20,6 +21,7 @@ use Event;
 use Request;
 use Redirect;
 use Gate;
+
 
 /**
  * Class PlanController
@@ -44,11 +46,25 @@ class PlanController extends Controller
         $data = array_filter($request->all(), 'strlen');
 
         /* Create Plan with corresponding Survey */
-        $this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id']);
+        if ($this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id'])) {
+            $notification = [
+                'status'     => 200,
+                'message'    => 'Plan was successfully created!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status'     => 500,
+                'message'    => 'Plan was not created!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
 
         /* Create a response in JSON */
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
             return response()->json([
                 'response'  => 200,
                 'msg'       => 'DMP with Survey created!'
@@ -61,17 +77,14 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($id);
 
-        if (Request::ajax())
-        {
-            if (!$plan)
-            {
+        if (Request::ajax()) {
+            if (!$plan) {
                 return response()->json([
                     'response' => 404,
                     'message' => 'Plan was not found.'
                 ]);
             }
             return $plan->toJson();
-
         } else {
             abort(403, 'Direct access is not allowed.');
         }
@@ -91,26 +104,38 @@ class PlanController extends Controller
         }
         */
 
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
             $data = array_filter($request->all(), 'strlen');
 
-            if($plan->update($data))
-            {
-                $response = 200;
-                $message = 'Plan was successfully updated!';
+            if ($plan->update($data)) {
+                $notification = [
+                    'status'     => 200,
+                    'message'    => 'Plan was successfully updated!',
+                    'alert-type' => 'success'
+                ];
                 Event::fire(new PlanUpdated($plan));
+            } else {
+                $notification = [
+                    'status'     => 500,
+                    'message'    => 'Plan was not updated!',
+                    'alert-type' => 'error'
+                ];
             }
 
             /* Response */
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
+
             return response()->json([
-                'response' => $response,
-                'message' => $message,
+                'response' => $notification['status'],
+                'message'  => $notification['message']
             ]);
 
         } else {
             abort(403, 'Direct access is not allowed.');
         }
+
+        return false;
     }
 
 
@@ -124,25 +149,32 @@ class PlanController extends Controller
     {
         $plan = $this->plan->findOrFail($id);
 
-        if ($plan)
-        {
-            if ($plan->isFinal())
-            {
+        if ($plan) {
+            if ($plan->isFinal()) {
                 $plan->setFinalFlag(false);
-                // TODO: Replace?
-                //Notifier::success('Plan unfinalized successfully!')->flash()->create();
+                $notification = [
+                    'status' => 200,
+                    'message' => 'Plan unfinalized successfully!',
+                    'alert-type' => 'success'
+                ];
             } else {
                 $plan->setFinalFlag(true);
-                // TODO: Replace?
-                //Notifier::success('Plan finalized successfully!')->flash()->create();
+                $notification = [
+                    'status' => 200,
+                    'message' => 'Plan finalized successfully!',
+                    'alert-type' => 'success'
+                ];
             }
         } else {
             abort(404, 'Plan was not found.');
-            // TODO: Replace?
-            //Notifier::error( 'Error while finalizing plan!' )->flash()->create();
+            $notification = [
+                'status' => 404,
+                'message' => 'Error while finalizing plan!',
+                'alert-type' => 'error'
+            ];
         }
 
-        return Redirect::route( 'dashboard' );
+        return Redirect::route( 'dashboard' )->with($notification);
     }
 
 
@@ -150,23 +182,27 @@ class PlanController extends Controller
     {
         $data = $request->except(['_token']);
 
-        if ($this->plan->createNextVersion($data))
-        {
-            $response = 200;
-            $message = 'New version created!';
-            //Notifier::success( $msg )->flash()->create();
+        if ($this->plan->createNextVersion($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'New version created!',
+                'alert-type' => 'success'
+            ];
         } else {
-            $response = 500;
-            $message = 'Versioning failed!';
-            //Notifier::error( $msg )->flash()->create();
+            $notification = [
+                'status' => 500,
+                'message' => 'Versioning failed!',
+                'alert-type' => 'error'
+            ];
         }
 
         /* Render the response */
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
             return response()->json([
-                'response' => $response,
-                'message' => $message
+                'response' => $notification['status'],
+                'message' => $notification['message']
             ]);
         } else {
             abort(403, 'Direct access is not allowed.');
@@ -178,21 +214,27 @@ class PlanController extends Controller
     {
         $data = $request->except(['_token']);
 
-        if ($this->plan->emailToRecipient($data))
-        {
-            $response = 200;
-            $msg = 'Mail was sent.';
+        if ($this->plan->emailToRecipient($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Mail was sent!',
+                'alert-type' => 'success'
+            ];
         } else {
-            $response = 500;
-            $msg = 'Mail was not sent.';
+            $notification = [
+                'status' => 500,
+                'message' => 'Mail was not sent!',
+                'alert-type' => 'error'
+            ];
         }
 
         /* Response */
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
             return response()->json([
-                'response' => $response,
-                'msg' => $msg,
+                'response' => $notification['status'],
+                'message' => $notification['message']
             ]);
         } else {
             abort(403, 'Direct access is not allowed.');

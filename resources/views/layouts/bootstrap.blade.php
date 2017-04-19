@@ -23,15 +23,59 @@
             {!! HTML::style('css/app.css') !!}
             {!! HTML::style('css/vendor.css') !!}
             {!! HTML::style('css/my.style.css') !!}
+            {!! HTML::script('js/jquery.js') !!}
+            {!! HTML::script('js/toastr.min.js') !!}
 
-                {!! HTML::script('js/jquery.js') !!}
-        @show
+            @show
 
 <style>
 * {
     outline: 0px #336699 solid;
 }
+
+.toast {
+    opacity: 1 !important;
+    margin-top: 55px !important;
+}
 </style>
+
+<script>
+$(document).ready(function(){
+
+    toastr.options = {
+        'positionClass': 'toast-top-right',
+        'preventDuplicates': true,
+        'timeOut': 2000,
+        'fadeOut': 1500,
+        'fadeIn': 1500
+    };
+
+    @if(Session::has('message'))
+        var type = "{{ Session::get('alert-type', 'info') }}";
+        switch (type) {
+            case 'info':
+                toastr.info("{{ Session::get('message') }}");
+                break;
+
+            case 'warning':
+                toastr.warning("{{ Session::get('message') }}");
+                break;
+
+            case 'success':
+                toastr.success("{{ Session::get('message') }}");
+                break;
+
+            case 'error':
+                toastr.error("{{ Session::get('message') }}");
+                break;
+
+            default:
+                toastr.info("{{ Session::get('message') }}");
+                break;
+        }
+    @endif
+});
+</script>
 
 </head>
 

@@ -52,22 +52,19 @@ class Plan extends Model
      */
     public static function getByCredentials( $project_number, $version, $user_id )
     {
-        if (is_null($project_number) || is_null($version))
-        {
+        if (is_null($project_number) || is_null($version)) {
             return null;
         }
 
         $query = Plan::where( 'project_number', $project_number )->where( 'version', $version );
 
-        if (auth()->user()->is_admin === 0)
-        {
+        if (auth()->user()->is_admin === 0) {
             $query->where( 'user_id', $user_id );
         }
 
         $plan = $query->first();
 
-        if ($plan)
-        {
+        if ($plan) {
             return $plan;
         }
 
@@ -86,8 +83,7 @@ class Plan extends Model
 
     public function isFinal()
     {
-        if ($this->is_final)
-        {
+        if ($this->is_final) {
             return true;
         }
 
@@ -97,8 +93,7 @@ class Plan extends Model
 
     public function setFinalFlag($status)
     {
-        if (is_bool($status))
-        {
+        if (is_bool($status)) {
             $this->is_final = $status;
             $this->save();
             return true;
@@ -136,8 +131,7 @@ class Plan extends Model
 
     public function hasNextVersion($current_version)
     {
-        if ($this->getNextVersion($current_version)->count())
-        {
+        if ($this->getNextVersion($current_version)->count()) {
             return true;
         }
 
@@ -161,8 +155,7 @@ class Plan extends Model
         $survey->save();
 
         /* Depending on answer data, set answers or default values */
-        if (is_null($answer_data))
-        {
+        if (is_null($answer_data)) {
             $survey->setDefaults();
         } else {
             $survey->saveAnswers($answer_data);
@@ -181,14 +174,11 @@ class Plan extends Model
         $next_version = $current_version + 1;
         $answers = null;
 
-        if (isset($data['clone_current']))
-        {
+        if (isset($data['clone_current'])) {
             $cloned_answers = [];
 
-            foreach ($current_plan->survey->template->questions as $question)
-            {
-                foreach (Answer::check($current_plan->survey, $question) as $answer)
-                {
+            foreach ($current_plan->survey->template->questions as $question) {
+                foreach (Answer::check($current_plan->survey, $question) as $answer) {
                     $cloned_answers[$question->id] = $answer->value;
                 }
             }
@@ -208,40 +198,46 @@ class Plan extends Model
         $recipient['name'] = $data['name'];
         $recipient['email'] = $data['email'];
 
-        $plan = $this->find($data['id']);
+        $plan = $this->findOrFail($data['id']);
 
-        $project_id = null;
 
-        if($plan->project->id)
-        {
-            $project_id = $plan->project->identifier;
-        }
+        if ($plan) {
+            $project_id = null;
+            $subject = 'Data Management Plan "' . $plan->title . '"';
 
-        $pdf = self::exportPlan($plan->project_number, $plan->version, 'pdf', false);
-        $pdf_filename = 'DMP_for_TUB_Project_' . $plan->project_number . '-' . $plan->version . '_' . $plan->updated_at->format( 'Ymd' ) . '.pdf';
-
-        Mail::send(['text' => 'emails.plan'], ['plan' => $plan, 'recipient' => $recipient, 'sender' => $sender ],
-            function($email) use ($sender, $recipient, $plan, $project_id) {
-                $subject = 'Data Management Plan "' . $plan->title . '"';
-                if (isset($project_id)) {
-                    $subject .= ' for TUB project ' . $project_id;
-                }
-                $subject .= ' / Version ' . $plan->version;
-                $email->from(env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP'));
-                if ($recipient['name']) {
-                    $email->to($recipient['email'], $recipient['name'])->subject($subject);
-                } else {
-                    $email->to($recipient['email'])->subject($subject);
-                }
-                $email->replyTo($sender['email'], $sender['name']);
+            if ($plan->project->id) {
+                $project_id = $plan->project->identifier;
+                $subject .= ' for TUB project ' . $project_id;
             }
-        );
 
-        if( Mail::failures() ) {
-            return false;
+            $subject .= ' / Version ' . $plan->version;
+
+            //$pdf = $plan->exportPlan($plan->project_number, $plan->version, 'pdf', false);
+            $pdf = $plan->exportPlan();
+            $pdf_filename = $plan->project->identifier . '_' . str_replace(' ', '', $plan->title) . '-' . $plan->version . '_' . $plan->updated_at->format( 'Ymd' ) . '.pdf';
+
+            Mail::send(['text' => 'emails.plan'], ['plan' => $plan, 'recipient' => $recipient, 'sender' => $sender ],
+                function($email) use ($sender, $recipient, $subject, $pdf, $pdf_filename)
+                {
+                    $email->from(env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP'));
+                    if ($recipient['name']) {
+                        $email->to($recipient['email'], $recipient['name'])->subject($subject);
+                    } else {
+                        $email->to($recipient['email'])->subject($subject);
+                    }
+                    $email->replyTo($sender['email'], $sender['name']);
+                    $email->attachData($pdf, $pdf_filename);
+                }
+            );
+
+            if( Mail::failures() ) {
+                return false;
+            }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public function exportPlan()

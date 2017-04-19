@@ -13,10 +13,11 @@
                 outline: 0px #336699 dotted;
             }
 
-            div { font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif; }
+            div {
+                font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
+            }
 
-            div.page
-            {
+            div.page {
                 overflow: hidden;
                 page-break-after: always;
                 page-break-inside: avoid;
@@ -31,12 +32,12 @@
 
             div.section {
                 page-break-inside: avoid;
+
             }
 
             div.question {
                 page-break-inside: avoid;
             }
-
 
         </style>
 

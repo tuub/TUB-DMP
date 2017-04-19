@@ -74,8 +74,8 @@ class Answer extends Model
     {
         self::where('survey_id', $survey->id)->delete();
 
-        foreach( $data as $question_id => $answer_value ) {
-            if(is_array($answer_value)) {
+        foreach ($data as $question_id => $answer_value) {
+            if (is_array($answer_value)) {
                 $answer_value = array_filter($answer_value, 'strlen');
                 $answer = self::formatForInput(
                     collect($answer_value),
@@ -106,7 +106,7 @@ class Answer extends Model
     public static function formatForOutput( EloquentCollection $answers, ContentType $content_type )
     {
         $result = collect([]);
-        switch($content_type->identifier) {
+        switch ($content_type->identifier) {
             case 'list':
                 $result = collect([$answers->implode(',', 'value')]);
                 break;
@@ -126,7 +126,7 @@ class Answer extends Model
     public static function formatForInput( Collection $answers, ContentType $content_type )
     {
         $result = collect([]);
-        switch($content_type->identifier) {
+        switch ($content_type->identifier) {
             case 'list':
                 $result = explode(',', $answers->first());
                 break;
