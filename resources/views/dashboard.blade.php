@@ -14,6 +14,7 @@
         </div>
         <div class="panel-body">
             @foreach ($projects as $project)
+                {{ $project->importFromDataSource() }}
                 @include('partials.project.infocard', $project)
                 @include('partials.project.modal', $project)
             @endforeach

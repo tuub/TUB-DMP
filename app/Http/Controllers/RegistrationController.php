@@ -8,7 +8,6 @@ use App\Http\Requests;
 use App\Http\Requests\RegistrationRequest;
 use View;
 use Mail;
-use Notifier;
 use Redirect;
 
 class RegistrationController extends Controller
@@ -44,7 +43,7 @@ class RegistrationController extends Controller
                 $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
                 $message->replyTo( $account['email'], $account['real_name'] );
             } );
-        Notifier::success( 'Your account request has been sent.' )->flash()->create();
+        //Notifier::success( 'Your account request has been sent.' )->flash()->create();
         return Redirect::route('home');
     }
 

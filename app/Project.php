@@ -205,10 +205,26 @@ class Project extends Node
         } else {
             throw new NotFoundHttpException;
         }
-
-
     }
 
+    public function importFromDataSource()
+    {
+        if( $this->data_source) {
+            $namespaces = $this->data_source->namespaces;
+            foreach ($namespaces as $namespace) {
+                $mappings = $this->data_source->mappings()
+                    ->where('data_source_id', $this->data_source->id)
+                    ->where('data_source_namespace_id', $namespace->id)
+                    ->get();
+
+                echo '<h4>' . $namespace->name . '</h4>';
+
+                foreach ($mappings as $mapping) {
+                    \AppHelper::varDump($mapping->target_entity);
+                }
+            }
+        }
+    }
 
 
 

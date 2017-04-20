@@ -20,7 +20,6 @@ use Auth;
 use Redirect;
 use Log;
 use Mail;
-use Notifier;
 use View;
 
 /**

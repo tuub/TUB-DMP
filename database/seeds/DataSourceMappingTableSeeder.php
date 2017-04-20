@@ -15,7 +15,7 @@ class DataSourceMappingTableSeeder extends Seeder
             'data_source_namespace_id' => 1,
             'data_source_entity' => ['Langtitel_dt'],
             'target_namespace' => 'project',
-            'target_entity' => ['title' => 'de'],
+            'target_entity' => ['content' => '', 'language' => 'de'],
         ]);
 
         DataSourceMapping::create([
@@ -23,7 +23,7 @@ class DataSourceMappingTableSeeder extends Seeder
             'data_source_namespace_id' => 1,
             'data_source_entity' => ['Langtitel_en'],
             'target_namespace' => 'project',
-            'target_entity' => ['title' => 'en'],
+            'target_entity' => ['content' => '', 'language' => 'en'],
         ]);
 
         DataSourceMapping::create([
