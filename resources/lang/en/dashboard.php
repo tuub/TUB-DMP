@@ -12,6 +12,6 @@ return [
     |
     |
     */
-    'my-plans-header' => 'My Data Management Plans',
+    'header' => 'My Projects & Data Management Plans',
 
 ];
