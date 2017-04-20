@@ -186,14 +186,19 @@
                         </div>
 
                         @foreach($section->questions as $question)
-
                             @php
                                 $answer = \App\Answer::get($survey, $question, 'html');
                             @endphp
 
-                            @unless( is_null($answer) )
+                            @unless(is_null($answer))
                                 <div class="row question">
-                                    <strong>{{ $question->text }}</strong>
+                                    <strong>
+                                        @if(is_null($question->output_text))
+                                            {{ $question->text }}
+                                        @else
+                                            {{ $question->output_text }}
+                                        @endif
+                                    </strong>
                                     <br/>
                                     {!! $answer  !!}
                                 </div>
@@ -202,15 +207,9 @@
 
                         @endforeach
                     </p>
-                    @endunless
-
+                @endunless
             @endforeach
         </div>
-
-    </body>
-</html>
-
-
 
     </body>
 </html>
