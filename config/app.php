@@ -151,7 +151,6 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
         App\Providers\MacroServiceProvider::class,
-        Xuma\Amaran\AmaranServiceProvider::class,
 
         Themsaid\Langman\LangmanServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
@@ -159,7 +158,6 @@ return [
         Baum\Providers\BaumServiceProvider::class,
         AdamWathan\BootForms\BootFormsServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
-        //Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -212,7 +210,6 @@ return [
 
         'Form'      => Collective\Html\FormFacade::class,
         'HTML'      => Collective\Html\HtmlFacade::class,
-        'Amaran'    => Xuma\Amaran\Facades\Amaran::class,
         'Debugbar'  => Barryvdh\Debugbar\Facade::class,
         'Flash'     => Laracasts\Flash\Flash::class,
         'BootForm'  => AdamWathan\BootForms\Facades\BootForm::class,

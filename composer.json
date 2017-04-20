@@ -8,15 +8,13 @@
         "php": ">=5.6.4",
         "laravel/framework": "5.3.*",
         "laravelcollective/html": "5.3.*",
-        "xuma/laravel-amaran": "~1.0@dev",
         "iamcal/lib_autolink": "^1.7",
         "laracasts/flash": "^2.0",
         "felixkiss/uniquewith-validator": "^2.0",
         "baum/baum": "^1.1",
         "adamwathan/bootforms": "^0.8.4",
         "barryvdh/laravel-snappy": "^0.3.3",
-        "h4cc/wkhtmltopdf-amd64": "^0.12.3",
-        "barryvdh/laravel-dompdf": "^0.8.0"
+        "h4cc/wkhtmltopdf-amd64": "^0.12.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -39,7 +37,6 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Helpers/notifier.php",
             "app/Helpers/exporters.php",
             "app/Helpers/AppHelper.php"
         ]

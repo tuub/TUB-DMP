@@ -82,7 +82,6 @@ $(document).ready(function(){
 <body>
 
 @include('flash::message')
-@include('amaran::javascript')
 
 <!--<header class="navbar navbar-static-top">-->
 
