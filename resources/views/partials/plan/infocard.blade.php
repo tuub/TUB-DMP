@@ -9,7 +9,7 @@
                         <i class="fa fa-file-text-o fa-1x"></i>
                     @endif
                 </div>
-                <div class="col-md-21 col-sm-20 col-xs-21">
+                <div class="col-md-20 col-sm-19 col-xs-20">
                     <span class="plan-title">{{ $plan->title }}</span>
                     (Version {{ $plan->version }})
                     @unless( $plan->is_final )
@@ -18,7 +18,7 @@
                         </a>
                     @endunless
                 </div>
-                <div class="col-md-2 col-sm-3 col-xs-3 text-right">
+                <div class="col-md-3 col-sm-4 col-xs-4 text-right">
                     <span class="plan-status label label-as-badge {{ $plan->is_final ? 'label-success' : 'label-default' }}">
                         @if( $plan->is_final)
                             <i class="fa fa-lock"></i>&nbsp;
