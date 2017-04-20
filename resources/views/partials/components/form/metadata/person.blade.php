@@ -3,16 +3,16 @@
     @foreach( $values as $value )
         <div class="form-group row" data-rel="{{ $loop->index }}">
             <div class="col-md-4">
-                {!! Form::text($name . '[' . $loop->index . '][firstname]', $value['firstname'], ['class' => 'form-control']) !!}
+                {!! Form::text($name . '[' . $loop->index . '][firstname]', $value['firstname'], ['class' => 'form-control', 'placeholder' => 'Given Name']) !!}
             </div>
             <div class="col-md-5">
-                {!! Form::text($name . '[' . $loop->index . '][lastname]', $value['lastname'], ['class' => 'form-control']) !!}
+                {!! Form::text($name . '[' . $loop->index . '][lastname]', $value['lastname'], ['class' => 'form-control', 'placeholder' => 'Family Name']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::text($name . '[' . $loop->index . '][email]', $value['email'], ['class' => 'form-control']) !!}
+                {!! Form::text($name . '[' . $loop->index . '][email]', $value['email'], ['class' => 'form-control', 'placeholder' => 'Email Address']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::text($name . '[' . $loop->index . '][uri]', $value['uri'], ['class' => 'form-control']) !!}
+                {!! Form::text($name . '[' . $loop->index . '][uri]', $value['uri'], ['class' => 'form-control', 'placeholder' => 'Some URI, e.g. ORCID ID']) !!}
             </div>
             <div class="col-md-3">
                 @if( $is_multiple )
@@ -29,16 +29,16 @@
 @else
     <div class="form-group row" data-rel="0">
         <div class="col-md-4">
-            {!! Form::text($name . '[0][firstname]', null, ['class' => 'form-control']) !!}
+            {!! Form::text($name . '[0][firstname]', null, ['class' => 'form-control', 'placeholder' => 'Given Name']) !!}
         </div>
         <div class="col-md-5">
-            {!! Form::text($name . '[0][lastname]', null, ['class' => 'form-control']) !!}
+            {!! Form::text($name . '[0][lastname]', null, ['class' => 'form-control', 'placeholder' => 'Family Name']) !!}
         </div>
         <div class="col-md-6">
-            {!! Form::text($name . '[0][email]', null, ['class' => 'form-control']) !!}
+            {!! Form::text($name . '[0][email]', null, ['class' => 'form-control', 'placeholder' => 'Email Address']) !!}
         </div>
         <div class="col-md-6">
-            {!! Form::text($name . '[0][uri]', null, ['class' => 'form-control']) !!}
+            {!! Form::text($name . '[0][uri]', null, ['class' => 'form-control', 'placeholder' => 'Some URI, e.g. ORCID ID']) !!}
         </div>
         <div class="col-md-3">
             @if( $is_multiple )
