@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\VersionPlanRequest;
 use App\Events\PlanUpdated;
 use App\Plan;
 use App\Template;
-use Illuminate\Support\Facades\Session;
 
-use Illuminate\Support\Facades\App;
-use App\Survey;
-use App\Events\PlanCreated;
-use App\Http\Requests\VersionRequest;
+use App\Events\Event;
 
-use App\HtmlOutputFilter;
-use Event;
-use Request;
-use Redirect;
-use Illuminate\Support\Facades\Gate;
+//use App\HtmlOutputFilter;
+//use Request;
+//use Illuminate\Support\Facades\Gate;
 
 
 /**
@@ -40,6 +33,14 @@ class PlanController extends Controller
     }
 
 
+    /**
+     * Stores a new plan instance with accompanying survey instance via
+     * model method createWithSurvey()
+     *
+     * @param PlanRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(PlanRequest $request)
     {
         /* Filter out all empty inputs */
@@ -93,6 +94,14 @@ class PlanController extends Controller
         }
     }
 
+
+    /**
+     * Updates the plan instance.
+     *
+     * @param PlanRequest $request
+     *
+     * @return bool|\Illuminate\Http\JsonResponse
+     */
     public function update(PlanRequest $request)
     {
         $plan = $this->plan->findOrFail($request->id);
@@ -167,7 +176,7 @@ class PlanController extends Controller
             ];
         }
 
-        return Redirect::route( 'dashboard' )->with($notification);
+        return redirect()->route('dashboard')->with($notification);
     }
 
 
