@@ -9,10 +9,10 @@ use App\Events\PlanUpdated;
 use App\Plan;
 use App\Template;
 
-use App\Events\Event;
+use Event;
 
 //use App\HtmlOutputFilter;
-//use Request;
+use Request;
 //use Illuminate\Support\Facades\Gate;
 
 

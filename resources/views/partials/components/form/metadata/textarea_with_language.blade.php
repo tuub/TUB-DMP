@@ -26,7 +26,7 @@
             {!! Form::textarea($name . '[0][content]', null, ['rows' => 3, 'class' => 'form-control']) !!}
         </div>
         <div class="col-md-4">
-            {!! Form::select($name . '[[0][language]', ['de' => 'DE', 'en' => 'EN'], null, ['class' => 'form-control']) !!}
+            {!! Form::select($name . '[0][language]', ['de' => 'DE', 'en' => 'EN'], null, ['class' => 'form-control']) !!}
         </div>
         <div class="col-md-3">
             @if( $is_multiple )

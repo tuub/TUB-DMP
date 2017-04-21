@@ -13,7 +13,6 @@ use View;
 use Redirect;
 use Hash;
 use Mail;
-use Notifier;
 
 class UserController extends Controller
 {
@@ -28,7 +27,7 @@ class UserController extends Controller
 
     public function getLogin()
     {
-        return View::make('home');
+        return view('home');
     }
 
 
@@ -41,12 +40,22 @@ class UserController extends Controller
      */
     public function postLogin( LoginUserRequest $request )
     {
-        if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
-            Notifier::success( 'Login successfull!' )->flash()->create();
-            return Redirect::intended('my/dashboard');
+        if (auth()->attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
+            $notification = [
+                'status'     => 200,
+                'message'    => 'Successfully logged in!',
+                'alert-type' => 'success'
+            ];
+
+            return redirect()->intended('my/dashboard')->with($notification);
         } else {
-            Notifier::error( 'Login Failure!' )->flash()->create();
-            return Redirect::back();
+            $notification = [
+                'status'     => 500,
+                'message'    => 'PLogin Failure!',
+                'alert-type' => 'error'
+            ];
+
+            return redirect()->back()->with($notification);
         }
     }
 
@@ -59,9 +68,13 @@ class UserController extends Controller
      */
     public function postLogout()
     {
-        Auth::logout();
-        Notifier::success( 'Logout successfull!' )->flash()->create();
-        return Redirect::route('home');
+        auth()->logout();
+        $notification = [
+            'status'     => 200,
+            'message'    => 'Logged out!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('home')->with($notification);
     }
 
 
@@ -74,7 +87,7 @@ class UserController extends Controller
      */
     public function getRegister()
     {
-        return View::make('register');
+        return view('register');
     }
 
     /**
@@ -91,15 +104,19 @@ class UserController extends Controller
         $account['email'] = $request->get( 'email' );
         $account['message'] = $request->get( 'message' );
 
-        Mail::send( [ 'text' => 'emails.register' ], [ 'account' => $account ],
-            function ( $message ) use ( $account ) {
+        Mail::send(['text' => 'emails.register'],['account' => $account],
+            function ($message) use ($account) {
                 $subject = 'TUB-DMP Account please';
                 $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
                 $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
                 $message->replyTo( $account['email'], $account['real_name'] );
             } );
-        Notifier::success( 'Your account request has been sent.' )->flash()->create();
-        return Redirect::route('home');
+        $notification = [
+            'status'     => 200,
+            'message'    => 'Your account request has been sent!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('home')->with($notification);
     }
 
     /* PROFILE */
@@ -110,7 +127,7 @@ class UserController extends Controller
      * @return View
      */
     public function getProfile() {
-        return View::make('profile');
+        return view('profile');
     }
 
     /**
@@ -126,16 +143,21 @@ class UserController extends Controller
         $data['email'] = $request->get( 'email' );
         $data['password'] = $request->get( 'new_password' );
 
-        $user = User::find( Auth::user()->id );
+        $user = auth()->user();
         $user->name = $data['name'];
         $user->email = $data['email'];
-        if( strlen($data['password']) > 0 ) {
+        if (strlen($data['password']) > 0) {
             $user->password = Hash::make($data['password']);
         }
         $user->save();
 
-        Notifier::success( 'Profile updated successfully!' )->flash()->create();
-        return Redirect::route('home');
+        $notification = [
+            'status'     => 200,
+            'message'    => 'Profile updated successfully!',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('home')->with($notification);
     }
 
 

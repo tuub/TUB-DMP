@@ -23,7 +23,7 @@ class ProfileRequest extends Request
     {
 
         return [
-            'real_name' => 'required',
+            'name' => 'required',
             'email' => 'required|email',
             'new_password' => 'same:confirm_password',
             'confirm_password' => 'same:new_password',
@@ -35,7 +35,7 @@ class ProfileRequest extends Request
     {
 
         return [
-            'real_name.required' => 'The name of the principal investigator is required to process your request.',
+            'name.required' => 'The name is required to process your request.',
             'email.required'  => 'A contact e-mail address is required to process your request.',
             'email.email'  => 'The provided e-mail address is not valid.',
             'new_password.same' => 'The passwords are not identical.',

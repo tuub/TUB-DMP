@@ -138,6 +138,7 @@ class ProjectTableSeeder extends Seeder
             'id' => 13,
             'identifier' => 'DMP-123',
             'user_id' => 1,
+            'data_source_id' => 1,
             'is_prefilled' => 1,
             'prefilled_at' => '2016-05-27 14:45:01',
             'created_at' => '2016-05-27 14:44:45',

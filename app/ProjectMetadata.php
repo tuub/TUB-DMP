@@ -191,40 +191,40 @@ class ProjectMetadata extends Model
     {
         ProjectMetadata::where('project_id', $project->id)->delete();
 
-        foreach($data as $field => $values) {
+        foreach ($data as $field => $values) {
 
             $input_data = collect([]);
             $content_type = ProjectMetadata::getMetadataContentType($field)->identifier;
 
-            if(is_array($values)) {
-                switch($content_type) {
+            if (is_array($values)) {
+                switch ($content_type) {
                     case 'person':
                         // Save me as PERSON JSON
                         $value = [];
-                        foreach( $values as $foo ) {
+                        foreach ($values as $foo) {
                             if(!\AppHelper::isEmptyArray($foo)) {
                                 array_push($value, $foo);
                             }
                         }
-                        if(count($value)) {
+                        if (count($value)) {
                             $input_data->push($value);
                         }
                         break;
                     case 'organization':
                         // Save me as ORGANIZATION JSON
                         $value = [];
-                        foreach( $values as $foo ) {
+                        foreach ($values as $foo) {
                             if(!\AppHelper::isEmpty($foo)) {
                                 array_push($value, $foo);
                             }
                         }
-                        if(count($value)) {
+                        if (count($value)) {
                             $input_data->push($value);
                         }
                         break;
                     case 'date':
                         // Save me as DATE STRING
-                        if(!\AppHelper::isEmptyArray($values)) {
+                        if (!\AppHelper::isEmptyArray($values)) {
                             $value = $values;
                             $input_data->push($value);
                         }
@@ -232,8 +232,8 @@ class ProjectMetadata extends Model
                     case 'text_with_language':
                         $value = [];
                         $required = ['content', 'language'];
-                        foreach( $values as $foo ) {
-                            if(!\AppHelper::hasEmptyValues($foo) && \AppHelper::hasKeys($foo, $required)) {
+                        foreach ($values as $foo) {
+                            if (!\AppHelper::hasEmptyValues($foo) && \AppHelper::hasKeys($foo, $required)) {
                                 array_push($value, $foo);
                             }
                         }
@@ -268,10 +268,11 @@ class ProjectMetadata extends Model
                 $input_data->push($value);
             }
 
-            if($input_data->isNotEmpty()) {
+
+            if ($input_data->isNotEmpty()) {
                 foreach ($input_data as $index => $value) {
                     $metadata_registry_id = $project->getMetadataRegistryIdByIdentifier($field);
-                    if($metadata_registry_id) {
+                    if ($metadata_registry_id) {
                         ProjectMetadata::create([
                             'project_id' => $project->id,
                             'metadata_registry_id' => $metadata_registry_id,
@@ -281,8 +282,9 @@ class ProjectMetadata extends Model
                 }
             }
             unset($input_data);
+
         }
 
-        return true;
+        //return true;
     }
 }

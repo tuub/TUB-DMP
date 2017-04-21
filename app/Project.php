@@ -209,18 +209,50 @@ class Project extends Node
 
     public function importFromDataSource()
     {
-        if( $this->data_source) {
+        if ($this->data_source) {
             $namespaces = $this->data_source->namespaces;
             foreach ($namespaces as $namespace) {
-                $mappings = $this->data_source->mappings()
-                    ->where('data_source_id', $this->data_source->id)
-                    ->where('data_source_namespace_id', $namespace->id)
-                    ->get();
+                $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+                foreach ($metadata_fields as $metadata_field) {
+                    $mappings = $this->data_source->mappings()
+                        ->where('data_source_id', $this->data_source->id)
+                        ->where('data_source_namespace_id', $namespace->id)
+                        ->where('target_metadata_registry_id', $metadata_field->id)
+                        ->get();
 
-                echo '<h4>' . $namespace->name . '</h4>';
 
-                foreach ($mappings as $mapping) {
-                    \AppHelper::varDump($mapping->target_entity);
+                    $foobar = collect([]);
+
+                    foreach ($mappings as $mapping) {
+
+                        $query = 'SELECT "' . $mapping->data_source_entity[0] . '" FROM "';
+                        $query .= $namespace->name . '" WHERE "Projekt_Nr" = "' . $this->identifier . '"';
+
+                        $contents = collect($mapping->target_content);
+                        foreach ($contents as $key => $value) {
+                            if ($value === 'CONTENT') {
+                                $contents[$key] = $query;
+                            }
+                        }
+                        $foobar->push($contents);
+                    }
+
+                    if ($foobar->count() > 0) {
+                        $fab = collect([]);
+                        foreach ($foobar as $foo) {
+                            $foo = $foo->reject(function ($value, $key) {
+                                return strlen($value) == 0;
+                            });
+
+                            foreach ($foo as $key => $value) {
+                                //\AppHelper::varDump($key);
+                                //\AppHelper::varDump($value);
+                                $fab[ $key ] = $value;
+                            }
+                        }
+                        \AppHelper::varDump($fab);
+                        echo 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+                    }
                 }
             }
         }

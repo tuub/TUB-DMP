@@ -35,8 +35,6 @@ var paths = {
     'css': './resources/assets/css/',
     'js': './resources/assets/js/'
     //'bootstrap_modal_form': bowerpath + 'laravel-bootstrap-modal-form/',
-    //'js_cookie': bowerpath + 'js-cookie/',
-    //'amaranjs': bowerpath + 'AmaranJS/',
 };
 
 elixir(function(mix) {

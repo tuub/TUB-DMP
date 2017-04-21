@@ -23,7 +23,8 @@ class CreateDataSourceMappingsTable extends Migration
             $table->integer('data_source_namespace_id')->unsigned();
             $table->json('data_source_entity');
             $table->string('target_namespace', 100);
-            $table->json('target_entity');
+            $table->integer('target_metadata_registry_id')->unsigned();
+            $table->json('target_content');
             //$table->integer('field_type')->unsigned()->default(1);
             //$table->integer('display_order')->default(1);
 

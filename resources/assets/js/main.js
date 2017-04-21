@@ -389,6 +389,8 @@ $(document).ready(function ()
         var form    = $(this);
         var div     = $(this).closest('modal');
 
+        console.log(form.children());
+
         $.ajax({
             url     : form.attr('action'),
             type    : form.attr('method'),
