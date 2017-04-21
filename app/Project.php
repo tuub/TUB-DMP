@@ -247,7 +247,11 @@ class Project extends Node
                             foreach ($foo as $key => $value) {
                                 //\AppHelper::varDump($key);
                                 //\AppHelper::varDump($value);
-                                $fab[ $key ] = $value;
+                                if (!isset($fab[$key])) {
+                                    $fab[$key] = $value;
+                                } else {
+                                    $fab->push($key);
+                                }
                             }
                         }
                         \AppHelper::varDump($fab);
