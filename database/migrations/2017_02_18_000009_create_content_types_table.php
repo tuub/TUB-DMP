@@ -17,6 +17,7 @@ class CreateContentTypesTable extends Migration
             $table->increments('id');
             $table->string('identifier',125);
             $table->string('title', 255);
+            $table->json('structure');
             $table->integer('input_type_id')->unsigned()->default(1);
 
             //$table->foreign('input_type_id')->references('id')->on('input_types');

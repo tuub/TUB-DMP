@@ -16,6 +16,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 1,
             'identifier' => 'text_simple',
             'title' => 'Text',
+            'structure' => [],
             'input_type_id' => 1,
         ]);
 
@@ -23,6 +24,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 2,
             'identifier' => 'textarea_simple',
             'title' => 'Textarea',
+            'structure' => [],
             'input_type_id' => 2,
         ]);
 
@@ -30,6 +32,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 3,
             'identifier' => 'date',
             'title' => 'Datum',
+            'structure' => [],
             'input_type_id' => 8,
         ]);
 
@@ -37,6 +40,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 4,
             'identifier' => 'person',
             'title' => 'Person',
+            'structure' => ['firstname' => '', 'lastname' => '', 'email' => '', 'uri' => ''],
             'input_type_id' => 14,
         ]);
 
@@ -44,6 +48,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 5,
             'identifier' => 'organization',
             'title' => 'Organization',
+            'structure' => [],
             'input_type_id' => 15,
         ]);
 
@@ -51,6 +56,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 6,
             'identifier' => 'list',
             'title' => 'List',
+            'structure' => [],
             'input_type_id' => 5,
         ]);
 
@@ -58,6 +64,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 7,
             'identifier' => 'value',
             'title' => 'Value',
+            'structure' => [],
             'input_type_id' => 10,
         ]);
 
@@ -65,6 +72,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 8,
             'identifier' => 'value_range',
             'title' => 'Value Range',
+            'structure' => ['alpha' => '', 'omega' => ''],
             'input_type_id' => 11,
         ]);
 
@@ -72,6 +80,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 9,
             'identifier' => 'date_range',
             'title' => 'Date Range',
+            'structure' => ['begin' => '', 'end' => ''],
             'input_type_id' => 9,
         ]);
 
@@ -79,6 +88,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 10,
             'identifier' => 'text_with_language',
             'title' => 'Text with language selector',
+            'structure' => ['content' => '', 'language' => ''],
             'input_type_id' => 16,
         ]);
 
@@ -86,6 +96,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 11,
             'identifier' => 'textarea_with_language',
             'title' => 'Textarea with language selector',
+            'structure' => ['content' => '', 'language' => ''],
             'input_type_id' => 17,
         ]);
 
@@ -93,6 +104,7 @@ class ContentTypeTableSeeder extends Seeder
             'id' => 99,
             'identifier' => 'plain',
             'title' => 'Plain Text',
+            'structure' => [],
             'input_type_id' => 99,
         ]);
 

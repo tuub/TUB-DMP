@@ -220,51 +220,60 @@ class Project extends Node
                         ->where('target_metadata_registry_id', $metadata_field->id)
                         ->get();
 
-
+                    $required = collect($metadata_field->content_type->structure);
                     $external_data = collect([]);
-                    $required = collect([]);
 
                     foreach ($mappings as $mapping) {
                         $query = 'SELECT "' . $mapping->data_source_entity[0] . '" FROM "';
                         $query .= $namespace->name . '" WHERE "Projekt_Nr" = "' . $this->identifier . '"';
 
                         $contents = collect($mapping->target_content);
+
                         foreach ($contents as $key => $value) {
-                            if ($value === 'CONTENT') {
-                                $contents[$key] = $query;
-                            }
-                        }
-                        $external_data->push($contents);
-                    }
-
-                    if ($external_data->count() > 0) {
-                        $result = collect([]);
-
-                        // TODO: a unique single list of required keys
-                        foreach ($external_data->first() as $key => $value) {
-                            $required->push($key);
-                        }
-
-                        REQUIRED: \AppHelper::varDump($required->implode(' | '));
-
-                        foreach ($external_data as $external_datum) {
-
-                            foreach ($external_datum as $key => $value) {
-                                //echo 'KEYS:';
-                                //\AppHelper::varDump($key);
-                                //echo 'VALUES:';
-                                //\AppHelper::varDump($value);
-                                /* We don't want to overwrite the already existing values */
-                                if (!isset($result[$key])) {
-                                    $result[$key] = $value;
-                                } else {
-                                    $result->push($key);
+                            if (strlen($value) > 0) {
+                                if ($value === 'CONTENT') {
+                                    $contents[$key] = $mapping->data_source_entity[0];
                                 }
                             }
+                            //else {
+                            //$contents->forget($key);
+                            //}
+                        };
+                        $external_data->push($contents);
+                    };
+
+                    if ($external_data->count() > 0) {
+                        //\AppHelper::varDump($external_data->toJson());
+                        $result = collect([]);
+                        foreach ($external_data as $external_datum) {
+                            //\AppHelper::varDump($external_datum->toJson());
+                            //$item = $required->merge($external_datum);
+                            //\AppHelper::varDump($item->toJson());
+                            $result->push($external_datum);
                         }
-                        \AppHelper::varDump($result);
+                        echo '------------------';
+                        \AppHelper::varDump($result->toArray());
+                        echo '------------------<br/>------------------<br/><br/><br/><br/>';
                     }
-                    echo 'END METADATA FOR ' .$metadata_field->title;
+
+                    /*
+                    if ($external_data->count() > 0) {
+                        $result = collect([]);
+                        foreach ($external_data as $external_datum) {
+                            $item = collect([]);
+                            foreach ($external_datum as $key => $value) {
+                                $item->put($key, $value);
+                                $item = $required->merge($item);
+                                $result->push($item);
+                            }
+                        }
+                        \AppHelper::varDump($result->toJson());
+
+                        //\AppHelper::varDump($required->toJson());
+                        //\AppHelper::varDump($result->toJson());
+                    }
+                    */
+                    //echo 'END METADATA FOR ' .$metadata_field->title;
                 }
             }
         }
