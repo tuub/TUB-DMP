@@ -221,10 +221,10 @@ class Project extends Node
                         ->get();
 
 
-                    $foobar = collect([]);
+                    $external_data = collect([]);
+                    $required = collect([]);
 
                     foreach ($mappings as $mapping) {
-
                         $query = 'SELECT "' . $mapping->data_source_entity[0] . '" FROM "';
                         $query .= $namespace->name . '" WHERE "Projekt_Nr" = "' . $this->identifier . '"';
 
@@ -234,29 +234,37 @@ class Project extends Node
                                 $contents[$key] = $query;
                             }
                         }
-                        $foobar->push($contents);
+                        $external_data->push($contents);
                     }
 
-                    if ($foobar->count() > 0) {
-                        $fab = collect([]);
-                        foreach ($foobar as $foo) {
-                            $foo = $foo->reject(function ($value, $key) {
-                                return strlen($value) == 0;
-                            });
+                    if ($external_data->count() > 0) {
+                        $result = collect([]);
 
-                            foreach ($foo as $key => $value) {
+                        // TODO: a unique single list of required keys
+                        foreach ($external_data->first() as $key => $value) {
+                            $required->push($key);
+                        }
+
+                        REQUIRED: \AppHelper::varDump($required->implode(' | '));
+
+                        foreach ($external_data as $external_datum) {
+
+                            foreach ($external_datum as $key => $value) {
+                                //echo 'KEYS:';
                                 //\AppHelper::varDump($key);
+                                //echo 'VALUES:';
                                 //\AppHelper::varDump($value);
-                                if (!isset($fab[$key])) {
-                                    $fab[$key] = $value;
+                                /* We don't want to overwrite the already existing values */
+                                if (!isset($result[$key])) {
+                                    $result[$key] = $value;
                                 } else {
-                                    $fab->push($key);
+                                    $result->push($key);
                                 }
                             }
                         }
-                        \AppHelper::varDump($fab);
-                        echo 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+                        \AppHelper::varDump($result);
                     }
+                    echo 'END METADATA FOR ' .$metadata_field->title;
                 }
             }
         }
