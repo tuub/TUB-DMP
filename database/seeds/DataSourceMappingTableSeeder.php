@@ -31,7 +31,7 @@ class DataSourceMappingTableSeeder extends Seeder
         DataSourceMapping::create([
             'data_source_id' => 1,
             'data_source_namespace_id' => 1,
-            'data_source_entity' => ['Abstract_de'],
+            'data_source_entity' => ['Abstract_dt'],
             'target_namespace' => 'project',
             'target_metadata_registry_id' => 2,
             'target_content' => ['content' => 'CONTENT', 'language' => 'de']

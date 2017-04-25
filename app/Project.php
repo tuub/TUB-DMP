@@ -4,6 +4,7 @@
 
 namespace App;
 
+use App\Providers\AppServiceProvider;
 use Baum\Node;
 use Carbon\Carbon;
 use DB;
@@ -220,19 +221,29 @@ class Project extends Node
                         ->where('target_metadata_registry_id', $metadata_field->id)
                         ->get();
 
-                    $required = collect($metadata_field->content_type->structure);
+                    $content_type = $metadata_field->content_type;
+                    $required = $content_type->structure;
                     $external_data = collect([]);
 
                     foreach ($mappings as $mapping) {
-                        $query = 'SELECT "' . $mapping->data_source_entity[0] . '" FROM "';
-                        $query .= $namespace->name . '" WHERE "Projekt_Nr" = "' . $this->identifier . '"';
+
+                        $result = DB::table($namespace->name)
+                                    ->select($mapping->data_source_entity[0] . ' as fooo')
+                                    ->where('Projekt_Nr', '=', $this->identifier)
+                                    ->get();
+
+                        $result = $result->map(function($x){ return (array) $x; })->toArray();
+
+                        \AppHelper::varDump($result);
+                        //\AppHelper::varDump($mapping->data_source_entity[0]);
+                        //\AppHelper::varDump($namespace->name);
 
                         $contents = collect($mapping->target_content);
 
                         foreach ($contents as $key => $value) {
                             if (strlen($value) > 0) {
                                 if ($value === 'CONTENT') {
-                                    $contents[$key] = $mapping->data_source_entity[0];
+                                    $contents[$key] = 'fooo';//$result[0][$mapping->data_source_entity[0]];
                                 }
                             }
                             //else {
@@ -243,16 +254,36 @@ class Project extends Node
                     };
 
                     if ($external_data->count() > 0) {
-                        //\AppHelper::varDump($external_data->toJson());
+                        \AppHelper::varDump($external_data->toJson());
                         $result = collect([]);
-                        foreach ($external_data as $external_datum) {
-                            //\AppHelper::varDump($external_datum->toJson());
-                            //$item = $required->merge($external_datum);
-                            //\AppHelper::varDump($item->toJson());
-                            $result->push($external_datum);
+
+                        switch ($content_type->identifier) {
+                            case 'person':
+                                $this_person = $required;
+                                //\AppHelper::varDump($external_data);
+                                foreach ($external_data as $external_datum) {
+                                    foreach ($external_datum as $external_datum_key => $external_datum_value) {
+                                        if (strlen($external_datum_value) > 0) {
+                                            $this_person[$external_datum_key] = $external_datum_value;
+                                        }
+                                    }
+                                }
+                                $result->push($this_person);
+                                //\AppHelper::varDump($this_person);
+                                break;
+
+                            default:
+                                foreach ($external_data as $external_datum) {
+                                    //\AppHelper::varDump($external_datum->toJson());
+                                    //$item = $required->merge($external_datum);
+                                    //\AppHelper::varDump($item->toJson());
+                                    $result->push($external_datum);
+                                }
+                                break;
                         }
+
                         echo '------------------';
-                        \AppHelper::varDump($result->toArray());
+                        \AppHelper::varDump($result->toJson());
                         echo '------------------<br/>------------------<br/><br/><br/><br/>';
                     }
 
