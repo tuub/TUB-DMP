@@ -177,18 +177,23 @@ class Project extends Node
     {
         $data = null;
 
+        /*
         if ($this->metadata->count()) {
             foreach ($this->metadata as $metadata) {
                 if ($metadata->metadata_registry->identifier == $identifier) {
                     $data = $metadata->metadata_registry->id;
                 }
             }
+
+            \AppHelper::varDump($data);
+
         } else {
+        */
             $data = MetadataRegistry::where([
                 'namespace' => 'project',
                 'identifier' => $identifier,
             ])->first()['id'];
-        }
+        //}
 
         return $data;
     }
@@ -211,9 +216,13 @@ class Project extends Node
     public function importFromDataSource()
     {
         if ($this->data_source) {
+
             $namespaces = $this->data_source->namespaces;
+
             foreach ($namespaces as $namespace) {
+
                 $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+
                 foreach ($metadata_fields as $metadata_field) {
                     $mappings = $this->data_source->mappings()
                         ->where('data_source_id', $this->data_source->id)
@@ -228,39 +237,50 @@ class Project extends Node
                     foreach ($mappings as $mapping) {
 
                         $result = DB::table($namespace->name)
-                                    ->select($mapping->data_source_entity[0] . ' as fooo')
+                                    ->select($mapping->data_source_entity[0])
                                     ->where('Projekt_Nr', '=', $this->identifier)
                                     ->get();
 
                         $result = $result->map(function($x){ return (array) $x; })->toArray();
 
-                        \AppHelper::varDump($result);
-                        //\AppHelper::varDump($mapping->data_source_entity[0]);
-                        //\AppHelper::varDump($namespace->name);
-
                         $contents = collect($mapping->target_content);
 
-                        foreach ($contents as $key => $value) {
-                            if (strlen($value) > 0) {
-                                if ($value === 'CONTENT') {
-                                    $contents[$key] = 'fooo';//$result[0][$mapping->data_source_entity[0]];
+                        if (count($result) > 0) {
+
+                            foreach ($contents as $key => $value) {
+
+                                if (strlen($value) > 0) {
+
+                                    if ($value === 'CONTENT') {
+                                        $contents[$key] = $result[0][$mapping->data_source_entity[0]];
+                                    }
+
                                 }
                             }
-                            //else {
-                            //$contents->forget($key);
-                            //}
-                        };
+
+                        } else {
+
+                            foreach ($contents as $key => $value) {
+
+                                if (strlen($value) > 0) {
+
+                                    if ($value === 'CONTENT') {
+                                        $contents[$key] = '';
+                                    }
+                                }
+                            }
+                        }
+
                         $external_data->push($contents);
-                    };
+                    }
 
                     if ($external_data->count() > 0) {
-                        \AppHelper::varDump($external_data->toJson());
+
                         $result = collect([]);
 
                         switch ($content_type->identifier) {
                             case 'person':
                                 $this_person = $required;
-                                //\AppHelper::varDump($external_data);
                                 foreach ($external_data as $external_datum) {
                                     foreach ($external_datum as $external_datum_key => $external_datum_value) {
                                         if (strlen($external_datum_value) > 0) {
@@ -269,42 +289,31 @@ class Project extends Node
                                     }
                                 }
                                 $result->push($this_person);
-                                //\AppHelper::varDump($this_person);
+                                break;
+
+                            case 'date':
+                                foreach ($external_data as $external_datum) {
+                                    $result = $external_datum;
+                                }
+                                break;
+
+                            case 'organization':
+                                foreach ($external_data as $external_datum) {
+                                    $result = $external_datum;
+                                }
                                 break;
 
                             default:
                                 foreach ($external_data as $external_datum) {
-                                    //\AppHelper::varDump($external_datum->toJson());
-                                    //$item = $required->merge($external_datum);
-                                    //\AppHelper::varDump($item->toJson());
                                     $result->push($external_datum);
                                 }
                                 break;
                         }
 
-                        echo '------------------';
-                        \AppHelper::varDump($result->toJson());
-                        echo '------------------<br/>------------------<br/><br/><br/><br/>';
-                    }
+                        $data = [$metadata_field->identifier => $result];
+                        $this->saveMetadata($data);
 
-                    /*
-                    if ($external_data->count() > 0) {
-                        $result = collect([]);
-                        foreach ($external_data as $external_datum) {
-                            $item = collect([]);
-                            foreach ($external_datum as $key => $value) {
-                                $item->put($key, $value);
-                                $item = $required->merge($item);
-                                $result->push($item);
-                            }
-                        }
-                        \AppHelper::varDump($result->toJson());
-
-                        //\AppHelper::varDump($required->toJson());
-                        //\AppHelper::varDump($result->toJson());
                     }
-                    */
-                    //echo 'END METADATA FOR ' .$metadata_field->title;
                 }
             }
         }

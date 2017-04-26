@@ -189,7 +189,7 @@ class ProjectMetadata extends Model
 
     public static function saveAll( Project $project, $data)
     {
-        ProjectMetadata::where('project_id', $project->id)->delete();
+        \AppHelper::varDump($data);
 
         foreach ($data as $field => $values) {
 
@@ -268,21 +268,29 @@ class ProjectMetadata extends Model
                 $input_data->push($value);
             }
 
-
             if ($input_data->isNotEmpty()) {
                 foreach ($input_data as $index => $value) {
+
                     $metadata_registry_id = $project->getMetadataRegistryIdByIdentifier($field);
+                    ProjectMetadata::where('project_id', $project->id)->where('metadata_registry_id', $metadata_registry_id)->delete();
+
                     if ($metadata_registry_id) {
-                        ProjectMetadata::create([
+                        $foo = ProjectMetadata::create([
                             'project_id' => $project->id,
                             'metadata_registry_id' => $metadata_registry_id,
-                            'content' => $value
-                        ]);
+                            'content' => $value->toArray()
+                        ])->save();
+
+                        \AppHelper::varDump($foo);
+
+                        \AppHelper::varDump('Updated ' . $field);
+                        \AppHelper::varDump(json_encode($value));
+                        
+
                     }
                 }
             }
             unset($input_data);
-
         }
 
         //return true;
