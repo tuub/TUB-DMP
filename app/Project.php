@@ -224,55 +224,43 @@ class Project extends Node
                 $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
 
                 foreach ($metadata_fields as $metadata_field) {
+
+                    $content_type = $metadata_field->content_type;
+                    $required = $content_type->structure;
+                    $external_data = collect([]);
                     $mappings = $this->data_source->mappings()
                         ->where('data_source_id', $this->data_source->id)
                         ->where('data_source_namespace_id', $namespace->id)
                         ->where('target_metadata_registry_id', $metadata_field->id)
                         ->get();
 
-                    $content_type = $metadata_field->content_type;
-                    $required = $content_type->structure;
-                    $external_data = collect([]);
-
                     foreach ($mappings as $mapping) {
-
                         $result = DB::table($namespace->name)
                                     ->select($mapping->data_source_entity[0])
                                     ->where('Projekt_Nr', '=', $this->identifier)
                                     ->get();
 
                         $result = $result->map(function($x){ return (array) $x; })->toArray();
-
                         $contents = collect($mapping->target_content);
 
                         if (count($result) > 0) {
-
                             foreach ($contents as $key => $value) {
-
                                 if (strlen($value) > 0) {
-
                                     if ($value === 'CONTENT') {
                                         $contents[$key] = $result[0][$mapping->data_source_entity[0]];
                                     }
-
                                 }
                             }
-
                         } else {
-
-                            foreach ($contents as $key => $value) {
-
-                                if (strlen($value) > 0) {
-
-                                    if ($value === 'CONTENT') {
-                                        $contents[$key] = '';
-                                    }
-                                }
-                            }
+                            $contents = [];
                         }
 
                         $external_data->push($contents);
                     }
+
+                    $external_data = $external_data->reject(function ($value, $key) {
+                        return count($value) == 0;
+                    });
 
                     if ($external_data->count() > 0) {
 
@@ -311,8 +299,19 @@ class Project extends Node
                         }
 
                         $data = [$metadata_field->identifier => $result];
-                        $this->saveMetadata($data);
-
+                        if ($this->saveMetadata($data)) {
+                            $notification = [
+                                'status' => 200,
+                                'message' => 'Data import successfull!',
+                                'alert-type' => 'success'
+                            ];
+                        } else {
+                            $notification = [
+                                'status' => 500,
+                                'message' => 'Data import not successfull!',
+                                'alert-type' => 'error'
+                            ];
+                        }
                     }
                 }
             }

@@ -189,7 +189,7 @@ class ProjectMetadata extends Model
 
     public static function saveAll( Project $project, $data)
     {
-        \AppHelper::varDump($data);
+        //\AppHelper::varDump($data);
 
         foreach ($data as $field => $values) {
 
@@ -281,10 +281,10 @@ class ProjectMetadata extends Model
                             'content' => $value->toArray()
                         ])->save();
 
-                        \AppHelper::varDump($foo);
+                        //\AppHelper::varDump($foo);
 
-                        \AppHelper::varDump('Updated ' . $field);
-                        \AppHelper::varDump(json_encode($value));
+                        //\AppHelper::varDump('Updated ' . $field);
+                        //\AppHelper::varDump(json_encode($value));
                         
 
                     }
