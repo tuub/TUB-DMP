@@ -271,6 +271,10 @@ class ProjectMetadata extends Model
             if ($input_data->isNotEmpty()) {
                 foreach ($input_data as $index => $value) {
 
+                    if (!is_array($value)) {
+                        $value = $value->toArray();
+                    }
+
                     $metadata_registry_id = $project->getMetadataRegistryIdByIdentifier($field);
                     ProjectMetadata::where('project_id', $project->id)->where('metadata_registry_id', $metadata_registry_id)->delete();
 
@@ -278,7 +282,7 @@ class ProjectMetadata extends Model
                         $foo = ProjectMetadata::create([
                             'project_id' => $project->id,
                             'metadata_registry_id' => $metadata_registry_id,
-                            'content' => $value->toArray()
+                            'content' => $value
                         ])->save();
 
                         //\AppHelper::varDump($foo);
