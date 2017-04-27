@@ -221,6 +221,53 @@ class Project extends Node
 
             foreach ($namespaces as $namespace) {
 
+                $results = DB::table($namespace->name)
+                    ->select()
+                    ->where('Projekt_Nr', '=', $this->identifier)
+                    ->get();
+
+                $results = $results->map(function($x){ return (array) $x; })->toArray();
+
+                $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+
+                foreach ($metadata_fields as $metadata_field) {
+
+                    $mappings = $this->data_source->mappings()
+                        ->where('data_source_id', $this->data_source->id)
+                        ->where('data_source_namespace_id', $namespace->id)
+                        ->where('target_metadata_registry_id', $metadata_field->id)
+                        ->get();
+
+                    foreach ($results as $result) {
+
+                        foreach ($result as $result_key => $result_value) {
+
+                            foreach ($mappings as $mapping) {
+
+                                if ($result_key == $mapping->data_source_entity[0]) {
+                                    \AppHelper::varDump($result_key . ' => ' . $result_value);
+
+                                }
+
+
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
+    public function importFromDataSource2()
+    {
+        if ($this->data_source) {
+
+            $namespaces = $this->data_source->namespaces;
+
+            foreach ($namespaces as $namespace) {
+
                 $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
 
                 foreach ($metadata_fields as $metadata_field) {
@@ -235,32 +282,45 @@ class Project extends Node
                         ->get();
 
                     foreach ($mappings as $mapping) {
-                        $result = DB::table($namespace->name)
+
+                        //\AppHelper::varDump($mapping);
+
+                        $results = DB::table($namespace->name)
                                     ->select($mapping->data_source_entity[0])
                                     ->where('Projekt_Nr', '=', $this->identifier)
                                     ->get();
 
-                        $result = $result->map(function($x){ return (array) $x; })->toArray();
-                        $contents = collect($mapping->target_content);
+                        $results = $results->map(function($x){ return (array) $x; })->toArray();
 
-                        if (count($result) > 0) {
-                            foreach ($contents as $key => $value) {
-                                if (strlen($value) > 0) {
-                                    if ($value === 'CONTENT') {
-                                        $contents[$key] = $result[0][$mapping->data_source_entity[0]];
+                        //\AppHelper::varDump($results);
+
+                        if (count($results) > 0) {
+                            $i = 0;
+                            foreach ($results as $result) {
+                                $contents[$i] = collect($mapping->target_content);
+                                foreach ($contents[$i] as $key => $value) {
+                                    if (strlen($value) > 0) {
+                                        if ($value === 'CONTENT') {
+                                            $contents[$i][$key] = $result[$mapping->data_source_entity[0]];
+                                        }
                                     }
                                 }
+                                $external_data->push($contents[$i]);
+                                $i++;
                             }
-                        } else {
-                            $contents = [];
                         }
+                    };
 
-                        $external_data->push($contents);
-                    }
+                    /* OK until here */
+
+
 
                     $external_data = $external_data->reject(function ($value, $key) {
+                        //\AppHelper::varDump($value);
                         return count($value) == 0;
                     });
+
+
 
                     if ($external_data->count() > 0) {
 
@@ -268,15 +328,23 @@ class Project extends Node
 
                         switch ($content_type->identifier) {
                             case 'person':
-                                $this_person = $required;
-                                foreach ($external_data as $external_datum) {
-                                    foreach ($external_datum as $external_datum_key => $external_datum_value) {
-                                        if (strlen($external_datum_value) > 0) {
-                                            $this_person[$external_datum_key] = $external_datum_value;
-                                        }
-                                    }
+                                \AppHelper::varDump(count($external_data));
+                                /*
+                                for ($i=0; $i < count($external_data); $i++) {
+                                    $this_person[$i] = $required;
+                                    \AppHelper::varDump($this_person[$i]);
+                                    echo '---------------------';
+
+
+                                    //foreach ($external_datum as $external_datum_key => $external_datum_value) {
+                                    //    if (strlen($external_datum_value) > 0) {
+                                    //        $this_person[$external_datum_key] = $external_datum_value;
+                                    //    }
+                                    //    $result->push($this_person);
+                                    //}
                                 }
-                                $result->push($this_person);
+                                */
+                                //\AppHelper::varDump($result);
                                 break;
 
                             case 'date':
@@ -299,6 +367,10 @@ class Project extends Node
                         }
 
                         $data = [$metadata_field->identifier => $result];
+
+                        //\AppHelper::varDump($data);
+
+                        /*
                         if ($this->saveMetadata($data)) {
                             $notification = [
                                 'status' => 200,
@@ -312,6 +384,7 @@ class Project extends Node
                                 'alert-type' => 'error'
                             ];
                         }
+                        */
                     }
                 }
             }
