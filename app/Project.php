@@ -228,62 +228,57 @@ class Project extends Node
                     ->get();
 
                 /* Convert external data to array */
-                $results = $results->map(function($x){ return (array) $x; })->toArray();
+                $results = $results->map(function($x){ return collect($x); });
 
-                /* Get all metadata fields */
-                $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+                /* If there is any external data? */
+                if($results->count() > 0) {
 
-                /* Loop through metadata fields */
-                foreach ($metadata_fields as $metadata_field) {
+                    /* Get all metadata fields */
+                    $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
 
-                    $content_type = $metadata_field->content_type;
-                    $required = $content_type->structure;
-                    $external_data = collect();
+                    /* Loop through metadata fields */
+                    foreach ($metadata_fields as $metadata_field) {
 
-                    /* Get all mappings */
-                    $mappings = $this->data_source->mappings()
-                        ->where('data_source_id', $this->data_source->id)
-                        ->where('data_source_namespace_id', $namespace->id)
-                        ->where('target_metadata_registry_id', $metadata_field->id)
-                        ->get();
+                        $content_type = $metadata_field->content_type;
+                        $required = $content_type->structure;
+                        $external_data = collect();
 
-                    /* Loop through external data */
-                    foreach ($results as $result) {
-                        foreach ($result as $result_key => $result_value) {
+                        if($content_type->identifier === 'person') {
+                            /* Get all mappings */
+                            $mappings = $this->data_source->mappings()
+                                ->where('data_source_id', $this->data_source->id)
+                                ->where('data_source_namespace_id', $namespace->id)
+                                ->where('target_metadata_registry_id', $metadata_field->id)
+                                ->get();
 
-                            /* Loop through mappings */
-                            foreach ($mappings as $mapping) {
+                            if ($mappings->count() > 0) {
+                                foreach ( $mappings as $mapping ) {
+                                    $external_key = $mapping->data_source_entity[0];
+                                    \AppHelper::varDump($external_key);
 
-                                $contents = collect($mapping->target_content);
-
-                                if ($result_key == $mapping->data_source_entity[0]) {
-                                    //\AppHelper::varDump($contents);
-                                    $foo = $mapping->target_content;
-                                    foreach ($contents as $key => $value) {
-                                        if (strlen($value) > 0) {
-                                            if ($value === 'CONTENT') {
-                                                //$contents[$key] = $result[$mapping->data_source_entity[0]];
-                                                $foo[$key] = $result[$mapping->data_source_entity[0]];
+                                    switch ($content_type->identifier) {
+                                        case 'person':
+                                            $item = $mapping->target_content;
+                                            $i = 0;
+                                            $foo = collect([]);
+                                            foreach ($results as $result) {
+                                                \AppHelper::varDump($i);
+                                                \AppHelper::varDump($item);
+                                                $i++;
+                                                $foo->put($i, $item);
+                                                //\AppHelper::varDump($mapping);
+                                                //\AppHelper::varDump($result[$external_key]);
                                             }
-                                        }
+                                            break;
+
+                                        default:
+                                            break;
                                     }
-
-                                    \AppHelper::varDump($foo);
-                                    $external_data->push($foo);
                                 }
+                                \AppHelper::varDump($foo);
+
+
                             }
-                        }
-                        echo '...................';
-
-                        /*
-                        $external_data = $external_data->reject(function ($value, $key) {
-                            //\AppHelper::varDump($value);
-                            return count($value) == 0;
-                        });
-                        */
-
-                        if ($external_data->count() > 0) {
-                            //\AppHelper::varDump($external_data);
                         }
                     }
                 }
