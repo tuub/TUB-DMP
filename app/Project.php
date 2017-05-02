@@ -219,73 +219,57 @@ class Project extends Node
 
             $namespaces = $this->data_source->namespaces;
 
-            foreach ($namespaces as $namespace) {
+            $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+            foreach ($metadata_fields as $metadata_field) {
+                //\AppHelper::varDump($metadata_field->id . ': ' . $metadata_field->identifier);
+                foreach ($namespaces as $namespace) {
+                    $mappings = $this->data_source->mappings()
+                        ->where('data_source_id', $this->data_source->id)
+                        ->where('data_source_namespace_id', $namespace->id)
+                        ->where('target_metadata_registry_id', $metadata_field->id)
+                        ->get();
 
-                /* Get the external data */
-                $results = DB::table($namespace->name)
-                    ->select()
-                    ->where('Projekt_Nr', '=', $this->identifier)
-                    ->get();
+                    $i = 0;
 
-                /* Convert external data to array */
-                $results = $results->map(function($x){ return collect($x); });
+                    foreach($mappings as $mapping) {
+                        $external_data = DB::table($namespace->name)
+                            ->select($mapping->data_source_entity[0])
+                            ->where('Projekt_Nr', '=', $this->identifier)
+                            ->get();
 
-                /* If there is any external data? */
-                if($results->count() > 0) {
+                        $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
 
-                    /* Get all metadata fields */
-                    $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+                        //\AppHelper::varDump($mapping->data_source_entity[0]);
+                        //\AppHelper::varDump($mapping->target_content);
+                        //\AppHelper::varDump($external_data);
 
-                    /* Loop through metadata fields */
-                    foreach ($metadata_fields as $metadata_field) {
+                        $target_content = $mapping->target_content;
+                        $new_item = [];
 
-                        $content_type = $metadata_field->content_type;
-                        $required = $content_type->structure;
-                        $external_data = collect();
+                        foreach ($target_content as $target_content_key => $target_content_value) {
+                            if ($target_content_value === 'CONTENT') {
 
-                        if($content_type->identifier === 'person') {
-                            /* Get all mappings */
-                            $mappings = $this->data_source->mappings()
-                                ->where('data_source_id', $this->data_source->id)
-                                ->where('data_source_namespace_id', $namespace->id)
-                                ->where('target_metadata_registry_id', $metadata_field->id)
-                                ->get();
+                                $target_content[$target_content_key] = $external_data[0][$mapping->data_source_entity[0]];
+                                /* Remove the empty fields */
+                                $target_content = array_filter($target_content);
 
-                            if ($mappings->count() > 0) {
-                                foreach ( $mappings as $mapping ) {
-                                    $external_key = $mapping->data_source_entity[0];
-                                    \AppHelper::varDump($external_key);
+                                /* Now to the URI field */
+                                $new_item[$i] = $target_content;
+                                $i++;
 
-                                    switch ($content_type->identifier) {
-                                        case 'person':
-                                            $item = $mapping->target_content;
-                                            $i = 0;
-                                            $foo = collect([]);
-                                            foreach ($results as $result) {
-                                                \AppHelper::varDump($i);
-                                                \AppHelper::varDump($item);
-                                                $i++;
-                                                $foo->put($i, $item);
-                                                //\AppHelper::varDump($mapping);
-                                                //\AppHelper::varDump($result[$external_key]);
-                                            }
-                                            break;
-
-                                        default:
-                                            break;
-                                    }
-                                }
-                                \AppHelper::varDump($foo);
-
-
+                                /* Merge the fucker */
+                                \AppHelper::varDump($new_item);
                             }
                         }
+
                     }
+                    //\AppHelper::varDump($new_item);
+                    echo '---------------';
+
                 }
             }
         }
     }
-
     public function importFromDataSource2()
     {
         if ($this->data_source) {
