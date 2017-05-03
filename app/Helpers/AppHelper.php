@@ -18,20 +18,26 @@ class AppHelper {
 
     public static function isEmpty($value)
     {
-        if (empty($value) || strlen($value) == 0) {
-            return true;
+        if (is_string($value)) {
+            if (empty($value) || strlen($value) == 0) {
+                return true;
+            }
         }
+
         return false;
     }
 
 
     public static function isEmptyArray($array)
     {
-        foreach($array as $key => $value) {
-            if (!empty($value)) {
-                return false;
+        if (is_array($array)) {
+            foreach($array as $key => $value) {
+                if (!empty($value)) {
+                    return false;
+                }
             }
         }
+
         return true;
     }
 
