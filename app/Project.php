@@ -230,7 +230,7 @@ class Project extends Node
                         ->get();
 
                     $i = 0;
-
+                    $new_item = [];
                     foreach($mappings as $mapping) {
                         $external_data = DB::table($namespace->name)
                             ->select($mapping->data_source_entity[0])
@@ -239,31 +239,72 @@ class Project extends Node
 
                         $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
 
-                        //\AppHelper::varDump($mapping->data_source_entity[0]);
-                        //\AppHelper::varDump($mapping->target_content);
-                        //\AppHelper::varDump($external_data);
-
                         $target_content = $mapping->target_content;
-                        $new_item = [];
+                        $content_type = $metadata_field->content_type;
+                        $required = $content_type->structure;
+
 
                         foreach ($target_content as $target_content_key => $target_content_value) {
                             if ($target_content_value === 'CONTENT') {
 
-                                $target_content[$target_content_key] = $external_data[0][$mapping->data_source_entity[0]];
-                                /* Remove the empty fields */
-                                $target_content = array_filter($target_content);
+                                foreach ($external_data as $external_datum) {
 
-                                /* Now to the URI field */
-                                $new_item[$i] = $target_content;
-                                $i++;
+                                    $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                    $target_content = array_filter($target_content);
 
-                                /* Merge the fucker */
-                                \AppHelper::varDump($new_item);
+                                    $new_item[$i] = $target_content;
+                                    $i++;
+                                }
                             }
+                        }
+                    }
+
+
+
+                    if (count($new_item) > 0) {
+
+                        //\AppHelper::varDump($new_item);
+                        //$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($new_item));
+                        //$list = iterator_to_array($it,false);
+                        //\AppHelper::varDump($list);
+
+                        switch ($content_type->identifier) {
+                            case 'person':
+                                $new_item = call_user_func_array('array_merge', $new_item);
+                                break;
+                            case 'organization':
+                                $new_item = call_user_func_array('array_merge', $new_item);
+                                break;
+                            case 'date':
+                                $new_item = call_user_func_array('array_merge', $new_item);
+                                break;
+                            default:
+                                $new_item = $new_item;
+                                break;
+                        }
+
+                        //\AppHelper::varDump(json_encode($new_item));
+
+                        $data = [$metadata_field->identifier => $new_item];
+
+                        \AppHelper::varDump($data);
+
+                        if ($this->saveMetadata($data)) {
+                            $notification = [
+                                'status' => 200,
+                                'message' => 'Data import successfull!',
+                                'alert-type' => 'success'
+                            ];
+                        } else {
+                            $notification = [
+                                'status' => 500,
+                                'message' => 'Data import not successfull!',
+                                'alert-type' => 'error'
+                            ];
                         }
 
                     }
-                    //\AppHelper::varDump($new_item);
+
                     echo '---------------';
 
                 }
