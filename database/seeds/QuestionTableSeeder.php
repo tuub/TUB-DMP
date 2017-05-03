@@ -762,7 +762,7 @@ When submitting a data file in DepositOnce the submitter has to confirm that the
             'keynumber' => 'b)',
             'order' => 5,
             'parent_id' => 150,
-            'text' => 'How will the data be licenced for reuse?',
+            'text' => 'How will the data be licensed for reuse?',
             'output_text' => 'Licencing of the data for reuse',
             'content_type_id' => 2,
             'default' => null,
