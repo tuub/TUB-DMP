@@ -270,6 +270,28 @@ class Project extends Node
 
                         switch ($content_type->identifier) {
                             case 'person':
+                                /*
+                                 * Is:
+                                 * array(1) {
+                                      ["member"] => array(3) {
+                                        ["firstname"] => string(4) "Noel"
+                                        ["lastname"] => string(9) "Gallagher"
+                                        ["email"] => string(16) "noel@example.org"
+                                      }
+                                    }
+                                 * Want:
+                                 * array(1) {
+                                      ["member"] => array(1) {
+                                        [0] => array(3) {
+                                            ["firstname"] => string(4) "Noel"
+                                            ["lastname"] => string(9) "Gallagher"
+                                            ["email"] => string(16) "noel@example.org"
+                                            ["uri"] => string(0) ""
+                                        }
+                                      }
+                                    }
+                                 *
+                                 */
                                 $new_item = call_user_func_array('array_merge', $new_item);
                                 break;
                             case 'organization':
