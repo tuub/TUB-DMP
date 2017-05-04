@@ -20,6 +20,6 @@ class DataSourceMapping extends Model
 
     public function metadata_registry()
     {
-        return $this->belongsTo(MetadataRegistry::class);
+        return $this->belongsTo(MetadataRegistry::class, 'target_metadata_registry_id', 'id');
     }
 }

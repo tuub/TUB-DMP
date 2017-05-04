@@ -19,7 +19,7 @@ class Project extends Node
     protected $table = 'projects';
     public $timestamps = true;
     protected $dates = ['created_at', 'updated_at', 'prefilled_at'];
-    protected $fillable = ['identifier','parent_id','user_id','data_source_id','is_prefilled','prefilled_at'];
+    protected $fillable = ['identifier', 'parent_id', 'user_id', 'data_source_id', 'is_prefilled', 'prefilled_at'];
     protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
 
     /* Nested Sets */
@@ -103,7 +103,7 @@ class Project extends Node
         $data = null;
         $content_type = new ContentType();
 
-        if($this->metadata->count()) {
+        if ($this->metadata->count()) {
             foreach ($this->metadata as $metadata) {
                 if ($metadata->metadata_registry->identifier == $attribute) {
                     $data = collect($metadata->content);
@@ -153,7 +153,7 @@ class Project extends Node
                 $status = 'Running';
             }
 
-            if ($this->getMetadata('end')  && $this->getMetadata('end')->count()) {
+            if ($this->getMetadata('end') && $this->getMetadata('end')->count()) {
                 if (Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
                     $status = 'Running';
                 } else {
@@ -189,10 +189,10 @@ class Project extends Node
 
         } else {
         */
-            $data = MetadataRegistry::where([
-                'namespace' => 'project',
-                'identifier' => $identifier,
-            ])->first()['id'];
+        $data = MetadataRegistry::where([
+            'namespace' => 'project',
+            'identifier' => $identifier,
+        ])->first()['id'];
         //}
 
         return $data;
@@ -213,6 +213,91 @@ class Project extends Node
         }
     }
 
+
+    public function importFromDataSource0()
+    {
+        if ($this->data_source) {
+
+            $namespaces = $this->data_source->namespaces;
+
+            foreach ($namespaces as $namespace) {
+                $mappings = $this->data_source->mappings()
+                    ->with('metadata_registry')
+                    ->where('data_source_id', $this->data_source->id)
+                    ->where('data_source_namespace_id', $namespace->id)
+                    ->get();
+
+                $required_fields = [];
+
+                foreach ($mappings as $mapping) {
+                    $required_fields[] = $mapping->data_source_entity[0];
+                }
+
+                $external_data = collect();
+
+                if (count($required_fields) > 0) {
+
+                    $external_data = DB::table($namespace->name)
+                        ->select($required_fields)
+                        ->where('Projekt_Nr', '=', $this->identifier)
+                        ->get();
+
+                    $required_fields = [];
+                }
+
+                $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
+
+                foreach ($external_data as $external_datum) {
+
+                    //\AppHelper::varDump($external_datum);
+
+                    $i = 0;
+                    $new_item = [];
+
+                    foreach ($mappings as $mapping) {
+                        $target_content = $mapping->target_content;
+                        $content_type = $mapping->metadata_registry->content_type;
+                        $required = $content_type->structure;
+                        foreach ($target_content as $target_content_key => $target_content_value) {
+
+                            \AppHelper::varDump($content_type->identifier);
+
+                            if ($target_content_value === 'CONTENT') {
+                                $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                \AppHelper::varDump($target_content);
+
+                                $target_content = array_filter($target_content);
+
+                                $new_item[$i] = $target_content;
+                                $i++;
+
+
+                                //\AppHelper::varDump($external_datum[$mapping->data_source_entity[0]]);
+                                /*
+                                foreach ($external_data as $external_datum) {
+
+                                    $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                    $target_content = array_filter($target_content);
+
+                                    $new_item[$i] = $target_content;
+                                    $i++;
+                                }
+                                */
+                            }
+                            //\AppHelper::varDump($target_content);
+                        }
+
+                    }
+                    echo '-------------';
+
+                }
+            }
+        }
+    }
+
+
+
+
     public function importFromDataSource()
     {
         if ($this->data_source) {
@@ -231,6 +316,7 @@ class Project extends Node
 
                     $i = 0;
                     $new_item = [];
+
                     foreach($mappings as $mapping) {
                         $external_data = DB::table($namespace->name)
                             ->select($mapping->data_source_entity[0])
@@ -270,29 +356,7 @@ class Project extends Node
 
                         switch ($content_type->identifier) {
                             case 'person':
-                                /*
-                                 * Is:
-                                 * array(1) {
-                                      ["member"] => array(3) {
-                                        ["firstname"] => string(4) "Noel"
-                                        ["lastname"] => string(9) "Gallagher"
-                                        ["email"] => string(16) "noel@example.org"
-                                      }
-                                    }
-                                 * Want:
-                                 * array(1) {
-                                      ["member"] => array(1) {
-                                        [0] => array(3) {
-                                            ["firstname"] => string(4) "Noel"
-                                            ["lastname"] => string(9) "Gallagher"
-                                            ["email"] => string(16) "noel@example.org"
-                                            ["uri"] => string(0) ""
-                                        }
-                                      }
-                                    }
-                                 *
-                                 */
-                                $new_item = call_user_func_array('array_merge', $new_item);
+                                $new_item = [call_user_func_array('array_merge', $new_item)];
                                 break;
                             case 'organization':
                                 $new_item = call_user_func_array('array_merge', $new_item);
@@ -311,6 +375,7 @@ class Project extends Node
 
                         \AppHelper::varDump($data);
 
+                        /*
                         if ($this->saveMetadata($data)) {
                             $notification = [
                                 'status' => 200,
@@ -324,6 +389,7 @@ class Project extends Node
                                 'alert-type' => 'error'
                             ];
                         }
+                        */
 
                     }
 
