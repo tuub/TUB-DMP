@@ -329,34 +329,48 @@ class Project extends Node
                         $content_type = $metadata_field->content_type;
                         $required = $content_type->structure;
 
-
-                        foreach ($target_content as $target_content_key => $target_content_value) {
-                            if ($target_content_value === 'CONTENT') {
-
+                        switch ($content_type->identifier) {
+                            case 'person':
+                                $k = 0;
                                 foreach ($external_data as $external_datum) {
-
-                                    $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
-                                    $target_content = array_filter($target_content);
-
-                                    $new_item[$i] = $target_content;
-                                    $i++;
+                                    foreach ($target_content as $target_content_key => $target_content_value) {
+                                        if ($target_content_value === 'CONTENT') {
+                                            $new_item[$k][$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                        }
+                                    }
+                                    $k++;
                                 }
-                            }
+                                break;
+                            default:
+                                foreach ($target_content as $target_content_key => $target_content_value) {
+                                    if ($target_content_value === 'CONTENT') {
+                                        foreach ($external_data as $external_datum) {
+                                            $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                            $target_content = array_filter($target_content);
+                                            $new_item[$i] = $target_content;
+                                            $i++;
+                                        }
+                                    }
+                                }
+                                break;
                         }
                     }
 
-
+                    foreach ($new_item as $item) {
+                        $item = $item + array_diff_key($required, $item);
+                        \AppHelper::varDump($item);
+                    }
 
                     if (count($new_item) > 0) {
 
-                        //\AppHelper::varDump($new_item);
+                        \AppHelper::varDump($new_item);
                         //$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($new_item));
                         //$list = iterator_to_array($it,false);
                         //\AppHelper::varDump($list);
 
                         switch ($content_type->identifier) {
                             case 'person':
-                                $new_item = [call_user_func_array('array_merge', $new_item)];
+                                //$new_item = [call_user_func_array('array_merge', $new_item)];
                                 break;
                             case 'organization':
                                 $new_item = call_user_func_array('array_merge', $new_item);
@@ -373,7 +387,7 @@ class Project extends Node
 
                         $data = [$metadata_field->identifier => $new_item];
 
-                        \AppHelper::varDump($data);
+                        //\AppHelper::varDump($data);
 
                         /*
                         if ($this->saveMetadata($data)) {
