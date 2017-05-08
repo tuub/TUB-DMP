@@ -356,40 +356,41 @@ class Project extends Node
                         }
                     }
 
+                    $new_full_item = [];
+
                     foreach ($new_item as $item) {
                         $item = $item + array_diff_key($required, $item);
-                        \AppHelper::varDump($item);
+                        $new_full_item[] = $item;
                     }
 
-                    if (count($new_item) > 0) {
+                    if (count($new_full_item) > 0) {
 
-                        \AppHelper::varDump($new_item);
+                        //\AppHelper::varDump($new_full_item);
                         //$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($new_item));
                         //$list = iterator_to_array($it,false);
                         //\AppHelper::varDump($list);
 
                         switch ($content_type->identifier) {
+                            case 'text_simple':
+                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                break;
                             case 'person':
                                 //$new_item = [call_user_func_array('array_merge', $new_item)];
                                 break;
                             case 'organization':
-                                $new_item = call_user_func_array('array_merge', $new_item);
+                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
                                 break;
                             case 'date':
-                                $new_item = call_user_func_array('array_merge', $new_item);
+                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
                                 break;
                             default:
-                                $new_item = $new_item;
+                                //$new_full_item = call_user_func_array('array_merge', $new_full_item);
                                 break;
                         }
 
-                        //\AppHelper::varDump(json_encode($new_item));
+                        $data = [$metadata_field->identifier => $new_full_item];
+                        //\AppHelper::varDump(json_encode($data));
 
-                        $data = [$metadata_field->identifier => $new_item];
-
-                        //\AppHelper::varDump($data);
-
-                        /*
                         if ($this->saveMetadata($data)) {
                             $notification = [
                                 'status' => 200,
@@ -403,392 +404,11 @@ class Project extends Node
                                 'alert-type' => 'error'
                             ];
                         }
-                        */
-
-                    }
-
-                    echo '---------------';
-
-                }
-            }
-        }
-    }
-    public function importFromDataSource2()
-    {
-        if ($this->data_source) {
-
-            $namespaces = $this->data_source->namespaces;
-
-            foreach ($namespaces as $namespace) {
-
-                $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
-
-                foreach ($metadata_fields as $metadata_field) {
-
-                    $content_type = $metadata_field->content_type;
-                    $required = $content_type->structure;
-                    $external_data = collect([]);
-                    $mappings = $this->data_source->mappings()
-                        ->where('data_source_id', $this->data_source->id)
-                        ->where('data_source_namespace_id', $namespace->id)
-                        ->where('target_metadata_registry_id', $metadata_field->id)
-                        ->get();
-
-                    foreach ($mappings as $mapping) {
-
-                        //\AppHelper::varDump($mapping);
-
-                        $results = DB::table($namespace->name)
-                                    ->select($mapping->data_source_entity[0])
-                                    ->where('Projekt_Nr', '=', $this->identifier)
-                                    ->get();
-
-                        $results = $results->map(function($x){ return (array) $x; })->toArray();
-
-                        //\AppHelper::varDump($results);
-
-                        if (count($results) > 0) {
-                            $i = 0;
-                            foreach ($results as $result) {
-                                $contents[$i] = collect($mapping->target_content);
-                                foreach ($contents[$i] as $key => $value) {
-                                    if (strlen($value) > 0) {
-                                        if ($value === 'CONTENT') {
-                                            $contents[$i][$key] = $result[$mapping->data_source_entity[0]];
-                                        }
-                                    }
-                                }
-                                $external_data->push($contents[$i]);
-                                $i++;
-                            }
-                        }
-                    };
-
-                    /* OK until here */
 
 
-
-                    $external_data = $external_data->reject(function ($value, $key) {
-                        //\AppHelper::varDump($value);
-                        return count($value) == 0;
-                    });
-
-
-
-                    if ($external_data->count() > 0) {
-
-                        $result = collect([]);
-
-                        switch ($content_type->identifier) {
-                            case 'person':
-                                \AppHelper::varDump(count($external_data));
-                                /*
-                                for ($i=0; $i < count($external_data); $i++) {
-                                    $this_person[$i] = $required;
-                                    \AppHelper::varDump($this_person[$i]);
-                                    echo '---------------------';
-
-
-                                    //foreach ($external_datum as $external_datum_key => $external_datum_value) {
-                                    //    if (strlen($external_datum_value) > 0) {
-                                    //        $this_person[$external_datum_key] = $external_datum_value;
-                                    //    }
-                                    //    $result->push($this_person);
-                                    //}
-                                }
-                                */
-                                //\AppHelper::varDump($result);
-                                break;
-
-                            case 'date':
-                                foreach ($external_data as $external_datum) {
-                                    $result = $external_datum;
-                                }
-                                break;
-
-                            case 'organization':
-                                foreach ($external_data as $external_datum) {
-                                    $result = $external_datum;
-                                }
-                                break;
-
-                            default:
-                                foreach ($external_data as $external_datum) {
-                                    $result->push($external_datum);
-                                }
-                                break;
-                        }
-
-                        $data = [$metadata_field->identifier => $result];
-
-                        //\AppHelper::varDump($data);
-
-                        /*
-                        if ($this->saveMetadata($data)) {
-                            $notification = [
-                                'status' => 200,
-                                'message' => 'Data import successfull!',
-                                'alert-type' => 'success'
-                            ];
-                        } else {
-                            $notification = [
-                                'status' => 500,
-                                'message' => 'Data import not successfull!',
-                                'alert-type' => 'error'
-                            ];
-                        }
-                        */
                     }
                 }
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function queryRelation($attribute = null, $language = null, $format = 'html')
-    {
-        /*
-        SELECT project_metadata.id, project_metadata.project_id, project_metadata.content, project_metadata.language,
-        metadata_registry.namespace, metadata_registry.identifier,
-        input_types.name
-        FROM project_metadata
-        INNER JOIN metadata_registry
-        ON project_metadata.metadata_registry_id = metadata_registry.id
-        INNER JOIN input_types
-        ON metadata_registry.input_type_id = input_types.id;
-        */
-
-        $data = collect([]);
-        $query = $this->metadata()
-            ->join('metadata_registry', 'project_metadata.metadata_registry_id', '=', 'metadata_registry.id')
-            ->join('content_types', 'metadata_registry.content_type_id', '=', 'content_types.id')
-            ->select(
-                'metadata_registry.title as title',
-                'project_metadata.content as content',
-                //'project_metadata.language as language',
-                'content_types.identifier as content_type'
-            )
-            ->where('metadata_registry.namespace', 'project');
-
-        if( !is_null($attribute) ) {
-            $query = $query->where('metadata_registry.identifier', $attribute);
-        }
-
-        if( !is_null($language) ) {
-            $query = $query->where('project_metadata.language', $language);
-        }
-
-        $results = $query->get();
-
-        /* No results? Return empty collection */
-
-        if($results->isEmpty()) {
-            return $data;
-        }
-
-        foreach( $results as $result ) {
-            if(is_array($result->content)) {
-                foreach ($result->content as $value) {
-                    if (is_array($value)) {
-                        foreach($value as $k => $v) {
-                            if(is_numeric($k)) {
-                                $data->push($v);
-                            } else {
-                                $data->put($k, $v);
-                            }
-                            //$data->put($k, $v);
-                        }
-                    } else {
-                        $data->push($value);
-                    }
-                }
-            }
-            $content_type = ContentType::where('identifier', $result->content_type)->first();
-            return ProjectMetadata::formatForOutput($data, $content_type);
-
-            /*
-            if( !empty($result->content) ) {
-
-                switch ($result->content_type) {
-                    case 'date':
-                        //$data->push(Carbon::parse($result->content));
-                        break;
-                    case 'person':
-                        $data->push($result->content);
-                        break;
-                    case 'organization':
-                        $data->push($result->content);
-                        break;
-                    default:
-                        $data->push($result->content);
-                        break;
-                };
-            };
-            */
-        }
-
-        /*
-        $data = DB::table('project_metadata')
-            ->join('metadata_registry', 'project_metadata.metadata_registry_id', '=', 'metadata_registry.id')
-            ->pluck('content', 'identifier');
-        */
-        return $data;
-    }
-
-
-
-    /*
-    public function getTitleAttribute()
-    {
-        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
-            return $q->where('identifier', '=', 'title');
-        })->pluck('content')->implode(' / ');
-
-        return $data;
-    }
-
-    public function getBeginDateAttribute()
-    {
-        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
-            return $q->where('identifier', '=', 'begin');
-        })->first()['content'];
-
-        if(!empty($data)) {
-            return Carbon::parse($data)->format('Y/m/d');
-        }
-        return null;
-    }
-
-    public function getEndDateAttribute()
-    {
-        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
-            return $q->where('identifier', '=', 'end');
-        })->first()['content'];
-
-        if(!empty($data)) {
-            return Carbon::parse($data)->format('Y/m/d');
-        }
-        return null;
-    }
-
-    public function getMembersAttribute()
-    {
-        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
-            return $q->where('identifier', '=', 'members');
-        })->pluck('content');
-
-        return $data;
-    }
-
-    public function getFundersAttribute()
-    {
-        $data = $this->metadata()->with('metadata_registry')->whereHas('metadata_registry', function($q) {
-            return $q->where('identifier', '=', 'funding_source');
-        })->pluck('content')->implode(', ');
-
-        return $data;
-    }
-
-
-    public function getMetadataViaRelation($attribute = null, $language = null, $format = 'html')
-    {
-        $data = collect([]);
-
-        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
-            $q->where('identifier', $attribute);
-            if( !is_null($language) ) {
-                $q->where('project_metadata.language', $language);
-            }
-        });
-        $results = $metadata_query->get();
-
-        //dd($results);
-
-        if($results->isEmpty()) {
-            return $data;
-        }
-
-        foreach( $results as $result ) {
-            if( !empty($result->content) ) {
-                switch ($result->content_type) {
-                    case 'date':
-                        $content = Carbon::parse($result->content)->format('Y/d/m');
-                        $data = $content;
-                        break;
-                    case 'organization':
-                        break;
-                    case 'person':
-                        $data->push($result->content);
-                        break;
-                    default:
-                        $data->push($result->content);
-                        break;
-                };
-            };
-        };
-        return $data;
-    }
-
-    public function getMetadataViaFoo($attribute = null, $language = null, $format = 'html')
-    {
-        $data = collect([]);
-
-        $metadata_query = $this->metadata()->whereHas('metadata_registry', function ($q) use($attribute, $language) {
-            $q->where('identifier', $attribute);
-            if( !is_null($language) ) {
-                $q->where('project_metadata.language', $language);
-            }
-        });
-        $results = $metadata_query->get();
-
-        //dd($results);
-
-
-
-        //$foobar = collect([]);
-        //$foo = $this->with('metadata', 'metadata.metadata_registry')->get();
-        //foreach( $this->metadata as $md ) {
-        //    $foobar->put($md->metadata_registry->identifier, $md->content['value']);
-        //}
-
-return $results;
-}
-
-
-
-    */
 }

@@ -43,21 +43,27 @@ class AppHelper {
 
     public static function hasKeys($array, $keys)
     {
-        foreach( $keys as $key ) {
-            if (!array_key_exists($key, $array)) {
-                return false;
+        if (is_array($array)) {
+            foreach ($keys as $key) {
+                if (!array_key_exists($key, $array)) {
+                    return false;
+                }
             }
         }
+
         return true;
     }
 
     public static function hasEmptyValues($array)
     {
-        foreach($array as $key => $value) {
-            if (empty($value) || strlen($value) == 0) {
-                return true;
+        if (is_array($array)) {
+            foreach ($array as $key => $value) {
+                if (empty($value) || strlen($value) == 0) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 }
