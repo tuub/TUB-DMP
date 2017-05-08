@@ -175,25 +175,10 @@ class Project extends Node
      */
     public function getMetadataRegistryIdByIdentifier($identifier)
     {
-        $data = null;
-
-        /*
-        if ($this->metadata->count()) {
-            foreach ($this->metadata as $metadata) {
-                if ($metadata->metadata_registry->identifier == $identifier) {
-                    $data = $metadata->metadata_registry->id;
-                }
-            }
-
-            \AppHelper::varDump($data);
-
-        } else {
-        */
         $data = MetadataRegistry::where([
             'namespace' => 'project',
             'identifier' => $identifier,
         ])->first()['id'];
-        //}
 
         return $data;
     }
@@ -212,90 +197,6 @@ class Project extends Node
             throw new NotFoundHttpException;
         }
     }
-
-
-    public function importFromDataSource0()
-    {
-        if ($this->data_source) {
-
-            $namespaces = $this->data_source->namespaces;
-
-            foreach ($namespaces as $namespace) {
-                $mappings = $this->data_source->mappings()
-                    ->with('metadata_registry')
-                    ->where('data_source_id', $this->data_source->id)
-                    ->where('data_source_namespace_id', $namespace->id)
-                    ->get();
-
-                $required_fields = [];
-
-                foreach ($mappings as $mapping) {
-                    $required_fields[] = $mapping->data_source_entity[0];
-                }
-
-                $external_data = collect();
-
-                if (count($required_fields) > 0) {
-
-                    $external_data = DB::table($namespace->name)
-                        ->select($required_fields)
-                        ->where('Projekt_Nr', '=', $this->identifier)
-                        ->get();
-
-                    $required_fields = [];
-                }
-
-                $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
-
-                foreach ($external_data as $external_datum) {
-
-                    //\AppHelper::varDump($external_datum);
-
-                    $i = 0;
-                    $new_item = [];
-
-                    foreach ($mappings as $mapping) {
-                        $target_content = $mapping->target_content;
-                        $content_type = $mapping->metadata_registry->content_type;
-                        $required = $content_type->structure;
-                        foreach ($target_content as $target_content_key => $target_content_value) {
-
-                            \AppHelper::varDump($content_type->identifier);
-
-                            if ($target_content_value === 'CONTENT') {
-                                $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
-                                \AppHelper::varDump($target_content);
-
-                                $target_content = array_filter($target_content);
-
-                                $new_item[$i] = $target_content;
-                                $i++;
-
-
-                                //\AppHelper::varDump($external_datum[$mapping->data_source_entity[0]]);
-                                /*
-                                foreach ($external_data as $external_datum) {
-
-                                    $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
-                                    $target_content = array_filter($target_content);
-
-                                    $new_item[$i] = $target_content;
-                                    $i++;
-                                }
-                                */
-                            }
-                            //\AppHelper::varDump($target_content);
-                        }
-
-                    }
-                    echo '-------------';
-
-                }
-            }
-        }
-    }
-
-
 
 
     public function importFromDataSource()
@@ -365,11 +266,6 @@ class Project extends Node
 
                     if (count($new_full_item) > 0) {
 
-                        //\AppHelper::varDump($new_full_item);
-                        //$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($new_item));
-                        //$list = iterator_to_array($it,false);
-                        //\AppHelper::varDump($list);
-
                         switch ($content_type->identifier) {
                             case 'text_simple':
                                 $new_full_item = call_user_func_array('array_merge', $new_full_item);
@@ -389,7 +285,6 @@ class Project extends Node
                         }
 
                         $data = [$metadata_field->identifier => $new_full_item];
-                        //\AppHelper::varDump(json_encode($data));
 
                         if ($this->saveMetadata($data)) {
                             $notification = [
@@ -404,8 +299,6 @@ class Project extends Node
                                 'alert-type' => 'error'
                             ];
                         }
-
-
                     }
                 }
             }
