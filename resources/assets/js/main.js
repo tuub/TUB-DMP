@@ -407,7 +407,27 @@ $(document).ready(function ()
                 }
             }
         })
+    });
 
+
+    $('a.import-project').bind('click', function (e) {
+        e.preventDefault();
+
+        var project_id  = $(this).data('rel');
+
+        $.ajax({
+            type    : 'GET',
+            url     : '/my/project/' + project_id + '/import',
+            dataType: 'json',
+            error   : function (json) {
+                console.log(json.responseText);
+            },
+            success : function (json) {
+                if (json.response === 200) {
+                    location.reload();
+                }
+            }
+        });
     });
 
 

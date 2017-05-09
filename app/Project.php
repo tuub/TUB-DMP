@@ -175,10 +175,25 @@ class Project extends Node
      */
     public function getMetadataRegistryIdByIdentifier($identifier)
     {
+        $data = null;
+
+        /*
+        if ($this->metadata->count()) {
+            foreach ($this->metadata as $metadata) {
+                if ($metadata->metadata_registry->identifier == $identifier) {
+                    $data = $metadata->metadata_registry->id;
+                }
+            }
+
+            \AppHelper::varDump($data);
+
+        } else {
+        */
         $data = MetadataRegistry::where([
             'namespace' => 'project',
             'identifier' => $identifier,
         ])->first()['id'];
+        //}
 
         return $data;
     }
@@ -207,7 +222,10 @@ class Project extends Node
 
             $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
             foreach ($metadata_fields as $metadata_field) {
-                //\AppHelper::varDump($metadata_field->id . ': ' . $metadata_field->identifier);
+
+                $content_type = $metadata_field->content_type;
+                $required = $content_type->structure;
+
                 foreach ($namespaces as $namespace) {
                     $mappings = $this->data_source->mappings()
                         ->where('data_source_id', $this->data_source->id)
@@ -227,8 +245,6 @@ class Project extends Node
                         $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
 
                         $target_content = $mapping->target_content;
-                        $content_type = $metadata_field->content_type;
-                        $required = $content_type->structure;
 
                         switch ($content_type->identifier) {
                             case 'person':
@@ -270,9 +286,6 @@ class Project extends Node
                             case 'text_simple':
                                 $new_full_item = call_user_func_array('array_merge', $new_full_item);
                                 break;
-                            case 'person':
-                                //$new_item = [call_user_func_array('array_merge', $new_item)];
-                                break;
                             case 'organization':
                                 $new_full_item = call_user_func_array('array_merge', $new_full_item);
                                 break;
@@ -285,23 +298,14 @@ class Project extends Node
                         }
 
                         $data = [$metadata_field->identifier => $new_full_item];
-
-                        if ($this->saveMetadata($data)) {
-                            $notification = [
-                                'status' => 200,
-                                'message' => 'Data import successfull!',
-                                'alert-type' => 'success'
-                            ];
-                        } else {
-                            $notification = [
-                                'status' => 500,
-                                'message' => 'Data import not successfull!',
-                                'alert-type' => 'error'
-                            ];
-                        }
+                        $this->saveMetadata($data);
                     }
                 }
             }
+
+            return true;
         }
+
+        return false;
     }
 }

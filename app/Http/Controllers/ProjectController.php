@@ -111,4 +111,41 @@ class ProjectController extends Controller
             abort(403, 'Direct access is not allowed.');
         }
     }
+
+
+    public function import(ProjectRequest $request)
+    {
+        /* Get the project instance */
+        $project = $this->project->findOrFail($request->id);
+
+        /* Import the metadata (or not) and assign response variables */
+        if ($project->importFromDataSource()) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Data import successfull!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Data import not successfull!',
+                'alert-type' => 'error'
+            ];
+        };
+
+        /* Send the response*/
+        if($request->ajax()) {
+
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
+
+            return response()->json([
+                'response' => $notification['status'],
+                'message'  => $notification['message']
+            ]);
+
+        } else {
+            abort(403, 'Direct access is not allowed.');
+        }
+    }
 }

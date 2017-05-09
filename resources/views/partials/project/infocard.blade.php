@@ -102,8 +102,13 @@ $status = $project->status;
                             <i class="fa fa-info"></i><span class="hidden-sm hidden-xs"> More Info</span>
                         </a>
                         <a href="{{ route('project.edit', $project->id)}}" class="edit-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#edit-project-{{$project->id}}" title="Edit Project">
-                            <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit</span>
+                            <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit Project Metadata</span>
                         </a>
+                        @if($project->data_source)
+                            <a href="{{ route('project.import', $project->id)}}" class="import-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" title="Import Project Metadata">
+                                <i class="fa fa-download"></i><span class="hidden-sm hidden-xs"> Import from Datasource</span>
+                            </a>
+                        @endif
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6 text-right">
                         <a href="#" class="toggle-plans card-link btn btn-success btn-xs" data-href="{{  $project->id }}">
