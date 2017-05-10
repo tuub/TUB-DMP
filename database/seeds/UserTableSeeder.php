@@ -71,7 +71,7 @@ class UserTableSeeder extends Seeder
             'email' => 'anja.kammel@tu-berlin.de',
             'institution_id' => 1,
             'remember_token' => 'zdwXbVQKjbrf3DWkOLu11WeehP7KKBTtofjaNOSpXWCkVCo39MRYDoxQZGxk',
-            'is_active' => 1,
+            'is_admin' => 1,
             'is_active' => 1,
             'last_login' => null,
             'created_at' => '2016-06-01 12:51:48',
