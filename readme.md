@@ -72,8 +72,11 @@ sudo ln -s /opt/wkhtmltox/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
 
 Then add the correct pathes in config/snappy.php.
 
-### Activate Prefilling
-In order to prefill plans with predefined answers (and maybe with external data) you have to add a cronjob:
+### Activate Data Source Imports
+In order to import project metadata from external source you might have to configure ODBC and add a cronjob:
+
+[https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx](https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx)
+
 ```sh
 * * * * * php /srv/tub-dmp/artisan schedule:run >> /dev/null 2>&1
 ```
