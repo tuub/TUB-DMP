@@ -279,13 +279,6 @@ class Plan extends Model
     }
 
 
-
-
-
-
-
-
-
     /* TODO: Experimental, not in use */
     public function getColoredCompletionRate()
     {
@@ -406,7 +399,7 @@ class Plan extends Model
                 'project_number' => $current_plan->project_number,
                 'version'        => $new_version,
                 'datasource'     => null,
-                'is_prefilled'   => 1
+                'imported'   => 1
             ]);
             if( Plan::createPlan( $request ) ) {
                 $new_plan = self::getByCredentials( $current_plan->project_number, $new_version, Auth::user()->id );
@@ -478,27 +471,7 @@ class Plan extends Model
     }
 
 
-    /**
-     * @param int $status
-     *
-     * @return bool
-     */
-    public function setPrefillStatus( $status = 1 ) {
-        if ( is_bool( $status ) ) {
-            $this->update( [ 'is_prefilled' => $status ] );
-            return true;
-        }
-        return false;
-    }
 
-
-    /**
-     * @return bool
-     */
-    public function setPrefillTimestamps() {
-        $this->update( [ 'prefilled_at' => Carbon::now() ] );
-        return true;
-    }
 
 
 

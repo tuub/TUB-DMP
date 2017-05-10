@@ -105,9 +105,11 @@ $status = $project->status;
                             <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit Project Metadata</span>
                         </a>
                         @if($project->data_source)
-                            <a href="{{ route('project.import', $project->id)}}" class="import-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" title="Import Project Metadata">
-                                <i class="fa fa-download"></i><span class="hidden-sm hidden-xs"> Import from Datasource</span>
-                            </a>
+                            @unless($project->imported)
+                                <a href="{{ route('project.import', $project->id)}}" class="import-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" title="Import Project Metadata">
+                                    <i class="fa fa-download"></i><span class="hidden-sm hidden-xs"> Import from Datasource</span>
+                                </a>
+                            @endunless
                         @endif
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6 text-right">

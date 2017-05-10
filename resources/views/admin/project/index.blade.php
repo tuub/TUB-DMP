@@ -36,7 +36,7 @@
                         <th>Plans</th>
                         <th>Sub-Projects</th>
                         <th>Data Source</th>
-                        <th>Prefilled</th>
+                        <th>Import</th>
                         <th>Created</th>
                         <th>Updated</th>
                         <th>Tools</th>

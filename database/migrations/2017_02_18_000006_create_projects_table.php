@@ -15,11 +15,6 @@ class CreateProjectsTable extends Migration
         //TODO: decide how to include the metadata: in this table or extra table with md schema
         Schema::dropIfExists('projects');
         Schema::create('projects', function (Blueprint $table) {
-            // These columns are needed for Baum's Nested Set implementation to work.
-            // Column names may be changed, but they *must* all exist and be modified
-            // in the model.
-            // Take a look at the model scaffold comments for details.
-            // We add indexes on parent_id, lft, rgt columns by default.
             $table->increments('id');
             $table->integer('parent_id')->nullable()->index();
             $table->integer('lft')->nullable()->index();
@@ -28,8 +23,8 @@ class CreateProjectsTable extends Migration
             $table->string('identifier',50)->unique();
             $table->integer('user_id')->unsigned();
             $table->integer('data_source_id')->unsigned()->nullable();
-            $table->boolean('is_prefilled')->default(0);
-            $table->dateTime('prefilled_at')->nullable();
+            $table->boolean('imported')->default(0);
+            $table->dateTime('imported_at')->nullable();
             $table->timestamps();
 
             //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

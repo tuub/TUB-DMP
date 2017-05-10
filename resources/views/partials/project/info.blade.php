@@ -41,7 +41,7 @@
     <td>
         @if($project->data_source)
             {{ $project->data_source->identifier }}
-            @if ($project->is_prefilled)
+            @if ($project->imported)
                 <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>
             @else
                 <i class="fa fa-check-square-o" aria-hidden="true"></i><span class="hidden-xs"></span>

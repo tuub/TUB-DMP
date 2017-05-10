@@ -21,8 +21,8 @@
         @endif
     </td>
     <td>
-        @if( $project->is_prefilled )
-            @date( $project->prefilled_at ) @time( $project->prefilled_at )
+        @if( $project->imported )
+            @date( $project->imported_at ) @time( $project->imported )
         @else
             Never
         @endif

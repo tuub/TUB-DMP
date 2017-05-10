@@ -18,8 +18,8 @@ class Project extends Node
 {
     protected $table = 'projects';
     public $timestamps = true;
-    protected $dates = ['created_at', 'updated_at', 'prefilled_at'];
-    protected $fillable = ['identifier', 'parent_id', 'user_id', 'data_source_id', 'is_prefilled', 'prefilled_at'];
+    protected $dates = ['created_at', 'updated_at', 'imported_at'];
+    protected $fillable = ['identifier', 'parent_id', 'user_id', 'data_source_id', 'imported', 'imported_at'];
     protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
 
     /* Nested Sets */
@@ -214,6 +214,21 @@ class Project extends Node
     }
 
 
+    public function setImportStatus( $status = true ) {
+        if ( is_bool( $status ) ) {
+            $this->update( [ 'imported' => $status ] );
+            return true;
+        }
+        return false;
+    }
+
+
+    public function setImportTimestamp() {
+        $this->update( [ 'imported_at' => Carbon::now() ] );
+        return true;
+    }
+
+
     public function importFromDataSource()
     {
         if ($this->data_source) {
@@ -302,6 +317,9 @@ class Project extends Node
                     }
                 }
             }
+
+            $this->setImportStatus(true);
+            $this->setImportTimestamp();
 
             return true;
         }
