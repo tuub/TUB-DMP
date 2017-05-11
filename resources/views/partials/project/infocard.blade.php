@@ -124,7 +124,7 @@ $status = $project->status;
 
     <div class="row dashboard-project-plans hidden" data-content="{{  $project->id }}">
         <div class="col-lg-24 col-md-offset-1 col-md-24 col-sm-24 col-xs-24">
-            @foreach ($project->plans as $plan)
+            @foreach ($project->plans()->orderBy('updated_at','desc')->orderBy('snapshot_at','desc')->get() as $plan)
                 @include('partials.plan.infocard', $plan)
                 @include('partials.plan.modal', $plan)
             @endforeach
