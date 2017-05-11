@@ -285,8 +285,8 @@ class Plan extends Model
         $pdf->setOption('header-html', $header_html);
         $pdf->setOption('footer-font-size', '8');
         $pdf->setOption('footer-right', $footer);
-        //return $pdf->stream();
-        return view('pdf.dmp', compact('plan', 'project', 'survey'));
+        return $pdf->stream();
+        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
     }
 
 
