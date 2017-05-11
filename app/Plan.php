@@ -119,34 +119,12 @@ class Plan extends Model
         return false;
     }
 
-    /*
-    public function getNextVersion($current_version)
-    {
-        $result = Plan::where([
-            'project_id' => $this->project->id,
-            'version'    => $current_version + 1
-        ])->get(['version']);
-
-        return $result;
-    }
-    */
-
 
     public function getGateInfo()
     {
         \AppHelper::varDump(Gate::forUser(auth()->user())->allows('update-plan', $this));
     }
 
-    /*
-    public function hasNextVersion($current_version)
-    {
-        if ($this->getNextVersion($current_version)->count()) {
-            return true;
-        }
-
-        return false;
-    }
-    */
 
     public function createSnapshot(Plan $plan)
     {
@@ -236,7 +214,6 @@ class Plan extends Model
 
             $subject .= ' / Version ' . $plan->version;
 
-            //$pdf = $plan->exportPlan($plan->project_number, $plan->version, 'pdf', false);
             $pdf = $plan->exportPlan();
             $pdf_filename = $plan->project->identifier . '_' . str_replace(' ', '', $plan->title) . '-' . $plan->version . '_' . $plan->updated_at->format( 'Ymd' ) . '.pdf';
 
