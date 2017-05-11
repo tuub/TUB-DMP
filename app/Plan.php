@@ -193,9 +193,6 @@ class Plan extends Model
     public function createNextVersion($data)
     {
         $current_plan = $this->find($data['id']);
-        //$current_version = $this->where('project_id', $data['project_id'])->max('version');
-        //$next_version = $current_version + 1;
-        $data['version'] = null;
         $answers = null;
 
         if ($this->createSnapshot($current_plan)) {

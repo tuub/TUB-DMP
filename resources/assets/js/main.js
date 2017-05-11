@@ -239,6 +239,7 @@ $(document).ready(function ()
                 form.find('#id').val(json.id);
                 form.find('#project_id').val(json.project_id);
                 form.find('#title').val(json.title);
+                form.find('#version').val(json.version);
                 div.modal();
             }
         });

@@ -48,7 +48,7 @@
                         <i class="fa fa-file-pdf-o"></i><span class="hidden-sm hidden-xs"> PDF</span>
                     </a>
                     @unless($plan->is_snapshot)
-                        <a href="#" class="create-plan-snapshot btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#create-plan-snapshot" title="Make new Version {{ $plan->version+1 }}">
+                        <a href="#" class="create-plan-snapshot btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#create-plan-snapshot" title="Create Snapshot">
                             <i class="fa fa-lock"></i><span class="hidden-xs"> Create Snapshot</span>
                         </a>
                     @endunless

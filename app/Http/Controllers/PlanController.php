@@ -184,16 +184,22 @@ class PlanController extends Controller
     {
         $data = $request->except(['_token']);
 
+        if (isset($data['clone_current'])) {
+            $message = 'Snapshot and new version';
+        } else {
+            $message = 'Snapshot';
+        }
+
         if ($this->plan->createNextVersion($data)) {
             $notification = [
                 'status' => 200,
-                'message' => 'Snapshot and new version created!',
+                'message' => $message . ' created!',
                 'alert-type' => 'success'
             ];
         } else {
             $notification = [
                 'status' => 500,
-                'message' => 'Snapshot failed!',
+                'message' => $message . ' failed!',
                 'alert-type' => 'error'
             ];
         }

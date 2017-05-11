@@ -251,7 +251,7 @@
                 <div class="errors"></div>
                 {!! BootForm::hidden('id')->id('id') !!}
                 {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
-                {!! BootForm::text('DMP Version', 'version') !!}
+                {!! BootForm::text('Version Description', 'version') !!}
             </div>
             <div class="modal-footer">
                 {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
@@ -283,6 +283,7 @@
                 {!! BootForm::hidden('id')->id('id') !!}
                 {!! BootForm::hidden('project_id')->id('project_id') !!}
                 {!! BootForm::text('DMP Title', 'title') !!}
+                {!! BootForm::text('Version Description', 'version') !!}
                 {!! BootForm::checkbox('Create new version from current plan', 'clone_current')->checked() !!}
             </div>
             <div class="modal-footer">
