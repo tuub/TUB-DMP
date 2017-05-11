@@ -11,14 +11,14 @@
                 </div>
                 <div class="col-md-20 col-sm-19 col-xs-20">
                     <span class="plan-title">{{ $plan->title }}</span>
-                    @if ($plan->version)
-                        ({{ $plan->version }})
-                    @endif
                     @unless( $plan->is_snapshot )
                         <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
                             <i class="fa fa-pencil"></i>
                         </a>
                     @endunless
+                    @if ($plan->version)
+                        <br/>{{ $plan->version }}
+                    @endif
                 </div>
                 <div class="col-md-3 col-sm-4 col-xs-4 text-right">
                     <span class="plan-status label label-as-badge {{ $plan->is_snapshot ? 'label-success' : 'label-default' }}">
@@ -34,11 +34,11 @@
             <div class="row">
                 <div class="col-lg-18 col-md-18 col-sm-18 col-xs-18">
                     @unless( $plan->is_snapshot )
-                        <a href="{{ URL::route('survey.edit', [$plan->id]) }}" class="btn btn-default btn-xs" title="Edit Survey">
+                        <a href="{{ URL::route('survey.edit', [$plan->survey->id]) }}" class="btn btn-default btn-xs" title="Edit Survey">
                             <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit</span>
                         </a>
                     @endunless
-                    <a href="{{ URL::route('survey.show', [$plan->id]) }}" class="btn btn-default btn-xs" title="View">
+                    <a href="{{ URL::route('survey.show', [$plan->survey->id]) }}" class="btn btn-default btn-xs" title="View">
                         <i class="fa fa-eye"></i><span class="hidden-sm hidden-xs"> View</span>
                     </a>
                     <a href="#" class="email-plan btn btn-default btn-xs" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#email-plan" title="Email Plan">
