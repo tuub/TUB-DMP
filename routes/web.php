@@ -111,9 +111,9 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'plan.toggle'
     ]);
     /* VERSION */
-    Route::post('/plan/version', [
-        'uses' => 'PlanController@version',
-        'as' => 'plan.version'
+    Route::post('/plan/snapshot', [
+        'uses' => 'PlanController@snapshot',
+        'as' => 'plan.snapshot'
     ]);
     /* EMAIL */
     Route::post('/plan/email', [

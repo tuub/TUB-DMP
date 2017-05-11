@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
-use App\Http\Requests\VersionPlanRequest;
+use App\Http\Requests\SnapshotPlanRequest;
 //use App\Http\Requests\CreatePlanRequest;
 //use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Requests\EmailPlanRequest;
@@ -23,8 +23,8 @@ class Plan extends Model
 {
     public $timestamps  = true;
     protected $table    = 'plans';
-    protected $dates    = ['created_at', 'updated_at'];
-    protected $fillable = ['title', 'project_id', 'version', 'template_id', 'is_active', 'is_final'];
+    protected $dates    = ['created_at', 'updated_at', 'snapshot_at'];
+    protected $fillable = ['title', 'project_id', 'version', 'template_id', 'is_active', 'is_snapshot', 'snapshot_at'];
 
     public function project()
     {
@@ -83,9 +83,9 @@ class Plan extends Model
     }
 
 
-    public function isFinal()
+    public function isSnapshot()
     {
-        if ($this->is_final) {
+        if ($this->is_snapshot) {
             return true;
         }
 
@@ -96,7 +96,7 @@ class Plan extends Model
     public function setFinalFlag($status)
     {
         if (is_bool($status)) {
-            $this->is_final = $status;
+            $this->is_snapshot = $status;
             $this->save();
             return true;
         }
@@ -107,7 +107,7 @@ class Plan extends Model
         {
             if (is_bool($status))
             {
-                $this->is_final = $status;
+                $this->is_snapshot = $status;
                 $this->save();
                 return true;
             }
@@ -119,7 +119,7 @@ class Plan extends Model
         return false;
     }
 
-
+    /*
     public function getNextVersion($current_version)
     {
         $result = Plan::where([
@@ -129,6 +129,7 @@ class Plan extends Model
 
         return $result;
     }
+    */
 
 
     public function getGateInfo()
@@ -136,7 +137,7 @@ class Plan extends Model
         \AppHelper::varDump(Gate::forUser(auth()->user())->allows('update-plan', $this));
     }
 
-
+    /*
     public function hasNextVersion($current_version)
     {
         if ($this->getNextVersion($current_version)->count()) {
@@ -145,7 +146,15 @@ class Plan extends Model
 
         return false;
     }
+    */
 
+    public function createSnapshot(Plan $plan)
+    {
+        $plan->is_snapshot = true;
+        $plan->snapshot_at = Carbon::now();
+        $plan->save();
+        return true;
+    }
 
     public function createWithSurvey($title, $project_id, $version, $template_id, $answer_data = null)
     {
@@ -184,24 +193,29 @@ class Plan extends Model
     public function createNextVersion($data)
     {
         $current_plan = $this->find($data['id']);
-        $current_version = $this->where('project_id', $data['project_id'])->max('version');
-        $next_version = $current_version + 1;
+        //$current_version = $this->where('project_id', $data['project_id'])->max('version');
+        //$next_version = $current_version + 1;
+        $data['version'] = null;
         $answers = null;
 
-        if (isset($data['clone_current'])) {
-            $cloned_answers = [];
+        if ($this->createSnapshot($current_plan)) {
+            if (isset($data['clone_current'])) {
+                $cloned_answers = [];
 
-            foreach ($current_plan->survey->template->questions as $question) {
-                foreach (Answer::check($current_plan->survey, $question) as $answer) {
-                    $cloned_answers[$question->id] = $answer->value;
+                foreach ($current_plan->survey->template->questions as $question) {
+                    foreach (Answer::check($current_plan->survey, $question) as $answer) {
+                        $cloned_answers[$question->id] = $answer->value;
+                    }
                 }
+                $answers = $cloned_answers;
+
+                $this->createWithSurvey($data['title'], $data['project_id'], $data['version'], $current_plan->survey->template_id, $answers);
             }
-            $answers = $cloned_answers;
+
+            return true;
         }
 
-        $this->createWithSurvey($data['title'], $data['project_id'], $next_version, $current_plan->survey->template_id, $answers);
-
-        return true;
+        return false;
     }
 
     public function emailToRecipient($data)
@@ -382,11 +396,11 @@ class Plan extends Model
 
 
     /**
-     * @param VersionPlanRequest $request
+     * @param SnapshotPlanRequest $request
      *
      * @return bool
      */
-    public function createVersion( VersionPlanRequest $request )
+    public function createVersion( SnapshotPlanRequest $request )
     {
         $current_version = $request->get( 'version' );
         $new_version = $current_version + 1;

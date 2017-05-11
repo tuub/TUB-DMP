@@ -18,9 +18,10 @@ class CreatePlansTable extends Migration
             $table->increments('id');
             $table->string('title',255);
             $table->integer('project_id')->unsigned();
-            $table->integer('version')->default(1);
+            $table->string('version',255)->nullable();
             $table->boolean('is_active')->default(1);
-            $table->boolean('is_final')->default(0);
+            $table->boolean('is_snapshot')->default(0);
+            $table->dateTime('snapshot_at')->nullable();
             $table->timestamps();
 
             //$table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
-use App\Http\Requests\VersionPlanRequest;
+use App\Http\Requests\SnapshotPlanRequest;
 use App\Events\PlanUpdated;
 use App\Plan;
 use App\Template;
@@ -152,7 +152,7 @@ class PlanController extends Controller
         $plan = $this->plan->findOrFail($id);
 
         if ($plan) {
-            if ($plan->isFinal()) {
+            if ($plan->isSnapshot()) {
                 $plan->setFinalFlag(false);
                 $notification = [
                     'status' => 200,
@@ -180,20 +180,20 @@ class PlanController extends Controller
     }
 
 
-    public function version(VersionPlanRequest $request)
+    public function snapshot(SnapshotPlanRequest $request)
     {
         $data = $request->except(['_token']);
 
         if ($this->plan->createNextVersion($data)) {
             $notification = [
                 'status' => 200,
-                'message' => 'New version created!',
+                'message' => 'Snapshot and new version created!',
                 'alert-type' => 'success'
             ];
         } else {
             $notification = [
                 'status' => 500,
-                'message' => 'Versioning failed!',
+                'message' => 'Snapshot failed!',
                 'alert-type' => 'error'
             ];
         }

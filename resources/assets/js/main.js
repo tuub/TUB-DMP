@@ -225,10 +225,10 @@ $(document).ready(function ()
     });
 
 
-    $('a.create-plan-version').bind('click', function (e) {
+    $('a.create-plan-snapshot').bind('click', function (e) {
         e.preventDefault();
 
-        var form    = $('#create-plan-version-form');
+        var form    = $('#create-plan-snapshot-form');
         var div     = form.parent();
 
         $.ajax({
@@ -238,15 +238,13 @@ $(document).ready(function ()
             success : function (json) {
                 form.find('#id').val(json.id);
                 form.find('#project_id').val(json.project_id);
-                form.find('#next_version_id').val(json.version + 1);
-                form.find('span#current-version').html(json.version);
-                form.find('span#next-version').html(json.version + 1);
+                form.find('#title').val(json.title);
                 div.modal();
             }
         });
     });
 
-    $('#create-plan-version-form').bind('submit', function (e) {
+    $('#create-plan-snapshot-form').bind('submit', function (e) {
         e.preventDefault();
 
         var form    = $(this);
