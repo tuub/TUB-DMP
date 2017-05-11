@@ -15,12 +15,12 @@ use Jenssegers\Optimus\Optimus;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Laracasts\Flash\Flash;
 
-use Auth;
+//use Auth;
 //use Exporters;
-use Redirect;
-use Log;
-use Mail;
-use View;
+//use Redirect;
+//use Log;
+//use Mail;
+//use View;
 
 /**
  * Class SurveyController
@@ -67,8 +67,25 @@ class SurveyController extends Controller
         $data = $request->except(['_token', '_method', 'save']);
 
         /* Save the answers */
-        $survey->saveAnswers($data);
+        if ($survey->saveAnswers($data)) {
+            $notification = [
+                'status'     => 200,
+                'message'    => 'Survey was successfully updated!',
+                'alert-type' => 'success'
+            ];
+            //Event::fire(new PlanUpdated($plan));
+        } else {
+            $notification = [
+                'status'     => 500,
+                'message'    => 'Survey was not updated!',
+                'alert-type' => 'error'
+            ];
+        }
 
-        return Redirect::back();
+        /* Response */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return redirect()->route('dashboard');
     }
 }
