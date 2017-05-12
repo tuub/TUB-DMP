@@ -22,7 +22,7 @@
     </td>
     <td>
         @if( $project->imported )
-            @date( $project->imported_at ) @time( $project->imported )
+            @date( $project->imported_at ) @time( $project->imported_at )
         @else
             Never
         @endif
