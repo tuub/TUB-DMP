@@ -32,7 +32,7 @@
 
             div.section {
                 page-break-inside: avoid;
-
+                display: inline-block;
             }
 
             div.question {
@@ -178,35 +178,36 @@
 
         <div class="container page survey">
             @foreach($survey->template->sections as $section)
-
                 @unless($section->isEmpty($survey))
-                    <p>
-                        <div class="row section">
-                            <h3>{{ $section->name }}</h3>
-                        </div>
+                    <div class="section">
+                        <p>
+                            <div class="row">
+                                <h3>{{ $section->name }}</h3>
+                            </div>
 
-                        @foreach($section->questions as $question)
-                            @php
-                                $answer = \App\Answer::get($survey, $question, 'html');
-                            @endphp
+                            @foreach($section->questions as $question)
+                                @php
+                                    $answer = \App\Answer::get($survey, $question, 'html');
+                                @endphp
 
-                            @unless(is_null($answer))
-                                <div class="row question">
-                                    <strong>
-                                        @if(is_null($question->output_text))
-                                            {{ $question->text }}
-                                        @else
-                                            {{ $question->output_text }}
-                                        @endif
-                                    </strong>
+                                @unless(is_null($answer))
+                                    <div class="row question">
+                                        <strong>
+                                            @if(is_null($question->output_text))
+                                                {{ $question->text }}
+                                            @else
+                                                {{ $question->output_text }}
+                                            @endif
+                                        </strong>
+                                        <br/>
+                                        {!! $answer  !!}
+                                    </div>
                                     <br/>
-                                    {!! $answer  !!}
-                                </div>
-                                <br/>
-                            @endunless
+                                @endunless
 
-                        @endforeach
-                    </p>
+                            @endforeach
+                        </p>
+                    </div>
                 @endunless
             @endforeach
         </div>
