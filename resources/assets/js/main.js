@@ -1,5 +1,10 @@
+/*global $, Modernizr, console */
+/*jslint browser:true */
+
 $(document).ready(function ()
 {
+    'use strict';
+
     /**
      * Read open state of project's plan panel from cookie value
      */
@@ -37,7 +42,7 @@ $(document).ready(function ()
     function setVisibleProjects()
     {
         var open = [];
-        $('div.dashboard-project-plans').not('.hidden').each(function(index, item){
+        $('div.dashboard-project-plans').not('.hidden').each(function(){
             open.push($(this).data('content'));
         });
         $.cookie('tub-dmp_dashboard', open);
@@ -52,6 +57,7 @@ $(document).ready(function ()
      * Reads in JSON error messages and returns them as unordered alert-styled list
      *
      * @param {Json} json
+     * @param {String} json.responseJSON
      *
      * @return {String} errorsHtml
      */
@@ -110,7 +116,7 @@ $(document).ready(function ()
                     form.find("#message").val('').end();
                 }
             }
-        })
+        });
     });
 
 
@@ -200,6 +206,7 @@ $(document).ready(function ()
         });
     });
 
+
     $('#edit-plan-form').bind('submit', function (e) {
         e.preventDefault();
 
@@ -221,7 +228,7 @@ $(document).ready(function ()
                     location.reload();
                 }
             }
-        })
+        });
     });
 
 
@@ -266,7 +273,7 @@ $(document).ready(function ()
                     location.reload();
                 }
             }
-        })
+        });
     });
 
     $('a.email-plan').bind('click', function (e) {
@@ -309,7 +316,7 @@ $(document).ready(function ()
                     form.find("#message").val('').end();
                 }
             }
-        })
+        });
     });
 
 
@@ -324,10 +331,10 @@ $(document).ready(function ()
             type    : 'GET',
             url     : '/plan/' + plan_id + '/show',
             dataType: 'json',
-            error   : function (json) {
+            error   : function () {
                 div.modal();
             },
-            success : function (json) {
+            success : function () {
                 div.modal();
             }
         });
@@ -345,10 +352,10 @@ $(document).ready(function ()
             type    : 'GET',
             url     : '/my/project/' + project_id + '/show',
             dataType: 'json',
-            error   : function (json) {
+            error   : function () {
                 div.modal();
             },
-            success : function (json) {
+            success : function () {
                 div.modal();
             }
         });
@@ -366,11 +373,10 @@ $(document).ready(function ()
             type    : 'GET',
             url     : '/my/project/' + $(this).data('rel') + '/show',
             dataType: 'json',
-            error   : function (json) {
+            error   : function () {
                 div.modal();
             },
             success : function (json) {
-                //form.find("input, textarea, select").val('').end();
                 $.each(json, function (field, value) {
                     form.find('#' + field).val(value);
                 });
@@ -388,8 +394,6 @@ $(document).ready(function ()
         var form    = $(this);
         var div     = $(this).closest('modal');
 
-        console.log(form.children());
-
         $.ajax({
             url     : form.attr('action'),
             type    : form.attr('method'),
@@ -400,12 +404,12 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response == 200) {
+                if (json.response === 200) {
                     div.modal('hide');
                     location.reload();
                 }
             }
-        })
+        });
     });
 
 
@@ -430,65 +434,70 @@ $(document).ready(function ()
     });
 
 
+    $('.modal')
+        .on('click', '.add-form-group', function(e){
+            e.preventDefault();
+            //var project_id = $(this).data('rel');
 
-    $('.modal').on('click', '.add-form-group', function(e){
-        e.preventDefault();
-        var project_id = $(this).data('rel');
+            //var form = $(this).parents('div#edit-project-' + project_id).find('form');
+            var current_form_group = $(this).closest('.form-group');
+            current_form_group.find('button.remove-form-group').remove();
+            var next_form_group = current_form_group.clone();
+            var current_index = current_form_group.data('rel');
+            var next_index = current_index + 1;
+            var plus_button = current_form_group.children().last().find('button');
 
-        //var form = $(this).parents('div#edit-project-' + project_id).find('form');
-        var current_form_group = $(this).closest('.form-group');
-        current_form_group.find('button.remove-form-group').remove();
-        var next_form_group = current_form_group.clone();
-        var current_index = current_form_group.data('rel');
-        var next_index = current_index + 1;
-        var plus_button = current_form_group.children().last().find('button');
+            next_form_group.attr('data-rel', next_index);
 
-        next_form_group.attr('data-rel', next_index);
+            /* Adjust array name index to next iterator and reset (cloned) values in new form group */
+            next_form_group.children().find('input, select, textarea').each(function(index, element){
+                $(element).attr('name', $(element).attr('name').replace(current_index, next_index));
+                $(element).attr('value', '');
+                $(element).val('');
+            });
 
-        /* Adjust array name index to next iterator and reset (cloned) values in new form group */
-        next_form_group.children().find('input, select, textarea').each(function(index, element){
-            $(element).attr('name', $(element).attr('name').replace(current_index, next_index));
-            $(element).attr('value', '');
-            $(element).val('');
+            /* Create minus button from plus button */
+            var minus_button = plus_button.clone();
+            minus_button.removeClass('add-form-group')
+                .addClass('remove-form-group')
+                .find('i.fa')
+                .removeClass('fa-plus').addClass('fa-minus')
+                .end();
+
+            /* Change plus button to minus button in current form group */
+            current_form_group.find('button.add-form-group').removeClass('add-form-group').addClass('remove-form-group');
+            current_form_group.find('i.fa').removeClass('fa-plus').addClass('fa-minus');
+
+            /* Insert minus button before plus button in next form group */
+            minus_button.insertBefore(next_form_group.find('button.add-form-group'));
+            /* ... */
+
+            /* Finally, add the fresh new form group after the last form group */
+            next_form_group.insertAfter(current_form_group);
+        })
+        .on('click', '.remove-form-group', function(e){
+            e.preventDefault();
+
+            /* Get the current form group and grep its buttons */
+            var current_form_group = $(this).closest('.form-group');
+            var buttons = current_form_group.find('button');
+            buttons.first().append('&nbsp;');
+
+            /* Get the previous form group, replace its buttons with the grepped buttons */
+            var previous_form_group = current_form_group.prev();
+            previous_form_group.find('button').remove();
+            previous_form_group.children().last().append(buttons);
+
+            /* Finally, remove the current form group */
+            current_form_group.remove();
         });
 
-        /* Create minus button from plus button */
-        var minus_button = plus_button.clone();
-        minus_button.removeClass('add-form-group')
-            .addClass('remove-form-group')
-            .find('i.fa')
-            .removeClass('fa-plus').addClass('fa-minus')
-            .end();
 
-        /* Change plus button to minus button in current form group */
-        current_form_group.find('button.add-form-group').removeClass('add-form-group').addClass('remove-form-group');
-        current_form_group.find('i.fa').removeClass('fa-plus').addClass('fa-minus');
-
-        /* Insert minus button before plus button in next form group */
-        minus_button.insertBefore(next_form_group.find('button.add-form-group'));
-        /* ... */
-
-        /* Finally, add the fresh new form group after the last form group */
-        next_form_group.insertAfter(current_form_group);
-    });
-
-    $('.modal').on('click', '.remove-form-group', function(e){
-        e.preventDefault();
-
-        /* Get the current form group and grep its buttons */
-        var current_form_group = $(this).closest('.form-group');
-        var buttons = current_form_group.find('button');
-        buttons.first().append('&nbsp;');
-
-        /* Get the previous form group, replace its buttons with the grepped buttons */
-        var previous_form_group = current_form_group.prev();
-        previous_form_group.find('button').remove();
-        previous_form_group.children().last().append(buttons);
-
-        /* Finally, remove the current form group */
-        current_form_group.remove();
-    })
-
+    if (!Modernizr.inputtypes.date) {
+        $('input[type=date]').datepicker(
+            { dateFormat: 'mm/dd/yy' }
+        );
+    }
 });
 
 
@@ -507,8 +516,10 @@ $.fn.popover.Constructor.prototype.show = function() {
 
 $( window ).load(function() {
 
+    'use strict';
+
     /* Uncheck Login Privacy Statement Checkboxes by default */
-    $('#login-form input[type=checkbox]').removeAttr('checked');
+    $('#login-form').find(['type="checkbox"']).removeAttr('checked');
 
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
@@ -516,7 +527,7 @@ $( window ).load(function() {
 
     /* Do not submit empty/hashy HREFs */
     $('a[href=#]').click(function(e) {
-        e.preventDefault;
+        if (e) { e.preventDefault(); }
     });
 
     $('.progress .progress-bar').progressbar({
@@ -527,20 +538,16 @@ $( window ).load(function() {
 
     $('.dropdown-toggle').dropdown();
 
-    $("input.slider").slider({
+    $('input.slider').slider({
         tooltip: 'hide'
-    });
-
-    $("input.slider").on("slide", function( slideEvt )
+    }).on('slide', function(slideEvt)
     {
         $(this).parent().next('span.slider-value').html(slideEvt.value);
     });
 
-    $("input.slider-range").slider({
+    $('input.slider-range').slider({
         tooltip: 'hide'
-    });
-
-    $("input.slider-range").on("slide", function( slideEvt )
+    }).on('slide', function(slideEvt)
     {
         $(this).parent().siblings('input.slider-range-input-alpha').val(slideEvt.value[0]).next('input.slider-range-input-omega').val(slideEvt.value[1]);
         $(this).parent().siblings('span.slider-range-display-alpha').html(slideEvt.value[0]).next('span.slider-range-display-omega').html(slideEvt.value[1]);
