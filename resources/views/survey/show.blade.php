@@ -10,11 +10,16 @@
 @append
 
 @section('headline')
+    <div class="row col-md-24">
+        {!! Html::linkRoute('dashboard', 'Back to Dashboard') !!}
+    </div>
+    <br/>
     <h3>Data Management Plan for TUB Project {{ $survey->plan->project->identifier }}</h3>
     <h4>Version: {{ $survey->plan->version }}</h4>
 @stop
 
 @section('body')
+
         <ol id="plan-toc">
             @foreach( $survey->template->sections()->active()->get() as $section )
                 <li><a href="#{{ $section->keynumber }}">{{ $section->name }}</a></li>
