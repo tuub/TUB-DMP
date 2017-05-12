@@ -2,7 +2,7 @@
 
 @section('header_assets')
     @parent
-    {!! HTML::script('js/plan.js') !!}
+    {!! HTML::script('js/survey.js') !!}
 @append
 
 @section('navigation')
