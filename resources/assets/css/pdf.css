@@ -1,0 +1,30 @@
+* {
+    outline: 0px #336699 dotted;
+}
+
+div {
+    font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
+}
+
+.text-center {
+    text-align: center;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+div.page  {
+    overflow: hidden;
+    page-break-after: always;
+    padding-top: 0mm;
+}
+
+div.question {
+    widows: 15;
+    orphans: 15;
+}
+
+div.section-title {
+    page-break-after: avoid;
+}

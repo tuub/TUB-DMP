@@ -53,6 +53,7 @@ elixir(function(mix) {
     mix.copy(paths.jquery + 'dist/jquery.min.js', 'public/js/');
     mix.copy(paths.toastr + 'toastr.min.js', 'public/js/');
     mix.copy(paths.js + 'env.js', 'public/js/');
+    mix.copy(paths.css + 'pdf.css', 'public/css/');
 
     mix.scripts([
         paths.jquery_steps + 'build/jquery.steps.min.js',
@@ -80,7 +81,9 @@ elixir(function(mix) {
     ], './public/js/my.jquery.js');
 
     mix.styles([
-        paths.css + '*.css'
+        paths.css + 'datepicker.jqueryui.css',
+        paths.css + 'jquery.steps.css',
+        paths.css + 'style.css'
     ], './public/css/my.style.css');
 
 

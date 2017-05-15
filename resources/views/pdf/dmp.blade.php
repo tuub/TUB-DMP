@@ -1,70 +1,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        @if(false )
-            {!! HTML::style('css/app.css') !!}
-        @endif
-
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Source+Serif+Pro" rel="stylesheet">
-
-        <style type = "text/css">
-
-
-            * {
-                outline: 0px #336699 dotted;
-            }
-
-            div {
-                font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
-            }
-
-            .text-center {
-                text-align: center;
-            }
-
-            a {
-                text-decoration: none !important;
-            }
-
-            /*
-            div.page {
-                overflow: hidden;
-                page-break-after: always;
-                page-break-inside: avoid;
-                padding-top: 0mm;
-            }
-
-            div.page p {
-                widows: 15;
-                orphans: 15;
-                page-break-inside: avoid;
-            }
-
-            div.section {
-                page-break-inside: avoid;
-                display: inline-block;
-            }
-*/
-
-
-            div.page  {
-                overflow: hidden;
-                page-break-after: always;
-                padding-top: 0mm;
-            }
-
-            div.question {
-                widows: 15;
-                orphans: 15;
-            }
-
-            div.section-title {
-                page-break-after: avoid;
-            }
-
-
-        </style>
-
+        {!! HTML::style('css/pdf.css') !!}
     </head>
     <body>
         <script type="text/php">
