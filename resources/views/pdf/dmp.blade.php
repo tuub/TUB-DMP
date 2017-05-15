@@ -1,13 +1,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        {!! HTML::style('css/app.css') !!}
+        @if(false )
+            {!! HTML::style('css/app.css') !!}
+        @endif
+
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Source+Serif+Pro" rel="stylesheet">
 
-
-
-
         <style type = "text/css">
+
 
             * {
                 outline: 0px #336699 dotted;
@@ -17,6 +18,15 @@
                 font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
             }
 
+            .text-center {
+                text-align: center;
+            }
+
+            a {
+                text-decoration: none !important;
+            }
+
+            /*
             div.page {
                 overflow: hidden;
                 page-break-after: always;
@@ -34,15 +44,44 @@
                 page-break-inside: avoid;
                 display: inline-block;
             }
+*/
+
+
+            div.page  {
+                overflow: hidden;
+                page-break-after: always;
+                padding-top: 0mm;
+            }
 
             div.question {
-                page-break-inside: avoid;
+                widows: 15;
+                orphans: 15;
             }
+
+            div.section-title {
+                page-break-after: avoid;
+            }
+
 
         </style>
 
     </head>
     <body>
+        <script type="text/php">
+        if (isset($pdf)) {
+            //$footer = $pdf->open_object();
+            $x = 540;
+            $y = 740;
+            $text = '{PAGE_NUM}/{PAGE_COUNT}';
+            $font = null;
+            $size = 10;
+            $color = array(0,0,0);
+            $word_space = 0.0;  //  default
+            $char_space = 0.0;  //  default
+            $angle = 0.0;   //  default
+            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+        }
+        </script>
         <div class="container page">
             <br/>
             <div class="row text-center">
@@ -84,7 +123,7 @@
                     @endif
                 </div>
             </div>
-            <br/><br/><br/><br/>
+            <br/><br/>
             <div class="row">
                 @if( $project->getMetadata('project_stage') )
                     <strong>{{ str_plural($project->getMetadataLabel('project_stage'), $project->getMetadata('project_stage')->count()) }}</strong>
@@ -181,7 +220,7 @@
                 @unless($section->isEmpty($survey))
                     <div class="section">
                         <p>
-                            <div class="row">
+                            <div class="row section-title">
                                 <h3>{{ $section->name }}</h3>
                             </div>
 

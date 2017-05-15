@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+//use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Requests\SnapshotPlanRequest;
 //use App\Http\Requests\CreatePlanRequest;
 //use App\Http\Requests\UpdatePlanRequest;
@@ -252,6 +253,13 @@ class Plan extends Model
         $header_html = (string) view('pdf.header');
         $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
 
+        $pdf = PDF::loadView('pdf.dmp',  compact('plan', 'project', 'survey'));
+        return $pdf->stream('FOO');
+        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
+
+
+
+        /*
         $pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
         $pdf->setOption('encoding', 'UTF-8');
         $pdf->setOption('page-size', 'A4');
@@ -260,10 +268,11 @@ class Plan extends Model
         $pdf->setOption('margin-left', '20mm');
         $pdf->setOption('margin-right', '20mm');
         $pdf->setOption('header-html', $header_html);
-        $pdf->setOption('footer-font-size', '8');
-        $pdf->setOption('footer-right', $footer);
+        //$pdf->setOption('footer-font-size', '8');
+        //$pdf->setOption('footer-right', $footer);
         return $pdf->stream();
         //return view('pdf.dmp', compact('plan', 'project', 'survey'));
+        */
     }
 
 
