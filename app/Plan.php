@@ -254,7 +254,7 @@ class Plan extends Model
         $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
 
         $pdf = PDF::loadView('pdf.dmp',  compact('plan', 'project', 'survey'));
-        return $pdf->stream('FOO');
+        return $pdf->stream($plan->project->identifier . ' - ' . $plan->title . '.pdf');
         //return view('pdf.dmp', compact('plan', 'project', 'survey'));
 
 

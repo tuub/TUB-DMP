@@ -2,6 +2,18 @@
     outline: 0px #336699 dotted;
 }
 
+html {
+    margin-top: 30mm;
+    margin-left: 19.4mm;
+    margin-right: 20mm;
+    margin-top: 20mm;
+    text-align: justify;
+}
+
+@page {
+    size: a4 portrait;
+}
+
 div {
     font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
 }
@@ -21,8 +33,8 @@ div.page  {
 }
 
 div.question {
-    widows: 15;
-    orphans: 15;
+
+    orphans: 5;
 }
 
 div.section-title {

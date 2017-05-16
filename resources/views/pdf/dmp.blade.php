@@ -8,8 +8,8 @@
         <script type="text/php">
         if (isset($pdf)) {
             //$footer = $pdf->open_object();
-            $x = 540;
-            $y = 740;
+            $x = 519;
+            $y = 30;
             $text = '{PAGE_NUM}/{PAGE_COUNT}';
             $font = null;
             $size = 10;
@@ -124,18 +124,6 @@
                     <br/>
                 @endif
             </div>
-            <br/><br/>
-            <div class="row">
-                <!--<div class="col-xs-offset-6 col-xs-12 text-justify">-->
-                    <p>
-                        Copyright information: The above plan creator(s) have agreed that others may use
-                        as much of the text of this plan as they would like in their own plans, and customize
-                        it as necessary. You do not need to credit the creators as the source of the
-                        language used, but using any of their plan's text does not imply that the creator(s)
-                        endorse, or have any relationship to, your project or proposal.
-                    </p>
-                <!--</div>-->
-            </div>
         </div>
 
         @if( $project->getMetadata('abstract') )
@@ -157,36 +145,45 @@
             @foreach($survey->template->sections as $section)
                 @unless($section->isEmpty($survey))
                     <div class="section">
-                        <p>
-                            <div class="row section-title">
-                                <h3>{{ $section->name }}</h3>
-                            </div>
+                        <div class="row section-title">
+                            <h3>{{ $section->name }}</h3>
+                        </div>
+                        @foreach($section->questions as $question)
+                            @php
+                                $answer = \App\Answer::get($survey, $question, 'html');
+                            @endphp
 
-                            @foreach($section->questions as $question)
-                                @php
-                                    $answer = \App\Answer::get($survey, $question, 'html');
-                                @endphp
-
-                                @unless(is_null($answer))
-                                    <div class="row question">
-                                        <strong>
-                                            @if(is_null($question->output_text))
-                                                {{ $question->text }}
-                                            @else
-                                                {{ $question->output_text }}
-                                            @endif
-                                        </strong>
-                                        <br/>
-                                        {!! $answer  !!}
-                                    </div>
+                            @unless(is_null($answer))
+                                <div class="row question">
+                                    <strong>
+                                        @if(is_null($question->output_text))
+                                            {{ $question->text }}
+                                        @else
+                                            {{ $question->output_text }}
+                                        @endif
+                                    </strong>
                                     <br/>
-                                @endunless
-
-                            @endforeach
-                        </p>
+                                    {!! $answer  !!}
+                                </div>
+                                <br/>
+                            @endunless
+                        @endforeach
                     </div>
                 @endunless
             @endforeach
+        </div>
+        <div class="container page">
+            <div class="row">
+                <!--<div class="col-xs-offset-6 col-xs-12 text-justify">-->
+                <p>
+                    Copyright information: The above plan creator(s) have agreed that others may use
+                    as much of the text of this plan as they would like in their own plans, and customize
+                    it as necessary. You do not need to credit the creators as the source of the
+                    language used, but using any of their plan's text does not imply that the creator(s)
+                    endorse, or have any relationship to, your project or proposal.
+                </p>
+                <!--</div>-->
+            </div>
         </div>
 
     </body>
