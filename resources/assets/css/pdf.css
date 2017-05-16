@@ -12,10 +12,15 @@ html {
 
 @page {
     size: a4 portrait;
+    font-size: 11pt;
 }
 
 div {
-    font-family: 'Source Serif Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
+    font-family: 'Source Sans Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Source Serif Pro', Geneva, serif !important;
 }
 
 .text-center {
@@ -26,6 +31,10 @@ a {
     text-decoration: none !important;
 }
 
+div.metadata {
+    font-size: 10pt;
+}
+
 div.page  {
     overflow: hidden;
     page-break-after: always;
@@ -33,7 +42,14 @@ div.page  {
 }
 
 div.question {
+    orphans: 5;
+}
 
+div.question-text {
+    font-weight: bold;
+}
+
+div.answer-text {
     orphans: 5;
 }
 

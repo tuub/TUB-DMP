@@ -62,7 +62,7 @@
                 </div>
             </div>
             <br/><br/>
-            <div class="row">
+            <div class="row metadata">
                 @if( $project->getMetadata('project_stage') )
                     <strong>{{ str_plural($project->getMetadataLabel('project_stage'), $project->getMetadata('project_stage')->count()) }}</strong>
                     @foreach( $project->getMetadata('project_stage') as $project_stage )
@@ -94,8 +94,7 @@
                     @endforeach
                     <br/>
                 @endif
-            </div>
-            <div class="row">
+
                 @if( $project->getMetadata('partner') )
                     <strong>{{ str_plural($project->getMetadataLabel('partner'), $project->getMetadata('partner')->count()) }}</strong>
                     <br/>
@@ -104,8 +103,7 @@
                     @endforeach
                     <br/>
                 @endif
-            </div>
-            <div class="row">
+
                 @if( $project->getMetadata('project_management_organisation') )
                     <strong>{{ str_plural($project->getMetadataLabel('project_management_organisation'), $project->getMetadata('project_management_organisation')->count()) }}</strong>
                     <br/>
@@ -123,6 +121,18 @@
                         @endforeach
                     <br/>
                 @endif
+            </div>
+            <br/><br/>
+            <div class="row">
+                <!--<div class="col-xs-offset-6 col-xs-12 text-justify">-->
+                    <p>
+                        Copyright information: The above plan creator(s) have agreed that others may use
+                        as much of the text of this plan as they would like in their own plans, and customize
+                        it as necessary. You do not need to credit the creators as the source of the
+                        language used, but using any of their plan's text does not imply that the creator(s)
+                        endorse, or have any relationship to, your project or proposal.
+                    </p>
+                <!--</div>-->
             </div>
         </div>
 
@@ -145,45 +155,36 @@
             @foreach($survey->template->sections as $section)
                 @unless($section->isEmpty($survey))
                     <div class="section">
-                        <div class="row section-title">
-                            <h3>{{ $section->name }}</h3>
-                        </div>
-                        @foreach($section->questions as $question)
-                            @php
-                                $answer = \App\Answer::get($survey, $question, 'html');
-                            @endphp
+                        <p>
+                            <div class="row section-title">
+                                <h3>{{ $section->name }}</h3>
+                            </div>
 
-                            @unless(is_null($answer))
-                                <div class="row question">
-                                    <strong>
-                                        @if(is_null($question->output_text))
-                                            {{ $question->text }}
-                                        @else
-                                            {{ $question->output_text }}
-                                        @endif
-                                    </strong>
+                            @foreach($section->questions as $question)
+                                @php
+                                    $answer = \App\Answer::get($survey, $question, 'html');
+                                @endphp
+
+                                @unless(is_null($answer))
+                                    <div class="row question">
+                                        <strong>
+                                            @if(is_null($question->output_text))
+                                                {{ $question->text }}
+                                            @else
+                                                {{ $question->output_text }}
+                                            @endif
+                                        </strong>
+                                        <br/>
+                                        {!! $answer  !!}
+                                    </div>
                                     <br/>
-                                    {!! $answer  !!}
-                                </div>
-                                <br/>
-                            @endunless
-                        @endforeach
+                                @endunless
+
+                            @endforeach
+                        </p>
                     </div>
                 @endunless
             @endforeach
-        </div>
-        <div class="container page">
-            <div class="row">
-                <!--<div class="col-xs-offset-6 col-xs-12 text-justify">-->
-                <p>
-                    Copyright information: The above plan creator(s) have agreed that others may use
-                    as much of the text of this plan as they would like in their own plans, and customize
-                    it as necessary. You do not need to credit the creators as the source of the
-                    language used, but using any of their plan's text does not imply that the creator(s)
-                    endorse, or have any relationship to, your project or proposal.
-                </p>
-                <!--</div>-->
-            </div>
         </div>
 
     </body>
