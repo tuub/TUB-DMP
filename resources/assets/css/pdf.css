@@ -1,3 +1,28 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
+@import url(http://fonts.googleapis.com/css?family=Source+Serif+Pro);
+@import url(http://fonts.googleapis.com/css?family=Space+Mono);
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: normal;
+    src: url(http://fonts.googleapis.com/css?family=Source+Sans+Pro) format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: normal;
+    src: url(http://fonts.googleapis.com/css?family=Source+Serif+Pro) format('truetype');
+}
+
+@font-face {
+    font-family: 'Space Mono';
+    font-style: normal;
+    font-weight: normal;
+    src: url(http://fonts.googleapis.com/css?family=Space+Mono) format('truetype');
+}
+
 * {
     outline: 0px #336699 dotted;
 }
@@ -19,8 +44,8 @@ div {
     font-family: 'Source Sans Pro', Arial, Geneva, Helvetica, Verdana, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Source Serif Pro', Geneva, serif !important;
+h1 {
+    font-family: 'Source Serif Pro', Geneva, serif;
 }
 
 .text-center {

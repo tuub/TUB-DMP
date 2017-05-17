@@ -4,13 +4,10 @@
 
 namespace App;
 
-use App\Providers\AppServiceProvider;
 use Baum\Node;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Collection;
-use phpDocumentor\Reflection\Types\Boolean;
-use phpDocumentor\Reflection\Types\String_;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 

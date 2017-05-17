@@ -501,19 +501,6 @@ $(document).ready(function ()
 });
 
 
-
-
-/*
-jQuery.fn.exists = function(){return this.length>0;}
-
-var tmp = $.fn.popover.Constructor.prototype.show;
-$.fn.popover.Constructor.prototype.show = function() {
-    tmp.call(this); if (this.options.callback) {
-        this.options.callback();
-    }
-}
-*/
-
 $( window ).load(function() {
 
     'use strict';

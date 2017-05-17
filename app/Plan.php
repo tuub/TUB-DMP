@@ -3,21 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
-//use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Requests\SnapshotPlanRequest;
-//use App\Http\Requests\CreatePlanRequest;
-//use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 
 use Illuminate\Support\Facades\Event;
 use App\Events\PlanCreated;
 
 use Carbon\Carbon;
-//use Storage;
 use Exporters;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Plan extends Model
@@ -41,38 +36,6 @@ class Plan extends Model
     {
         return $query->orderBy( 'updated_at', 'desc' );
     }
-
-
-
-
-    /**
-     * @param $project_number
-     * @param $version
-     * @param $user_id
-     * @return mixed
-     */
-    /*
-    public static function getByCredentials( $project_number, $version, $user_id )
-    {
-        if (is_null($project_number) || is_null($version)) {
-            return null;
-        }
-
-        $query = Plan::where( 'project_number', $project_number )->where( 'version', $version );
-
-        if (auth()->user()->is_admin === 0) {
-            $query->where( 'user_id', $user_id );
-        }
-
-        $plan = $query->first();
-
-        if ($plan) {
-            return $plan;
-        }
-
-        return null;
-    }
-    */
 
 
     public function isComplete() {
@@ -169,6 +132,7 @@ class Plan extends Model
         }
     }
 
+
     public function createNextVersion($data)
     {
         $current_plan = $this->find($data['id']);
@@ -193,6 +157,7 @@ class Plan extends Model
 
         return false;
     }
+
 
     public function emailToRecipient($data)
     {
@@ -244,35 +209,24 @@ class Plan extends Model
         }
     }
 
+
     public function exportPlan()
     {
         $plan = $this;
         $project = $plan->project;
         $survey = $plan->survey;
+        $filename = $plan->project->identifier . ' - ' . $plan->title . '.pdf';
 
         $header_html = (string) view('pdf.header');
         $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
 
         $pdf = PDF::loadView('pdf.dmp',  compact('plan', 'project', 'survey'));
-        return $pdf->stream($plan->project->identifier . ' - ' . $plan->title . '.pdf');
-        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
 
-
-
-        /*
-        $pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
-        $pdf->setOption('encoding', 'UTF-8');
-        $pdf->setOption('page-size', 'A4');
-        $pdf->setOption('margin-top', '10mm');
-        $pdf->setOption('margin-bottom', '20mm');
-        $pdf->setOption('margin-left', '20mm');
-        $pdf->setOption('margin-right', '20mm');
-        $pdf->setOption('header-html', $header_html);
-        //$pdf->setOption('footer-font-size', '8');
-        //$pdf->setOption('footer-right', $footer);
-        return $pdf->stream();
-        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
-        */
+        if ($pdf) {
+            return $pdf->stream($filename);
+            //return view('pdf.dmp', compact('plan', 'project', 'survey'));
+        }
+        throw new NotFoundHttpException;
     }
 
 
@@ -286,194 +240,6 @@ class Plan extends Model
         $color = sprintf( '#%02X%02X00', round($red * $step), round($green * $step));
         return $color;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * @param $table
-     * @param $connection
-     * @return bool
-     */
-    public function setExternalValues( $table, $connection ) {
-        switch($this->datasource) {
-            case 'ivmc':
-                IvmcMapping::setFields( $this, $table, $connection );
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
-
-    /**
-     * @param CreatePlanRequest $request
-     * @return bool
-     */
-    public static function createPlan( CreatePlanRequest $request )
-    {
-        $plan = self::getByCredentials( $request['project_number'], $request['version'], Auth::user()->id );
-        if( is_null($plan) ) {
-            $plan = new Plan;
-            $plan->template_id = $request->get( 'plan_template' );
-            $plan->user_id = $request->get( 'plan_owner' );
-            $plan->project_number = $request->get( 'project_number' );
-            $plan->version = $request->get( 'version' );
-            $plan->datasource = ( $request->get( 'datasource' ) == '' ) ? null : $request->get( 'datasource' );
-            if ( $plan->save() ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * @param UpdatePlanRequest $request
-     *
-     * @return bool
-     */
-    public static function updatePlan( UpdatePlanRequest $request )
-    {
-        $plan = self::getByCredentials( $request['project_number'], $request['version'], Auth::user()->id );
-        if( !is_null($plan) ) {
-            if ( $request->ajax() ) {
-                parse_str( html_entity_decode( $request->get( 'input_data' ) ), $answer_data );
-            } else {
-                $answer_data = $request->all();
-            }
-            foreach ( $answer_data as $key => $values ) {
-                if(is_array($values)) {
-                    $question = Question::find($key);
-                    Answer::setAnswer($plan, $question, Auth::user(), $values);
-                }
-            }
-            $plan->touch();
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
-     * @param SnapshotPlanRequest $request
-     *
-     * @return bool
-     */
-    public function createVersion( SnapshotPlanRequest $request )
-    {
-        $current_version = $request->get( 'version' );
-        $new_version = $current_version + 1;
-        $current_plan = self::getByCredentials($request->get('project_number'), $request->get('version'), Auth::user()->id);
-
-        if ( !$current_plan->hasVersion( $current_plan->project_number, $new_version ) ) {
-            $request = new CreatePlanRequest([
-                'plan_template'  => $current_plan->template_id,
-                'plan_owner'     => Auth::user()->id,
-                'project_number' => $current_plan->project_number,
-                'version'        => $new_version,
-                'datasource'     => null,
-                'imported'   => 1
-            ]);
-            if( Plan::createPlan( $request ) ) {
-                $new_plan = self::getByCredentials( $current_plan->project_number, $new_version, Auth::user()->id );
-                foreach ( $new_plan->template->questions as $question ) {
-                    $answers = Answer::getAnswerObject( $current_plan, $question, Auth::user() );
-                    foreach ( $answers as $answer ) {
-                        $answer->copyToPlan( $new_plan );
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function exportPlan2($project_number, $version, $format, $download)
-    {
-        $plan = self::getByCredentials( $project_number, $version, Auth::user()->id );
-        if( !is_null($plan) ) {
-            if ( !is_null( $format ) ) {
-                switch ( $format ) {
-                    case 'html':
-                        return Exporters::getHTML( $plan, $download );
-                        break;
-                    case 'pdf':
-                        return Exporters::getPDF( $plan, $download );
-                        break;
-                    default:
-                        return null;
-                        break;
-                }
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * @param EmailPlanRequest $request
-     *
-     * @return bool
-     */
-    public function emailoPlan( EmailPlanRequest $request )
-    {
-        $sender['name'] = Auth::user()->name;
-        $sender['email'] = Auth::user()->email;
-        $recipient['name'] = $request->get('name');
-        $recipient['email'] = $request->get('email');
-        $plan = self::getByCredentials($request->get('project_number'), $request->get('version'), Auth::user()->id);
-
-        if( !is_null($plan) ) {
-            $pdf = self::exportPlan($plan->project_number, $plan->version, 'pdf', false);
-            $pdf_filename = 'DMP_for_TUB_Project_' . $plan->project_number . '-' . $plan->version . '_' . $plan->updated_at->format( 'Ymd' ) . '.pdf';
-            Mail::send(['text' => 'emails.plan'], ['plan' => $plan, 'recipient' => $recipient ],
-                function($message) use ($plan, $sender, $recipient, $pdf, $pdf_filename) {
-                    $subject = 'Your Data Management Plan for TUB project ' . $plan->project_number . ' / Version ' . $plan->version;
-                    $message->from(env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP'));
-                    if ($recipient['name']) {
-                        $message->to($recipient['email'], $recipient['name'])->subject($subject);
-                    } else {
-                        $message->to($recipient['email'])->subject($subject);
-                    }
-                    $message->replyTo($sender['email'], $sender['name']);
-                    $message->attachData($pdf, $pdf_filename);
-                });
-            return true;
-        };
-        return false;
-    }
-
-
-
-
-
-
-
-
 
 
     /**
