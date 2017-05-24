@@ -77,13 +77,18 @@ return [
         ],
 
         'odbc' => array(
-            'driver'   => 'odbc',
-            'dsn'     => env('ODBC_DSN', ''),
-            'username' => env('ODBC_USERNAME', ''),
-            'password' => env('ODBC_PASSWORD', ''),
-            'database' => env('ODBC_DATABASE', ''),
-            'grammar' => 'DB2',
-            'prefix'   => '',
+            'driver'    => 'odbc',
+            'dsn'       => env('ODBC_DSN', ''),
+            'host'      => env('ODBC_HOST', ''),
+            'username'  => env('ODBC_USERNAME', ''),
+            'password'  => env('ODBC_PASSWORD', ''),
+            'database'  => env('ODBC_DATABASE', ''),
+            //'grammar'   => 'DB2',
+            'grammar' => [
+                'query' => Illuminate\Database\Query\Grammars\SqlServerGrammar::class,
+                'schema' => Illuminate\Database\Schema\Grammars\SqlServerGrammar::class,
+            ],
+            //'prefix'    => '',
         ),
 
         'pgsql' => [
