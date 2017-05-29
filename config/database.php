@@ -77,7 +77,7 @@ return [
         ],
 
         'odbc' => array(
-            'driver'    => 'odbc',
+            'driver'    => env('ODBC_DRIVER', 'odbc'),
             'dsn'       => env('ODBC_DSN', ''),
             'host'      => env('ODBC_HOST', ''),
             'username'  => env('ODBC_USERNAME', ''),

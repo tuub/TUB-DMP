@@ -86,7 +86,7 @@ class ProjectController extends Controller
 
     /* TODO: REMOVE AFTER TESTING */
     public function random_ivmc() {
-        $connection = odbc_connect( "IVMC_MSSQL", "WIN\svc-ub-dmp", "vByZ80az" );
+        $connection = odbc_connect( "IVMC_MSSQL_2", "WIN\svc-ub-dmp", "vByZ80az" );
         $query = "SELECT TOP 15 Projekt_Nr FROM t_821300_IVMC_DMP_Projekt ORDER BY NEWID()";
         //$query = "SELECT TOP 15 * FROM t_821311_IVMC_DMP_Projektpartner_intern ORDER BY NEWID()";
         //$query = "SELECT TOP 15 * FROM t_821320_IVMC_DMP_Weitere_Projektleiter ORDER BY NEWID()";

@@ -13,19 +13,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Project extends Node
 {
-    protected $table = 'projects';
-    public $timestamps = true;
-    protected $dates = ['created_at', 'updated_at', 'imported_at'];
-    protected $fillable = ['identifier', 'parent_id', 'user_id', 'data_source_id', 'imported', 'imported_at'];
-    protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
+    protected $table      = 'projects';
+    public    $timestamps = true;
+    protected $dates      = [
+        'created_at',
+        'updated_at',
+        'imported_at'
+    ];
+    protected $fillable   = [
+        'identifier',
+        'parent_id',
+        'user_id',
+        'data_source_id',
+        'imported',
+        'imported_at'
+    ];
+    protected $guarded    = [
+        'id',
+        'parent_id',
+        'lft',
+        'rgt',
+        'depth'
+    ];
 
     /* Nested Sets */
     protected $parentColumn = 'parent_id';
-    protected $leftColumn = 'lft';
-    protected $rightColumn = 'rgt';
-    protected $depthColumn = 'depth';
-    protected $orderColumn = null;
-    protected $scoped = [];
+    protected $leftColumn   = 'lft';
+    protected $rightColumn  = 'rgt';
+    protected $depthColumn  = 'depth';
+    protected $orderColumn  = null;
+    protected $scoped       = [];
 
     //////////////////////////////////////////////////////////////////////////////
     //
@@ -110,6 +127,7 @@ class Project extends Node
 
             $data = ProjectMetadata::formatForOutput($data, $content_type);
         }
+
         return $data;
     }
 
@@ -187,9 +205,10 @@ class Project extends Node
         } else {
         */
         $data = MetadataRegistry::where([
-            'namespace' => 'project',
+            'namespace'  => 'project',
             'identifier' => $identifier,
         ])->first()['id'];
+
         //}
 
         return $data;
@@ -198,12 +217,14 @@ class Project extends Node
 
     /**
      * @param $data
+     *
      * @return bool
      */
     public function saveMetadata($data)
     {
         if ($data) {
             ProjectMetadata::saveAll($this, $data);
+
             return true;
         } else {
             throw new NotFoundHttpException;
@@ -211,17 +232,22 @@ class Project extends Node
     }
 
 
-    public function setImportStatus( $status = true ) {
-        if ( is_bool( $status ) ) {
-            $this->update( [ 'imported' => $status ] );
+    public function setImportStatus($status = true)
+    {
+        if (is_bool($status)) {
+            $this->update(['imported' => $status]);
+
             return true;
         }
+
         return false;
     }
 
 
-    public function setImportTimestamp() {
-        $this->update( [ 'imported_at' => Carbon::now() ] );
+    public function setImportTimestamp()
+    {
+        $this->update(['imported_at' => Carbon::now()]);
+
         return true;
     }
 
@@ -248,13 +274,13 @@ class Project extends Node
                     $i = 0;
                     $new_item = [];
 
-                    foreach($mappings as $mapping) {
+                    foreach ($mappings as $mapping) {
                         $external_data = DB::table($namespace->name)
                             ->select($mapping->data_source_entity[0])
-                            ->where('Projekt_Nr', '=', $this->identifier)
+                            ->where('Projekt_Nr', 'LIKE', $this->identifier)
                             ->get();
 
-                        $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
+                        $external_data = $external_data->map(function ($x) { return (array)$x; })->toArray();
 
                         $target_content = $mapping->target_content;
 
@@ -264,7 +290,7 @@ class Project extends Node
                                 foreach ($external_data as $external_datum) {
                                     foreach ($target_content as $target_content_key => $target_content_value) {
                                         if ($target_content_value === 'CONTENT') {
-                                            $new_item[$k][$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                            $new_item[ $k ][ $target_content_key ] = $external_datum[ $mapping->data_source_entity[0] ];
                                         }
                                     }
                                     $k++;
@@ -274,110 +300,9 @@ class Project extends Node
                                 foreach ($target_content as $target_content_key => $target_content_value) {
                                     if ($target_content_value === 'CONTENT') {
                                         foreach ($external_data as $external_datum) {
-                                            $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                            $target_content[ $target_content_key ] = $external_datum[ $mapping->data_source_entity[0] ];
                                             $target_content = array_filter($target_content);
-                                            $new_item[$i] = $target_content;
-                                            $i++;
-                                        }
-                                    }
-                                }
-                                break;
-                        }
-                    }
-
-                    $new_full_item = [];
-
-                    foreach ($new_item as $item) {
-                        $item = $item + array_diff_key($required, $item);
-                        $new_full_item[] = $item;
-                    }
-
-                    if (count($new_full_item) > 0) {
-
-                        switch ($content_type->identifier) {
-                            case 'text_simple':
-                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
-                                break;
-                            case 'organization':
-                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
-                                break;
-                            case 'date':
-                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
-                                break;
-                            default:
-                                //$new_full_item = call_user_func_array('array_merge', $new_full_item);
-                                break;
-                        }
-
-                        $data = [$metadata_field->identifier => $new_full_item];
-                        $this->saveMetadata($data);
-                    }
-                }
-            }
-
-            $this->setImportStatus(true);
-            $this->setImportTimestamp();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function testImportFromDataSource()
-    {
-        if ($this->data_source) {
-
-            $namespaces = $this->data_source->namespaces;
-
-            $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
-            foreach ($metadata_fields as $metadata_field) {
-
-                $content_type = $metadata_field->content_type;
-                $required = $content_type->structure;
-
-                foreach ($namespaces as $namespace) {
-                    $mappings = $this->data_source->mappings()
-                        ->where('data_source_id', $this->data_source->id)
-                        ->where('data_source_namespace_id', $namespace->id)
-                        ->where('target_metadata_registry_id', $metadata_field->id)
-                        ->get();
-
-                    $i = 0;
-                    $new_item = [];
-
-                    foreach($mappings as $mapping) {
-
-                        $external_data = DB::connection('odbc')->table($namespace->name)
-                            ->select($mapping->data_source_entity[0])
-                            ->where('Projekt_Nr', '=', $this->identifier)
-                            ->get();
-
-                        \AppHelper::varDump($external_data);
-
-                        $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
-
-                        $target_content = $mapping->target_content;
-
-                        switch ($content_type->identifier) {
-                            case 'person':
-                                $k = 0;
-                                foreach ($external_data as $external_datum) {
-                                    foreach ($target_content as $target_content_key => $target_content_value) {
-                                        if ($target_content_value === 'CONTENT') {
-                                            $new_item[$k][$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
-                                        }
-                                    }
-                                    $k++;
-                                }
-                                break;
-                            default:
-                                foreach ($target_content as $target_content_key => $target_content_value) {
-                                    if ($target_content_value === 'CONTENT') {
-                                        foreach ($external_data as $external_datum) {
-                                            $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
-                                            $target_content = array_filter($target_content);
-                                            $new_item[$i] = $target_content;
+                                            $new_item[ $i ] = $target_content;
                                             $i++;
                                         }
                                     }

@@ -154,14 +154,6 @@ Route::group(['middleware' => 'auth'], function()
     ]);
 
 
-
-
-    Route::get('/project/{id}/test', [
-        'uses' => 'PlanController@testImport',
-        'as' => 'test_import'
-    ]);
-
-
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function()
     {
         Route::get( '/', 'Admin\DashboardController@index', ['as' => 'admin'])->name('admin.dashboard');
