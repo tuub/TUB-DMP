@@ -148,4 +148,14 @@ class ProjectController extends Controller
             abort(403, 'Direct access is not allowed.');
         }
     }
+
+
+    public function testImport(ProjectRequest $request)
+    {
+        /* Get the project instance */
+        $project = $this->project->findOrFail($request->id);
+
+        /* Import the metadata (or not) and assign response variables */
+        $project->testImportFromDataSource();
+    }
 }

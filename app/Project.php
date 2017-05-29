@@ -323,4 +323,105 @@ class Project extends Node
 
         return false;
     }
+
+    public function testImportFromDataSource()
+    {
+        if ($this->data_source) {
+
+            $namespaces = $this->data_source->namespaces;
+
+            $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+            foreach ($metadata_fields as $metadata_field) {
+
+                $content_type = $metadata_field->content_type;
+                $required = $content_type->structure;
+
+                foreach ($namespaces as $namespace) {
+                    $mappings = $this->data_source->mappings()
+                        ->where('data_source_id', $this->data_source->id)
+                        ->where('data_source_namespace_id', $namespace->id)
+                        ->where('target_metadata_registry_id', $metadata_field->id)
+                        ->get();
+
+                    $i = 0;
+                    $new_item = [];
+
+                    foreach($mappings as $mapping) {
+
+                        $external_data = DB::connection('odbc')->table($namespace->name)
+                            ->select($mapping->data_source_entity[0])
+                            ->where('Projekt_Nr', '=', $this->identifier)
+                            ->get();
+
+                        \AppHelper::varDump($external_data);
+
+                        $external_data = $external_data->map(function($x){ return (array) $x; })->toArray();
+
+                        $target_content = $mapping->target_content;
+
+                        switch ($content_type->identifier) {
+                            case 'person':
+                                $k = 0;
+                                foreach ($external_data as $external_datum) {
+                                    foreach ($target_content as $target_content_key => $target_content_value) {
+                                        if ($target_content_value === 'CONTENT') {
+                                            $new_item[$k][$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                        }
+                                    }
+                                    $k++;
+                                }
+                                break;
+                            default:
+                                foreach ($target_content as $target_content_key => $target_content_value) {
+                                    if ($target_content_value === 'CONTENT') {
+                                        foreach ($external_data as $external_datum) {
+                                            $target_content[$target_content_key] = $external_datum[$mapping->data_source_entity[0]];
+                                            $target_content = array_filter($target_content);
+                                            $new_item[$i] = $target_content;
+                                            $i++;
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+
+                    $new_full_item = [];
+
+                    foreach ($new_item as $item) {
+                        $item = $item + array_diff_key($required, $item);
+                        $new_full_item[] = $item;
+                    }
+
+                    if (count($new_full_item) > 0) {
+
+                        switch ($content_type->identifier) {
+                            case 'text_simple':
+                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                break;
+                            case 'organization':
+                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                break;
+                            case 'date':
+                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                break;
+                            default:
+                                //$new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                break;
+                        }
+
+                        $data = [$metadata_field->identifier => $new_full_item];
+                        $this->saveMetadata($data);
+                    }
+                }
+            }
+
+            $this->setImportStatus(true);
+            $this->setImportTimestamp();
+
+            return true;
+        }
+
+        return false;
+    }
 }

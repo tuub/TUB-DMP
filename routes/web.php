@@ -156,9 +156,9 @@ Route::group(['middleware' => 'auth'], function()
 
 
 
-    Route::get('/plan/{id}/test_output_filter', [
-        'uses' => 'PlanController@test_output_filter',
-        'as' => 'test_output_filter'
+    Route::get('/project/{id}/test', [
+        'uses' => 'PlanController@testImport',
+        'as' => 'test_import'
     ]);
 
 
