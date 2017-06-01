@@ -189,8 +189,6 @@ class ProjectMetadata extends Model
 
     public static function saveAll( Project $project, $data)
     {
-        //\AppHelper::varDump($data);
-
         foreach ($data as $field => $values) {
 
             $input_data = collect([]);
@@ -202,7 +200,7 @@ class ProjectMetadata extends Model
                         // Save me as PERSON JSON
                         $value = [];
                         foreach ($values as $foo) {
-                            if(!\AppHelper::isEmptyArray($foo)) {
+			    if(!\AppHelper::isEmptyArray($foo)) {
                                 array_push($value, $foo);
                             }
                         }
@@ -269,6 +267,7 @@ class ProjectMetadata extends Model
             }
 
             if ($input_data->isNotEmpty()) {
+
                 foreach ($input_data as $index => $value) {
 
                     if (!is_array($value)) {
@@ -284,19 +283,12 @@ class ProjectMetadata extends Model
                             'metadata_registry_id' => $metadata_registry_id,
                             'content' => $value
                         ])->save();
-
-                        //\AppHelper::varDump($foo);
-
-                        //\AppHelper::varDump('Updated ' . $field);
-                        //\AppHelper::varDump(json_encode($value));
-                        
-
                     }
-                }
+		}
             }
             unset($input_data);
         }
 
-        //return true;
+        return true;
     }
 }

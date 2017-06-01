@@ -275,11 +275,13 @@ class Project extends Node
                     $new_item = [];
 
                     foreach ($mappings as $mapping) {
-                        $external_data = DB::table($namespace->name)
+                        /* Get the external data by source */
+			$external_data = DB::connection('odbc')->table($namespace->name)
                             ->select($mapping->data_source_entity[0])
                             ->where('Projekt_Nr', 'LIKE', $this->identifier)
                             ->get();
 
+			/* Convert to array */
                         $external_data = $external_data->map(function ($x) { return (array)$x; })->toArray();
 
                         $target_content = $mapping->target_content;
@@ -336,7 +338,7 @@ class Project extends Node
                         }
 
                         $data = [$metadata_field->identifier => $new_full_item];
-                        $this->saveMetadata($data);
+			$this->saveMetadata($data);
                     }
                 }
             }
@@ -346,7 +348,6 @@ class Project extends Node
 
             return true;
         }
-
         return false;
     }
 }
