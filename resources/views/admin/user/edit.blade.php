@@ -38,15 +38,6 @@
                     </div>
                     <div class="form-group row container">
                         <div class="col-md-2">
-                            {!! Form::Label( 'real_name', 'Real Name' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::Text( 'real_name', $user->name, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('name') ? 'form-error' : '') }}">{{ $errors->first('name') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
                             {!! Form::Label( 'email', 'E-mail Address' ) !!}
                         </div>
                         <div class="col-md-10">
