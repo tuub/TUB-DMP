@@ -14,6 +14,8 @@ use Redirect;
 use Hash;
 use Session;
 
+use Illuminate\Support\Facades\Log;
+
 class UserController extends Controller
 {
     protected $user;
@@ -107,6 +109,9 @@ class UserController extends Controller
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
+
+        Log::info($data);
+
         $user->update( $data );
         return Redirect::route('admin.user.index');
     }
