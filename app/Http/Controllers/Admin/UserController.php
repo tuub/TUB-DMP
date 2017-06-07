@@ -111,27 +111,11 @@ class UserController extends Controller
         $user->is_active = $request->get( 'is_active' );
         $user->is_admin = $request->get( 'is_admin' );
 
-        if (strlen($request->get( 'new_password' ) > 0)) {
+        if (strlen($request->get( 'new_password' )) > 0) {
             $user->password = Hash::make($request->get( 'new_password' ));
         }
 
-        Log::info($user);
-
         $user->save();
-
-
-
-
-        $data = $request->except('_token');
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
-
-        Log::info($data);
-
-        $data['password'] = Hash::make($data['new_password']);
-
-        $user->update( $data );
         return Redirect::route('admin.user.index');
     }
 

@@ -41,9 +41,6 @@ class UserController extends Controller
      */
     public function postLogin( LoginUserRequest $request )
     {
-        Log::info($request);
-        Log::info(Hash::make($request->get('password')));
-
         if (auth()->attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
             $notification = [
                 'status'     => 200,
@@ -53,9 +50,10 @@ class UserController extends Controller
 
             return redirect()->intended('my/dashboard')->with($notification);
         } else {
+
             $notification = [
                 'status'     => 500,
-                'message'    => 'PLogin Failure!',
+                'message'    => 'Login Failure!',
                 'alert-type' => 'error'
             ];
 
@@ -150,12 +148,10 @@ class UserController extends Controller
         $user = auth()->user();
         $user->name = $data['name'];
         $user->email = $data['email'];
+
         if (strlen($data['password']) > 0) {
             $user->password = Hash::make($data['password']);
         }
-
-        Log::info($data['password']);
-        Log::info($user->password);
 
         $user->save();
 
