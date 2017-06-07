@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Requests\RegistrationRequest;
+use Illuminate\Support\Facades\Log;
 
 use App\User;
 
@@ -40,6 +41,9 @@ class UserController extends Controller
      */
     public function postLogin( LoginUserRequest $request )
     {
+        Log::info($request);
+        Log::info(Hash::make($request->get('password')));
+
         if (auth()->attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
             $notification = [
                 'status'     => 200,
@@ -100,7 +104,7 @@ class UserController extends Controller
     public function postRegister( RegistrationRequest $request )
     {
         $account['project_number'] = $request->get( 'project_number' );
-        $account['real_name'] = $request->get( 'real_name' );
+        $account['name'] = $request->get( 'name' );
         $account['email'] = $request->get( 'email' );
         $account['message'] = $request->get( 'message' );
 
@@ -109,7 +113,7 @@ class UserController extends Controller
                 $subject = 'TUB-DMP Account please';
                 $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
                 $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
-                $message->replyTo( $account['email'], $account['real_name'] );
+                $message->replyTo( $account['email'], $account['name'] );
             } );
         $notification = [
             'status'     => 200,
@@ -149,6 +153,10 @@ class UserController extends Controller
         if (strlen($data['password']) > 0) {
             $user->password = Hash::make($data['password']);
         }
+
+        Log::info($data['password']);
+        Log::info($user->password);
+
         $user->save();
 
         $notification = [
