@@ -5,24 +5,111 @@
 @stop
 
 @section('headline')
-    <h1 class="page-header">Admin: TUB-DMP</h1>
+    <h1 class="page-header">Admin</h1>
 @stop
 
 @section('body')
 
-    <h2>Edit Data</h2>
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Templates</h3>
+                        <p class="card-text">Change templates.</p>
+                        {{ HTML::link(route('admin.template.index'), 'Edit Templates', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Sections</h3>
+                        <p class="card-text">Change sections.</p>
+                        {{ HTML::link(route('admin.section.index'), 'Edit Sections', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Questions</h3>
+                        <p class="card-text">Change questions.</p>
+                        {{ HTML::link(route('admin.question.index'), 'Edit Questions', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    {!! link_to_route('admin.template.index', 'Templates') !!}<br/>
-    {!! link_to_route('admin.section.index', 'Sections') !!}<br/>
-    {!! link_to_route('admin.question.index', 'Questions') !!}<br/>
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Users</h3>
+                        <p class="card-text">Change users.</p>
+                        {{ HTML::link(route('admin.user.index'), 'Edit Users', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Projects</h3>
+                        <p class="card-text">Change projects.</p>
+                        {{ HTML::link(route('admin.project.index'), 'Edit Projects', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Plans</h3>
+                        <p class="card-text">Change plans.</p>
+                        {{ HTML::link(route('admin.plan.index'), 'Edit Plans', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    {!! link_to_route('admin.project.index', 'Projects') !!}<br/>
-    {!! link_to_route('admin.plan.index', 'Plans') !!}<br/>
-    {!! link_to_route('admin.user.index', 'Users') !!}<br/>
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">System Info</h3>
+                        <p class="card-text">View PHP Info.</p>
+                        {{ HTML::link(route('admin.phpinfo'), 'PHP Info', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Lookup</h3>
+                        <p class="card-text">Lookup project identifier.</p>
+                        {{ HTML::link(route('admin.project.get_lookup'), 'Lookup', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Logs</h3>
+                        <p class="card-text">View the logfile.</p>
+                        {{ HTML::link(route('admin.log_viewer'), 'Log Viewer', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <hr/>
-    {!! link_to_route('admin.phpinfo', 'PHP Info') !!}<br/>
-    {!! link_to_route('admin.random_ivmc', 'Random IVMC') !!}<br/>
-    {!! link_to_route('admin.log_viewer', 'Log Viewer') !!}<br/>
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">Random</h3>
+                        <p class="card-text">Random external project identifiers.</p>
+                        {{ HTML::link(route('admin.random_ivmc'), 'Random IVMC', ['class' => 'btn btn-default']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
 @stop

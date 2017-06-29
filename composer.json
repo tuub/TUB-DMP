@@ -6,8 +6,8 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
-        "laravelcollective/html": "5.3.*",
+        "laravel/framework": "5.4.*",
+        "laravelcollective/html": "5.4.*",
         "iamcal/lib_autolink": "^1.7",
         "laracasts/flash": "^2.0",
         "felixkiss/uniquewith-validator": "^2.0",
@@ -16,19 +16,23 @@
         "barryvdh/laravel-snappy": "^0.3.3",
         "h4cc/wkhtmltopdf-amd64": "dev-master",
         "barryvdh/laravel-dompdf": "^0.8.0",
-        "tck/odbc": "dev-master"
+        "tck/odbc": "dev-master",
+        "laravel/tinker": "^1.0",
+        "razorbacks/laravel-shibboleth": "^2.2",
+        "mrclay/shibalike": "^1.0",
+        "delatbabel/elocryptfive": "^1.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "~5.7",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "phpspec/phpspec": "~2.1",
         "rap2hpoutre/laravel-log-viewer": "^0.5.3",
         "doctrine/dbal": "~2.3",
         "barryvdh/laravel-debugbar": "^2.2",
-        "laracasts/generators": "^1.1",
+        "laracasts/generators": "dev-master as 1.1.4",
         "themsaid/laravel-langman": "^1.1"
     },
     "autoload": {

@@ -94,7 +94,8 @@ $(document).ready(function ()
      *
      * @return {String} errorsHtml
      */
-    $('#feedback-form').bind('submit', function (e) {
+    $('#feedback-form').bind('submit', function (e)
+    {
         e.preventDefault();
 
         var form    = $(this);
@@ -114,6 +115,55 @@ $(document).ready(function ()
                     // http://stackoverflow.com/questions/13177426/how-to-destroy-bootstrap-modal-window-completely/18169689
                     div.modal('hide');
                     form.find("#message").val('').end();
+                }
+            }
+        });
+    });
+
+    $('#login-form').bind('submit', function (e)
+    {
+        if ($(this).find('input').not(':checked').length > 0) {
+            e.preventDefault();
+            alert('Please check the privacy statements!');
+        }
+    });
+
+    $('a.project-request').bind('click', function (e)
+    {
+        e.preventDefault();
+
+        var form    = $('#project-request-form');
+        var div     = form.parent();
+
+        $.ajax({
+            type    : 'GET',
+            url     : '/my/project/request',
+            dataType: 'json',
+            success : function (json) {
+                div.modal();
+            }
+        });
+    });
+
+    $('#project-request-form').bind('submit', function (e) {
+        e.preventDefault();
+
+        var form    = $(this);
+        var div     = $(this).parent();
+
+        $.ajax({
+            url     : form.attr('action'),
+            type    : form.attr('method'),
+            data    : form.serialize(),
+            dataType: 'json',
+            error   : function (json) {
+                form.children().find('.errors').html( showAjaxErrors(json) );
+                div.modal();
+            },
+            success : function (json) {
+                if (json.response === 200) {
+                    div.modal('hide');
+                    location.reload();
                 }
             }
         });

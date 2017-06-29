@@ -252,6 +252,33 @@ class Project extends Node
     }
 
 
+    public static function lookupDatasource($identifier)
+    {
+        /* Get the datasource */
+        $data_sources = DataSource::get();
+        $external_data = [];
+
+        /*
+        foreach ($data_sources as $data_source) {
+            $namespaces = $data_source->namespaces()->get();
+            foreach ($namespaces as $namespace) {
+                $external_data[] = $namespace;
+            }
+        }
+        */
+
+        foreach ($data_sources as $data_source) {
+            $namespaces = $data_source->namespaces()->get();
+            foreach ($namespaces as $namespace) {
+                $external_data[$namespace->name] = DB::connection('odbc')->table($namespace->name)
+                    ->where('Projekt_Nr', 'LIKE', $identifier)
+                    ->get()->toJson();
+            }
+        }
+
+        return $external_data;
+    }
+
     public function importFromDataSource()
     {
         if ($this->data_source) {
@@ -276,12 +303,12 @@ class Project extends Node
 
                     foreach ($mappings as $mapping) {
                         /* Get the external data by source */
-			$external_data = DB::connection('odbc')->table($namespace->name)
+			            $external_data = DB::connection('odbc')->table($namespace->name)
                             ->select($mapping->data_source_entity[0])
                             ->where('Projekt_Nr', 'LIKE', $this->identifier)
                             ->get();
 
-			/* Convert to array */
+			            /* Convert to array */
                         $external_data = $external_data->map(function ($x) { return (array)$x; })->toArray();
 
                         $target_content = $mapping->target_content;

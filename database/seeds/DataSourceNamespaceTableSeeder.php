@@ -22,7 +22,7 @@ class DataSourceNamespaceTableSeeder extends Seeder
 
         DataSourceNamespace::create([
             'data_source_id' => 1,
-            'name' => 't_821310_IVMC_DMP_Projektpartner_intern',
+            'name' => 't_821311_IVMC_DMP_Projektpartner_intern',
         ]);
 
         DataSourceNamespace::create([
@@ -32,7 +32,7 @@ class DataSourceNamespaceTableSeeder extends Seeder
 
         DataSourceNamespace::create([
             'data_source_id' => 1,
-            'name' => 't_821320_IVMC_DMP_Schlagworte',
+            'name' => 't_821396_IVMC_DMP_Schlagworte',
         ]);
 
 

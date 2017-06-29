@@ -67,7 +67,7 @@ elixir(function(mix) {
         paths.bootstrap + 'dist/js/bootstrap.min.js',
         paths.progressbar + 'bootstrap-progressbar.js',
         paths.tagsinput + 'dist/bootstrap-tagsinput.js',
-        paths.slider + 'dist/bootstrap-slider.min.js',
+        //paths.slider + 'dist/bootstrap-slider.min.js',
         paths.select + 'dist/js/bootstrap-select.min.js',
         paths.typeahead + 'dist/typeahead.jquery.js',
         paths.jquery_cookie + 'jquery.cookie.js',

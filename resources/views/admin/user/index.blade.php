@@ -31,8 +31,7 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Institution</th>
+                        <th>Identifier</th>
                         <th>Email</th>
                         <th>Plans</th>
                         <th>Admin</th>
@@ -52,7 +51,4 @@
             </div>
         </div>
     </div>
-    {!! link_to_route('admin.user.create', 'Create') !!}
-
-
 @stop

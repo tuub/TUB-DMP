@@ -20,12 +20,12 @@ Route::group(['middleware' => 'guest'], function()
     Route::get( '/', ['uses' => 'HomeController@index', 'as'   => 'home']);
 
     // LOGIN
-    Route::get('/login', ['uses' => 'UserController@getLogin']);
-    Route::post('/login', ['uses' => 'UserController@postLogin', 'as' => 'login']);
+    //Route::get('/login', ['uses' => 'UserController@getLogin']);
+    //Route::post('/login', ['uses' => 'UserController@postLogin', 'as' => 'login']);
 
-    // REGISTER
-    Route::get('/register', ['uses' => 'UserController@getRegister']);
-    Route::post('/register', ['uses' => 'UserController@postRegister', 'as' => 'register']);
+    Route::name('shibboleth-login')->get('/login', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@login');
+    Route::name('shibboleth-authenticate')->get('/shibboleth-authenticate', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@idpAuthenticate');
+
 });
 
 Route::group(['middleware' => 'auth'], function()
@@ -37,26 +37,13 @@ Route::group(['middleware' => 'auth'], function()
     ]);
 
     // LOGOUT
-    Route::get('/logout', [
-        'uses' => 'UserController@postLogout',
-        'as' => 'logout'
-    ]);
-
-    // PROFILE
-    Route::get('/my/profile', [
-        'uses' => 'UserController@getProfile'
-    ]);
-    Route::post('/my/profile', [
-        'uses' => 'UserController@postProfile',
-        'as' => 'update_profile'
-    ]);
+    Route::name('shibboleth-logout')->get('/logout', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@destroy');
 
     // FEEDBACK
     Route::post('/my/feedback', [
         'uses' => 'DashboardController@feedback',
         'as' => 'feedback'
     ]);
-
 
     /* SURVEY*/
 
@@ -130,6 +117,11 @@ Route::group(['middleware' => 'auth'], function()
     /* Project */
 
     /* SHOW */
+    Route::post('/my/project/request',[
+        'uses' => 'ProjectController@request',
+        'as' => 'project.request'
+    ]);
+    /* SHOW */
     Route::get('/my/project/{id}/show',[
         'uses' => 'ProjectController@show',
         'as' => 'project.show'
@@ -161,6 +153,9 @@ Route::group(['middleware' => 'auth'], function()
         Route::get('/phpinfo', function () {
             return phpinfo();
         })->name('admin.phpinfo');
+
+        Route::get( '/project/lookup', 'Admin\ProjectController@getLookup', ['as' => 'admin'])->name('admin.project.get_lookup');
+        Route::post( '/project/lookup', 'Admin\ProjectController@postLookup', ['as' => 'admin'])->name('admin.project.post_lookup');
 
         Route::get( '/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', ['as' => 'admin'] )->name('admin.log_viewer');
         Route::get( '/project/{project_number}/raw_ivmc', 'Admin\ProjectController@raw_ivmc', ['as' => 'admin'])->name('admin.raw_ivmc');

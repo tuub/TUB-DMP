@@ -1,17 +1,15 @@
 <tr>
     <td>{{ $user->id }}</td>
-    <td>{{ $user->name }}</td>
-    <td>{{ $user->institution->name }}</td>
+    <td>{{ $user->identifier }}</td>
     <td>{{ $user->email }}</td>
     <td>{{ $user->plans_count    }}</td>
     <td>{{ $user->is_admin }}</td>
     <td>{{ $user->is_active }}</td>
     <td>
-        {{ $user->last_login }}
-        @if( false )
-            @if( $user->last_login )
-                @date( $user->last_login ) @time( $user->last_login )
-            @endif
+        @if( $user->last_login )
+            @date( $user->last_login ) @time( $user->last_login )
+        @else
+            N/A
         @endif
     </td>
     <td>@date( $user->created_at ) @time( $user->created_at )</td>

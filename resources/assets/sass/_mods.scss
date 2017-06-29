@@ -2,6 +2,22 @@
     border: 0px #000 dotted !important;
 }
 
+a.btn-fancy {
+    border-radius: $border-radius-base;
+    margin-top: 5px;
+    padding: 0;
+}
+
+a.btn-fancy i {
+    text-decoration: underline;
+    font-style: normal;
+}
+
+p.lead {
+    font-size: 1.3em;
+    font-weight: 800;
+}
+
 @media (max-width: $screen-xs-max) {
     .pull-xs-left {
         float: left;

@@ -80,6 +80,12 @@ In order to import project metadata from external source you might have to confi
 ```sh
 * * * * * php /srv/tub-dmp/artisan schedule:run >> /dev/null 2>&1
 ```
+
+### Activate Shibboleth ###
+```sh
+cp app/Library/ShibbolethController.php vendor/razorbacks/laravel-shibboleth/src/StudentAffairsUwm/Shibboleth/Controllers/
+```
+
 ### License
 
 TUB-DMP is open-sourced software licensed under the MIT license.

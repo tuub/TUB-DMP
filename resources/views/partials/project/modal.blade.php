@@ -163,7 +163,7 @@
                             {!! Form::date('begin[]', null, ['class' => 'form-control']) !!}
                         @endif
                     </div>
-                    <div class="col-md-1">-</div>
+                    <div class="col-md-1 text-center" style="padding-top: 7px;">-</div>
                     <div class="col-md-6">
                         @if( $project->getMetadata('end') and $project->getMetadata('end')->count() )
                             {!! Form::date('end[]', $project->getMetadata('end')->first(), ['class' => 'form-control']) !!}

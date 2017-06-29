@@ -50,7 +50,7 @@
                             {!! Form::label('version', 'DMP Version', array('class' => 'control-label')) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('version', $versions, $plan->version, array('class' => 'form-control') ) !!}
+                            {!! Form::Text( 'version', $plan->version, array('class' => 'form-control xs') ) !!}
                             <span class="help-block {{ ($errors->first('version') ? 'form-error' : '') }}">{{ $errors->first('version') }}</span>
                         </div>
                     </div>

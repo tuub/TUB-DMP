@@ -66,7 +66,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'shibboleth',
             'model' => App\User::class,
         ],
 
@@ -103,5 +103,17 @@ return [
             'expire' => 60,
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Group Model
+    | --------------------------------------------------------------------------
+    |
+    | When using the "shibboleth" authentication driver, it requires that a
+    | group model is supported. Of course, it is often just the "Group" model
+    | but you may use whatever you like.
+    |
+    */
+    'group_model' => 'App\Group',
 
 ];

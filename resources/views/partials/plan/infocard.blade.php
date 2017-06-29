@@ -12,9 +12,7 @@
                 <div class="col-md-20 col-sm-19 col-xs-20">
                     <span class="plan-title">{{ $plan->title }}</span>
                     @unless( $plan->is_snapshot )
-                        <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP">
-                            <i class="fa fa-pencil"></i>
-                        </a>
+                        <a href="{{ route('plan.edit', $plan->id)}}" class="edit-plan" data-rel="{{ $plan->id }}" data-toggle="modal" data-target="#edit-plan-{{$plan->id}}" title="Edit DMP"><i class="fa fa-pencil"></i></a>
                     @endunless
                     @if ($plan->version)
                         <br/>{{ $plan->version }}

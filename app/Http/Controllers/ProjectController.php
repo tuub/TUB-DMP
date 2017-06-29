@@ -7,6 +7,7 @@ use App\MetadataRegistry;
 use App\Project;
 use App\Template;
 use Request;
+use Mail;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -158,5 +159,50 @@ class ProjectController extends Controller
 
         /* Import the metadata (or not) and assign response variables */
         $project->testImportFromDataSource();
+    }
+
+
+    public function request(ProjectRequest $request)
+    {
+        if (Request::ajax()) {
+            $project['project_id'] = $request->get( 'project_id' );
+            $project['name'] = $request->get( 'name' );
+            $project['email'] = $request->get( 'email' );
+            $project['message'] = $request->get( 'message' );
+
+            Mail::send( [ 'text' => 'emails.project-request' ], [ 'project' => $project ],
+                function ( $message ) use ( $project ) {
+                    $subject = 'TUB-DMP Project please';
+                    $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
+                    $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
+                    $message->replyTo( $project['email'], $project['name'] );
+                }
+            );
+
+            if (Mail::failures()) {
+                $notification = [
+                    'status' => 500,
+                    'message' => 'Project request was not sent successfully!',
+                    'alert-type' => 'error'
+                ];
+            } else {
+                $notification = [
+                    'status' => 200,
+                    'message' => 'Project request was sent successfully!',
+                    'alert-type' => 'success'
+                ];
+            }
+
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
+
+            return response()->json([
+                'response' => $notification['status'],
+                'message'  => $notification['message']
+            ]);
+
+        } else {
+            abort(403, 'Direct access is not allowed.');
+        }
     }
 }

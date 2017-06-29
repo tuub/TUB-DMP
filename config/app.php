@@ -149,6 +149,10 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+
+        StudentAffairsUwm\Shibboleth\ShibbolethServiceProvider::class,
+        StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
+
         App\Providers\RouteServiceProvider::class,
 
 
@@ -160,8 +164,9 @@ return [
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
         Baum\Providers\BaumServiceProvider::class,
         AdamWathan\BootForms\BootFormsServiceProvider::class,
-        //Barryvdh\Snappy\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
+        Delatbabel\Elocrypt\ElocryptServiceProvider::class,
     ],
 
     /*

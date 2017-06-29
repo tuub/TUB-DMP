@@ -5,7 +5,7 @@ public/js/*
 public/fonts/*
 resources/assets/bower/
 storage/*.key
-vendor/
+vendor/*
 .idea/
 Homestead.json
 Homestead.yaml
@@ -15,5 +15,5 @@ config/ide-helper.php
 bootstrap/compiled.php
 database/seeds/Fake*
 _ide_helper.php
-.idea
 env.js
+*.log

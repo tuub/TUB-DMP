@@ -10,6 +10,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\Notifiable;
+use StudentAffairsUwm\Shibboleth\Entitlement;
+use Delatbabel\Elocrypt\Elocrypt;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -17,8 +19,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     protected $table = 'users';
     public $timestamps = true;
-    protected $fillable = ['real_name', 'email', 'password', 'is_active', 'last_login'];
-    protected $hidden = ['password', 'remember_token'];
+    protected $fillable = ['identifier', 'type', 'email', 'is_admin', 'is_active'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at', 'last_login'];
+    //protected $encrypts = ['email'];
 
     public function projects()
     {
@@ -35,16 +38,32 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo('App\Institution');
     }
 
+    public function entitlements()
+    {
+        return $this->belongsToMany(Entitlement::class);
+    }
+
     public function scopeActive($query)
     {
         $query->where('is_active', 1);
     }
 
+    public function getNameAttribute()
+    {
+        return session()->get('name');
+    }
+
+    public function getInstitutionIdentifierAttribute()
+    {
+        return session()->get('institution_identifier');
+    }
+
+    /*
     public function getNameWithEmailAttribute()
     {
         return $this->name . " <" . $this->email . '>';
     }
-
+    */
 
     public function isAdmin()
     {

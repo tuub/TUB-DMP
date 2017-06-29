@@ -15,33 +15,24 @@
 @stop
 
 @section('title')
-    {{ $user->name_with_email }}
+    {{ $user->email }}
 @stop
 
 @section('body')
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            Edit User "{{ $user->name_with_email }}"
+            Edit User "{{ $user->email }}"
         </div>
         <div class="panel-body">
             <div class="row">
                 {!! Form::model($user, ['method' => 'PUT', 'route' => ['admin.user.update', $user->id], 'class' => '', 'role' => 'form']) !!}
                     <div class="form-group row container">
                         <div class="col-md-2">
-                            {!! Form::Label( 'name', 'Name' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::Text( 'name', $user->name, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('name') ? 'form-error' : '') }}">{{ $errors->first('name') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
                             {!! Form::Label( 'email', 'E-mail Address' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::Text( 'email', $user->email, array('class' => 'form-control') ) !!}
+                            {!! Form::Text( 'email', $user->email, array('class' => 'form-control', 'disabled' => 'disabled') ) !!}
                             <span class="help-block {{ ($errors->first('email') ? 'form-error' : '') }}">{{ $errors->first('email') }}</span>
                         </div>
                     </div>
@@ -50,7 +41,7 @@
                             {!! Form::Label( 'institution_id', 'Institution' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('institution_id', [null => 'None'] + $institutions->toArray(), $user->institution_id, array('class' => 'form-control')) !!}
+                            {!! Form::select('institution_id', [null => 'None'] + $institutions->toArray(), $user->institution_id, array('class' => 'form-control', 'disabled' => 'disabled')) !!}
                             <span class="help-block {{ ($errors->first('institution_id') ? 'form-error' : '') }}">{{ $errors->first('institution_id') }}</span>
                         </div>
                     </div>
@@ -72,24 +63,6 @@
                             {!! Form::radio('is_admin', 1, $user->is_admin) !!} Yes
                             {!! Form::radio('is_admin', 0, $user->is_admin) !!} No
                             <span class="help-block {{ ($errors->first('is_admin') ? 'form-error' : '') }}">{{ $errors->first('is_admin') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
-                            {!! Form::Label( 'new_password', 'New Password' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::Text( 'new_password', null, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('new_password') ? 'form-error' : '') }}">{{ $errors->first('new_password') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
-                            {!! Form::Label( 'confirm_password', 'Confirm Password' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::Text( 'confirm_password', null, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('confirm_password') ? 'form-error' : '') }}">{{ $errors->first('confirm_password') }}</span>
                         </div>
                     </div>
                     <div class="form-group row container">

@@ -27,7 +27,7 @@ class ProjectMetadataController extends Controller
     {
         $project = $this->project;
         $projects = $this->project->all()->pluck('identifier','id')->prepend('Select a parent','');
-        $users = User::all()->pluck('real_name','id')->prepend('Select an owner','');
+        $users = User::all()->pluck('email','id')->prepend('Select an owner','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
         return view('admin.project.new', compact('project','projects','users','data_sources'));
     }

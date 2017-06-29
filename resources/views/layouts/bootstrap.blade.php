@@ -26,12 +26,22 @@
             {!! HTML::script('js/jquery.min.js') !!}
             {!! HTML::script('js/toastr.min.js') !!}
 
-            @show
+        @show
 
 <style>
+
 * {
     outline: 0px #336699 solid;
 }
+
+h1.page-header {
+    padding: 5px;
+    background-color: #fff;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+h1.page-header * { display: block }
 
 .toast {
     opacity: 1 !important;
@@ -82,7 +92,6 @@ $(document).ready(function(){
 <body>
 
 @include('flash::message')
-
 <!--<header class="navbar navbar-static-top">-->
 
 <header>
@@ -93,15 +102,12 @@ $(document).ready(function(){
 
 <main class="main">
     <div class="container">
-
-    @section('headline')
-        <div class="text-center">
-            <h3>Create your Data Management Plan</h3>
-        </div>
-    @show
-
-    @yield('body')
-
+        @section('headline')
+            <div class="text-center">
+                <h1>{!! HTML::image('images/logo-dmp.png') !!}</h1>
+            </div>
+        @show
+        @yield('body')
     </div>
 </main>
 
@@ -109,14 +115,16 @@ $(document).ready(function(){
     <div class="container">
         <div class="text-center">
             &copy; {{ date("Y") }}
-            <a href="http://www.szf.tu-berlin.de/" target="_blank">Servicezentrum Forschungsdaten und Publikationen</a>
+            {{ HTML::link('http://www.szf.tu-berlin.de/', trans('general.footer.link-01'), ['target' => '_blank']) }}
         </div>
         <div class="text-center">
-            <a href="http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/" target="_blank">About TUB-DMP</a> |
-            <!--Policy |-->
-            <a href="http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/" target="_blank">Contact</a> |
-            <a href="http://www.szf.tu-berlin.de/servicemenue/impressum/" target="_blank">Imprint</a> |
-            <a href="http://www.tu-berlin.de/allgemeine_seiten/datenschutz/" target="_blank">Privacy Statement</a>
+            {{ HTML::link('http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/', trans('general.footer.link-02'), ['target' => '_blank']) }}
+            |
+            {{ HTML::link('http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/', trans('general.footer.link-03'), ['target' => '_blank']) }}
+            |
+            {{ HTML::link('http://www.szf.tu-berlin.de/servicemenue/impressum/', trans('general.footer.link-04'), ['target' => '_blank']) }}
+            |
+            {{ HTML::link('http://www.tu-berlin.de/allgemeine_seiten/datenschutz/', trans('general.footer.link-05'), ['target' => '_blank']) }}
         </div>
     </div>
 </footer>

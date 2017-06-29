@@ -23,7 +23,7 @@
         <div class="container page">
             <br/>
             <div class="row text-center">
-                {!! HTML::image('images/logo-tu.png', 'TU Berlin', array('class' => 'thumb', 'title' => 'TU Berlin', 'style' => 'height: 50px;')) !!}
+                {!! HTML::image('images/logo/logo-tu.png', 'TU Berlin', array('class' => 'thumb', 'title' => 'TU Berlin', 'style' => 'height: 50px;')) !!}
                 <h1>{{ $plan->title }}</h1>
             </div>
             <div class="row">

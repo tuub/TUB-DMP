@@ -28,16 +28,9 @@
                     @endif
                     @if( Auth::check() )
                         <li>
-                            <a href="/my/profile"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
-                        </li>
-                    @endif
-                    @if( Auth::check() )
-                        <li>
                             <a href="#" class="feedback" data-toggle="modal" data-target="#feedback" title="Feedback">
                                 <i class="fa fa-comment" aria-hidden="true"></i>Feedback</a>
                             </a>
-
-
                         </li>
                     @endif
                     @if( Auth::check() and Auth::user()->is_admin )

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ProjectLookupRequest;
 use App\MetadataRegistry;
 use App\ProjectMetadata;
 use Illuminate\Support\Facades\Redirect;
@@ -11,6 +12,7 @@ use App\Http\Requests\Admin\ProjectRequest;
 use App\Project;
 use App\User;
 use App\DataSource;
+use DB;
 
 class ProjectController extends Controller
 {
@@ -32,8 +34,8 @@ class ProjectController extends Controller
     public function create()
     {
         $project = $this->project;
-        $projects = $this->project->all()->pluck('identifier','id')->prepend('Select a parent','');
-        $users = User::all()->pluck('name','id')->prepend('Select an owner','');
+        $projects = $this->project->orderBy('identifier', 'asc')->get()->pluck('identifier','id')->prepend('Select a parent','');
+        $users = User::orderBy('email', 'asc')->get()->pluck('email','id')->prepend('Select an owner','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
         return view('admin.project.new', compact('project','projects','users','data_sources'));
     }
@@ -43,7 +45,7 @@ class ProjectController extends Controller
     {
         $data = array_filter($request->all(), 'strlen');
         $project = $this->project->create($data);
-        return Redirect::route('admin.project.index');
+        return redirect()->route('admin.project.index');
     }
 
 
@@ -56,8 +58,8 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $project = $this->project->findOrFail($id);
-        $projects = $this->project->all()->pluck('identifier','id')->prepend('Select a parent','');
-        $users = User::all()->pluck('name_with_email','id')->prepend('Select an owner','');
+        $projects = $this->project->orderBy('identifier', 'asc')->get()->pluck('identifier','id')->prepend('Select a parent','');
+        $users = User::orderBy('email', 'asc')->get()->pluck('email','id')->prepend('Select an owner','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
         return view('admin.project.edit', compact('project','projects','users','data_sources'));
     }
@@ -72,7 +74,7 @@ class ProjectController extends Controller
             $item = ($item == '') ? null : $item;
         });
         $project->update($data);
-        return Redirect::route('admin.project.index');
+        return redirect()->route('admin.project.index');
     }
 
 
@@ -80,7 +82,45 @@ class ProjectController extends Controller
     {
         $project = $this->project->findOrFail($id);
         $project->delete();
-        return Redirect::route('admin.project.index');
+        return redirect()->route('admin.project.index');
+    }
+
+
+    public function getLookup() {
+        $data_sources = DataSource::get()->pluck('identifier','id')->prepend('Select a datasource','');
+        return view('admin.project.lookup', compact('data_sources'));
+    }
+
+
+    public function postLookup(ProjectLookupRequest $request)
+    {
+        $data = Project::lookupDataSource($request->identifier);
+
+        if ($data) {
+            $notification = [
+                'status' => 200,
+                'data' => $data,
+                'message' => 'Project Lookup successfull!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Project Lookup not successfull!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Response */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return response()->json([
+            'status' => $notification['status'],
+            'data' => $notification['data'],
+            'message'  => $notification['message']
+        ]);
+
     }
 
 
@@ -140,5 +180,4 @@ class ProjectController extends Controller
             }
         }
     }
-
 }
