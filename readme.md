@@ -75,13 +75,191 @@ Then add the correct pathes in config/snappy.php.
 ### Activate Data Source Imports
 In order to import project metadata from external source you might have to configure ODBC and add a cronjob:
 
+##### Example connection with SQL Server #####
 [https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx](https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx)
 
+##### Simulate external datasource with Postgresql #####
+
+Create the new database:
+```sh
+sudo -u postgres createdb <DATABASE_NAME>
+sudo -u postgres createuser <DATABASE_USER>
+sudo -u postgres psql
+
+postgres@COSMO:~$ psql
+
+psql (9.5.8)
+Type "help" for help.
+
+postgres=# ALTER USER "<DATABASE_USER>" WITH PASSWORD '<DATABASE_SECRET>';
+postgres=# ALTER DATABASE <DATABASE_NAME> OWNER TO <DATABASE_USER>;
+```
+
+Install ODBC drivers:
+```sh
+sudo apt install unixodbc php-odbc php-pgsql odbc-postgresql
+```
+
+/etc/odbcinst.ini:
+```sh
+[PostgreSQL ANSI]
+Description=PostgreSQL ODBC driver (ANSI version)
+Driver=psqlodbca.so
+Setup=libodbcpsqlS.so
+Debug=0
+CommLog=1
+UsageCount=1
+
+[PostgreSQL Unicode]
+Description=PostgreSQL ODBC driver (Unicode version)
+Driver=psqlodbcw.so
+Setup=libodbcpsqlS.so
+Debug=0
+CommLog=1
+UsageCount=1
+```
+
+/etc/odbc.ini:
+```sh
+[PSQL_ODBC]
+Description = PostgreSQL connection to AMPG961
+Driver = PostgreSQL Unicode
+Database = <DATABASE_NAME>
+Servername = <DATABASE_HOST>
+UserName = <DATABASE_USER>
+Password = <DATABASE_SECRET>
+Port = 5432
+Protocol = <POSTGRESQL_VERSION>
+ReadOnly = No
+RowVersioning = No
+ShowSystemTables = No
+ConnSettings =
+```
+
+.env:
+```sh
+ODBC_DRIVER=pgsql
+#ODBC_DSN=odbc:\\\\PSQL_ODBC
+ODBC_DSN=odbc:PSQL_ODBC
+ODBC_HOST=<DATABASE_HOST>
+ODBC_USERNAME=<DATABASE_USER>
+ODBC_PASSWORD=<DATABASE_SECRET>
+ODBC_DATABASE=<DATABASE_NAME>
+```
+
+config/database.php:
+```php
+/* Example for a connection "odbc-sqlsrv" */
+    'odbc-sqlsrv' => array(
+        'driver'    => env('ODBC_DRIVER', 'odbc'),
+        'dsn'       => env('ODBC_DSN', ''),
+        'host'      => env('ODBC_HOST', ''),
+        'username'  => env('ODBC_USERNAME', ''),
+        'password'  => env('ODBC_PASSWORD', ''),
+        'database'  => env('ODBC_DATABASE', ''),
+        'grammar'   => [
+            'query'  => Illuminate\Database\Query\Grammars\SqlServerGrammar::class,
+            'schema' => Illuminate\Database\Schema\Grammars\SqlServerGrammar::class,
+        ],
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+    ),
+
+/* Example for a connection "odbc-pgsql" */
+    'odbc-pgsql' => array(
+        'driver'    => env('ODBC_DRIVER', 'odbc'),
+        'dsn'       => env('ODBC_DSN', ''),
+        'host'      => env('ODBC_HOST', ''),
+        'username'  => env('ODBC_USERNAME', ''),
+        'password'  => env('ODBC_PASSWORD', ''),
+        'database'  => env('ODBC_DATABASE', ''),
+        'grammar'   => [
+            'query'  => Illuminate\Database\Query\Grammars\PostgresGrammar::class,
+            'schema' => Illuminate\Database\Schema\Grammars\PostgresGrammar::class,
+        ],
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+    ),
+```
+
+Temporarily set .env values to the target database and then run the seeder (there might be other and better ways like setting the option "--database='<CONNECTION_NAME>'"):
+```sh
+DB_CONNECTION=pgsql
+DB_HOST=<DATABASE_HOST>
+DB_DATABASE=<DATABASE_NAME>
+DB_USERNAME=<DATABASE_USER>
+DB_PASSWORD=<DATABASE_SECRET>
+```
+
+Migrate to the new database:
+```sh
+php artisan migrate --path=/database/migrations/odbc/
+```
+Seed to the new database:
+```sh
+composer dump-autoload && php artisan db:seed --class=IVMCDMPProjektTableSeeder
+```
+
+##### Setting up scheduler #####
 ```sh
 * * * * * php /srv/tub-dmp/artisan schedule:run >> /dev/null 2>&1
 ```
 
 ### Activate Shibboleth ###
+
+##### Modify config/shibboleth.php #####
+
+```php
+'emulate_idp'       => true,
+    'emulate_idp_users' => array(
+        'foo' => array(
+            'uid'         => 'foo',
+            'givenName'   => 'Liam',
+            'sn'          => 'Gallagher',
+            'o'           => 'Oasis',
+            'tubPersonKostenstelle'	=> '123456',
+            'tubPersonOM' => '987654321',
+            'mail'        => 'liam@oasisinet.com',
+        ),
+        
+[...]
+        
+'user' => [
+    // fillable user model attribute => server variable
+    'email'       => 'mail',
+    'identifier'  => 'tubPersonOM',
+    'first_name'  => 'givenName',
+    'last_name'   => 'sn',
+    'institution_identifier' => 'tubPersonKostenstelle',
+],
+```
+
+##### Modify app/Library/ShibbolethController.php #####
+
+```php
+$user->last_login = Carbon::now();
+$user->save();
+$user_name = $map['first_name'] . ' ' . $map['last_name'];
+$institution_identifier = $map['institution_identifier'];
+session(['name' => $user_name]);
+session(['institution_identifier' => $institution_identifier]);
+```
+
+##### Check app/User.php for values that shall not end up in the TUB-DMP database (in our case the name and the institution_identifier) #####
+```php
+public function getNameAttribute()
+{
+    return session()->get('name');
+}
+
+public function getInstitutionIdentifierAttribute()
+{
+    return session()->get('institution_identifier');
+}
+```
+
+##### Overwrite vendor class with app/Library/ShibbolethController.php #####
+
 ```sh
 cp app/Library/ShibbolethController.php vendor/razorbacks/laravel-shibboleth/src/StudentAffairsUwm/Shibboleth/Controllers/
 ```

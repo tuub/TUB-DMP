@@ -43,14 +43,19 @@
                         if (json.status === 200) {
                             $.each(json.data, function(namespace,values) {
                                 output += '-'.repeat(75) + '\n' + namespace + '\n' + '-'.repeat(75) + '\n\n';
-                                $.each($.parseJSON(values), function(key,value) {
-                                    for (var property in value) {
-                                        // skip loop if the property is from prototype
-                                        if(!value.hasOwnProperty(property)) continue;
-                                        output += property + ': ' + value[property] + '\n';
-                                    }
-                                    output += '\n';
-                                });
+                                var values = $.parseJSON(values)
+                                if (values.length > 0) {
+                                    $.each(values, function(key,value) {
+                                        for (var property in value) {
+                                            // skip loop if the property is from prototype
+                                            if(!value.hasOwnProperty(property)) continue;
+                                            output += property + ': ' + value[property] + '\n';
+                                        }
+                                    });
+                                } else {
+                                    output += 'No records found\n';
+                                }
+                                output += '\n';
                             });
                         } else {
                             output += json;

@@ -168,6 +168,8 @@ class ProjectController extends Controller
             $project['project_id'] = $request->get( 'project_id' );
             $project['name'] = $request->get( 'name' );
             $project['email'] = $request->get( 'email' );
+            $project['identifier'] = $request->get( 'identifier' );
+            $project['institution_identifier'] = $request->get( 'institution_identifier' );
             $project['message'] = $request->get( 'message' );
 
             Mail::send( [ 'text' => 'emails.project-request' ], [ 'project' => $project ],

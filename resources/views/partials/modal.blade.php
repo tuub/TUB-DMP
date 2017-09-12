@@ -9,8 +9,8 @@
             </div>
             <div class="modal-body">
                 <div class="errors"></div>
-                {!! BootForm::text('Name', 'name')->placeholder('John Doe')->value( auth()->user()->name ) !!}
-                {!! BootForm::text('Email', 'email')->placeholder('john.doe@example.org')->value( auth()->user()->email ) !!}
+                {!! BootForm::text('Name', 'name')->placeholder('John Doe')->value( auth()->user()->name )->readonly() !!}
+                {!! BootForm::text('Email', 'email')->placeholder('john.doe@example.org')->value( auth()->user()->email)->readonly() !!}
                 {!! BootForm::textarea('Your Feedback message', 'message') !!}
             </div>
             <div class="modal-footer">

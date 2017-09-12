@@ -144,5 +144,14 @@ class DataSourceMappingTableSeeder extends Seeder
             'target_metadata_registry_id' => 10,
             'target_content' => ['CONTENT']
         ]);
+
+        DataSourceMapping::create([
+            'data_source_id' => 1,
+            'data_source_namespace_id' => 5,
+            'data_source_entity' => ['Schlagwort'],
+            'target_namespace' => 'project',
+            'target_metadata_registry_id' => 14,
+            'target_content' => ['CONTENT']
+        ]);
     }
 }

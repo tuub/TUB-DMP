@@ -128,7 +128,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = $this->user->find($id);
-        $user->delete();
+        $user->update([
+            'email' => null,
+            'identifier' => null
+        ]);
+        //$user->delete();
+
         Session::flash('message', 'Successfully deleted user!');
         return Redirect::route('admin.user.index');
     }

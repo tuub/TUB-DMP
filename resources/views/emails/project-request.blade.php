@@ -3,6 +3,8 @@ A new project needs to be created.
 TUB project number: {!! $project['project_id'] !!}
 Name: {!! $project['name'] !!}
 E-mail: {!! $project['email'] !!}
+Identifier: {!! $project['identifier'] !!}
+Institution Identifier: {!! $project['institution_identifier'] !!}
 
 Message: {!! $project['message'] !!}
 

@@ -16,12 +16,12 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name')->nullable();
             $table->integer('institution_id')->unsigned()->default(1);
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->boolean('is_admin')->default(0);
             $table->boolean('is_active')->default(1);
             $table->dateTime('last_login')->nullable();
-            $table->string('password', 60);
-            $table->rememberToken();
+            $table->string('password', 60)->nullable();
+            $table->rememberToken()->nullable();
             $table->timestamps();
         });
     }

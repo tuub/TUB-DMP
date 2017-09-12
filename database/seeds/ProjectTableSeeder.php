@@ -136,7 +136,7 @@ class ProjectTableSeeder extends Seeder
 
         Project::create([
             'id' => 13,
-            'identifier' => 'DMP-123',
+            'identifier' => '123-456',
             'user_id' => 1,
             'data_source_id' => 1,
             'imported' => 0,

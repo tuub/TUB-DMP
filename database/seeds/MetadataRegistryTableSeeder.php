@@ -130,5 +130,14 @@ class MetadataRegistryTableSeeder extends Seeder
             'content_type_id' => 1,
             'is_multiple' => 0,
         ]);
+
+        MetadataRegistry::create([
+            'id' => 14,
+            'namespace' => 'project',
+            'identifier' => 'keyword',
+            'title' => 'Keyword',
+            'description' => 'The keyword(s) of the research project.',
+            'content_type_id' => 5,
+        ]);
     }
 }

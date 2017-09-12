@@ -39,7 +39,7 @@ return array(
             'o'           => 'Technische Universitaet Berlin',
             'tubPersonKostenstelle'	=> '46110011',
             'tubPersonOM' => '16908018421',
-            'mail'        => 'fab.fuerste@gmail.com',
+            'mail'        => 'fabian.fuerste@tu-berlin.de',
         ),
         'admin' => array(
             'uid'         => 'admin',

@@ -12,8 +12,8 @@ class CreateIVMCDMPProjektpartnerinternTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('t_821310_IVMC_DMP_Projektpartner_intern');
-        Schema::create('t_821310_IVMC_DMP_Projektpartner_intern', function (Blueprint $table) {
+        Schema::dropIfExists('t_821311_IVMC_DMP_Projektpartner_intern');
+        Schema::create('t_821311_IVMC_DMP_Projektpartner_intern', function (Blueprint $table) {
             $table->increments('ID');
             $table->integer('ID_MA')->nullable();
             $table->integer('ID_KTR')->nullable();
@@ -40,6 +40,6 @@ class CreateIVMCDMPProjektpartnerinternTable extends Migration
      */
     public function down()
     {
-        Schema::drop('t_821310_IVMC_DMP_Projektpartner_intern');
+        Schema::drop('t_821311_IVMC_DMP_Projektpartner_intern');
     }
 }
