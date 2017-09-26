@@ -17,7 +17,7 @@ $status = $project->status;
                         </span>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6 text-right">
-                        <span class="project-status"><strong>Status:</strong> {{  $project->status }}</span>
+                        <span class="project-status"><strong>{{ trans('project.infocard.status.label') }}:</strong> {{  $project->status }}</span>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@ $status = $project->status;
                                     "{{ $title['content'] }}"<br/>
                                 @endforeach
                             @else
-                                [Project Title]
+                                [{{ trans('project.metadata.title') }}]
                             @endif
                         </div>
                     </div>
@@ -40,7 +40,7 @@ $status = $project->status;
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-24">
 
                             @unless( $project->getMetadata('leader') )
-                                [Principal Investigator]
+                                [{{ trans('project.metadata.leader') }}]
                             @endunless
 
                             @if( $project->getMetadata('leader') )
@@ -57,7 +57,7 @@ $status = $project->status;
 
                         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-24">
                             @if( $project->getMetadata('begin') )
-                                <strong>Project Duration:</strong>
+                                <strong>{{ trans('project.metadata.duration') }}:</strong>
                                 @foreach( $project->getMetadata('begin') as $begin )
                                     @date($begin) -
                                     @if( $project->getMetadata('end') )
@@ -68,27 +68,27 @@ $status = $project->status;
                                 @endforeach
                                 <br/>
                             @else
-                                [Project Duration]
+                                [{{ trans('project.metadata.duration') }}]
                             @endif
                         </div>
 
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-24">
                             @if( $project->getMetadata('funding_source') )
-                                <strong>Funded by</strong><br/>
+                                <strong>{{ trans('project.metadata.funding_source') }}</strong><br/>
                                 @foreach( $project->getMetadata('funding_source') as $funding_source )
                                     {{ $funding_source }}<br/>
                                 @endforeach
                             @else
-                                [Funding]
+                                [{{ trans('project.metadata.funding_source') }}]
                             @endif
                         </div>
 
                         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-24">
-                            <strong>Data Import:</strong>
+                            <strong>{{ trans('project.infocard.import.label') }}:</strong>
                             @if($project->data_source)
                                 {{ $project->data_source->identifier }}
                             @else
-                                None
+                                {{ trans('project.infocard.import.no_datasource') }}
                             @endif
                         </div>
                     </div>
@@ -98,23 +98,23 @@ $status = $project->status;
             <div class="card-footer">
                 <div class="row">
                     <div class="col-md-18 col-sm-18 col-xs-18">
-                        <a href="{{ route('project.show', $project->id)}}" class="show-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#show-project-{{$project->id}}" title="Show Project">
-                            <i class="fa fa-info"></i><span class="hidden-sm hidden-xs"> More Info</span>
+                        <a href="{{ route('project.show', $project->id)}}" class="show-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#show-project-{{$project->id}}" title="{{ trans('project.infocard.button.show') }}">
+                            <i class="fa fa-info"></i><span class="hidden-sm hidden-xs"> {{ trans('project.infocard.button.show') }}</span>
                         </a>
-                        <a href="{{ route('project.edit', $project->id)}}" class="edit-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#edit-project-{{$project->id}}" title="Edit Project">
-                            <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> Edit Project Metadata</span>
+                        <a href="{{ route('project.edit', $project->id)}}" class="edit-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" data-target="#edit-project-{{$project->id}}" title="{{ trans('project.infocard.button.edit') }}">
+                            <i class="fa fa-pencil"></i><span class="hidden-sm hidden-xs"> {{ trans('project.infocard.button.edit') }}</span>
                         </a>
                         @if($project->data_source)
                             @unless($project->imported)
-                                <a href="{{ route('project.import', $project->id)}}" class="import-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" title="Import Project Metadata">
-                                    <i class="fa fa-download"></i><span class="hidden-sm hidden-xs"> Import from Datasource</span>
+                                <a href="{{ route('project.import', $project->id)}}" class="import-project card-link btn btn-default btn-xs" data-rel="{{ $project->id }}" title="{{ trans('project.infocard.button.import') }}">
+                                    <i class="fa fa-download"></i><span class="hidden-sm hidden-xs"> {{ trans('project.infocard.button.import') }}</span>
                                 </a>
                             @endunless
                         @endif
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6 text-right">
                         <a href="#" class="toggle-plans card-link btn btn-success btn-xs" data-href="{{  $project->id }}">
-                            <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"> Plans ({{ $project->plans_count }})</span>
+                            <i class="fa fa-plus"></i><span class="hidden-sm hidden-xs"> {{ trans('project.infocard.button.plans') }} ({{ $project->plans_count }})</span>
                         </a>
                     </div>
                 </div>

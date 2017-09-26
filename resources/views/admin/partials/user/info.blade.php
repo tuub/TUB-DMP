@@ -1,8 +1,8 @@
 <tr>
     <td>{{ $user->id }}</td>
-    <td>{{ $user->identifier }}</td>
+    <td>{{ $user->tub_om }}</td>
     <td>{{ $user->email }}</td>
-    <td>{{ $user->plans_count    }}</td>
+    <td>{{ $user->plans_count }}</td>
     <td>{{ $user->is_admin }}</td>
     <td>{{ $user->is_active }}</td>
     <td>
@@ -10,12 +10,6 @@
             @date( $user->last_login ) @time( $user->last_login )
         @else
             N/A
-        @endif
-    </td>
-    <td>@date( $user->created_at ) @time( $user->created_at )</td>
-    <td>
-        @if( $user->updated_at )
-            @date( $user->updated_at ) @time( $user->updated_at )
         @endif
     </td>
     <td>

@@ -6,6 +6,7 @@
         @endif
     </td>
     <td>{{ $project->user->email }}</td>
+    <td>{{ $project->contact_email }}</td>
     <td>{{ $project->plans_count }}</td>
     <td>
         {{ $project->children()->count() }}

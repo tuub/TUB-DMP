@@ -557,6 +557,7 @@ $( window ).load(function() {
 
     /* Uncheck Login Privacy Statement Checkboxes by default */
     $('#login-form').find(['type="checkbox"']).removeAttr('checked');
+    $('.checkbox input').prop('checked', false);
 
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');

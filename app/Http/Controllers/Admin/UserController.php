@@ -41,6 +41,7 @@ class UserController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * FIXME: Obsolete!
      *
      * @return \Illuminate\Http\Response
      */
@@ -53,6 +54,7 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * FIXME: Obsolete!
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -60,12 +62,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = new User;
-        $user->name       = $request->get('name');
         $user->email      = $request->get('email');
         $user->institution_id = $request->get('institution_id');
         $user->is_admin = $request->get('is_admin');
         $user->is_active      = $request->get('is_active');
-        $user->password      = Hash::make($request->get('new_password'));
         $user->save();
         Session::flash('message', 'Successfully created the user!');
         return Redirect::route('admin.user.index');
@@ -73,6 +73,7 @@ class UserController extends Controller
 
     /**
      * Display the specified resource.
+     * FIXME: Obsolete!
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -105,17 +106,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = $this->user->find($id);
-        $user->name = $request->get( 'name' );
         $user->email = $request->get( 'email' );
         $user->institution_id = $request->get( 'institution_id' );
         $user->is_active = $request->get( 'is_active' );
         $user->is_admin = $request->get( 'is_admin' );
-
-        if (strlen($request->get( 'new_password' )) > 0) {
-            $user->password = Hash::make($request->get( 'new_password' ));
-        }
-
         $user->save();
+
         return Redirect::route('admin.user.index');
     }
 
@@ -130,7 +126,7 @@ class UserController extends Controller
         $user = $this->user->find($id);
         $user->update([
             'email' => null,
-            'identifier' => null
+            'tub_om' => null
         ]);
         //$user->delete();
 

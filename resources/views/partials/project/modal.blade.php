@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Show Project Metadata</h4>
+                <h4 class="modal-title">{{ trans('project.show.title') }}</h4>
             </div>
             <div class="modal-body">
                 @if( $project->identifier )
@@ -14,13 +14,13 @@
                 @endif
 
                 @if( $project->plans_count )
-                    <label>{{ str_plural('Plan', $project->plans_count) }}:</label>
+                    <label>{{ str_plural(trans('project.show.plan'), $project->plans_count) }}:</label>
                     {{ $project->plans_count }}
                     <br/>
                 @endif
 
                 @if( $project->children_count )
-                    <label>{{ str_plural('Sub Project', $project->children_count) }}:</label>
+                    <label>{{ str_plural('project.show.sub_project', $project->children_count) }}:</label>
                     {{ $project->children_count }}
                     <br/>
                 @endif
@@ -130,7 +130,7 @@
 
             </div>
             <div class="modal-footer">
-                {{ Form::button('OK', ['class' => 'btn btn-success', 'data-dismiss' => 'modal']) }}
+                {{ Form::button(trans('project.show.button.submit'), ['class' => 'btn btn-success', 'data-dismiss' => 'modal']) }}
             </div>
         </div>
     </div>
@@ -205,8 +205,8 @@
 
             </div>
             <div class="modal-footer">
-                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit('Update')->class('btn btn-success') !!}
+                {!! BootForm::button(trans('project.edit.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit(trans('project.edit.button.submit'))->class('btn btn-success') !!}
             </div>
             {!! BootForm::close() !!}
         </div>

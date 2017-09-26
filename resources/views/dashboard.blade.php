@@ -14,8 +14,8 @@
         </div>
         <div class="panel-body">
             <div class="text-center">
-                <a href="#" class="project-request btn btn-success btn-success btn-xl large-text" data-toggle="modal" data-target="#project-request" title="Add new project">
-                    <i class="fa fa-plus" aria-hidden="true"></i> Add new project</a>
+                <a href="#" class="project-request btn btn-success btn-success btn-xl large-text" data-toggle="modal" data-target="#project-request" title="{{ trans('project.request.title') }}">
+                    <i class="fa fa-plus" aria-hidden="true"></i> {{ trans('project.request.title') }}</a>
                 </a>
             </div>
             <br/>

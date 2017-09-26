@@ -18,9 +18,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     protected $table = 'users';
-    public $timestamps = true;
-    protected $fillable = ['identifier', 'type', 'email', 'is_admin', 'is_active'];
-    protected $dates = ['created_at', 'updated_at', 'deleted_at', 'last_login'];
+    public $timestamps = false;
+    protected $fillable = ['tub_om', 'institution_id', 'type', 'email', 'is_admin', 'is_active'];
+    protected $dates = ['last_login'];
     //protected $encrypts = ['email'];
 
     public function projects()
@@ -62,6 +62,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getNameWithEmailAttribute()
     {
         return $this->name . " <" . $this->email . '>';
+    }
     }
     */
 

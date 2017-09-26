@@ -114,7 +114,11 @@ class ShibbolethController extends Controller
         }
 
         /* Added by fab: 2017-09-06 */
-        $user->last_login = Carbon::now();
+        if ($user->is_admin) {
+            $user->last_login = null;
+        } else {
+            $user->last_login = Carbon::now();
+        }
         $user->save();
         $user_name = $map['first_name'] . ' ' . $map['last_name'];
         $institution_identifier = $map['institution_identifier'];

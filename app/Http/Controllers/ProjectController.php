@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportProjectRequest;
 use App\Http\Requests\ProjectRequest;
+use App\Http\Requests\CreateProjectRequest;
 use App\MetadataRegistry;
 use App\Project;
 use App\Template;
@@ -115,7 +117,7 @@ class ProjectController extends Controller
     }
 
 
-    public function import(ProjectRequest $request)
+    public function import(ImportProjectRequest $request)
     {
         /* Get the project instance */
         $project = $this->project->findOrFail($request->id);
@@ -162,19 +164,20 @@ class ProjectController extends Controller
     }
 
 
-    public function request(ProjectRequest $request)
+    public function request(CreateProjectRequest $request)
     {
         if (Request::ajax()) {
             $project['project_id'] = $request->get( 'project_id' );
             $project['name'] = $request->get( 'name' );
             $project['email'] = $request->get( 'email' );
-            $project['identifier'] = $request->get( 'identifier' );
+            $project['tub_om'] = $request->get( 'tub_om' );
             $project['institution_identifier'] = $request->get( 'institution_identifier' );
+            $project['contact_email'] = $request->get( 'contact_email' );
             $project['message'] = $request->get( 'message' );
 
             Mail::send( [ 'text' => 'emails.project-request' ], [ 'project' => $project ],
                 function ( $message ) use ( $project ) {
-                    $subject = 'TUB-DMP Project please';
+                    $subject = 'TUB-DMP Project Request';
                     $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
                     $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
                     $message->replyTo( $project['email'], $project['name'] );

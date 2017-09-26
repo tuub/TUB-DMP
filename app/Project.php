@@ -24,6 +24,7 @@ class Project extends Node
         'identifier',
         'parent_id',
         'user_id',
+        'contact_email',
         'data_source_id',
         'imported',
         'imported_at'
@@ -163,20 +164,20 @@ class Project extends Node
     {
         if ($this->getMetadata('begin') && $this->getMetadata('begin')->count()) {
             if (Carbon::parse($this->getMetadata('begin')->first()) > (Carbon::now())) {
-                $status = 'Not started';
+                $status = trans('project.status.not_started');
             } else {
-                $status = 'Running';
+                $status = trans('project.status.running');
             }
 
             if ($this->getMetadata('end') && $this->getMetadata('end')->count()) {
                 if (Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
-                    $status = 'Running';
+                    $status = trans('project.status.running');
                 } else {
-                    $status = 'Ended';
+                    $status = trans('project.status.ended');
                 }
             }
         } else {
-            $status = 'Unknown';
+            $status = trans('project.status.unknown');
         }
 
         return $status;

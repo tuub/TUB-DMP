@@ -32,7 +32,7 @@
                             {!! Form::Label( 'email', 'E-mail Address' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::Text( 'email', $user->email, array('class' => 'form-control', 'disabled' => 'disabled') ) !!}
+                            {!! Form::Text( 'email', $user->email, array('class' => 'form-control', 'readonly' => 'readonly') ) !!}
                             <span class="help-block {{ ($errors->first('email') ? 'form-error' : '') }}">{{ $errors->first('email') }}</span>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             {!! Form::Label( 'institution_id', 'Institution' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('institution_id', [null => 'None'] + $institutions->toArray(), $user->institution_id, array('class' => 'form-control', 'disabled' => 'disabled')) !!}
+                            {!! Form::select('institution_id', [null => 'None'] + $institutions->toArray(), $user->institution_id, array('class' => 'form-control', 'readonly' => 'readonly')) !!}
                             <span class="help-block {{ ($errors->first('institution_id') ? 'form-error' : '') }}">{{ $errors->first('institution_id') }}</span>
                         </div>
                     </div>

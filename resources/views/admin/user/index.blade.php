@@ -31,14 +31,12 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Identifier</th>
+                        <th>TUB OM</th>
                         <th>Email</th>
                         <th>Plans</th>
                         <th>Admin</th>
                         <th>Active</th>
                         <th>Last Login</th>
-                        <th>Created</th>
-                        <th>Updated</th>
                         <th>Tools</th>
                     </tr>
                     </thead>

@@ -33,6 +33,7 @@
                         <th>ID</th>
                         <th>Identifier</th>
                         <th>Owner</th>
+                        <th>Contact Email</th>
                         <th>Plans</th>
                         <th>Sub-Projects</th>
                         <th>Data Source</th>

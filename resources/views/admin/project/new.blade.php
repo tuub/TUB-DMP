@@ -63,7 +63,15 @@
                             <span class="help-block {{ ($errors->first('data_source_id') ? 'form-error' : '') }}">{{ $errors->first('data_source_id') }}</span>
                         </div>
                     </div>
-
+                    <div class="form-group row container">
+                        <div class="col-md-2">
+                            {!! Form::Label( 'contact_email', 'Institutional contact email' ) !!}
+                        </div>
+                        <div class="col-md-10">
+                            {!! Form::Text( 'contact_email', Input::old('contact_email'), array('class' => 'form-control') ) !!}
+                            <span class="help-block {{ ($errors->first('contact_email') ? 'form-error' : '') }}">{{ $errors->first('contact_email') }}</span>
+                        </div>
+                    </div>
                     <div class="form-group row container">
                         <div class="col-md-2">
                             &nbsp;
