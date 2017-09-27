@@ -13,9 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\Inspire::class,
-        \App\Console\Commands\PrefillPlans::class,
         \App\Console\Commands\CalculateCompletion::class,
+        \App\Console\Commands\UpdatePsqlSequences::class,
     ];
 
     /**
