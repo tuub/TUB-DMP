@@ -63,7 +63,7 @@ $(document).ready(function ()
      */
     function showAjaxErrors(json)
     {
-        var errors = json.responseJSON;
+        var errors = json.responseJSON.errors;
         var errorsHtml = '<ul>';
         $.each( errors , function( key, value ) {
             errorsHtml += '<li>' + value[0] + '</li>';
