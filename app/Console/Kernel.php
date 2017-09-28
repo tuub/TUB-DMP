@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\CalculateCompletion::class,
         \App\Console\Commands\UpdatePsqlSequences::class,
+        \App\Console\Commands\RebuildHierarchies::class,
     ];
 
     /**

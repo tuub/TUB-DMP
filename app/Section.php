@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Library\Traits\Uuids;
 
 class Section extends \Eloquent
 {
+    use Uuids;
+
     /*
 	|--------------------------------------------------------------------------
 	| Model Options
@@ -14,6 +16,7 @@ class Section extends \Eloquent
 	*/
 
     protected $table = 'sections';
+    public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];
 

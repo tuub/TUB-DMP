@@ -7,6 +7,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Http\Requests\CreateProjectRequest;
 use App\MetadataRegistry;
 use App\Project;
+use App\Question;
 use App\Template;
 use Request;
 use Mail;
@@ -37,12 +38,11 @@ class ProjectController extends Controller
      */
     public function index()
     {
-	
         $projects = $this->project
                     ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template',
                         'metadata', 'metadata.metadata_registry', 'metadata.metadata_registry.content_type')
-                    ->withCount('children')
                     ->withCount('plans')
+                    ->withCount('children')
                     ->where('user_id', auth()->user()->id)
                     ->orderBy('updated_at', 'desc')
                     ->get()

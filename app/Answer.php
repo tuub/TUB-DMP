@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Library\HtmlOutputFilter;
 use App\Library\FormOutputFilter;
 use App\Library\PdfOutputFilter;
+use App\Library\Traits\Uuids;
 
 use Illuminate\Support\Facades\Log;
 /*
@@ -18,7 +19,10 @@ implements AnswerInterface
 
 class Answer extends Model
 {
+    use Uuids;
+
     protected $table    = 'answers';
+    public $incrementing = false;
     public $timestamps  = true;
     protected $guarded  = [];
     protected $casts    = [

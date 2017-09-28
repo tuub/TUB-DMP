@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class QuestionOption extends Model
 {
+    use Uuids;
+
     /*
 	|--------------------------------------------------------------------------
 	| Model Options
@@ -13,6 +16,7 @@ class QuestionOption extends Model
 	*/
 
     protected $table = 'question_options';
+    public $incrementing = false;
     public $timestamps = false;
 
     /*

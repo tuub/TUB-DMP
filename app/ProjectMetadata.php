@@ -8,10 +8,14 @@ use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use HTML;
 use DB;
+use App\Library\Traits\Uuids;
 
 class ProjectMetadata extends Model
 {
+    use Uuids;
+
     protected $table = 'project_metadata';
+    public $incrementing = false;
     protected $fillable = ['project_id', 'metadata_registry_id', 'content'];
     protected $casts = ['content' => 'array'];
 

@@ -4,23 +4,26 @@
 
 namespace App;
 
+use App\Library\Traits\Uuids;
 use Baum\Node;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 class Project extends Node
 {
-    protected $table      = 'projects';
-    public    $timestamps = true;
-    protected $dates      = [
+    use Uuids;
+
+    protected $table        = 'projects';
+    public    $incrementing = false;
+    public    $timestamps   = true;
+    protected $dates = [
         'created_at',
         'updated_at',
         'imported_at'
     ];
-    protected $fillable   = [
+    protected $fillable = [
         'identifier',
         'parent_id',
         'user_id',
@@ -29,12 +32,16 @@ class Project extends Node
         'imported',
         'imported_at'
     ];
-    protected $guarded    = [
+    protected $guarded = [
         'id',
         'parent_id',
         'lft',
         'rgt',
         'depth'
+    ];
+    protected $casts = [
+        'id' => 'string',
+        'parent_id' => 'string',
     ];
 
     /* Nested Sets */

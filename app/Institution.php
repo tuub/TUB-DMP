@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class Institution extends Model
 {
+    use Uuids;
+
     /*
 	|--------------------------------------------------------------------------
 	| Model Options
@@ -13,6 +16,7 @@ class Institution extends Model
 	*/
 
     protected $table = 'institutions';
+    public $incrementing = false;
     public $timestamps = false;
 
     /*

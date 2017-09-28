@@ -14,10 +14,14 @@ use Carbon\Carbon;
 use Exporters;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Library\Traits\Uuids;
 
 class Plan extends Model
 {
+    use Uuids;
+
     public $timestamps  = true;
+    public $incrementing = false;
     protected $table    = 'plans';
     protected $dates    = ['created_at', 'updated_at', 'snapshot_at'];
     protected $fillable = ['title', 'project_id', 'version', 'template_id', 'is_active', 'is_snapshot', 'snapshot_at'];

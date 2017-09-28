@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class DataSource extends Model
 {
+    use Uuids;
+
     protected $table = 'data_sources';
+    public $incrementing = false;
     public $timestamps = false;
 
     public function projects()

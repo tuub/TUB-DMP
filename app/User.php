@@ -12,15 +12,19 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\Notifiable;
 use StudentAffairsUwm\Shibboleth\Entitlement;
 use Delatbabel\Elocrypt\Elocrypt;
+use App\Library\Traits\Uuids;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use Uuids, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     protected $table = 'users';
+    public $incrementing = false;
     public $timestamps = false;
     protected $fillable = ['tub_om', 'institution_id', 'type', 'email', 'is_admin', 'is_active'];
     protected $dates = ['last_login'];
+
+
     //protected $encrypts = ['email'];
 
     public function projects()

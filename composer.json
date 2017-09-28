@@ -17,7 +17,8 @@
         "tck/odbc": "dev-master",
         "laravel/tinker": "^1.0",
         "razorbacks/laravel-shibboleth": "^2.2",
-        "mrclay/shibalike": "^1.0"
+        "mrclay/shibalike": "^1.0",
+        "webpatser/laravel-uuid": "^3.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

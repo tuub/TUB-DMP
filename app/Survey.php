@@ -4,10 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Answer;
+use App\Library\Traits\Uuids;
 
 class Survey extends Model
 {
+    use Uuids;
+
     public $timestamps = true;
+    public $incrementing = false;
     protected $table = 'surveys';
     protected $dates = ['created_at', 'updated_at'];
     protected $fillable = ['plan_id', 'template_id', 'completion'];

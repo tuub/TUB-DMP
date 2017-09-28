@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class DataSourceMapping extends Model
 {
+    use Uuids;
+
     protected $table = 'data_source_mappings';
+    public $incrementing = false;
     public $timestamps = false;
     protected $casts = [
         'data_source_entity' => 'array',

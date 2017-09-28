@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class InputType extends Model
 {
+    use Uuids;
+
     /*
 	|--------------------------------------------------------------------------
 	| Model Options
@@ -13,6 +16,7 @@ class InputType extends Model
 	*/
 
     protected $table = 'input_types';
+    public $incrementing = false;
     public $timestamps = false;
 
     /*

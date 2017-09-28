@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class Template extends Model
 {
+    use Uuids;
+
     /*
 	|--------------------------------------------------------------------------
 	| Model Options
@@ -13,6 +16,7 @@ class Template extends Model
 	*/
 
     protected $table = 'templates';
+    public $incrementing = false;
     public $timestamps = false;
     protected $guarded = [];
 

@@ -1,10 +1,13 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class Group extends Model
 {
+    use Uuids;
 
+    public $incrementing = false;
     /**
      * Determine need for soft deletes in the database.
      *
@@ -58,5 +61,4 @@ class Group extends Model
     {
         return $this->belongsToMany('App\User');
     }
-
 }

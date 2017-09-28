@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Traits\Uuids;
 
 class MetadataRegistry extends Model
 {
+    use Uuids;
+
     protected $table = 'metadata_registry';
+    public $incrementing = false;
     public $timestamps = false;
 
     public function content_type()

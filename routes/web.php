@@ -26,6 +26,13 @@ Route::group(['middleware' => 'guest'], function()
     Route::name('shibboleth-login')->get('/login', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@login');
     Route::name('shibboleth-authenticate')->get('/shibboleth-authenticate', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@idpAuthenticate');
 
+    Route::get('/uuid', function() {
+        return \App\Project::create([
+            'identifier' => '123-45663632',
+            'user_id' => 1,
+        ]);
+    });
+
 });
 
 Route::group(['middleware' => 'auth'], function()
@@ -122,7 +129,7 @@ Route::group(['middleware' => 'auth'], function()
         'as' => 'project.request'
     ]);
     /* SHOW */
-    Route::get('/my/project/{id}/show',[
+    Route::get('/my/project/{uuid}/show',[
         'uses' => 'ProjectController@show',
         'as' => 'project.show'
     ]);
