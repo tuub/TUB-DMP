@@ -2,7 +2,6 @@
 
 namespace StudentAffairsUwm\Shibboleth\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Auth\GenericUser;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +16,7 @@ use JWTAuth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use StudentAffairsUwm\Shibboleth\Entitlement;
 use StudentAffairsUwm\Shibboleth\ConfigurationBackwardsCompatabilityMapper;
+use Carbon\Carbon;
 
 class ShibbolethController extends Controller
 {
@@ -105,9 +105,9 @@ class ShibbolethController extends Controller
 
         // Add user and send through auth.
         elseif (config('shibboleth.add_new_users', true)) {
-            //$map['password'] = 'shibboleth';
+            $map['password'] = 'shibboleth';
             $user = $userClass::create($map);
-            Auth::attempt(array('email' => $map['email']), true);
+            Auth::login($user);
         }
 
         else {
@@ -201,13 +201,13 @@ class ShibbolethController extends Controller
             $userAttrs = $this->idp->fetchAttrs($username);
             if ($userAttrs) {
                 $this->idp->markAsAuthenticated($username);
-                $this->idp->redirect();
+                $this->idp->redirect(route('shibboleth-authenticate'));
             }
 
             $data['error'] = 'Incorrect username and/or password';
         }
 
-        return view('IdpLogin', $data);
+        return view('shibalike::IdpLogin', $data);
     }
 
     /**
