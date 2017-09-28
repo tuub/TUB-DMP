@@ -78,7 +78,7 @@ return array(
     'user' => [
         // fillable user model attribute => server variable
         'email'       => 'mail',
-        'identifier'  => 'tubPersonOM',
+        'tub_om'  => 'tubPersonOM',
         'first_name'  => 'givenName',
         'last_name'   => 'sn',
         'institution_identifier' => 'tubPersonKostenstelle',

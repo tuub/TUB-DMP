@@ -58,7 +58,7 @@ class UpdatePsqlSequences extends Command
 
                 if (count($foo) > 0) {
                     $query = "SELECT setval(pg_get_serial_sequence('" . $table->name . "', 'id'),
-                                    COALESCE(MAX(id),1), false)
+                                    COALESCE(MAX(id)+1,1), false)
                                     FROM " . $table->name;
 
                     DB::select(DB::raw($query));
