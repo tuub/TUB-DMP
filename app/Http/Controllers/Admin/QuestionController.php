@@ -54,8 +54,8 @@ class QuestionController extends Controller {
         $questions = $this->question->all()->pluck('text', 'id');
         $templates = $this->template->all()->pluck('name', 'id');
         $sections = $this->section->all()->pluck('name', 'id');
-        $content_types = $this->content_type->all()->pluck('name', 'id');
-        return View::make('admin.question.new', compact('question','questions','templates','sections','input_types'));
+        $content_types = $this->content_type->all()->pluck('title', 'id');
+        return view('admin.question.new', compact('question','questions','templates','sections','content_types'));
     }
 
     /**

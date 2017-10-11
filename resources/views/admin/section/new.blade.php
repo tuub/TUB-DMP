@@ -73,6 +73,15 @@
                     </div>
                     <div class="form-group row container">
                         <div class="col-md-2">
+                            {!! Form::Label( 'is_active', 'Active' ) !!}
+                        </div>
+                        <div class="col-md-10">
+                            {!! Form::radio('is_active', 1, Input::old('$template->is_active'), ['checked' => 'checked']) !!} Yes
+                            {!! Form::radio('is_active', 0, Input::old('$template->is_active')) !!} No
+                        </div>
+                    </div>
+                    <div class="form-group row container">
+                        <div class="col-md-2">
                             &nbsp;
                         </div>
                         <div class="col-md-10">

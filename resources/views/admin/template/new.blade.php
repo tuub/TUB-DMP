@@ -48,7 +48,7 @@
                             {!! Form::Label( 'is_active', 'Active' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::radio('is_active', 1, Input::old('$template->is_active')) !!} Yes
+                            {!! Form::radio('is_active', 1, Input::old('$template->is_active'), ['checked' => 'checked']) !!} Yes
                             {!! Form::radio('is_active', 0, Input::old('$template->is_active')) !!} No
                         </div>
                     </div>

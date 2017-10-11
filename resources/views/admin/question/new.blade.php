@@ -75,12 +75,12 @@
                     </div>
                     <div class="form-group row container" id="vue-instance">
                         <div class="col-md-2">
-                            {!! Form::Label( 'input_type_id', 'Input Type' ) !!}
+                            {!! Form::Label( 'content_type_id', 'Content Type' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('input_type_id', [null => 'None'] + $input_types->toArray(), Input::old('input_type_id'), array('class' => 'form-control', 'v-model' => 'input_type',  'v-on:change' => 'showOptions')) !!}
+                            {!! Form::select('content_type_id', $content_types->toArray(), 1, array('class' => 'form-control', 'v-model' => 'content_type',  'v-on:change' => 'showOptions')) !!}
                             <pre>@{{ $data | json }}</pre>
-                            <span class="help-block {{ ($errors->first('input_type_id') ? 'form-error' : '') }}">{{ $errors->first('input_type_id') }}</span>
+                            <span class="help-block {{ ($errors->first('content_type_id') ? 'form-error' : '') }}">{{ $errors->first('content_type_id') }}</span>
                         </div>
                     </div>
                     <div class="form-group row container">
@@ -88,7 +88,7 @@
                             {!! Form::Label( 'template_id', 'Template' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::select('template_id', [null => 'None'] + $templates->toArray(), Input::old('template_id'), array('class' => 'form-control')) !!}
+                            {!! Form::select('template_id', $templates->toArray(), Input::old('template_id'), array('class' => 'form-control')) !!}
                             <span class="help-block {{ ($errors->first('template_id') ? 'form-error' : '') }}">{{ $errors->first('template_id') }}</span>
                         </div>
                     </div>
@@ -244,11 +244,11 @@
         var vm = new Vue({
             el: '#vue-instance',
             data: {
-                input_type: ''
+                content_type: ''
             },
             methods: {
                 showOptions: function() {
-                    switch( this.input_type ) {
+                    switch( this.content_type ) {
                         case '6':
                             console.log( 'Case for Option Area' );
                             break;
