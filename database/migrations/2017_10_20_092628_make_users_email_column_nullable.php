@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddForeignKeyProjectsToDataSources extends Migration
+class MakeUsersEmailColumnNullable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddForeignKeyProjectsToDataSources extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function($table) {
-            $table->foreign('data_source_id')->references('id')->on('data_sources');
+        Schema::table('users', function(Blueprint $table) {
+            $table->string('email')->nullable()->change();
         });
     }
 
@@ -25,8 +25,8 @@ class AddForeignKeyProjectsToDataSources extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function($table) {
-            $table->dropForeign(['data_source_id']);
+        Schema::table('users', function(Blueprint $table) {
+            $table->string('email')->nullable(false)->change();
         });
     }
 }
