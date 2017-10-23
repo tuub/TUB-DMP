@@ -21,17 +21,19 @@
 @section('body')
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            New Section
+            New Section for "{{ $template->name }}"
         </div>
         <div class="panel-body">
             <div class="row">
                 {!! Form::model($section, ['method' => 'POST', 'route' => ['admin.section.store'], 'class' => '', 'role' => 'form']) !!}
-                    <div class="form-group row container">
+                {!! Form::hidden('order', $position) !!}
+                {!! Form::hidden('template_id', $template->id) !!}
+                <div class="form-group row container">
                         <div class="col-md-2">
                             {!! Form::Label( 'keynumber', 'Keynumber' ) !!}
                         </div>
                         <div class="col-md-10">
-                            {!! Form::text('keynumber', Input::old('keynumber'), array('class' => 'form-control')) !!}
+                            {!! Form::text('keynumber', $position, array('class' => 'form-control')) !!}
                             <span class="help-block {{ ($errors->first('keynumber') ? 'form-error' : '') }}">{{ $errors->first('keynumber') }}</span>
                         </div>
                     </div>
@@ -42,24 +44,6 @@
                         <div class="col-md-10">
                             {!! Form::Text( 'name', Input::old('name'), array('class' => 'form-control xs') ) !!}
                             <span class="help-block {{ ($errors->first('name') ? 'form-error' : '') }}">{{ $errors->first('name') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
-                            {!! Form::Label( 'template_id', 'Template' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::select('template_id', $templates, Input::old('template_id'), array('class' => 'form-control')) !!}
-                            <span class="help-block {{ ($errors->first('template_id') ? 'form-error' : '') }}">{{ $errors->first('template_id') }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group row container">
-                        <div class="col-md-2">
-                            {!! Form::Label( 'order', 'Order' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::text('order', Input::old('order'), array('class' => 'form-control')) !!}
-                            <span class="help-block {{ ($errors->first('order') ? 'form-error' : '') }}">{{ $errors->first('order') }}</span>
                         </div>
                     </div>
                     <div class="form-group row container">

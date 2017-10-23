@@ -26,6 +26,7 @@ class SnapshotPlanRequest extends Request
         return [
             'project_id' => 'required',
             'title' => 'required',
+            'version' => 'required',
         ];
     }
 }

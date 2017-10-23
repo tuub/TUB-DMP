@@ -35,8 +35,8 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = $this->template->all();
-        return View::make('admin.template.index', compact('templates'));
+        $templates = $this->template->get();
+        return view('admin.template.index', compact('templates'));
     }
 
     /**
@@ -47,8 +47,8 @@ class TemplateController extends Controller
     public function create()
     {
         $template = new $this->template;
-        $institutions = $this->institution->all()->pluck('name', 'id');
-        return View::make('admin.template.new', compact('template','institutions'));
+        $institutions = $this->institution->get()->pluck('name', 'id');
+        return view('admin.template.new', compact('template','institutions'));
     }
 
     /**
@@ -65,7 +65,7 @@ class TemplateController extends Controller
         $template->is_active      = $request->get('is_active');
         $template->save();
         Session::flash('message', 'Successfully created the template!');
-        return Redirect::route('admin.template.index');
+        return redirect()->route('admin.dashboard');
     }
 
     /**
@@ -88,8 +88,8 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $template = $this->template->find($id);
-        $institutions = $this->institution->all()->pluck('name', 'id');
-        return View::make('admin.template.edit', compact('template','institutions'));
+        $institutions = $this->institution->get()->pluck('name', 'id');
+        return view('admin.template.edit', compact('template','institutions'));
     }
 
     /**
@@ -107,7 +107,7 @@ class TemplateController extends Controller
             $item = ($item == '') ? null : $item;
         });
         $template->update( $data );
-        return Redirect::route('admin.template.index');
+        return redirect()->route('admin.dashboard');
     }
 
     /**
@@ -121,8 +121,6 @@ class TemplateController extends Controller
         $template = $this->template->find($id);
         $template->delete();
         Session::flash('message', 'Successfully deleted template!');
-        return Redirect::route('admin.template.index');
+        return redirect()->route('admin.dashboard');
     }
 }
-
-

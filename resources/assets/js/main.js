@@ -14,7 +14,7 @@ $(document).ready(function ()
     /**
      * Gets the state of project's plan panel based on project_id from
      * cookie values and toggles the plus/minus buttons, located in
-     * partials/project/info.php
+     * resources/views/partials/project/info.php
      */
     function getVisibleProjects()
     {
@@ -29,7 +29,7 @@ $(document).ready(function ()
             }).removeClass('hidden');
             $('a.toggle-plans').filter(function () {
                 return $.inArray($(this).attr('data-href'), projects) > -1;
-            }).find('i').toggleClass('fa-plus fa-minus');
+            }).find('i').toggleClass('fa-caret-down fa-caret-up');
         }
     }
 
@@ -37,7 +37,7 @@ $(document).ready(function ()
     /**
      * Sets the state of project's plan panel based on project_id from
      * cookie values and toggles the plus/minus buttons, located in
-     * partials/project/info.php
+     * resources/views/partials/partials/project/info.php
      */
     function setVisibleProjects()
     {
@@ -47,10 +47,6 @@ $(document).ready(function ()
         });
         $.cookie('tub-dmp_dashboard', open);
     }
-
-
-
-
 
 
     /**
@@ -73,6 +69,28 @@ $(document).ready(function ()
     }
 
 
+    function hasValue(nodes, value) {
+        var deletes = [];
+        nodes.each(function() {
+            if ($(this).val() === value || $(this).attr('title') === value ) {
+                deletes.push($(this).val());
+            }
+        });
+        return deletes.length > 0;
+    }
+
+    function areYouSure() {
+        if (!confirm("DELETE: Are You Sure?")) {
+            event.preventDefault();
+        }
+    }
+
+    $('.btn').bind('click', function(e){
+        if (hasValue($(this),'Delete') ) {
+            areYouSure();
+        }
+    });
+
     /**
      * Ensures that every Ajax request includes the CSRF token from the page metadata
      *
@@ -92,7 +110,7 @@ $(document).ready(function ()
      *
      * @param {Json} json
      *
-     * @return {String} errorsHtml
+     * @return {String} errorsHtml FIXME
      */
     $('#feedback-form').bind('submit', function (e)
     {
@@ -120,6 +138,14 @@ $(document).ready(function ()
         });
     });
 
+
+    /**
+     * Validate the privacy statements at login page.
+     *
+     * @param {Json} json
+     *
+     * @return {String} errorsHtml
+     */
     $('#login-form').bind('submit', function (e)
     {
         if ($(this).find('input').not(':checked').length > 0) {
@@ -128,23 +154,14 @@ $(document).ready(function ()
         }
     });
 
-    $('a.project-request').bind('click', function (e)
-    {
-        e.preventDefault();
-
-        var form    = $('#project-request-form');
-        var div     = form.parent();
-
-        $.ajax({
-            type    : 'GET',
-            url     : '/my/project/request',
-            dataType: 'json',
-            success : function (json) {
-                div.modal();
-            }
-        });
-    });
-
+    /**
+     * Serializes the project request form and passes the form data to controller method.
+     * If successsful, close the modal and reload the page. Otherwise errors in modal.
+     *
+     * @param {Json} json
+     *
+     * @return {String} errorsHtml FIXME
+     */
     $('#project-request-form').bind('submit', function (e) {
         e.preventDefault();
 
@@ -179,13 +196,13 @@ $(document).ready(function ()
         e.preventDefault();
 
         var project_id  = $(this).data('href');
-        var toggleState = ($(this).find('i').hasClass('fa-plus')) ? 'open' : 'closed';
+        var toggleState = ($(this).find('i').hasClass('fa-caret-down')) ? 'open' : 'closed';
 
         if( toggleState === 'open' ) {
-            $(this).find('i').removeClass('fa-plus').addClass('fa-minus');
+            $(this).find('i').removeClass('fa-caret-down').addClass('fa-caret-up');
             $('div[data-content=' + project_id + ']').removeClass('hidden');
         } else {
-            $(this).find('i').removeClass('fa-minus').addClass('fa-plus');
+            $(this).find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
             $('div[data-content=' + project_id + ']').addClass('hidden');
         }
 
@@ -194,8 +211,16 @@ $(document).ready(function ()
 
 
 
-
-
+    /**
+     * Create Plan
+     *
+     * While modal is loaded, the project's show method is called and the returning json attribute
+     * "id" is then injected into the hidden input field in the form.
+     *
+     * FIXME: do we really need this? find a non js way.
+     *
+     * @return {Json} json
+     */
     $('a.create-plan').bind('click', function (e) {
         e.preventDefault();
 
@@ -213,6 +238,14 @@ $(document).ready(function ()
         });
     });
 
+    /**
+     * Create Plan
+     *
+     * Serializes the creatw plan form and passes the form data to controller method.
+     * If successsful, close the modal and reload the page. Otherwise errors in modal.
+     * *
+     * @return {Json} json
+     */
     $('#create-plan-form').bind('submit', function (e) {
         e.preventDefault();
 
@@ -236,6 +269,17 @@ $(document).ready(function ()
             }
         });
     });
+
+    /**
+     * Edit Plan
+     *
+     * While modal is loaded, the plan's show method is called and the returning json attribute
+     * "id" is then injected into the hidden input field in the form.
+     *
+     * FIXME: do we really need this? find a non js way.
+     *
+     * @return {Json} json
+     */
 
     $('a.edit-plan').bind('click', function (e) {
         e.preventDefault();
@@ -296,7 +340,7 @@ $(document).ready(function ()
                 form.find('#id').val(json.id);
                 form.find('#project_id').val(json.project_id);
                 form.find('#title').val(json.title);
-                form.find('#version').val(json.version);
+                form.find('#version').val('');
                 div.modal();
             }
         });
@@ -386,6 +430,49 @@ $(document).ready(function ()
             },
             success : function () {
                 div.modal();
+            }
+        });
+    });
+
+    $('a.delete-plan').bind('click', function (e) {
+        e.preventDefault();
+
+        var plan_id = $(this).data('rel');
+        var div     = $('div#delete-plan-' + plan_id);
+
+        $.ajax({
+            type    : 'GET',
+            url     : '/plan/' + plan_id + '/show',
+            dataType: 'json',
+            error   : function () {
+                div.modal();
+            },
+            success : function () {
+                div.modal();
+            }
+        });
+    });
+
+    $('form.delete-plan-form').on('submit', function (e) {
+        e.preventDefault();
+
+        var form    = $(this);
+        var div     = $(this).closest('modal');
+
+        $.ajax({
+            url     : form.attr('action'),
+            type    : form.attr('method'),
+            data    : form.serialize(),
+            dataType: 'json',
+            error   : function (json) {
+                form.children().find('.errors').html( showAjaxErrors(json) );
+                div.modal();
+            },
+            success : function (json) {
+                if (json.response === 200) {
+                    div.modal('hide');
+                    location.reload();
+                }
             }
         });
     });
@@ -557,7 +644,7 @@ $( window ).load(function() {
 
     /* Uncheck Login Privacy Statement Checkboxes by default */
     $('#login-form').find(['type="checkbox"']).removeAttr('checked');
-    $('.checkbox input').prop('checked', false);
+    //$('.checkbox input').prop('checked', false);
 
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');

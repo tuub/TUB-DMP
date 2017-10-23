@@ -6,7 +6,6 @@
 @append
 
 @section('navigation')
-    <li>{!! link_to_route( 'dashboard', 'Back to Dashboard' ) !!}</li>
 @append
 
 @section('headline')
@@ -20,25 +19,29 @@
 
 @section('body')
 
-        <ol id="plan-toc">
-            @foreach( $survey->template->sections()->active()->get() as $section )
-                <li><a href="#{{ $section->keynumber }}">{{ $section->name }}</a></li>
-            @endforeach
-        </ol>
+    <style>
+        * {
+            outline: 0px #336699 solid;
+        }
+    </style>
 
-        @foreach( $survey->template->sections()->active()->get() as $section )
-            <div class="col-md-24">
-                <h3>
-                    <a class="anchor" name="{{ $section->keynumber }}"></a>
-                    {{ $section->full_name }}
-                </h3>
-                <div class="section-text">
-                    @foreach( $section->questions()->active()->ordered()->get() as $question )
-                        @if( $question->isRoot() )
-                            @include('partials.question.show', $question)
-                        @endif
-                    @endforeach
-                </div>
-            </div>
+    <ol id="plan-toc">
+        @foreach( $survey->template->sections()->active()->ordered()->get() as $section )
+            <li><a href="#{{ $section->keynumber }}">{{ $section->name }}</a></li>
         @endforeach
+    </ol>
+
+    @foreach( $survey->template->sections()->active()->ordered()->get() as $section )
+        <div class="col-md-24">
+            <h3>
+                <a class="anchor" name="{{ $section->keynumber }}"></a>
+                {{ $section->full_name }}
+            </h3>
+            <div class="section-text">
+                @foreach( $section->questions()->active()->ordered()->get() as $question )
+                    @include('partials.question.show', $question)
+                @endforeach
+            </div>
+        </div>
+    @endforeach
 @stop

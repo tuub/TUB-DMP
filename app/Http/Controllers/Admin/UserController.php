@@ -28,60 +28,6 @@ class UserController extends Controller
         $this->institution = $institution;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $users = $this->user->withCount('plans')->get();
-        return View::make('admin.user.index', compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * FIXME: Obsolete!
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $user = new $this->user;
-        $institutions = $this->institution->all()->pluck('name', 'id');
-        return View::make('admin.user.new', compact('user','institutions'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * FIXME: Obsolete!
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $user = new User;
-        $user->email      = $request->get('email');
-        $user->institution_id = $request->get('institution_id');
-        $user->is_admin = $request->get('is_admin');
-        $user->is_active      = $request->get('is_active');
-        $user->save();
-        Session::flash('message', 'Successfully created the user!');
-        return Redirect::route('admin.user.index');
-    }
-
-    /**
-     * Display the specified resource.
-     * FIXME: Obsolete!
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -92,8 +38,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = $this->user->find($id);
-        $institutions = $this->institution->all()->pluck('name', 'id');
-        return View::make('admin.user.edit', compact('user','institutions'));
+        return view('admin.user.edit', compact('user'));
     }
 
     /**
@@ -107,12 +52,11 @@ class UserController extends Controller
     {
         $user = $this->user->find($id);
         $user->email = $request->get( 'email' );
-        $user->institution_id = $request->get( 'institution_id' );
         $user->is_active = $request->get( 'is_active' );
         $user->is_admin = $request->get( 'is_admin' );
         $user->save();
 
-        return Redirect::route('admin.user.index');
+        return redirect()->route('admin.dashboard');
     }
 
     /**
@@ -131,6 +75,7 @@ class UserController extends Controller
         //$user->delete();
 
         Session::flash('message', 'Successfully deleted user!');
-        return Redirect::route('admin.user.index');
+
+        return redirect()->route('admin.dashboard');
     }
 }

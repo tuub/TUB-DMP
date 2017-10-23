@@ -96,7 +96,7 @@ $(document).ready(function(){
 
 <header>
     @section('header')
-        @include('partials.header')
+        @include('partials.layout.header')
     @show
 </header>
 
@@ -120,7 +120,7 @@ $(document).ready(function(){
         <div class="text-center">
             {{ HTML::link('http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/', trans('general.footer.link-02'), ['target' => '_blank']) }}
             |
-            {{ HTML::link('http://www.szf.tu-berlin.de/menue/personen/ansprechpartnerinnen/', trans('general.footer.link-03'), ['target' => '_blank']) }}
+            {{ HTML::link('http://www.szf.tu-berlin.de/menue/ansprechpartnerinnen/', trans('general.footer.link-03'), ['target' => '_blank']) }}
             |
             {{ HTML::link('http://www.szf.tu-berlin.de/servicemenue/impressum/', trans('general.footer.link-04'), ['target' => '_blank']) }}
             |

@@ -11,8 +11,6 @@
 @stop
 
 @section('headline')
-    <h1>Admin: TUB-DMP</h1>
-    <h3>Projects</h3>
 @stop
 
 @section('title')
@@ -21,26 +19,26 @@
 
 @section('body')
 
+    {{ Breadcrumbs::render('projects', $user) }}
+
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            All Projects
+            Projects of {{ $user->email ? $user->email : trans('admin/table.value.null') }}
         </div>
         <div class="panel-body">
             <div class="table-responsive">
-                <table class="table table-fixed">
+                <table class="table table-fixed data-table">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Identifier</th>
-                        <th>Owner</th>
                         <th>Contact Email</th>
                         <th>Plans</th>
-                        <th>Sub-Projects</th>
+                        <th>Childs</th>
                         <th>Data Source</th>
                         <th>Import</th>
                         <th>Created</th>
                         <th>Updated</th>
-                        <th>Tools</th>
+                        <th data-orderable="false">Tools</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,8 +48,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="text-center">
+                {!! link_to_route('admin.user.projects.create', 'Create', ['user' => $user]) !!}
+            </div>
         </div>
     </div>
-    {!! link_to_route('admin.project.create', 'Create') !!}
-
 @stop

@@ -15,6 +15,12 @@ class Project extends Node
 {
     use Uuids;
 
+    /*
+	|--------------------------------------------------------------------------
+	| Model Options
+	|--------------------------------------------------------------------------
+	*/
+
     protected $table        = 'projects';
     public    $incrementing = false;
     public    $timestamps   = true;
@@ -52,20 +58,11 @@ class Project extends Node
     protected $orderColumn  = null;
     protected $scoped       = [];
 
-    //////////////////////////////////////////////////////////////////////////////
-    //
-    // Baum makes available two model events to application developers:
-    //
-    // 1. `moving`: fired *before* the a node movement operation is performed.
-    //
-    // 2. `moved`: fired *after* a node movement operation has been performed.
-    //
-    // In the same way as Eloquent's model events, returning false from the
-    // `moving` event handler will halt the operation.
-    //
-    // Please refer the Laravel documentation for further instructions on how
-    // to hook your own callbacks/observers into this events:
-    // http://laravel.com/docs/5.0/eloquent#model-events
+    /*
+	|--------------------------------------------------------------------------
+	| Model Relationships
+	|--------------------------------------------------------------------------
+	*/
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -103,6 +100,12 @@ class Project extends Node
     }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Scopes
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * @param $query
      * @param $flag
@@ -114,6 +117,12 @@ class Project extends Node
         return $query->where('is_prefilled', $flag);
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * @param String $attribute

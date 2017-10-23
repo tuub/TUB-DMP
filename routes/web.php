@@ -25,14 +25,6 @@ Route::group(['middleware' => 'guest'], function()
 
     Route::name('shibboleth-login')->get('/login', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@login');
     Route::name('shibboleth-authenticate')->get('/shibboleth-authenticate', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@idpAuthenticate');
-
-    Route::get('/uuid', function() {
-        return \App\Project::create([
-            'identifier' => '123-45663632',
-            'user_id' => 1,
-        ]);
-    });
-
 });
 
 Route::group(['middleware' => 'auth'], function()
@@ -99,6 +91,16 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'PlanController@update',
         'as' => 'plan.update'
     ]);
+    /* DELETE */
+    Route::get('/plan/{id}/delete', [
+        'uses' => 'PlanController@delete',
+        'as' => 'plan.delete'
+    ]);
+    /* DESTROY */
+    Route::delete('/plan/destroy', [
+        'uses' => 'PlanController@destroy',
+        'as' => 'plan.destroy'
+    ]);
     /* TOGGLE FINAL STATE */
     Route::get('/plan/{id}/toggle', [
         'uses' => 'PlanController@toggleState',
@@ -123,7 +125,7 @@ Route::group(['middleware' => 'auth'], function()
 
     /* Project */
 
-    /* SHOW */
+    /* REQUEST */
     Route::post('/my/project/request',[
         'uses' => 'ProjectController@request',
         'as' => 'project.request'
@@ -158,7 +160,7 @@ Route::group(['middleware' => 'auth'], function()
         Route::get( '/', 'Admin\DashboardController@index', ['as' => 'admin'])->name('admin.dashboard');
 
         Route::get('/phpinfo', function () {
-            return phpinfo();
+            phpinfo();
         })->name('admin.phpinfo');
 
         Route::get( '/project/lookup', 'Admin\ProjectController@getLookup', ['as' => 'admin'])->name('admin.project.get_lookup');
@@ -169,12 +171,23 @@ Route::group(['middleware' => 'auth'], function()
         Route::get( '/project/random_ivmc', 'Admin\ProjectController@random_ivmc', ['as' => 'admin'])->name('admin.random_ivmc');
 
         /* REST ENTITIES */
+        Route::resource( 'template', 'Admin\TemplateController', ['as' => 'admin']  );
+        Route::resource( 'template.sections', 'Admin\SectionController', ['as' => 'admin']  );
         Route::resource( 'user', 'Admin\UserController', ['as' => 'admin'] );
+        Route::resource( 'user.projects', 'Admin\ProjectController', ['as' => 'admin']  );
         Route::resource( 'project', 'Admin\ProjectController', ['as' => 'admin']  );
+        Route::resource( 'project.plans', 'Admin\PlanController', ['as' => 'admin']  );
+        Route::resource( 'section', 'Admin\SectionController', ['as' => 'admin']  );
+        Route::resource( 'section.questions', 'Admin\QuestionController', ['as' => 'admin']  );
+        Route::resource( 'plan.survey', 'Admin\SurveyController', ['as' => 'admin']  );
+
         Route::resource( 'project_metadata', 'Admin\ProjectMetadataController', ['as' => 'admin']  );
         Route::resource( 'plan', 'Admin\PlanController', ['as' => 'admin']  );
-        Route::resource( 'template', 'Admin\TemplateController', ['as' => 'admin']  );
-        Route::resource( 'section', 'Admin\SectionController', ['as' => 'admin']  );
         Route::resource( 'question', 'Admin\QuestionController', ['as' => 'admin']  );
+        Route::resource( 'data_source', 'Admin\DataSourceController', ['as' => 'admin'] );
+
+        Route::post('/section/sort', array ('as' => 'admin.section.sort', 'uses' => 'Admin\SectionController@sort'));
+        Route::post('/question/sort', array ('as' => 'admin.question.sort', 'uses' => 'Admin\QuestionController@sort'));
+
     });
 });

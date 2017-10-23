@@ -5,7 +5,7 @@
     {!! BootForm::bind($plan) !!}
     {!! BootForm::text('ID', 'id') !!}
     {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
-    {{-- BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) --}}
+    {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
     {!! BootForm::text('DMP Version', 'version') !!}
     {!! BootForm::submit('Save')->class('btn btn-success') !!}
     {!! BootForm::close() !!}

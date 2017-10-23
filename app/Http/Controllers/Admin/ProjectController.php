@@ -18,34 +18,39 @@ use Illuminate\Support\Facades\Mail;
 class ProjectController extends Controller
 {
     protected $project;
+    protected $user;
 
-    public function __construct(Project $project)
+    public function __construct(Project $project, User $user)
     {
         $this->project = $project;
+        $this->user = $user;
     }
 
-    public function index()
+    public function index(User $user)
     {
+        $user = $this->user->find($user->id);
         // Get only parent projects so we can include the child projects via view
-        $projects = $this->project->get()->toHierarchy();
-        return view('admin.project.index', compact('projects'));
+        $projects = $this->project->withCount('plans')->where('user_id', $user->id)->get()->toHierarchy();
+        return view('admin.project.index', compact('user', 'projects'));
     }
 
 
-    public function create()
+    public function create(User $user)
     {
+        $user = $this->user->find($user->id);
         $project = $this->project;
-        $projects = $this->project->orderBy('identifier', 'asc')->get()->pluck('identifier','id')->prepend('Select a parent','');
-        $users = User::orderBy('email', 'asc')->get()->pluck('email','id')->prepend('Select an owner','');
+        $projects = $this->project->where('user_id', $user->id)->orderBy('identifier', 'asc')->get()->pluck('identifier','id')->prepend('Select a parent','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
-        return view('admin.project.new', compact('project','projects','users','data_sources'));
+        return view('admin.project.new', compact('project','projects','user','data_sources'));
     }
 
 
     public function store(ProjectRequest $request)
     {
         $data = array_filter($request->all(), 'strlen');
+        $user = $this->user->find($data['user_id']);
         $project = $this->project->create($data);
+        $project->importFromDataSource();
 
         if ($project) {
             Mail::send( [ 'text' => 'emails.project-created' ], [ 'project' => $project ],
@@ -74,7 +79,7 @@ class ProjectController extends Controller
             $request->session()->flash('message', $notification['message']);
             $request->session()->flash('alert-type', $notification['alert-type']);
         };
-        return redirect()->route('admin.project.index');
+        return redirect()->route('admin.user.projects.index', $user);
     }
 
 
@@ -96,6 +101,8 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request, $id)
     {
+        $user = User::find($request->user_id);
+        //\AppHelper::varDump($request);
         $project = $this->project->findOrFail($id);
         // $data = array_filter($request->all(), 'strlen');
         $data = $request->all();
@@ -103,7 +110,7 @@ class ProjectController extends Controller
             $item = ($item == '') ? null : $item;
         });
         $project->update($data);
-        return redirect()->route('admin.project.index');
+        return redirect()->route('admin.user.projects.index', $user);
     }
 
 
@@ -111,7 +118,7 @@ class ProjectController extends Controller
     {
         $project = $this->project->findOrFail($id);
         $project->delete();
-        return redirect()->route('admin.project.index');
+        return redirect()->route('admin.user.projects.index', $project->user->id);
     }
 
 

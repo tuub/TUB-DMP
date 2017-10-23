@@ -39,22 +39,16 @@ class SurveyController extends Controller
 
     public function show($id)
     {
-        $survey = $this->survey
-                ->with('plan', 'plan.project.user', 'template', 'template.questions', 'template.questions.answers')
-                ->findOrFail($id);
+        $survey = $this->survey->findOrFail($id);
 
-        if ($survey) {
-            return view('survey.show', compact('survey'));
-        }
+        return view('survey.show', compact('survey'));
     }
 
 
     public function edit($id)
     {
-        $survey = $this->survey->with('plan', 'template', 'template.questions', 'template.questions.answers')->findOrFail($id);
-        $questions = $survey->template->questions()->with('section', 'answers')->get();
-
-        return view('survey.edit', compact('survey', 'questions'));
+        $survey = $this->survey->findOrFail($id);
+        return view('survey.edit', compact('survey'));
     }
 
 

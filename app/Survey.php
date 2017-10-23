@@ -10,6 +10,12 @@ class Survey extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     public $timestamps = true;
     public $incrementing = false;
     protected $table = 'surveys';
@@ -17,6 +23,11 @@ class Survey extends Model
     protected $fillable = ['plan_id', 'template_id', 'completion'];
     protected $touches = ['plan'];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function plan()
     {
@@ -33,6 +44,11 @@ class Survey extends Model
         return $this->hasManyThrough(Answer::class, Question::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
     public function calculateCompletionRate()
     {

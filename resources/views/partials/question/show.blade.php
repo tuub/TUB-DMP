@@ -1,3 +1,6 @@
+@if ($question->isChild())
+    <div class="col-md-offset-1">
+@endif
 <div class="row">
     <div class="col-md-24">
         <span class="question-text">
@@ -5,12 +8,13 @@
                 <span class="headline_question">
             @endif
 
-            @if(is_numeric( $question->keynumber ) || str_contains($question->keynumber, '/'))
-                {{ $question->keynumber }}.
-            @else
-                {{ $question->keynumber }}
-            @endif
-
+            <div style="display: inline-block; width: 15px;">
+                @if(is_numeric( $question->keynumber ) || str_contains($question->keynumber, '/'))
+                    {{ $question->keynumber }}.
+                @else
+                    {{ $question->keynumber }}
+                @endif
+            </div>
             @if( $question->output_text )
                 {{ $question->output_text }}
             @else
@@ -22,18 +26,16 @@
         </span>
     </div>
     <div class="col-md-24">
-        <span class="question-answer-text">
-            @if( $question->input_type != 'headline')
-                {!! App\Answer::get( $survey, $question, 'html' ) !!}
-                <?php
-                //$answers = App\Answer::getAnswer( $plan, $question );
-                ?>
-            @endif
-        </span>
+        <div style="display: inline-block; margin-top: 10px; margin-left: 18px;">
+            <div class="question-answer-text">
+                @if( $question->input_type != 'headline')
+                    {!! App\Answer::get( $survey, $question, 'html' ) !!}
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 <br/>
-
-@foreach($question->children()->ordered()->get() as $question)
-    @include('partials.question.show', $question)
-@endforeach
+@if ($question->isChild())
+    </div>
+@endif

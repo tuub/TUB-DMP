@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeletePlanRequest;
 use App\Http\Requests\PlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\SnapshotPlanRequest;
@@ -256,47 +257,41 @@ class PlanController extends Controller
         $plan = $this->plan->findOrFail($id);
 
         return $plan->exportPlan();
-
-        /*
-        $project = $plan->project;
-        $survey = $plan->survey;
-
-        $header_html = (string) view('pdf.header');
-        $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
-
-        $pdf = PDF::loadView('pdf.dmp', compact('plan', 'project', 'survey'));
-        $pdf->setOption('encoding', 'UTF-8');
-        $pdf->setOption('page-size', 'A4');
-        $pdf->setOption('margin-top', '10mm');
-        $pdf->setOption('margin-bottom', '20mm');
-        $pdf->setOption('margin-left', '20mm');
-        $pdf->setOption('margin-right', '20mm');
-        $pdf->setOption('header-html', $header_html);
-        $pdf->setOption('footer-font-size', '8');
-        $pdf->setOption('footer-right',$footer);
-        //return $pdf->stream();
-        //return view('pdf.dmp', compact('plan', 'project', 'survey'));
-
-        */
-
-        /*
-
-        if($this->plan->exportPlan($id, $format, $download)) {
-            //$msg = 'Exported successfully!';
-            //Notifier::success( $msg )->flash()->create();
-        } else {
-            //$msg = 'Export failed!';
-            //Notifier::error( $msg )->flash()->create();
-        }
-        return Redirect::route('dashboard');
-        */
     }
 
 
-    // TODO!
-    public function destroy($id)
+    public function destroy(DeletePlanRequest $request)
     {
+        $plan = $this->plan->findOrFail($request->id);
 
+        /* Delete Plan with corresponding Survey(s) */
+        if ($request->ajax()) {
+            if ($this->plan->deleteWithSurvey($plan)) {
+                $notification = [
+                    'status'     => 200,
+                    'message'    => 'Plan was successfully deleted!',
+                    'alert-type' => 'success'
+                ];
+            } else {
+                $notification = [
+                    'status'     => 500,
+                    'message'    => 'Plan was not deleted!',
+                    'alert-type' => 'error'
+                ];
+            }
+
+            /* Create Flash session with return values for notification */
+            $request->session()->flash('message', $notification['message']);
+            $request->session()->flash('alert-type', $notification['alert-type']);
+
+            /* Create the response in JSON */
+            return response()->json([
+                'response' => $notification['status'],
+                'message'  => $notification['message']
+            ]);
+        } else {
+            abort(403, 'Direct access is not allowed.');
+        };
     }
 
     // TODO!

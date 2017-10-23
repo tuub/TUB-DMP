@@ -18,14 +18,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Uuids, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'users';
     public $incrementing = false;
     public $timestamps = false;
     protected $fillable = ['tub_om', 'institution_id', 'type', 'email', 'is_admin', 'is_active'];
     protected $dates = ['last_login'];
-
-
     //protected $encrypts = ['email'];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function projects()
     {
@@ -47,10 +57,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsToMany(Entitlement::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Scopes
+    |--------------------------------------------------------------------------
+    */
+
     public function scopeActive($query)
     {
         $query->where('is_active', 1);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Mutators
+    |--------------------------------------------------------------------------
+    */
 
     public function getNameAttribute()
     {
@@ -68,6 +90,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->name . " <" . $this->email . '>';
     }
     }
+    */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
     */
 
     public function isAdmin()

@@ -9,9 +9,21 @@ class MetadataRegistry extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'metadata_registry';
     public $incrementing = false;
     public $timestamps = false;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function content_type()
     {
@@ -29,6 +41,11 @@ class MetadataRegistry extends Model
         return $this->hasMany(ProjectMetadata::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
     public static function getFieldList($namespace)
     {

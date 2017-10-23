@@ -73,9 +73,7 @@
                     </div>
                 </div>
                 <div class="form-group row container">
-                    <div class="col-md-2">
-                        &nbsp;
-                    </div>
+                    <div class="col-md-2">&nbsp;</div>
                     <div class="col-md-10">
                         {!! Form::submit('Update', array('class' => 'button btn btn-success')) !!}
                     </div>

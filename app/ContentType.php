@@ -9,11 +9,22 @@ class ContentType extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'content_types';
     public $incrementing = false;
     public $timestamps = false;
     protected $casts = ['structure' => 'array'];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -14,10 +14,22 @@ class ProjectMetadata extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'project_metadata';
     public $incrementing = false;
     protected $fillable = ['project_id', 'metadata_registry_id', 'content'];
     protected $casts = ['content' => 'array'];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     // 1 Project Metadata belongs to 1 Project.
     public function project()
@@ -31,6 +43,11 @@ class ProjectMetadata extends Model
         return $this->belongsTo(MetadataRegistry::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
     public static function getProjectMemberOutput($data) {
         $output = null;

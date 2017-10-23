@@ -9,6 +9,12 @@ class DataSourceMapping extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'data_source_mappings';
     public $incrementing = false;
     public $timestamps = false;
@@ -16,6 +22,12 @@ class DataSourceMapping extends Model
         'data_source_entity' => 'array',
         'target_content' => 'array',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function datasource()
     {

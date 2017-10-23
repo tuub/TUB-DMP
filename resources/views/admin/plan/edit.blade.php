@@ -11,18 +11,16 @@
 @stop
 
 @section('headline')
-    <h1>Admin: TUB-DMP</h1>
 @stop
 
 @section('title')
-    {{ $plan->project_number }} / {{ $plan->version }}
 @stop
 
 @section('body')
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            Edit Plan "{{ $plan->project_number }} / {{ $plan->version }}"
+            Edit Plan "{{ $plan->title }}"
         </div>
         <div class="panel-body">
             <div class="row">

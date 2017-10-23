@@ -19,11 +19,15 @@ var paths = {
     'bootstrap': bowerpath + 'bootstrap/',
     'jquery': bowerpath + 'jquery/',
     'jqueryui': bowerpath + 'jquery-ui/',
+    'jqueryui_bootstrap': bowerpath + 'jquery-ui-bootstrap/',
+    'jqueryui_sortable_animation': bowerpath + 'jquery-ui-sortable-animation/',
     'jquery_easing': bowerpath + 'jquery.easing/',
     'progressbar': bowerpath + 'bootstrap-progressbar/',
     'slider': bowerpath + 'seiyria-bootstrap-slider/',
     'tagsinput': bowerpath + 'bootstrap-tagsinput/',
     'select': bowerpath + 'bootstrap-select/',
+    'datatables': bowerpath + 'datatables.net/',
+    'datatables_bs': bowerpath + 'datatables.net-bs/',
     'typeahead': bowerpath + 'typeahead.js/',
     'toastr': bowerpath + 'toastr/',
     'jquery_expander': bowerpath + 'jquery.expander/',
@@ -44,20 +48,14 @@ elixir(function(mix) {
         paths.fonts + 'scss/font-awesome.scss'
     ],'public/css/app.css');
 
-    //mix.copy(paths.bootstrap + 'fonts/bootstrap/**', 'public/fonts/bootstrap/');
-    //mix.copy(paths.bootstrap + 'fonts/bootstrap/**', 'public/fonts/bootstrap/');
-
-    mix.copy(paths.fonts + 'fonts/**', 'public/fonts/');
     mix.copy(paths.images + '**', 'public/images/');
-
     mix.copy(paths.jquery + 'dist/jquery.min.js', 'public/js/');
     mix.copy(paths.toastr + 'toastr.min.js', 'public/js/');
-    mix.copy(paths.js + 'env.js', 'public/js/');
     mix.copy(paths.css + 'pdf.css', 'public/css/');
+    mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
 
     mix.scripts([
         paths.jquery_steps + 'build/jquery.steps.min.js',
-        paths.js + 'env.js', 'public/js/',
         paths.js + 'plan.js', 'public/js/'
     ], './public/js/survey.js');
 
@@ -67,6 +65,8 @@ elixir(function(mix) {
         paths.bootstrap + 'dist/js/bootstrap.min.js',
         paths.progressbar + 'bootstrap-progressbar.js',
         paths.tagsinput + 'dist/bootstrap-tagsinput.js',
+        paths.datatables + 'js/jquery.dataTables.js',
+        paths.datatables_bs + 'js/dataTables.bootstrap.js',
         //paths.slider + 'dist/bootstrap-slider.min.js',
         paths.select + 'dist/js/bootstrap-select.min.js',
         paths.typeahead + 'dist/typeahead.jquery.js',
@@ -77,20 +77,23 @@ elixir(function(mix) {
     ], './public/js/vendor.js');
 
     mix.scripts([
-        paths.js + 'main.js'
+        paths.js + 'main.js',
+        paths.js + 'admin.js'
     ], './public/js/my.jquery.js');
 
     mix.styles([
         paths.css + 'datepicker.jqueryui.css',
         paths.css + 'jquery.steps.css',
-        paths.css + 'style.css'
+        paths.css + 'style.css',
+        paths.css + 'admin.css'
     ], './public/css/my.style.css');
 
-
     mix.styles([
+        paths.jqueryui_bootstrap + 'jquery.ui.theme.font-awesome.css',
         paths.toastr + 'toastr.css',
         paths.tagsinput + 'dist/bootstrap-tagsinput.css',
         paths.slider + 'dist/css/bootstrap-slider.css',
         paths.select + 'dist/css/bootstrap-select.css',
+        paths.datatables_bs + 'css/dataTables.bootstrap.css'
     ], './public/css/vendor.css');
 });

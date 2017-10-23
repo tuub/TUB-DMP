@@ -1,5 +1,5 @@
 <?php
-
+/* FIXME! */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +11,7 @@ use App\ContentType;
 use App\Http\Requests\Admin\CreateQuestionRequest;
 use App\Http\Requests\Admin\UpdateQuestionRequest;
 
-use Request;
+use Illuminate\Http\Request;
 use Redirect;
 use View;
 use Illuminate\Support\Facades\Session;
@@ -37,10 +37,11 @@ class QuestionController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Section $section)
     {
-        $questions = $this->question->all();
-        return View::make('admin.question.index', compact('questions'));
+        $section = $this->section->find($section->id);
+        $questions = $this->question->where('section_id', $section->id)->orderBy('order', 'asc')->get();
+        return view('admin.question.index', compact('section', 'questions'));
     }
 
     /**
@@ -138,13 +139,14 @@ class QuestionController extends Controller {
         }
         */
         $question = $this->question->find($id);
+        $section = $question->section;
         $data = $request->except('_token');
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
         $question->update( $data );
         //return Redirect::to($redirect);
-        return Redirect::route('admin.question.index');
+        return Redirect::route('admin.section.questions.index', $section);
     }
 
     /**
@@ -156,8 +158,48 @@ class QuestionController extends Controller {
     public function destroy($id)
     {
         $question = $this->question->find($id);
+        $section = $question->section;
         $question->delete();
         Session::flash('message', 'Successfully deleted question!');
-        return Redirect::route('admin.question.index');
+        return Redirect::route('admin.section.questions.index', $section);
+    }
+
+    /**
+     * Updates positions of the given sections set.
+     *
+     * @uses \App\Question::updatePositions
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sort(Request $request) {
+        $data = $request->all();
+
+        if ($this->question->updatePositions($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Sorting updated!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Sorting not updated!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        /* Create the response in JSON */
+        if ($request->ajax()) {
+            return response()->json([
+                'response' => $notification['status'],
+                'message' => $notification['message']
+            ]);
+        } else {
+            abort(403, 'Direct access is not allowed.');
+        };
     }
 }

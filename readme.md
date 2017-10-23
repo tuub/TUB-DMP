@@ -4,7 +4,7 @@ TUB-DMP is a tool for handling data management planning efficiently, based on th
 
 ## Installation
 
-TUB-DMP 1.3 is a web application, implemented in [Laravel] 5.4
+TUB-DMP 1.3 is a web application, implemented in [Laravel] 5.5
 
 ### Prerequisites
 TUB-DMP has several requirements:
@@ -42,9 +42,7 @@ TUB-DMP has several requirements:
 3. Copy the environment file: cp .env.example .env
 4. Modify .env with your database credentials
 5. Review the files in the config directory, e.g. session.php
-6. Copy the environment js file: cp resources/assets/js/env.example.js resources/assets/js/env.js
-7. Modify the paths in /resources/assets/js/env.js to your environment
-8. Set permissions: chmod -R 777 storage
+6. Set permissions: chmod -R 777 storage
 
 ### Installation of vendor components
 1. Run composer: composer install --no-scripts && composer update
@@ -59,7 +57,8 @@ Installation of additional components or changes to the Assets require calling o
 1. Setup the migrations support in the database: php artisan migrate:install
 2. Create the database tables: php artisan migrate
 3. Insert data to the tables: php artisan db:seed
-4. If PostgreSQL: Update the sequences via
+4. Setup the hierarchies in the nested question sets: php artisan db:hierarchy
+5. If PostgreSQL: Update the sequences via
 ```
 php artisan db:sequences
 ```

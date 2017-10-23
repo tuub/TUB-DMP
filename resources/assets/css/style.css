@@ -170,11 +170,12 @@ span.child-question-text {
     font-style: italic;
 }
 
-span.question-answer-text {
-    display: block;
-    margin-top: 15px;
-    margin-left: 15px;
+div.question-answer-text {
+    display: inline-block;
+    /*margin-top: 15px;*/
+    /*margin-left: 15px;*/
     font-weight: normal;
+    text-align: justify;
 }
 
 span.question-answer-prepend {

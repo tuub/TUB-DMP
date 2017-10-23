@@ -30,7 +30,8 @@ class PlanRequest extends Request
     public function rules()
     {
         return [
-            'title' => 'required'
+            'title' => 'required',
+            'version' => 'required',
         ];
     }
 }

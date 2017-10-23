@@ -135,7 +135,7 @@ $(document).ready(function(){
 
 <header>
     @section('header')
-        @include('partials.header')
+        @include('partials.layout.header')
     @show
 </header>
 

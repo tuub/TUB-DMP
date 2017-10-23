@@ -1,12 +1,10 @@
-<tr>
-    <td>{{ $project->id }}</td>
+<tr title="{{ $project->id }}">
     <td>{{ $project->identifier }}
         @if($project->children()->count() > 0)
             PARENT
         @endif
     </td>
-    <td>{{ $project->user->email }}</td>
-    <td>{{ $project->contact_email }}</td>
+    <td>{{ $project->contact_email ? HTML::mailto($project->contact_email) : trans('admin/table.value.null') }}</td>
     <td>{{ $project->plans_count }}</td>
     <td>
         {{ $project->children()->count() }}
@@ -18,14 +16,14 @@
         @if( $project->data_source_id )
             {{ $project->data_source->name }}
         @else
-            None
+            {{ trans('admin/table.value.null') }}
         @endif
     </td>
     <td>
         @if( $project->imported )
             @date( $project->imported_at ) @time( $project->imported_at )
         @else
-            Never
+            {{ trans('admin/table.value.null') }}
         @endif
     </td>
     <td>@date( $project->created_at ) @time( $project->created_at )</td>
@@ -36,11 +34,13 @@
     </td>
     <td>
         {!! Form::open(['method' => 'GET', 'route' => ['admin.project.edit', $project->id], 'style'=>'display:inline-block', 'class' => 'form-inline', 'role' => 'form']) !!}
-        {!! Form::submit('Edit', ['class' => 'btn btn-link nopadding']) !!}
+        {!! Form::button('<i class="fa ' . trans('admin/table.icon.edit') . '"></i>', ['type' => 'submit', 'class' => 'btn btn-link btn-xs nopadding', 'title' => trans('admin/table.label.edit')] )  !!}
+        {!! Form::close() !!}
+        &nbsp;&nbsp;
+        {!! Form::open(['method' => 'DELETE', 'route' => ['admin.project.destroy', $project->id], 'style'=>'display:inline-block', 'class' => 'form-inline', 'role' => 'form']) !!}
+        {!! Form::button('<i class="fa ' . trans('admin/table.icon.delete') . '"></i>', ['type' => 'submit', 'class' => 'btn btn-link btn-xs nopadding', 'title' => trans('admin/table.label.delete')] )  !!}
         {!! Form::close() !!}
 
-        {!! Form::open(['method' => 'DELETE', 'route' => ['admin.project.destroy', $project->id], 'style'=>'display:inline-block', 'class' => 'form-inline', 'role' => 'form']) !!}
-        {!! Form::submit('Delete', ['class' => 'btn btn-link nopadding']) !!}
-        {!! Form::close() !!}
+        {!! HTML::linkRoute('admin.project.plans.index', trans('admin/table.label.edit') . ' Plans', $project, ['class' => 'edit-relation']) !!}
     </td>
 </tr>

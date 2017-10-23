@@ -9,9 +9,22 @@ class DataSource extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'data_sources';
     public $incrementing = false;
     public $timestamps = false;
+    protected $fillable = ['name', 'identifier', 'type', 'description', 'uri'];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function projects()
     {
@@ -28,10 +41,11 @@ class DataSource extends Model
         return $this->hasMany(DataSourceMapping::class);
     }
 
-    public function getIdentifierAttribute($value)
-    {
-        return strtoupper($value);
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Model Mutators
+    |--------------------------------------------------------------------------
+    */
 
     public function getTypeAttribute($value)
     {

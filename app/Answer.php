@@ -21,6 +21,12 @@ class Answer extends Model
 {
     use Uuids;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Options
+    |--------------------------------------------------------------------------
+    */
+
     protected $table    = 'answers';
     public $incrementing = false;
     public $timestamps  = true;
@@ -28,6 +34,12 @@ class Answer extends Model
     protected $casts    = [
         'value' => 'array',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function question()
     {
@@ -39,6 +51,11 @@ class Answer extends Model
         return $this->belongsTo(Survey::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
     public static function get( Survey $survey = null, Question $question = null, $format = 'html' )
     {

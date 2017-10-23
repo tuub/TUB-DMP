@@ -14,7 +14,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\CalculateCompletion::class,
-        \App\Console\Commands\UpdatePsqlSequences::class,
         \App\Console\Commands\RebuildHierarchies::class,
     ];
 
@@ -28,8 +27,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('inspire')
                  ->hourly();
-        $schedule->command('dmp:prefill')
-                 ->everyMinute();
+        $schedule->command('db:hierarchy')
+                 ->hourly();
         $schedule->command('monitor:run')->daily()->at('10:00');
     }
 }

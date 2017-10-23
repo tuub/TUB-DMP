@@ -20,11 +20,23 @@ class Plan extends Model
 {
     use Uuids;
 
+    /*
+	|--------------------------------------------------------------------------
+	| Model Options
+	|--------------------------------------------------------------------------
+	*/
+
     public $timestamps  = true;
     public $incrementing = false;
     protected $table    = 'plans';
     protected $dates    = ['created_at', 'updated_at', 'snapshot_at'];
     protected $fillable = ['title', 'project_id', 'version', 'template_id', 'is_active', 'is_snapshot', 'snapshot_at'];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function project()
     {
@@ -36,13 +48,25 @@ class Plan extends Model
         return $this->hasOne(Survey::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Scopes
+    |--------------------------------------------------------------------------
+    */
+
     public function scopeOrdered($query)
     {
         return $query->orderBy( 'updated_at', 'desc' );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
-    public function isComplete() {
+    public function isComplete()
+    {
         if ($this->survey->completion == 100) {
             return true;
         }
@@ -134,6 +158,14 @@ class Plan extends Model
         } else {
             throw new NotFoundHttpException;
         }
+    }
+
+    public function deleteWithSurvey($data)
+    {
+        $plan = $this->find($data['id']);
+        $plan->delete();
+
+        return true;
     }
 
 

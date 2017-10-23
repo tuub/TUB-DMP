@@ -1,44 +1,35 @@
 @extends('layouts.bootstrap')
 
 @section('navigation')
-    <li>{{ link_to_route( 'dashboard', 'Zurück' ) }}</li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Datenmanagementplan <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li>{{ link_to_route( 'admin.dashboard', 'Zurück zur Übersicht' ) }}</li>
-        </ul>
-    </li>
 @stop
 
 @section('headline')
-    <h1>Admin: TUB-DMP</h1>
-    <h3>Plans</h3>
 @stop
 
 @section('title')
-
 @stop
 
 @section('body')
 
+    {{ Breadcrumbs::render('plans', $project) }}
+
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            All Plans
+            Plans for {{ $project->identifier }}
         </div>
         <div class="panel-body">
             <div class="table-responsive">
-                <table class="table table-fixed">
+                <table class="table table-fixed data-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Project Number</th>
-                            <th>Title</th>
-                            <th>Version</th>
-                            <th>Template</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>Updated</th>
-                            <th>Tools</th>
+                            <th class="col-md-4">Title</th>
+                            <th class="col-md-3">Version</th>
+                            <th class="col-md-3">Template</th>
+                            <th class="col-md-1">Status</th>
+                            <th class="col-md-1">Snapshot</th>
+                            <th class="col-md-4">Created</th>
+                            <th class="col-md-4">Updated</th>
+                            <th class="col-md-4" data-orderable="false">Tools</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,8 +39,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="text-center">
+                {!! link_to_route('admin.project.plans.create', 'Create', ['project' => $project]) !!}
+            </div>
         </div>
     </div>
-    {!! link_to_route('admin.plan.create', 'Create') !!}
-
 @stop

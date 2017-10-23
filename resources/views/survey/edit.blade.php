@@ -39,7 +39,7 @@
     <br/><br/><br/>
     <div id="plan-section-steps">
 
-        @foreach( $survey->template->sections()->active()->get() as $section )
+        @foreach( $survey->template->sections()->active()->ordered()->get() as $section )
             <h4 style="font-weight: bold;">
                 {{ $section->full_name }}
             </h4>
@@ -53,15 +53,11 @@
                         {{ $section->guidance }}
                     </span>
                 @endif
-
                 @foreach( $section->questions()->active()->ordered()->get() as $question )
-                    @if( $question->isRoot() )
-                        @include('partials.question.edit', $question)
-                    @endif
+                    @include('partials.question.edit', $question)
                 @endforeach
             </section>
         @endforeach
-
     </div>
     {!! Form::close() !!}
 @stop

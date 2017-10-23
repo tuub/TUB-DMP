@@ -1,3 +1,6 @@
+@if ($question->isChild())
+    <div class="col-md-offset-1">
+@endif
 <div class="row form-group">
     <label for="{{ $question->id }}" class="control-label col-md-6 col-xs-24">
         <span class="question-text">
@@ -43,6 +46,6 @@
         </div>
     </div>
 </div>
-@foreach($question->children()->ordered()->get() as $question)
-    @include('partials.question.edit', $question)
-@endforeach
+@if ($question->isChild())
+    </div>
+@endif

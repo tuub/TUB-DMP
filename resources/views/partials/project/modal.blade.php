@@ -220,18 +220,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Create DMP</h4>
+                <h4 class="modal-title">{{ (trans('plan.create.title')) }}</h4>
             </div>
             <div class="modal-body">
+                <p>
+                    {{ (trans('plan.create.description')) }}
+                </p>
                 <div class="errors"></div>
                 {!! BootForm::hidden('project_id')->id('project_id') !!}
-                {!! BootForm::text('DMP Title', 'title')->placeholder('My Data Management Plan') !!}
-                {!! BootForm::select('Template', 'template_id')->options($templates->pluck('name', 'id')) !!}
-                {!! BootForm::text('Version Description', 'version')->value('First DMP version') !!}
+                {!! BootForm::text(trans('plan.create.input.title.label'), 'title')->placeholder(trans('plan.create.input.title.placeholder')) !!}
+                {!! BootForm::select(trans('plan.create.input.template.label'), 'template_id')->options($templates->pluck('name', 'id')) !!}
+                {!! BootForm::text(trans('plan.create.input.version.label'), 'version')->placeholder(trans('plan.create.input.version.placeholder')) !!}
             </div>
             <div class="modal-footer">
-                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit('Create')->class('btn btn-success') !!}
+                {!! BootForm::button(trans('plan.create.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit(trans('plan.create.button.submit'))->class('btn btn-success') !!}
             </div>
         </div>
     </div>
@@ -245,17 +248,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Edit DMP</h4>
+                <h4 class="modal-title">{{ trans('plan.edit.title') }}</h4>
             </div>
             <div class="modal-body">
+                <p>
+                    {{ (trans('plan.edit.description')) }}
+                </p>
                 <div class="errors"></div>
                 {!! BootForm::hidden('id')->id('id') !!}
-                {!! BootForm::text('DMP Title', 'title')->helpBlock('A good title would help.') !!}
-                {!! BootForm::text('Version Description', 'version') !!}
+                {!! BootForm::text(trans('plan.edit.input.title.label'), 'title')->placeholder(trans('plan.edit.input.title.placeholder')) !!}
+                {!! BootForm::text(trans('plan.edit.input.version.label'), 'version')->placeholder(trans('plan.edit.input.version.placeholder')) !!}
             </div>
             <div class="modal-footer">
-                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit('Save')->class('btn btn-success') !!}
+                {!! BootForm::button(trans('plan.edit.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit(trans('plan.edit.button.submit'))->class('btn btn-success') !!}
             </div>
         </div>
     </div>
@@ -269,26 +275,27 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Create Snapshot</h4>
+                <h4 class="modal-title">{{ trans('plan.snapshot.title') }}</h4>
             </div>
             <div class="modal-body">
-                <div class="errors"></div>
                 <p>
-                    <strong>
-                        Once you create a snapshot of your DMP, you will not be able to edit
-                        the data of your current version.<br/>
-                        By default, a new version will be created for you to continue editing.
-                    </strong>
+                    {{ (trans('plan.snapshot.description')) }}
                 </p>
+                <p>
+                    <div class="alert alert-danger">
+                        {{ trans('plan.snapshot.danger') }}
+                    </div>
+                </p>
+                <div class="errors"></div>
                 {!! BootForm::hidden('id')->id('id') !!}
                 {!! BootForm::hidden('project_id')->id('project_id') !!}
-                {!! BootForm::text('DMP Title', 'title') !!}
-                {!! BootForm::text('Version Description', 'version') !!}
-                {!! BootForm::checkbox('Create new version from current plan', 'clone_current')->checked() !!}
+                {!! BootForm::text(trans('plan.snapshot.input.title.label'), 'title') !!}
+                {!! BootForm::text(trans('plan.snapshot.input.version.label'), 'version')->placeholder(trans('plan.snapshot.input.version.placeholder')) !!}
+                {!! BootForm::checkbox(trans('plan.snapshot.input.clone_current.label'), 'clone_current')->check() !!}
             </div>
             <div class="modal-footer">
-                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit('Create Snapshot')->class('btn btn-success') !!}
+                {!! BootForm::button(trans('plan.snapshot.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit(trans('plan.snapshot.button.submit'))->class('btn btn-success') !!}
             </div>
         </div>
     </div>
@@ -303,21 +310,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Email DMP <span id="plan-title"></span></h4>
+                <h4 class="modal-title">{{ trans('plan.email.title') }}</h4>
             </div>
             <div class="modal-body">
+                <p>
+                    {{ trans('plan.email.description') }}
+                </p>
                 <div class="errors"></div>
-                Let your colleagues know about your DMP.
                 {!! BootForm::hidden('id')->id('id') !!}
                 {!! BootForm::hidden('project_id')->id('project_id') !!}
                 {!! BootForm::hidden('version')->id('version') !!}
-                {!! BootForm::text('Name', 'name')->placeholder('John Doe') !!}
-                {!! BootForm::text('Email', 'email')->placeholder('john.doe@example.org') !!}
-                {!! BootForm::textarea('Your Message', 'message') !!}
+                {!! BootForm::text(trans('plan.email.input.name.label'), 'name')->placeholder(trans('plan.email.input.name.placeholder')) !!}
+                {!! BootForm::text(trans('plan.email.input.email.label'), 'email')->placeholder(trans('plan.email.input.email.placeholder')) !!}
+                {!! BootForm::textarea(trans('plan.email.input.message.label'), 'message') !!}
             </div>
             <div class="modal-footer">
-                {!! BootForm::button('Cancel')->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit('Send')->class('btn btn-success') !!}
+                {!! BootForm::button(trans('plan.email.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
+                {!! BootForm::submit(trans('plan.email.button.submit'))->class('btn btn-success') !!}
             </div>
         </div>
     </div>

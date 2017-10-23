@@ -22,11 +22,12 @@
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            New Project
+            New Project for {{ $user->email }}
         </div>
         <div class="panel-body">
             <div class="row">
                 {!! Form::model($project, ['method' => 'POST', 'route' => ['admin.project.store'], 'class' => '', 'role' => 'form']) !!}
+                    {{ Form::hidden('user_id', $user->id) }}
                     <div class="form-group row container">
                         <div class="col-md-2">
                             {!! Form::Label( 'identifier', 'Project Number' ) !!}
@@ -43,15 +44,6 @@
                         <div class="col-md-10">
                             {!! Form::select('parent_id', $projects, $project->parent_id, array('class' => 'form-control') ) !!}
                             <span class="help-block {{ ($errors->first('parent_id') ? 'form-error' : '') }}">{{ $errors->first('parent_id') }}</span>
-                        </div>
-                    </div>
-                    <div class="row form-group container">
-                        <div class="col-md-2">
-                            {!! Form::Label( 'user_id', 'Owner' ) !!}
-                        </div>
-                        <div class="col-md-10">
-                            {!! Form::select('user_id', $users, $project->user_id, array('class' => 'form-control') ) !!}
-                            <span class="help-block {{ ($errors->first('user_id') ? 'form-error' : '') }}">{{ $errors->first('user_id') }}</span>
                         </div>
                     </div>
                     <div class="row form-group container">

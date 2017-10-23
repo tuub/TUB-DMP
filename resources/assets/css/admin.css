@@ -1,0 +1,8 @@
+table.sortable tbody tr:hover {
+    cursor: move;
+}
+
+a.edit-relation {
+    vertical-align: middle;
+    margin-left: 20px;
+}

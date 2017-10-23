@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Http\Requests\Admin\PlanRequest;
@@ -14,25 +15,28 @@ use App\Template;
 class PlanController extends Controller
 {
     protected $plan;
+    protected $project;
 
-    public function __construct(Plan $plan)
+    public function __construct(Plan $plan, Project $project)
     {
         $this->plan = $plan;
+        $this->project = $project;
     }
 
-    public function index()
+    public function index(Project $project)
     {
-        $plans = $this->plan->with('survey')->orderBy('updated_at', 'desc')->get();
-        return view('admin.plan.index', compact('plans'));
-    }
+        $project = $this->project->find($project->id);
+        $plans = $this->plan->where('project_id', $project->id)->with('survey')->orderBy('updated_at', 'desc')->get();
+        return view('admin.plan.index', compact('plans', 'project'));
+       }
 
-    public function create()
+    public function create(Request $request)
     {
-        $plan = $this->plan;
+        $project = $this->project->where('id', $request->project)->first();
+        $plan = new $this->plan;
         $plan->title = "Data Management Plan";
-        $projects = Project::orderBy('identifier', 'asc')->get()->pluck('identifier','id');
         $templates = Template::get()->pluck('name','id');
-        return view('admin.plan.new', compact('plan','projects','templates'));
+        return view('admin.plan.new', compact('plan','project','templates'));
     }
 
 
@@ -48,6 +52,7 @@ class PlanController extends Controller
     {
         /* Filter out all empty inputs */
         $data = array_filter($request->all(), 'strlen');
+        $project = $this->project->find($data['project_id']);
 
         /* Create Plan with corresponding Survey */
         if ($this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id'])) {
@@ -69,7 +74,7 @@ class PlanController extends Controller
         $request->session()->flash('alert-type', $notification['alert-type']);
 
         /* Create the redirect to index */
-        return redirect()->route('admin.plan.index');
+        return redirect()->route('admin.project.plans.index', $project);
     }
 
     public function show($id)
@@ -80,22 +85,24 @@ class PlanController extends Controller
     public function edit($id)
     {
         $plan = $this->plan->findOrFail($id);
-        $projects = Project::orderBy('identifier', 'asc')->get()->pluck('identifier','id');
+        $projects = Project::where('user_id', $plan->project->user->id)->orderBy('identifier', 'asc')->get()->pluck('identifier','id');
         return view('admin.plan.edit', compact('plan','projects','templates','versions'));
     }
 
     public function update(PlanRequest $request, $id)
     {
         $plan = $this->plan->findOrFail($id);
+        $project = $this->project->find($request->project_id);
         $data = $request->all();
         $plan->update($data);
-        return Redirect::route('admin.dashboard');
+        return Redirect::route('admin.project.plans.index', $project);
     }
 
     public function destroy($id)
     {
         $plan = $this->plan->findOrFail($id);
+        $project = $plan->project;
         $plan->delete();
-        return Redirect::route('admin.plan.index');
+        return Redirect::route('admin.project.plans.index', $project);
     }
 }

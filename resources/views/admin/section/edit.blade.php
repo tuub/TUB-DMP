@@ -56,15 +56,6 @@
                 </div>
                 <div class="form-group row container">
                     <div class="col-md-2">
-                        {!! Form::Label( 'order', 'Order' ) !!}
-                    </div>
-                    <div class="col-md-10">
-                        {!! Form::Text( 'order', $section->order, array('class' => 'form-control') ) !!}
-                        <span class="help-block {{ ($errors->first('order') ? 'form-error' : '') }}">{{ $errors->first('order') }}</span>
-                    </div>
-                </div>
-                <div class="form-group row container">
-                    <div class="col-md-2">
                         {!! Form::Label( 'guidance', 'Guidance' ) !!}
                     </div>
                     <div class="col-md-10">

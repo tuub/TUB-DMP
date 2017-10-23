@@ -3,24 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Section;
-use App\Template;
-
+use App\Http\Requests\Admin\SortSectionRequest;
 use App\Http\Requests\Admin\CreateSectionRequest;
 use App\Http\Requests\Admin\UpdateSectionRequest;
-
-use Request;
-use Redirect;
-use View;
-use Session;
+use App\Section;
+use App\Template;
+use Illuminate\Http\Request;
 
 class SectionController extends Controller {
 
     protected $section;
     protected $template;
 
-
-    public function __construct( Section $section, Template $template )
+    /**
+     * SectionController constructor.
+     *
+     * @param Section  $section
+     * @param Template $template
+     */
+    public function __construct(Section $section, Template $template)
     {
         $this->section = $section;
         $this->template = $template;
@@ -28,75 +29,88 @@ class SectionController extends Controller {
 
 
     /**
-     * Display a listing of the resource.
+     * Gets a section list of the specified template.
      *
-     * @return \Illuminate\Http\Response
+     * @param $template_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Template $template)
     {
-        $sections = $this->section->all();
-        return View::make('admin.section.index', compact('sections'));
+        $template = $this->template->find($template->id);
+        $sections = $this->section->withCount('questions')->where('template_id', $template->id)->orderBy('order', 'asc')
+                ->get();
+        return view('admin.section.index', compact('template', 'sections'));
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Displays the form for creating a new section.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         $section = new $this->section;
-        $templates = $this->template->all()->pluck('name', 'id');
-        return View::make('admin.section.new', compact('section','templates'));
+        $template = $this->template->where('id', $request->template)->first();
+        $position = $this->section->getNextOrderPosition($template);
+        return view('admin.section.new', compact('section','template', 'position'));
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * Stores the new section and redirects to template's section index.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \App\Http\Requests\Admin\CreateSectionRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CreateSectionRequest $request)
     {
-        $section = new $this->section;
-        $section->name          = $request->get('name');
-        $section->template_id   = $request->get('template_id');
-        $section->is_active     = $request->get('is_active');
-        $section->save();
-        Session::flash('message', 'Successfully created the section!');
-        return Redirect::route('admin.section.index');
+        $data = array_filter($request->all(), 'strlen');
+
+        if ($section = $this->section->create($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Successfully created the section!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Error while creating the section!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return redirect()->route('admin.template.sections.index', $section->template->id);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
-     * Show the form for editing the specified resource.
+     * Displays the form for editing the specified section.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id)
     {
         $section = $this->section->find($id);
-        $templates = $this->template->all()->pluck('name', 'id');
-        return View::make('admin.section.edit', compact('section','templates'));
+        $templates = $this->template->get()->pluck('name', 'id');
+        return view('admin.section.edit', compact('section','templates'));
     }
 
+
     /**
-     * Update the specified resource in storage.
+     * Updates the specified section and redirects to template's section index.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \App\Http\Requests\Admin\UpdateSectionRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateSectionRequest $request, $id)
     {
@@ -105,56 +119,98 @@ class SectionController extends Controller {
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
-        $section->update( $data );
-        return Redirect::route('admin.section.index');
+
+        if ($section = $section->update($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Successfully updated the section!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Error while updating the section!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return redirect()->route('admin.template.sections.index', $request->get('template_id'));
     }
+
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes the specified section and redirects to template's section index.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $section = $this->section->find($id);
-        $section->delete();
-        Session::flash('message', 'Successfully deleted section!');
-        return Redirect::route('admin.section.index');
-    }
 
-
-
-
-
-
-
-
-
-
-    /*
-
-    public function edit($id)
-    {
-        $section = $this->section->find($id);
-        $questions = $section->questions()->get();
-        session(['redirect' => Request::server('HTTP_REFERER')]);
-        return View::make('admin.section.edit', compact('section','questions'));
-    }
-
-    public function update( UpdateSectionRequest $request )
-    {
-        if($request->session()->has('redirect'))
-        {
-            $redirect = session('redirect');
-        } else
-        {
-            $redirect = $request->headers->get('referer');;
+        if ($section->delete()) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Successfully deleted the section!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Error while deleting the section!',
+                'alert-type' => 'error'
+            ];
         }
-        $section = $this->section->find($request->id);
-        $data = $request->except('_token');
-        $section->update( $data );
-        return Redirect::to($redirect);
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return redirect()->route('admin.template.sections.index', $section->template->id);
     }
-    */
+
+
+    /**
+     * Updates positions of the given sections set.
+     *
+     * @uses \App\Section::updatePositions
+     * @param \App\Http\Requests\Admin\SortSectionRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sort(SortSectionRequest $request) {
+        $data = $request->all();
+
+        if ($this->section->updatePositions($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Sorting updated!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Sorting not updated!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        /* Create the response in JSON */
+        if ($request->ajax()) {
+            return response()->json([
+                'response' => $notification['status'],
+                'message' => $notification['message']
+            ]);
+        } else {
+            abort(403, 'Direct access is not allowed.');
+        };
+    }
 }

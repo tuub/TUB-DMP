@@ -15,5 +15,4 @@ config/ide-helper.php
 bootstrap/compiled.php
 database/seeds/Fake*
 _ide_helper.php
-env.js
 *.log

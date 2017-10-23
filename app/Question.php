@@ -32,7 +32,7 @@ class Question extends Node
     protected $leftColumn = 'lft';
     protected $rightColumn = 'rgt';
     protected $depthColumn = 'depth';
-    protected $orderColumn = null;
+    protected $orderColumn = 'order';
     protected $scoped = [];
 
     /*
@@ -66,12 +66,16 @@ class Question extends Node
         return $this->hasMany(QuestionOption::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Model Scopes
+    |--------------------------------------------------------------------------
+    */
 
     public function scopeParent($query)
     {
         return $query->where('parent_id', null);
     }
-
 
     public function scopeMandatory($query)
     {
@@ -83,12 +87,17 @@ class Question extends Node
         return $query->where('questions.is_active', true);
     }
 
+
     public function scopeOrdered($query)
     {
-        return $query->orderBy('questions.order', 'asc');
+        return $query->reOrderBy('questions.order', 'asc');
     }
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | Model Methods
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * @return string
@@ -140,5 +149,20 @@ class Question extends Node
 
     public function getChildren() {
         return Question::where('parent_id', $this->id)->get();
+    }
+
+    /**
+     * @param $data
+     *
+     * @return bool
+     */
+    public function updatePositions($data)
+    {
+        foreach ($data as $items) {
+            foreach ($items as $position => $id) {
+                Question::find($id)->update(['order' => $position+1]);
+            }
+        }
+        return true;
     }
 }
