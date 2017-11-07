@@ -161,14 +161,12 @@ class ProjectController extends Controller
 
 
     public function random_ivmc() {
-        $connection = odbc_connect( "PSQL_ODBC", env('ODBC_USERNAME'), env('ODBC_PASSWORD') );
-        if (env('ODBC_DRIVER') == 'sqlsrv') {
-            $query = 'SELECT TOP 15 Projekt_Nr FROM t_821300_IVMC_DMP_Projekt ORDER BY NEWID()';
-        }
-        if (env('ODBC_DRIVER') == 'pgsql') {
-            $query = 'SELECT "Projekt_Nr" FROM "t_821300_IVMC_DMP_Projekt" ORDER BY RANDOM() LIMIT 15';
-        }
-        $result = odbc_exec( $connection, $query );
+        $connection = odbc_connect( "IVMC_MSSQL_2", env('ODBC_USERNAME'), env('ODBC_PASSWORD') );
+	
+	$query = 'SELECT TOP 15 Projekt_Nr FROM t_821300_IVMC_DMP_Projekt ORDER BY NEWID()'; // SQL Server
+	// $query = 'SELECT "Projekt_Nr" FROM "t_821300_IVMC_DMP_Projekt" ORDER BY RANDOM() LIMIT 15'; //PostgreSQL
+        
+	$result = odbc_exec( $connection, $query );
         while ( $row = odbc_fetch_array( $result ) ) {
             echo $row['Projekt_Nr'];
             echo '<hr/>';

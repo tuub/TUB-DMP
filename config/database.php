@@ -76,7 +76,7 @@ return [
             'strict'    => false,
         ],
 
-        'odbc-sqlsrv' => array(
+        'odbc' => array(
             'driver'    => env('ODBC_DRIVER', 'odbc'),
             'dsn'       => env('ODBC_DSN', ''),
             'host'      => env('ODBC_HOST', ''),
@@ -93,6 +93,7 @@ return [
             //'prefix'    => '',
         ),
 
+	/*
         'odbc' => array(
             'driver'    => env('ODBC_DRIVER', 'odbc'),
             'dsn'       => env('ODBC_DSN', ''),
@@ -109,6 +110,7 @@ return [
             'collation' => 'utf8_unicode_ci',
             //'prefix'    => '',
         ),
+	*/
 
         'pgsql' => [
             'driver'   => 'pgsql',

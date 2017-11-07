@@ -5,6 +5,10 @@ $(document).ready(function ()
 {
     'use strict';
 
+    /* Make sure that the privacy statements on login page aren't check (looking at you, Chrome!) */
+    $('#login-form div.checkbox input').attr('checked', false);
+ 
+
     /**
      * Read open state of project's plan panel from cookie value
      */

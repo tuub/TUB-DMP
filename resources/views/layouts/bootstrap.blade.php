@@ -140,7 +140,6 @@ $(document).ready(function(){
     ================================================== -->
 
     {!! HTML::script('js/vendor.js') !!}
-    {!! HTML::script('js/env.js') !!}
     {!! HTML::script('https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js') !!}
     {!! HTML::script('js/my.jquery.js') !!}
 

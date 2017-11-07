@@ -320,9 +320,9 @@ class Project extends Node
 
                     foreach ($mappings as $mapping) {
                         /* Get the external data by source */
-			            $external_data = DB::connection('odbc')->table($namespace->name)
+			$external_data = DB::connection('odbc')->table($namespace->name)
                             ->select($mapping->data_source_entity[0])
-                            ->where('Projekt_Nr', '=', $this->identifier)
+                            ->where('Projekt_Nr', 'LIKE', $this->identifier)
                             ->get();
 
 			            /* Convert to array */
