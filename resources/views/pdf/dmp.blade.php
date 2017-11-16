@@ -150,9 +150,8 @@
                 </div>
             </div>
         @endif
-
         <div class="container page survey">
-            @foreach($survey->template->sections as $section)
+            @foreach($survey->template->sections()->active()->ordered()->get() as $section)
                 @unless($section->isEmpty($survey))
                     <div class="section">
                         <p>
@@ -160,7 +159,7 @@
                                 <h3>{{ $section->name }}</h3>
                             </div>
 
-                            @foreach($section->questions as $question)
+                            @foreach($section->questions()->active()->ordered()->get() as $question)
                                 @php
                                     $answer = \App\Answer::get($survey, $question, 'html');
                                 @endphp
@@ -179,7 +178,6 @@
                                     </div>
                                     <br/>
                                 @endunless
-
                             @endforeach
                         </p>
                     </div>
