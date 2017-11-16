@@ -39,9 +39,9 @@ class QuestionController extends Controller {
      */
     public function index(Section $section)
     {
-        $section = $this->section->find($section->id);
         $questions = $this->question->where('section_id', $section->id)->orderBy('order', 'asc')->get();
-        return view('admin.question.index', compact('section', 'questions'));
+        $template = $section->template;
+        return view('admin.question.index', compact('section', 'questions', 'template'));
     }
 
     /**
@@ -67,10 +67,11 @@ class QuestionController extends Controller {
      */
     public function store(CreateQuestionRequest $request)
     {
+        $section = $this->section->where('id', $request->get('section_id'))->first();
         $question = new $this->question;
         $question->text       = $request->get('text');
         $question->keynumber = $request->get('keynumber');
-        $question->order = $request->get('order');
+        $question->order = $this->question->getNextOrderPosition($section);
         $question->template_id      = $request->get('template_id');
         $question->section_id      = $request->get('section_id');
         $question->parent_id      = $request->get('parent_id');
@@ -87,9 +88,12 @@ class QuestionController extends Controller {
         $question->is_active      = $request->get('is_active');
         $question->read_only      = $request->get('read_only');
 
+        //dd($section);
+        //($question);
+
         $question->save();
         Session::flash('message', 'Successfully created the question!');
-        return Redirect::route('admin.question.index');
+        return redirect()->route('admin.section.questions.index', $section);
     }
 
     /**

@@ -165,4 +165,10 @@ class Question extends Node
         }
         return true;
     }
+
+    public static function getNextOrderPosition(Section $section)
+    {
+        $position = Question::where('section_id', $section->id)->max('order') + 1;
+        return $position;
+    }
 }
