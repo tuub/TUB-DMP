@@ -49,7 +49,7 @@ class ProjectController extends Controller
                     ->toHierarchy();
 
         // For Modals
-        $templates = Template::get();
+        $templates = Template::active()->get();
 
         return view('dashboard', compact('projects', 'templates'));
     }
