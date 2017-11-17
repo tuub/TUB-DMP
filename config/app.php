@@ -166,6 +166,7 @@ return [
         AdamWathan\BootForms\BootFormsServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*
