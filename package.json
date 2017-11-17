@@ -1,14 +1,48 @@
 {
   "private": true,
   "devDependencies": {
-    "bower": "^1.8.0",
-    "gulp": "^3.9.1"
+    "axios": "^0.17",
+    "bootstrap-sass": "^3.3.7",
+    "cross-env": "^5.1",
+    "gulp": "^3.9.1",
+    "laravel-mix": "^1.0",
+    "lodash": "^4.17.4",
+    "vue": "^2.5.7"
   },
   "dependencies": {
-    "laravel-elixir": "^5.0.0",
-    "bootstrap-sass": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "bootstrap-3-card": "^0.2.0",
+    "bootstrap-progressbar": "^0.9.0",
+    "bootstrap-select": "^1.12.4",
+    "bootstrap-tagsinput": "^0.7.1",
+    "components-jqueryui": "^1.12.1",
+    "datatables.net": "^1.10.16",
+    "datatables.net-bs": "^1.10.16",
+    "famfamfam_flags": "jbdelhommeau/famfamfam_flags",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "jquery-expander": "kswedberg/jquery-expander",
+    "jquery-steps": "rstaib/jquery-steps",
+    "jquery-treetable": "martinsbalodis/jquery-treetable",
+    "jquery-ui": "^1.12.1",
+    "jquery-ui-bootstrap": "^1.0.0",
+    "jquery-ui-sortable-animation": "egych/jquery-ui-sortable-animation",
+    "jquery.cookie": "^1.4.1",
+    "jquery.easing": "^1.4.1",
+    "simple-expand": "sylvain-hamel/simple-expand",
+    "toastr": "^2.1.2",
+    "typeahead.js": "^0.11.1"
   },
   "scripts": {
-    "postinstall": "bower install & bower update && gulp"
+    "dev": "npm run development",
+    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch-poll": "npm run watch -- --watch-poll",
+    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "prod": "npm run production",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
   }
 }

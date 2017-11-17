@@ -24,8 +24,6 @@
             {!! HTML::style('css/vendor.css') !!}
             {!! HTML::style('css/my.style.css') !!}
             {!! HTML::script('js/jquery.min.js') !!}
-            {!! HTML::script('js/toastr.min.js') !!}
-
         @show
 
         @php

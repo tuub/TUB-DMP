@@ -3,7 +3,7 @@ public/images/*
 public/css/*
 public/js/*
 public/fonts/*
-resources/assets/bower/
+resources/assets/bower
 storage/*.key
 vendor/*
 .idea/
@@ -16,3 +16,5 @@ bootstrap/compiled.php
 database/seeds/Fake*
 _ide_helper.php
 *.log
+yarn.lock
+mix-manifest.json

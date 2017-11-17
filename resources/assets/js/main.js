@@ -109,6 +109,43 @@ $(document).ready(function ()
     });
 
 
+    var table = $('table.data-table').DataTable({
+        'paging': false,
+        'info': false,
+        'order-column': true,
+        'hover': true,
+        'dom': '<"row"<"col-sm-12"l><"col-sm-12"f>>' +
+        '<"row"<"col-md-24"tr>>' +
+        '<"row"<"col-sm-5"i><"col-sm-7"p>>'
+    });
+
+    $('tbody tr').tooltip({
+        track: true
+    });
+
+    $('table.sortable tbody').sortable({
+        cursor: 'move',
+        placeholder: 'success',
+        revert: false,
+        dropOnEmpty: true,
+        animation: 150,
+        update: function (event, ui) {
+            var data = $(this).sortable('serialize',{expression: /(.+)_(.+)/ });
+            var model = $(this).children().filter('.ui-sortable-handle').removeClass('ui-sortable-handle').attr('class');
+            var url = '/admin/' + model + '/sort';
+            $.ajax({
+                data: data,
+                type: 'POST',
+                url: url,
+                success: function (response) {
+                    location.reload();
+                }
+            });
+            // TODO: get color from bootstrap CSS class
+            $(ui.item).effect('highlight', {'color': '#3c763d'}, 200);
+        }
+    });
+
     /**
      * Serializes the feedback form and passes the form data to controller method
      *
@@ -642,7 +679,7 @@ $(document).ready(function ()
 });
 
 
-$( window ).load(function() {
+$( window ).on('load', function() {
 
     'use strict';
 
@@ -655,7 +692,7 @@ $( window ).load(function() {
     });
 
     /* Do not submit empty/hashy HREFs */
-    $('a[href=#]').click(function(e) {
+    $('a[href=\\#]').click(function(e) {
         if (e) { e.preventDefault(); }
     });
 
@@ -667,6 +704,7 @@ $( window ).load(function() {
 
     $('.dropdown-toggle').dropdown();
 
+    /*
     $('input.slider').slider({
         tooltip: 'hide'
     }).on('slide', function(slideEvt)
@@ -681,4 +719,5 @@ $( window ).load(function() {
         $(this).parent().siblings('input.slider-range-input-alpha').val(slideEvt.value[0]).next('input.slider-range-input-omega').val(slideEvt.value[1]);
         $(this).parent().siblings('span.slider-range-display-alpha').html(slideEvt.value[0]).next('span.slider-range-display-omega').html(slideEvt.value[1]);
     });
+    */
 });
