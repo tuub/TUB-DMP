@@ -4,10 +4,6 @@
 
 <body>
 
-@if(env('APP_SERVER') == 'test')
-    @include('partials.layout.testsystem.banner')
-@endif
-
 <header>
     @section('navigation')
         @include('partials.layout.navigation')

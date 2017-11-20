@@ -29,13 +29,15 @@
                     </thead>
                     <tbody>
                         @foreach( $questions as $question )
-                            @include('admin.partials.question.info', $question)
+                            @if (true)
+                                @include('admin.partials.question.info', $question)
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="text-center">
-                {!! link_to_route('admin.question.create', 'Create') !!}
+                {!! link_to_route('admin.question.create', 'Create', ['section' => $section]) !!}
             </div>
         </div>
     </div>

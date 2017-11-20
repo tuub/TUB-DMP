@@ -21,7 +21,7 @@ class Question extends Node
     protected $table = 'questions';
     public $incrementing = false;
     public $timestamps = true;
-    protected $guarded = ['id', 'parent_id', 'lft', 'rgt', 'depth'];
+    protected $guarded = ['id', 'lft', 'rgt', 'depth'];
     protected $casts = [
         'id' => 'string',
         'parent_id' => 'string',

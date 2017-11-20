@@ -3,7 +3,6 @@ public/images/*
 public/css/*
 public/js/*
 public/fonts/*
-public/favicon.ico
 resources/assets/bower
 storage/*.key
 vendor/*

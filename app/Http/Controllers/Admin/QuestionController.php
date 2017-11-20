@@ -39,7 +39,7 @@ class QuestionController extends Controller {
      */
     public function index(Section $section)
     {
-        $questions = $this->question->where('section_id', $section->id)->orderBy('order', 'asc')->get();
+        $questions = $this->question->roots()->where('section_id', $section->id)->orderBy('order', 'asc')->get();
         $template = $section->template;
         return view('admin.question.index', compact('section', 'questions', 'template'));
     }
@@ -49,14 +49,16 @@ class QuestionController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $section = $this->section->find($request->section);
         $question = new $this->question;
-        $questions = $this->question->all()->pluck('text', 'id');
-        $templates = $this->template->all()->pluck('name', 'id');
-        $sections = $this->section->all()->pluck('name', 'id');
-        $content_types = $this->content_type->all()->pluck('title', 'id');
-        return view('admin.question.new', compact('question','questions','templates','sections','content_types'));
+
+        $template = $section->template;
+        $sections = $template->sections()->get()->pluck('name', 'id');
+        $questions = $section->questions()->get()->pluck('text', 'id');
+        $content_types = $this->content_type->get()->pluck('title', 'id');
+        return view('admin.question.new', compact('question','questions','template', 'section','sections', 'content_types'));
     }
 
     /**
@@ -67,6 +69,38 @@ class QuestionController extends Controller {
      */
     public function store(CreateQuestionRequest $request)
     {
+        // FIXME: VALIDATE!
+        $data = array_filter($request->all(), 'strlen');
+        array_walk($data, function (&$item) {
+            $item = ($item == '') ? null : $item;
+        });
+
+        $section = $this->section->where('id', $data['section_id'])->first();
+        $data['order'] = $this->question->getNextOrderPosition($section);
+
+        if ($question = $this->question->create($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Successfully created the question!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Error while creating the question!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return redirect()->route('admin.section.questions.index', $question->section->id);
+
+
+
+        /*
         $section = $this->section->where('id', $request->get('section_id'))->first();
         $question = new $this->question;
         $question->text       = $request->get('text');
@@ -94,6 +128,7 @@ class QuestionController extends Controller {
         $question->save();
         Session::flash('message', 'Successfully created the question!');
         return redirect()->route('admin.section.questions.index', $section);
+        */
     }
 
     /**
@@ -115,13 +150,12 @@ class QuestionController extends Controller {
      */
     public function edit($id)
     {
-        //session(['redirect' => Request::server('HTTP_REFERER')]);
         $question = $this->question->find($id);
-        $questions = $this->question->all()->pluck('text', 'id');
-        $templates = $this->template->all()->pluck('name', 'id');
-        $sections = $this->section->all()->pluck('name', 'id');
-        $content_types = $this->content_type->all()->pluck('name', 'id');
-        return View::make('admin.question.edit', compact('question','questions','templates','sections','content_types'));
+        $template = $question->template;
+        $sections = $template->sections()->get()->pluck('name', 'id');
+        $questions = $question->section->questions()->get()->pluck('text', 'id');
+        $content_types = $this->content_type->get()->pluck('title', 'id');
+        return view('admin.question.edit', compact('question','template', 'questions', 'sections', 'content_types'));
     }
 
     /**
@@ -133,24 +167,35 @@ class QuestionController extends Controller {
      */
     public function update(UpdateQuestionRequest $request, $id)
     {
-        /*
-        if($request->session()->has('redirect'))
-        {
-            $redirect = session('redirect');
-        } else
-        {
-            $redirect = $request->headers->get('referer');;
-        }
-        */
-        $question = $this->question->find($id);
-        $section = $question->section;
-        $data = $request->except('_token');
+        // FIXME: VALIDATE!
+        $data = array_filter($request->all(), 'strlen');
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
-        $question->update( $data );
-        //return Redirect::to($redirect);
-        return Redirect::route('admin.section.questions.index', $section);
+
+        $question = $this->question->findOrFail($id);
+        $section = $this->section->where('id', $data['section_id'])->first();
+        // FIXME: ORDER! $data['order'] = $this->question->getNextOrderPosition($section);
+
+        if ($question->update($data)) {
+            $notification = [
+                'status' => 200,
+                'message' => 'Successfully updated the question!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'status' => 500,
+                'message' => 'Error while updating the question!',
+                'alert-type' => 'error'
+            ];
+        }
+
+        /* Create Flash session with return values for notification */
+        $request->session()->flash('message', $notification['message']);
+        $request->session()->flash('alert-type', $notification['alert-type']);
+
+        return redirect()->route('admin.section.questions.index', $question->section->id);
     }
 
     /**

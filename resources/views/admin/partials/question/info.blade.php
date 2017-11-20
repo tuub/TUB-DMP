@@ -23,3 +23,8 @@
         {!! Form::close() !!}
     </td>
 </tr>
+@if(true)
+    @foreach($question->getDescendants() as $question)
+        @include('admin.partials.question.info', $question)
+    @endforeach
+@endif

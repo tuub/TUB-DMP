@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+let mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,10 +11,11 @@ const mix = require('laravel-mix');
  |
  */
 
-const vendor_path = './node_modules/';
+var vendor_path = './node_modules/';
 
-const paths = {
+var paths = {
     'bootstrap': vendor_path + 'bootstrap/',
+    'bootstrap_switch': vendor_path + 'bootstrap-switch/',
     'jqueryui': vendor_path + 'components-jqueryui/',
     'jqueryui_bootstrap': vendor_path + 'jquery-ui-bootstrap/',
     'jqueryui_sortable_animation': vendor_path + 'jquery-ui-sortable-animation/',
@@ -26,7 +27,8 @@ const paths = {
     'datatables_bs': vendor_path + 'datatables.net-bs/',
     'typeahead': vendor_path + 'typeahead.js/',
     'toastr': vendor_path + 'toastr/',
-    'jquery_expander': vendor_path + 'jquery.expander/',
+    'jquery_collapse': vendor_path + 'jquery-collapse/',
+    'jquery_expander': vendor_path + 'jquery-expander/',
     'simple_expand': vendor_path + 'simple-expand/',
     'jquery_cookie': vendor_path + 'jquery.cookie/',
     'jquery_steps': vendor_path + 'jquery-steps/',
@@ -38,7 +40,6 @@ const paths = {
 
 mix.sass('resources/assets/sass/app.scss','public/css/app.css');
 
-mix.copy(paths.images + 'favicon.ico', 'public/');
 mix.copy(paths.images + '**', 'public/images/');
 mix.copy(paths.css + 'pdf.css', 'public/css/');
 mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
@@ -48,7 +49,9 @@ mix.scripts([
     paths.jquery_easing + 'js/jquery.easing.min.js',
     paths.jquery_steps + 'build/jquery.steps.min.js',
     paths.bootstrap + 'dist/js/bootstrap.min.js',
+    paths.bootstrap_switch + 'dist/js/bootstrap-switch.min.js',
     paths.toastr + 'toastr.js',
+    paths.jquery_collapse + 'src/jquery.collapse.js',
     paths.progressbar + 'bootstrap-progressbar.js',
     paths.tagsinput + 'dist/bootstrap-tagsinput.js',
     paths.datatables + 'js/jquery.dataTables.js',
@@ -76,6 +79,7 @@ mix.styles([
 mix.styles([
     paths.jqueryui_bootstrap + 'jquery.ui.theme.css',
     paths.jqueryui_bootstrap + 'jquery.ui.theme.font-awesome.css',
+    paths.bootstrap_switch + 'dist/css/bootstrap3/bootstrap-switch.css',
     paths.toastr + 'build/toastr.css',
     paths.tagsinput + 'dist/bootstrap-tagsinput.css',
     paths.select + 'dist/css/bootstrap-select.css',
