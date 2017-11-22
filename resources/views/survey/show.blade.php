@@ -1,18 +1,6 @@
 @extends('layouts.bootstrap')
 
-@section('header_assets')
-    @parent
-    {!! HTML::script('js/survey.js') !!}
-@append
-
-@section('navigation')
-@append
-
 @section('headline')
-    <div class="row col-md-24">
-        {!! Html::linkRoute('dashboard', 'Back to Dashboard') !!}
-    </div>
-    <br/>
     <h3>Data Management Plan for TUB Project {{ $survey->plan->project->identifier }}</h3>
     <h4>Version: {{ $survey->plan->version }}</h4>
 @stop

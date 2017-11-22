@@ -1,9 +1,5 @@
 @extends('layouts.bootstrap')
 
-@section('navigation')
-    <li>{!! link_to_route( 'dashboard', 'Dashboard' ) !!}</li>
-@stop
-
 @section('headline')
     <!--<h1>Ihre Datenmanagementpläne</h1>-->
 @stop

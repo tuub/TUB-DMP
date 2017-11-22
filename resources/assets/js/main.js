@@ -108,42 +108,33 @@ $(document).ready(function ()
         }
     });
 
-
-    var table = $('table.data-table').DataTable({
-        'paging': false,
-        'info': false,
-        'order-column': true,
-        'hover': true,
-        'dom': '<"row"<"col-sm-12"l><"col-sm-12"f>>' +
-        '<"row"<"col-md-24"tr>>' +
-        '<"row"<"col-sm-5"i><"col-sm-7"p>>'
-    });
-
-    $('tbody tr').tooltip({
-        track: true
-    });
-
-    $('table.sortable tbody').sortable({
-        cursor: 'move',
-        placeholder: 'success',
-        revert: false,
-        dropOnEmpty: true,
-        animation: 150,
-        update: function (event, ui) {
-            var data = $(this).sortable('serialize',{expression: /(.+)_(.+)/ });
-            var model = $(this).children().filter('.ui-sortable-handle').removeClass('ui-sortable-handle').attr('class');
-            var url = '/admin/' + model + '/sort';
-            $.ajax({
-                data: data,
-                type: 'POST',
-                url: url,
-                success: function (response) {
-                    location.reload();
-                }
-            });
-            // TODO: get color from bootstrap CSS class
-            $(ui.item).effect('highlight', {'color': '#3c763d'}, 200);
-        }
+    /**
+     * Builds the section tabs for survey edit
+     * FIXME: Was not working in survey.js anymore after switch to webpack mix
+     *
+     * @param {Json} json
+     *
+     * @return {String} errorsHtml
+     */
+    $("#plan-section-steps").steps({
+        headerTag: "h4",
+        bodyTag: "section",
+        transitionEffect: "slideLeft",
+        autoFocus: true,
+        enableAllSteps: true,
+        saveState: true,
+        enablePagination: false,
+        titleTemplate: '#title#',
+        stepsOrientation: 1,
+        transitionEffectSpeed: 100,
+        onStepChanging: function (event, currentIndex, newIndex) {
+            if($(window).scrollTop() > 0) {
+                $('html, body').animate({
+                    scrollTop:0
+                }, 300);
+            }
+            return true;
+        },
     });
 
     /**

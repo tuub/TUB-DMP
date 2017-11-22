@@ -15,7 +15,6 @@ var vendor_path = './node_modules/';
 
 var paths = {
     'bootstrap': vendor_path + 'bootstrap/',
-    'jquery': vendor_path + 'jquery/',
     'jqueryui': vendor_path + 'components-jqueryui/',
     'jqueryui_bootstrap': vendor_path + 'jquery-ui-bootstrap/',
     'jqueryui_sortable_animation': vendor_path + 'jquery-ui-sortable-animation/',
@@ -30,7 +29,7 @@ var paths = {
     'jquery_expander': vendor_path + 'jquery.expander/',
     'simple_expand': vendor_path + 'simple-expand/',
     'jquery_cookie': vendor_path + 'jquery.cookie/',
-    'jquery_steps': vendor_path + 'jquery.steps/',
+    'jquery_steps': vendor_path + 'jquery-steps/',
     'fonts': vendor_path + 'font-awesome/',
     'images': './resources/assets/images/',
     'css': './resources/assets/css/',
@@ -44,7 +43,6 @@ mix.copy(paths.css + 'pdf.css', 'public/css/');
 mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
 
 mix.scripts([
-    paths.jquery + 'dist/jquery.js',
     paths.jqueryui + 'jquery-ui.js',
     paths.jquery_easing + 'js/jquery.easing.min.js',
     paths.jquery_steps + 'build/jquery.steps.min.js',
@@ -62,12 +60,10 @@ mix.scripts([
 ], './public/js/vendor.js');
 
 mix.scripts([
-    paths.js + 'main.js'
+    paths.js + 'main.js',
+    paths.js + 'admin.js',
+    paths.js + 'survey.js'
 ], './public/js/my.jquery.js');
-
-mix.scripts([
-    paths.js + 'plan.js'
-], './public/js/survey.js');
 
 mix.styles([
     paths.css + 'datepicker.jqueryui.css',
@@ -79,7 +75,7 @@ mix.styles([
 mix.styles([
     paths.jqueryui_bootstrap + 'jquery.ui.theme.css',
     paths.jqueryui_bootstrap + 'jquery.ui.theme.font-awesome.css',
-    paths.toastr + 'toastr.css',
+    paths.toastr + 'build/toastr.css',
     paths.tagsinput + 'dist/bootstrap-tagsinput.css',
     paths.select + 'dist/css/bootstrap-select.css',
     paths.datatables_bs + 'css/dataTables.bootstrap.css'

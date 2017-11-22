@@ -1,14 +1,5 @@
 @extends('layouts.bootstrap')
 
-@section('header_assets')
-    @parent
-    {!! HTML::script('js/plan.js') !!}
-@append
-
-@section('navigation')
-    <li>{!! link_to_route( 'dashboard', 'Back to Dashboard' ) !!}</li>
-@append
-
 @section('headline')
     <h3>Data Management Plan for TUB Project {{ $plan->project_number }}</h3>
     <h4>Version: {{ $plan->version }}</h4>

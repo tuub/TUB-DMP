@@ -1,9 +1,5 @@
 @extends('layouts.bootstrap')
 
-@section('navigation')
-    <li>{{ link_to_route( 'dashboard', 'Übersicht' ) }}</li>
-@stop
-
 @section('headline')
 
 @stop

@@ -1,8 +1,5 @@
 @extends('layouts.bootstrap')
 
-@section('navigation')
-@stop
-
 @section('headline')
 @stop
 

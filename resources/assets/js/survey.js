@@ -1,4 +1,4 @@
-$(window).load(function()
+$(window).on('load', function()
 {
     /* Autoheight for textareas with prefilled content, based on line breaks
      * TODO: Still room for improvement.
@@ -14,27 +14,6 @@ $(window).load(function()
         } else {
             $(this).attr('rows', 2);
         }
-    });
-
-    $("#plan-section-steps").steps({
-        headerTag: "h4",
-        bodyTag: "section",
-        transitionEffect: "slideLeft",
-        autoFocus: true,
-        enableAllSteps: true,
-        saveState: true,
-        enablePagination: false,
-        titleTemplate: '#title#',
-        stepsOrientation: 1,
-        transitionEffectSpeed: 100,
-        onStepChanging: function (event, currentIndex, newIndex) {
-            if($(window).scrollTop() > 0) {
-                $('html, body').animate({
-                    scrollTop:0
-                }, 300);
-            }
-            return true;
-        },
     });
 
     $("div.tagsinput select").tagsinput('items');

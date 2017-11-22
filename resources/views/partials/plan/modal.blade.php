@@ -21,7 +21,7 @@
                         <td>{{ trans('plan.export.format.pdf.description') }}</td>
                         <td>
                             <!-- download -->
-                            <a href='{{URL::route('plan.export', ['id' => $plan->id] )}}'>{{ trans('plan.export.format.pdf.link') }}</a>
+                            <a href="{{URL::route('plan.export', ['id' => $plan->id] )}}" target="_blank">{{ trans('plan.export.format.pdf.link') }}</a>
                         </td>
                     </tr>
                 </table>

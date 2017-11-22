@@ -1,15 +1,5 @@
 @extends('layouts.bootstrap')
 
-@section('navigation')
-    <li>{{ link_to_route( 'dashboard', 'Zurück' ) }}</li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Datenmanagementplan <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li>{{ link_to_route( 'admin.dashboard', 'Zurück zur Übersicht' ) }}</li>
-        </ul>
-    </li>
-@stop
-
 @section('headline')
     <h1>Admin: TUB-DMP</h1>
     <h3>New plan</h3>
