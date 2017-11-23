@@ -10,6 +10,7 @@ TUB-DMP 1.3 is a web application, implemented in [Laravel] 5.5
 TUB-DMP has several requirements:
 * Linux, Apache2, Database, PHP>5.5, PDO-Driver, php-mbstring, php-xml, php-mcrypt
 * [Node, NVM, NPM]
+* [Yarn]
 * [Composer]
 * VirtualHost Configuration (see below for example)
 * sudo a2enmod rewrite && sudo service apache2 restart
@@ -31,10 +32,7 @@ TUB-DMP has several requirements:
 `3rd party components`:
 * [Twitter Bootstrap] - UI boilerplate for modern web apps
 * [Composer] - PHP Dependency Manager
-* [npm] - node.js based Packet Manager
-* [Gulp] - Streaming Build System
-* [jQuery] - JS Framework
-* [Bower] - Assets Dependency Manager
+* [Yarn] - node.js/npm based Packet & Dependency Manager
 
 ### Installation of main app
 1. Clone the git repository to your web root: git clone git@gitlab.tubit.tu-berlin.de:onIT/tub-dmp.git
@@ -43,15 +41,16 @@ TUB-DMP has several requirements:
 4. Modify .env with your database credentials
 5. Review the files in the config directory, e.g. session.php
 6. Set permissions: chmod -R 777 storage
+7. Set permissions: chmod -R 777 bootstrap/cache
 
 ### Installation of vendor components
-1. Run composer: composer install --no-scripts && composer update
-2. Run NPM: npm install
+1. Run Composer: composer install --no-scripts && composer update
+2. Run Yarn: yarn && yarn run [dev, production]
 3. Set a new app encryption key by running: php artisan config:clear && php artisan key:generate
 
 Installation of additional components or changes to the Assets require calling of
-* bower search *query* / bower install *package*
-* gulp [--production]
+* yarn info *query* / yarn add *package*
+* yarn run [dev, production]
 
 ### Run the data migrations
 1. Setup the migrations support in the database: php artisan migrate:install
@@ -296,8 +295,7 @@ TUB-DMP is open to contribution. [Contact us] or [Fork].
    [node.js]: <http://nodejs.org>
    [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>
    [jQuery]: <http://jquery.com>
-   [Gulp]: <http://gulpjs.com>
-   [Bower]: <https://bower.io/>
+   [Yarn]: <https://yarnpkg.com>
    [npm]: <https://www.npmjs.com/>
    
    [Laravel Authentication]: https://laravel.com/docs/5.5/authentication
