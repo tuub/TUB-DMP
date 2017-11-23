@@ -8,7 +8,8 @@ TUB-DMP 1.3 is a web application, implemented in [Laravel] 5.5
 
 ### Prerequisites
 TUB-DMP has several requirements:
-* Linux, Apache2, Database, PHP>5.5, PDO-Driver, php-mbstring, php-xml, php-mcrypt
+* Linux, Apache2, PHP7.x, PDO-Driver, php-mbstring, php-xml, php-mcrypt, php-zip, php-dom
+* Database of your choice, preferably PostgreSQL with UUID extension + the corresponding php lib
 * [Node, NVM, NPM]
 * [Yarn]
 * [Composer]
