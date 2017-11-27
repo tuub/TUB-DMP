@@ -27,5 +27,4 @@ return [
     'info-link-01' => '<span class="fa fa-info"></span>&nbsp;&nbsp;<i>More Information</i>',
     'info-link-02' => '<span class="fa fa-envelope"></span>&nbsp;&nbsp;<i>Get in touch with us</i>',
     'info-footer' => '',
-
 ];

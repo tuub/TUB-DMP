@@ -4,7 +4,9 @@
 
     <nav class="navbar navbar-default navbar-fixed-top" id="main-navbar">
         <div class="container">
-            <a href="/" class="navbar-brand navbar-right">{!! HTML::image('images/logo-dmp.png', 'TUB-DMP', array('class' => 'thumb', 'title' => 'TUB-DMP', 'style' => 'height: 38px; padding-top: 6px;')) !!}</a>
+            <a href="/" class="navbar-brand navbar-right">
+                {!! HTML::image('images/logo-dmp.png', 'TUB-DMP', array('class' => 'thumb', 'title' => 'TUB-DMP', 'style' => 'display: inline-block; height: 38px; padding-top: 6px;')) !!}
+            </a>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                     <span class="sr-only">Toggle navigation</span>

@@ -98,6 +98,11 @@
         </div>
     </div>
 
+    @if(env('APP_SERVER') == 'test')
+        @include('partials.layout.testsystem.box')
+    @endif
+
+
 
 
 
