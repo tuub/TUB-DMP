@@ -1,4 +1,4 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,9 +11,9 @@ let mix = require('laravel-mix');
  |
  */
 
-var vendor_path = './node_modules/';
+const vendor_path = './node_modules/';
 
-var paths = {
+const paths = {
     'bootstrap': vendor_path + 'bootstrap/',
     'jqueryui': vendor_path + 'components-jqueryui/',
     'jqueryui_bootstrap': vendor_path + 'jquery-ui-bootstrap/',
@@ -38,6 +38,7 @@ var paths = {
 
 mix.sass('resources/assets/sass/app.scss','public/css/app.css');
 
+mix.copy(paths.images + 'favicon.ico', 'public/');
 mix.copy(paths.images + '**', 'public/images/');
 mix.copy(paths.css + 'pdf.css', 'public/css/');
 mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
