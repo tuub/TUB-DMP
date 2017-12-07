@@ -11,7 +11,12 @@
         <div class="panel-body">
             <div class="text-center">
                 <a href="#" class="project-request btn btn-success btn-success btn-xl large-text" data-toggle="modal" data-target="#project-request" title="{{ trans('project.request.title') }}">
-                    <i class="fa fa-plus" aria-hidden="true"></i> {{ trans('project.request.title') }}</a>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    @if ($projects->count() == 0)
+                        {{ trans('dashboard.request.first') }}
+                    @else
+                        {{ trans('dashboard.request.another') }}
+                    @endif
                 </a>
                 <br/><br/>
                 <p>
