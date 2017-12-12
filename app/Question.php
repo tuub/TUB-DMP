@@ -3,14 +3,18 @@
 namespace App;
 
 use Baum\Node;
-
-use Auth;
-use App\Answer;
 use App\Library\Traits\Uuids;
+use Iatstuti\Database\Support\NullableFields;
 
+/**
+ * Question
+ *
+ * @mixin Eloquent
+ */
 class Question extends Node
 {
     use Uuids;
+    use NullableFields;
 
     /*
 	|--------------------------------------------------------------------------
@@ -24,7 +28,9 @@ class Question extends Node
     protected $guarded = ['id', 'lft', 'rgt', 'depth'];
     protected $casts = [
         'id' => 'string',
-        'parent_id' => 'string',
+    ];
+    protected $nullable = [
+        'output_text', 'parent_id', 'default', 'prepend', 'append', 'comment', 'reference', 'guidance', 'hint',
     ];
 
     /* Nested Sets */

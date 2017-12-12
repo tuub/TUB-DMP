@@ -1,35 +1,55 @@
 <tr title="{{ $project->id }}">
-    <td>{{ $project->identifier }}
-        @if($project->children()->count() > 0)
-            PARENT
-        @endif
+
+    @if ($project->isChild())
+        <td style="padding-left:{!! ($project->getLevel()+1)*0.9 !!}em">
+    @else
+        <td>
+    @endif
+
+    @if ($project->isRoot())
+        <span class="fa fa-cubes"></span>
+    @endif
+    @if ($project->isChild())
+            <span class="fa fa-child"></span>
+    @endif
+    {{ $project->identifier }}
+
     </td>
+
+    @if(false)
+        @if ($project->children()->count() > 0)
+            <td>
+                <span class="fa fa-cubes"></span>
+                {{ $project->identifier }}
+            </td>
+        @endif
+        @if ($project->isChild())
+            <td style="padding-left:{!! ($project->getLevel()+1)*0.9 !!}em">
+                <span class="fa fa-child"></span>
+                {{ $project->identifier }}
+            </td>
+        @endif
+    @endif
     <td>{{ $project->contact_email ? HTML::mailto($project->contact_email) : trans('admin/table.value.null') }}</td>
     <td>{{ $project->plans_count }}</td>
     <td>
-        {{ $project->children()->count() }}
-        @if( $project->children()->count() > 0 )
-            {!! Form::button('Show', ['class' => 'btn btn-xs']) !!}
-        @endif
-    </td>
-    <td>
         @if( $project->data_source_id )
             {{ $project->data_source->name }}
+            :
+            @if( $project->imported )
+                @date( $project->imported_at ) @time( $project->imported_at )
+            @else
+                {{ trans('admin/table.value.null') }}
+            @endif
         @else
             {{ trans('admin/table.value.null') }}
         @endif
     </td>
-    <td>
-        @if( $project->imported )
-            @date( $project->imported_at ) @time( $project->imported_at )
-        @else
-            {{ trans('admin/table.value.null') }}
-        @endif
-    </td>
-    <td>@date( $project->created_at ) @time( $project->created_at )</td>
     <td>
         @if( $project->updated_at )
             @date( $project->updated_at ) @time( $project->updated_at )
+        @else
+            @date( $project->created_at ) @time( $project->created_at )
         @endif
     </td>
     <td>
@@ -44,3 +64,6 @@
         {!! HTML::linkRoute('admin.project.plans.index', trans('admin/table.label.edit') . ' Plans', $project, ['class' => 'edit-relation']) !!}
     </td>
 </tr>
+@foreach($project->getImmediateDescendants() as $project)
+    @include('admin.partials.project.info', $project)
+@endforeach

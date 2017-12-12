@@ -8,46 +8,46 @@ Breadcrumbs::register('admin', function ($breadcrumbs) {
 // Admin > Templates
 Breadcrumbs::register('templates', function ($breadcrumbs, $template) {
     $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Templates');
+    $breadcrumbs->push('Template "' . $template->name . '"', route('admin.dashboard'));
 });
 
 // Admin > Template > Sections
 Breadcrumbs::register('sections', function ($breadcrumbs, $template) {
     $breadcrumbs->parent('templates', $template);
-    $breadcrumbs->push('Sections: ' . $template->name);
+    $breadcrumbs->push('Sections');
 });
 
 // Admin > Template > Section > Questions
 Breadcrumbs::register('questions', function ($breadcrumbs, $section) {
     $breadcrumbs->parent('templates', $section->template);
-    $breadcrumbs->push('Sections: ' . $section->template->name, route('admin.template.sections.index', $section->template));
-    $breadcrumbs->push('Questions: ' . $section->name);
+    $breadcrumbs->push('Section "' . $section->name . '"', route('admin.template.sections.index', $section->template));
+    $breadcrumbs->push('Questions');
 });
 
 // Admin > Users
-Breadcrumbs::register('users', function ($breadcrumbs) {
+Breadcrumbs::register('users', function ($breadcrumbs, $user) {
     $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Users');
+    $breadcrumbs->push('User "' . $user->email . '"', route('admin.dashboard'));
 });
 
 // Admin > User > Projects
 Breadcrumbs::register('projects', function ($breadcrumbs, $user) {
-    $breadcrumbs->parent('users');
-    $breadcrumbs->push('Projects: ' . $user->email);
+    $breadcrumbs->parent('users', $user);
+    $breadcrumbs->push('Projects');
 });
 
 // Admin > User > Project > Plan
 Breadcrumbs::register('plans', function ($breadcrumbs, $project) {
-    $breadcrumbs->parent('users');
-    $breadcrumbs->push('Projects of ' . $project->user->email, route('admin.user.projects.index', $project->user));
-    $breadcrumbs->push('Plans of Project ' . $project->identifier, route('admin.project.plans.index', $project));
+    $breadcrumbs->parent('users', $project->user);
+    $breadcrumbs->push('Project "' . $project->identifier . '"', route('admin.user.projects.index', $project->user));
+    $breadcrumbs->push('Plans', route('admin.project.plans.index', $project));
 });
 
 // Admin > User > Project > Plan > Survey
 Breadcrumbs::register('survey', function ($breadcrumbs, $plan) {
-    $breadcrumbs->parent('users');
-    $breadcrumbs->push('Projects of ' . $plan->project->user->email, route('admin.user.projects.index', $plan->project->user));
-    $breadcrumbs->push('Plans of Project ' . $plan->project->identifier, route('admin.project.plans.index',
-        $plan->project));
-    $breadcrumbs->push('Survey "' . $plan->title . '"');
+    //$breadcrumbs->parent('users');
+    //$breadcrumbs->push('Projects of ' . $plan->project->user->email, route('admin.user.projects.index', $plan->project->user));
+    //$breadcrumbs->push('Plans of Project ' . $plan->project->identifier, route('admin.project.plans.index',
+    //    $plan->project));
+    //$breadcrumbs->push('Survey "' . $plan->title . '"');
 });

@@ -32,6 +32,7 @@ var paths = {
     'simple_expand': vendor_path + 'simple-expand/',
     'jquery_cookie': vendor_path + 'jquery.cookie/',
     'jquery_steps': vendor_path + 'jquery-steps/',
+    'vue': vendor_path + 'vue/',
     'fonts': vendor_path + 'font-awesome/',
     'images': './resources/assets/images/',
     'css': './resources/assets/css/',
@@ -43,6 +44,9 @@ mix.sass('resources/assets/sass/app.scss','public/css/app.css');
 mix.copy(paths.images + '**', 'public/images/');
 mix.copy(paths.css + 'pdf.css', 'public/css/');
 mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
+
+mix.js(paths.vue + 'dist/vue.min.js', 'public/js/');
+mix.js(paths.js + 'app.js', 'public/js');
 
 mix.scripts([
     paths.jqueryui + 'jquery-ui.js',

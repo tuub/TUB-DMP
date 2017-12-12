@@ -19,7 +19,8 @@
         "razorbacks/laravel-shibboleth": "^2.2",
         "mrclay/shibalike": "^1.0",
         "webpatser/laravel-uuid": "^3.0",
-        "davejamesmiller/laravel-breadcrumbs": "^4.2"
+        "davejamesmiller/laravel-breadcrumbs": "^4.2",
+        "iatstuti/laravel-nullable-fields": "^1.5"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
@@ -33,7 +34,8 @@
         "doctrine/dbal": "~2.3",
         "barryvdh/laravel-debugbar": "^2.2",
         "laracasts/generators": "dev-master as 1.1.4",
-        "themsaid/laravel-langman": "^1.1"
+        "themsaid/laravel-langman": "^1.1",
+        "barryvdh/laravel-ide-helper": "^2.4"
     },
     "autoload": {
         "classmap": [
@@ -60,6 +62,10 @@
             "php artisan clear-compiled"
         ],
         "post-update-cmd": [
+            "php artisan clear-compiled",
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta",
             "php artisan optimize"
         ],
         "post-root-package-install": [

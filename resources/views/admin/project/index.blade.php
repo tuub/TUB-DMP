@@ -23,10 +23,7 @@
                         <th>Identifier</th>
                         <th>Contact Email</th>
                         <th>Plans</th>
-                        <th>Childs</th>
-                        <th>Data Source</th>
                         <th>Import</th>
-                        <th>Created</th>
                         <th>Updated</th>
                         <th data-orderable="false">Tools</th>
                     </tr>

@@ -23,6 +23,8 @@
                 {!! HTML::style('css/vendor.css') !!}
                 {!! HTML::style('css/my.style.css') !!}
                 {!! HTML::script('https://code.jquery.com/jquery-2.2.4.min.js') !!}
+                {!! HTML::script('js/vue.min.js') !!}
+                {!! HTML::script('js/app.js') !!}
             @show
 
             <script>

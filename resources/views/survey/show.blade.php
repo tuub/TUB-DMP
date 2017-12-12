@@ -9,7 +9,7 @@
 
     <style>
         * {
-            outline: 0px #336699 solid;
+            outline: 1px #336699 solid;
         }
     </style>
 

@@ -52,7 +52,11 @@ class Survey extends Model
 
     public function calculateCompletionRate()
     {
-        return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
+        if ($this->getAnswerCount() > 0) {
+            return round( ( $this->getAnswerCount() / $this->getQuestionCount() ) * 100 );
+        }
+
+        return 0;
     }
 
 

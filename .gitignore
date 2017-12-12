@@ -15,6 +15,7 @@ config/ide-helper.php
 bootstrap/compiled.php
 database/seeds/Fake*
 _ide_helper.php
+*.meta.php
 *.log
 yarn.lock
 mix-manifest.json

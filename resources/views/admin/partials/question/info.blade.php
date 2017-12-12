@@ -2,11 +2,12 @@
     <td>{{ $question->order }}</td>
     <td>{{ $question->keynumber }}</td>
     @if( $question->parent_id )
-        <td style="padding-left:5em">
+        <td style="padding-left:{!! ($question->getLevel()+1)*1.2 !!}em">
     @else
         <td>
     @endif
-    {{ $question->text }}</td>
+        {{ $question->text }}
+    </td>
     <td>@date( $question->created_at ) @time( $question->created_at )</td>
     <td>
         @if( $question->updated_at )
@@ -23,8 +24,6 @@
         {!! Form::close() !!}
     </td>
 </tr>
-@if(true)
-    @foreach($question->getDescendants() as $question)
-        @include('admin.partials.question.info', $question)
-    @endforeach
-@endif
+@foreach($question->getImmediateDescendants() as $question)
+    @include('admin.partials.question.info', $question)
+@endforeach

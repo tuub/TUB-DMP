@@ -35,6 +35,7 @@ $(window).on('load', function()
         }
     });
 
+    /*
     var $text_inputs = $('form :input[class^="question"]').not( ':radio' );
     var $choice_inputs = $('form input[type=radio],form input[type=checkbox]');
 
@@ -98,4 +99,5 @@ $(window).on('load', function()
             }
         });
     });
+    */
 });

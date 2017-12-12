@@ -167,6 +167,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
