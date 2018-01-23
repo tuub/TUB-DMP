@@ -25,6 +25,8 @@ class QuestionController extends Controller {
         $this->template = $template;
         $this->section = $section;
         $this->content_type = $content_type;
+
+        $this->question->rebuild(true);
     }
 
 
@@ -56,7 +58,7 @@ class QuestionController extends Controller {
         /* Validate input */
 
         /* The operation */
-        $op = $this->question->create($data);
+        $op = $question = $this->question->create($data);
 
         /* Notification */
         if ($op) {
