@@ -3,10 +3,12 @@
   "devDependencies": {
     "axios": "^0.17",
     "bootstrap-sass": "^3.3.7",
-    "cross-env": "^5.1",
-    "laravel-mix": "^1.0",
+    "cross-env": "^5.1.3",
+    "laravel-mix": "^1.7.2",
     "lodash": "^4.17.4",
-    "vue": "^2.5.7"
+    "napa": "^3.0.0",
+    "vue": "^2.5.13",
+    "yarn": "^1.3.2"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
@@ -18,23 +20,18 @@
     "components-jqueryui": "^1.12.1",
     "datatables.net": "^1.10.16",
     "datatables.net-bs": "^1.10.16",
-    "famfamfam_flags": "jbdelhommeau/famfamfam_flags",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "jquery-collapse": "^1.1.2",
-    "jquery-expander": "kswedberg/jquery-expander",
-    "jquery-steps": "rstaib/jquery-steps",
-    "jquery-treetable": "martinsbalodis/jquery-treetable",
     "jquery-ui": "^1.12.1",
     "jquery-ui-bootstrap": "^1.0.0",
-    "jquery-ui-sortable-animation": "egych/jquery-ui-sortable-animation",
     "jquery.cookie": "^1.4.1",
     "jquery.easing": "^1.4.1",
-    "simple-expand": "sylvain-hamel/simple-expand",
-    "toastr": "^2.1.2",
+    "toastr": "^2.1.4",
     "typeahead.js": "^0.11.1"
   },
   "scripts": {
+    "install": "napa",
     "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -43,6 +40,14 @@
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "postinstall": "yarn autoclean --force"
+  },
+  "napa": {
+    "famfamfam_flags": "jbdelhommeau/famfamfam_flags",
+    "jquery-expander": "kswedberg/jquery-expander",
+    "jquery-steps": "rstaib/jquery-steps",
+    "jquery-treetable": "martinsbalodis/jquery-treetable",
+    "jquery-ui-sortable-animation": "egych/jquery-ui-sortable-animation",
+    "simple-expand": "sylvain-hamel/simple-expand"
   },
   "engines": {
     "yarn": ">= 1.0.0"
