@@ -30,7 +30,7 @@ class UpdateQuestionRequest extends Request
     public function rules()
     {
         return [
-            //
+            'text' => 'required',
         ];
     }
 }

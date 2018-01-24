@@ -42,6 +42,8 @@ class QuestionController extends Controller {
     {
         $section = $this->section->find($request->section);
         $question = new $this->question;
+        $question->is_active = 1;
+        $question->is_mandatory = 1;
         $template = $section->template;
         $content_types = $this->content_type->get()->pluck('title', 'id');
         $position = $this->question->getNextOrderPosition($section);

@@ -40,17 +40,17 @@
                 <div class="controls">
                     {!! Form::Label( 'is_active', trans('admin/question.form.label.is_active') ) !!}
                     {!! Form::hidden('is_active', '0') !!}
-                    {!! Form::checkbox('is_active', 1, old('is_active')) !!}
+                    {!! Form::checkbox('is_active', 1, old('is_active', $question->is_active)) !!}
                 </div>
                 <div class="controls">
                     {!! Form::Label( 'is_mandatory', trans('admin/question.form.label.is_mandatory') ) !!}
                     {!! Form::hidden('is_mandatory', '0') !!}
-                    {!! Form::checkbox('is_mandatory', 1, old('is_mandatory')) !!}
+                    {!! Form::checkbox('is_mandatory', 1, old('is_mandatory', $question->is_mandatory)) !!}
                 </div>
                 <div class="controls">
                     {!! Form::Label( 'read_only', trans('admin/question.form.label.read_only') ) !!}
                     {!! Form::hidden('read_only', '0') !!}
-                    {!! Form::checkbox('read_only', 1, old('read_only')) !!}
+                    {!! Form::checkbox('read_only', 1, old('read_only', $question->read_only)) !!}
                 </div>
             </div>
         </div>
