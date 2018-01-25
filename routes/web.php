@@ -186,6 +186,7 @@ Route::group(['middleware' => 'auth'], function()
         Route::resource( 'question', 'Admin\QuestionController', ['as' => 'admin']  );
         Route::resource( 'data_source', 'Admin\DataSourceController', ['as' => 'admin'] );
 
+        Route::get('/template/{id}/copy', array ('as' => 'admin.template.copy', 'uses' => 'Admin\TemplateController@copy'));
         Route::post('/section/sort', array ('as' => 'admin.section.sort', 'uses' => 'Admin\SectionController@sort'));
         Route::post('/question/sort', array ('as' => 'admin.question.sort', 'uses' => 'Admin\QuestionController@sort'));
 

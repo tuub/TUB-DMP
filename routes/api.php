@@ -11,7 +11,8 @@ use Illuminate\Http\Request;
 |
 */
 Route::get('/sections', function (Request $request) {
-    return \App\Section::where('template_id', $request->template)->orderBy('order')->get(['name', 'id'])->toJson();
+    $response = \App\Section::where('template_id', $request->template)->orderBy('order')->get(['name', 'id']);
+    return $response->toJson();
 });
 
 Route::get('/questions', function (Request $request) {

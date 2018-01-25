@@ -30,6 +30,7 @@
         <legend>{{ trans('admin/question.title.' . $mode) }}</legend>
         {!! Form::hidden('order', ($position ?? $question->order)) !!}
         {!! Form::hidden('template_id', $template->id) !!}
+
         <div class="row">
             <div class="form-group col-md-2">
                 {!! Form::Label( 'keynumber', trans('admin/question.form.label.keynumber') ) !!}

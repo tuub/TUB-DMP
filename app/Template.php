@@ -71,4 +71,29 @@ class Template extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function copy()
+    {
+        $current_template = $this;
+        $new_template = $current_template->replicate()->setRelations([]);
+
+        if ($new_template) {
+            $new_template->name .= ' - COPY (' . date('Ymdhis') . ')';
+            $new_template->is_active = 0;
+            $new_template->push();
+
+            foreach($current_template->sections as $current_section) {
+                $new_section = $new_template->sections()->create($current_section->toArray());
+                foreach($current_section->questions as $current_question) {
+                    $new_question = $new_section->questions()->create($current_question->toArray());
+                    $new_question->template()->associate($new_template->id);
+                    $new_question->save();
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
 }

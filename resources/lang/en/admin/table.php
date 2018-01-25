@@ -19,6 +19,7 @@ return [
         'edit' => 'Edit',
         'delete' => 'Delete',
         'export' => 'Export',
+        'copy' => 'Copy',
     ],
     'value' => [
         'true' => 'Yes',
@@ -31,5 +32,6 @@ return [
         'edit' => 'fa-pencil',
         'delete' => 'fa-trash',
         'export' => 'fa-file-pdf-o',
+        'copy' => 'fa-clone',
     ],
 ];

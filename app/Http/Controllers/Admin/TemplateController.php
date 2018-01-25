@@ -3,18 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Template;
 use App\Institution;
-
 use App\Http\Requests\Admin\UpdateTemplateRequest;
-
-use View;
-use Redirect;
 use Session;
+use App\Library\Notification;
 
 
 class TemplateController extends Controller
@@ -121,6 +115,24 @@ class TemplateController extends Controller
         $template = $this->template->find($id);
         $template->delete();
         Session::flash('message', 'Successfully deleted template!');
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function copy(Request $request)
+    {
+        $template = $this->template->findOrFail($request->id);
+
+        /* The operation */
+        $op = $template->copy();
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully copied the template!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while copying the template!', 'error');
+        }
+        $notification->toSession($request);
+
         return redirect()->route('admin.dashboard');
     }
 }
