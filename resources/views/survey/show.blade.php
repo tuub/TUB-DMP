@@ -7,12 +7,6 @@
 
 @section('body')
 
-    <style>
-        * {
-            outline: 1px #336699 solid;
-        }
-    </style>
-
     <ol id="plan-toc">
         @foreach( $survey->template->sections()->active()->ordered()->get() as $section )
             <li><a href="#{{ $section->keynumber }}">{{ $section->name }}</a></li>

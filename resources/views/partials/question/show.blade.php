@@ -1,7 +1,5 @@
 @if ($question->isChild())
     <div class="col-md-offset-{!! $question->getLevel() !!}">
-        {!! 'col-md-offset-' . $question->getLevel() !!}
-        {!! $question->parent->text !!}
 @endif
 <div class="row">
     <div class="col-md-24">
