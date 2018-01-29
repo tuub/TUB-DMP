@@ -95,7 +95,7 @@ class QuestionController extends Controller {
         $dirty = new Sanitizer($request);
         $data = $dirty->cleanUp();
 
-        /* Validate input */
+        /* The validation */
 
         /* Get object */
         $question = $this->question->findOrFail($id);

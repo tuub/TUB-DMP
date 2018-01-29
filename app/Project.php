@@ -33,6 +33,7 @@ class Project extends Node
         'identifier',
         'parent_id',
         'user_id',
+        'is_active',
         'contact_email',
         'data_source_id',
         'imported',
@@ -296,6 +297,23 @@ class Project extends Node
         return $external_data;
     }
 
+    public function hasValidIdentifier()
+    {
+        if (env('PROJECT_IDENTIFIER_PATTERN')) {
+            if (preg_match(env('PROJECT_IDENTIFIER_PATTERN'), $this->identifier)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function approve()
+    {
+        $this->update(['is_active' => true]);
+        return true;
+    }
+
     public function importFromDataSource()
     {
         if ($this->data_source) {
@@ -320,7 +338,7 @@ class Project extends Node
 
                     foreach ($mappings as $mapping) {
                         /* Get the external data by source */
-			$external_data = DB::connection('odbc')->table($namespace->name)
+			            $external_data = DB::connection('odbc')->table($namespace->name)
                             ->select($mapping->data_source_entity[0])
                             ->where('Projekt_Nr', 'LIKE', $this->identifier)
                             ->get();
@@ -389,9 +407,8 @@ class Project extends Node
 
             $this->setImportStatus(true);
             $this->setImportTimestamp();
-
-            return true;
         }
-        return false;
+
+        return $this;
     }
 }

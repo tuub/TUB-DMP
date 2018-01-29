@@ -43,7 +43,10 @@ class ProjectController extends Controller
                         'metadata', 'metadata.metadata_registry', 'metadata.metadata_registry.content_type')
                     ->withCount('plans')
                     ->withCount('children')
-                    ->where('user_id', auth()->user()->id)
+                    ->where([
+                        'user_id' => auth()->user()->id,
+                        'is_active' => true,
+                    ])
                     ->orderBy('updated_at', 'desc')
                     ->get()
                     ->toHierarchy();
@@ -167,13 +170,21 @@ class ProjectController extends Controller
     public function request(CreateProjectRequest $request)
     {
         if (Request::ajax()) {
-            $project['project_id'] = $request->get( 'project_id' );
+
+            $project['user_id'] = $request->get('user_id');
+            $project['identifier'] = $request->get( 'identifier' );
             $project['name'] = $request->get( 'name' );
             $project['email'] = $request->get( 'email' );
             $project['tub_om'] = $request->get( 'tub_om' );
             $project['institution_identifier'] = $request->get( 'institution_identifier' );
             $project['contact_email'] = $request->get( 'contact_email' );
             $project['message'] = $request->get( 'message' );
+
+            $project['is_active'] = false;
+
+            // FIXME: If child project then create the big one as well (if not present!)
+
+            $this->project->create($project);
 
             Mail::send( [ 'text' => 'emails.project-request' ], [ 'project' => $project ],
                 function ( $message ) use ( $project ) {

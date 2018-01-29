@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Http\Requests\Request;
 use Route;
 
-class ProjectRequest extends Request
+class CreateProjectRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,6 @@ class ProjectRequest extends Request
         $id = Route::input('project');
         return [
             'identifier' => 'required|max:50|unique:projects,identifier' . ($id ? ',' . $id : ''),
-            'user_id' => 'required'
         ];
     }
 }

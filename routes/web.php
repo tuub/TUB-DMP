@@ -165,9 +165,11 @@ Route::group(['middleware' => 'auth'], function()
 
         Route::get( '/project/lookup', 'Admin\ProjectController@getLookup', ['as' => 'admin'])->name('admin.project.get_lookup');
         Route::post( '/project/lookup', 'Admin\ProjectController@postLookup', ['as' => 'admin'])->name('admin.project.post_lookup');
+        Route::post( '/project/{id}/approve', 'Admin\ProjectController@approve', ['as' => 'admin'])->name('admin.project.approve');
+        Route::post( '/project/{id}/reject', 'Admin\ProjectController@reject', ['as' => 'admin'])->name('admin.project.reject');
 
         Route::get( '/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', ['as' => 'admin'] )->name('admin.log_viewer');
-        Route::get( '/project/{project_number}/raw_ivmc', 'Admin\ProjectController@raw_ivmc', ['as' => 'admin'])->name('admin.raw_ivmc');
+        //Route::get( '/project/{project_number}/raw_ivmc', 'Admin\ProjectController@raw_ivmc', ['as' => 'admin'])->name('admin.raw_ivmc');
         Route::get( '/project/random_ivmc', 'Admin\ProjectController@random_ivmc', ['as' => 'admin'])->name('admin.random_ivmc');
 
         /* REST ENTITIES */

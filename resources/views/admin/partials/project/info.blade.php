@@ -16,21 +16,14 @@
 
     </td>
 
-    @if(false)
-        @if ($project->children()->count() > 0)
-            <td>
-                <span class="fa fa-cubes"></span>
-                {{ $project->identifier }}
-            </td>
-        @endif
-        @if ($project->isChild())
-            <td style="padding-left:{!! ($project->getLevel()+1)*0.9 !!}em">
-                <span class="fa fa-child"></span>
-                {{ $project->identifier }}
-            </td>
-        @endif
-    @endif
     <td>{{ $project->contact_email ? HTML::mailto($project->contact_email) : trans('admin/table.value.null') }}</td>
+    <td>
+        @if ($project->is_active)
+            <span class="fa fa-circle" style="color:green;"></span>
+        @else
+            <span class="fa fa-circle" style="color:red;"></span>
+        @endif
+    </td>
     <td>{{ $project->plans_count }}</td>
     <td>
         @if( $project->data_source_id )

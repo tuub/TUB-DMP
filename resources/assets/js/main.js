@@ -7,7 +7,15 @@ $(document).ready(function ()
 
     /* Make sure that the privacy statements on login page aren't check (looking at you, Chrome!) */
     $('#login-form div.checkbox input').attr('checked', false);
- 
+
+    /* http://bootstrapswitch.com/options.html */
+    $( "input[type=checkbox]" ).bootstrapSwitch({
+        size: 'mini',
+        onText: 'Yes',
+        onColor: 'success',
+        offText: 'No',
+        offColor: 'default',
+    });
 
     /**
      * Read open state of project's plan panel from cookie value

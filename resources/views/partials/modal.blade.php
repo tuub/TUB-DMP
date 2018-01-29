@@ -34,7 +34,8 @@
             </div>
             <div class="modal-body">
                 <div class="errors"></div>
-                {!! BootForm::text(trans('project.request.label.identifier'), 'project_id')->helpBlock(trans('project.request.help.identifier')) !!}
+                {!! BootForm::hidden('user_id')->value(auth()->user()->id) !!}
+                {!! BootForm::text(trans('project.request.label.identifier'), 'identifier')->helpBlock(trans('project.request.help.identifier')) !!}
 
                 {!! BootForm::text(trans('project.request.label.name'), 'name')->placeholder(trans('project.request.placeholder.name'))->value(auth()->user()->name)->readonly() !!}
                 {!! BootForm::text(trans('project.request.label.email'), 'email')->placeholder(trans('project.request.placeholder.email'))->value(auth()->user()->email)->readonly() !!}

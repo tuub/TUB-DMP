@@ -77,7 +77,8 @@ mix.styles([
     paths.css + 'datepicker.jqueryui.css',
     paths.css + 'jquery.steps.css',
     paths.css + 'style.css',
-    paths.css + 'admin.css'
+    paths.css + 'admin.css',
+    paths.css + 'form.css',
 ], './public/css/my.style.css');
 
 mix.styles([

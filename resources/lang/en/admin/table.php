@@ -20,6 +20,8 @@ return [
         'delete' => 'Delete',
         'export' => 'Export',
         'copy' => 'Copy',
+        'approve' => 'Approve',
+        'reject' => 'Reject',
     ],
     'value' => [
         'true' => 'Yes',
@@ -33,5 +35,7 @@ return [
         'delete' => 'fa-trash',
         'export' => 'fa-file-pdf-o',
         'copy' => 'fa-clone',
+        'approve' => 'fa-check',
+        'reject' => 'fa-ban',
     ],
 ];

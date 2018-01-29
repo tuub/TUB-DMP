@@ -2,7 +2,7 @@
     <footer class="footer">
         <div class="container">
             <div class="text-center">
-                &copy; {{ date("Y") }}
+                &copy; 2014 - {{ date("Y") }}
                 {{ HTML::link('http://www.szf.tu-berlin.de/', trans('general.footer.link-01'), ['target' => '_blank']) }}
             </div>
             <div class="text-center">

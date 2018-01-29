@@ -22,6 +22,7 @@
                     <tr>
                         <th>Identifier</th>
                         <th>Contact Email</th>
+                        <th>Status</th>
                         <th>Plans</th>
                         <th>Import</th>
                         <th>Updated</th>

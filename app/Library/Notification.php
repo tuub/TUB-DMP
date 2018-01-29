@@ -35,5 +35,11 @@ class Notification
     public function toSession($request) {
         $request->session()->flash('message', $this->notification['message']);
         $request->session()->flash('alert-type', $this->notification['alert-type']);
+        /*
+        session()->put([
+            'message' => $this->notification['message'],
+            'alert-type' => $this->notification['alert-type'],
+        ]);
+        */
     }
 }

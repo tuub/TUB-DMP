@@ -21,7 +21,11 @@
                         @if( $plan->is_snapshot)
                             <i class="fa fa-lock"></i>&nbsp;
                         @endif
-                        {{ $plan->survey->completion }}&nbsp;%
+                        @php
+                            //AppHelper::varDump($plan->survey);
+                            //dd($plan);
+                            //&nbsp;%
+                        @endphp
                     </span>
                 </div>
             </div>

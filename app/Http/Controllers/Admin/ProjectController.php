@@ -7,13 +7,18 @@ use App\Http\Requests\Admin\ProjectLookupRequest;
 use App\MetadataRegistry;
 use App\ProjectMetadata;
 use Illuminate\Support\Facades\Redirect;
-
-use App\Http\Requests\Admin\ProjectRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\Admin\CreateProjectRequest;
+use App\Http\Requests\Admin\UpdateProjectRequest;
 use App\Project;
 use App\User;
 use App\DataSource;
 use DB;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ProjectApproved;
+use App\Mail\ProjectRejected;
+use App\Library\Sanitizer;
+use App\Library\Notification;
 
 class ProjectController extends Controller
 {
@@ -28,6 +33,7 @@ class ProjectController extends Controller
 
     public function index(User $user)
     {
+        //dd($user);
         $user = $this->user->find($user->id);
         // Get only parent projects so we can include the child projects via view
         $projects = $this->project->withCount('plans')->where('user_id', $user->id)->get()->toHierarchy();
@@ -38,48 +44,45 @@ class ProjectController extends Controller
     public function create(User $user)
     {
         $user = $this->user->find($user->id);
-        $project = $this->project;
+        $project = new $this->project;
         $projects = $this->project->where('user_id', $user->id)->orderBy('identifier', 'asc')->get()->pluck('identifier','id')->prepend('Select a parent','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
-        return view('admin.project.new', compact('project','projects','user','data_sources'));
+        $return_route = 'admin.user.projects.index';
+        return view('admin.project.create', compact('project','projects','user','data_sources', 'return_route'));
     }
 
 
-    public function store(ProjectRequest $request)
+    public function store(CreateProjectRequest $request)
     {
-        $data = array_filter($request->all(), 'strlen');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* The validation */
+
+        /* The return route */
+        $return_route = $request->return_route;
+        array_forget($data, 'return_route');
+
+        /* The operation */
         $user = $this->user->find($data['user_id']);
-        $project = $this->project->create($data);
+        $project = $op = $this->project->create($data);
+
+        /* The metadata import */
         $project->importFromDataSource();
 
-        if ($project) {
-            Mail::send( [ 'text' => 'emails.project-created' ], [ 'project' => $project ],
-                function ( $message ) use ( $project ) {
-                    $subject = 'Your TUB-DMP Project has been created';
-                    $message->from( env('ADMIN_MAIL_ADDRESS', 'server@localhost'), env('ADMIN_MAIL_NAME', 'TUB-DMP Admin') );
-                    $message->to( $project->user->email )->subject( $subject );
-                    $message->replyTo( env('ADMIN_MAIL_ADDRESS', 'server@localhost'), env('ADMIN_MAIL_NAME', 'TUB-DMP Admin') );
-                }
-            );
+        /* FIXME: The activation */
+        //$project->approve();
 
-            if (Mail::failures()) {
-                $notification = [
-                    'status' => 500,
-                    'message' => 'There was a problem when sending project notification to ' . $project->user->email . '!',
-                    'alert-type' => 'error'
-                ];
-            } else {
-                $notification = [
-                    'status' => 200,
-                    'message' => 'Project notification was sent to ' . $project->user->email . '!',
-                    'alert-type' => 'success'
-                ];
-            }
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully created the project!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while creating the project!', 'error');
+        }
+        $notification->toSession($request);
 
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
-        };
-        return redirect()->route('admin.user.projects.index', $user);
+        return redirect()->route($return_route, $user);
     }
 
 
@@ -92,25 +95,42 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $project = $this->project->findOrFail($id);
+        $user = $project->user;
         $projects = $this->project->orderBy('identifier', 'asc')->get()->pluck('identifier','id')->prepend('Select a parent','');
         $users = User::orderBy('email', 'asc')->get()->pluck('email','id')->prepend('Select an owner','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
-        return view('admin.project.edit', compact('project','projects','users','data_sources'));
+        $return_route = 'admin.user.projects.index';
+        return view('admin.project.edit', compact('project','projects','user','users','data_sources', 'return_route'));
     }
 
 
-    public function update(ProjectRequest $request, $id)
+    public function update(UpdateProjectRequest $request, $id)
     {
-        $user = User::find($request->user_id);
-        //\AppHelper::varDump($request);
         $project = $this->project->findOrFail($id);
-        // $data = array_filter($request->all(), 'strlen');
-        $data = $request->all();
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
-        $project->update($data);
-        return redirect()->route('admin.user.projects.index', $user);
+
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* The validation */
+
+        /* The return route */
+        $return_route = $request->return_route;
+        array_forget($data, 'return_route');
+
+        /* The operation */
+        $op = $project->update($data);
+
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully updated the project!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while updating the project!', 'error');
+        }
+
+        $notification->toSession($request);
+
+        return redirect()->route($return_route, $project->user->id);
     }
 
 
@@ -157,6 +177,51 @@ class ProjectController extends Controller
             'message'  => $notification['message']
         ]);
 
+    }
+
+    public function approve(Request $request) {
+        $project = $this->project->findOrFail($request->id);
+
+        /* The operation */
+        $op = $project->approve();
+
+        /* Notification & Mail */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully approved the project request!', 'success');
+            Mail::to($project->user->email)->send(new ProjectApproved($project));
+        } else {
+            $notification = new Notification(500, 'Error while approving the project request!', 'error');
+            Mail::to($project->user->email)->send(new ProjectRejected($project));
+        }
+
+        // FIXME: not working flash because of redirect
+        // FIXME: another bug, project request doesn't show error when entering already existing project id
+
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function reject(Request $request) {
+        $project = $this->project->findOrFail($request->id);
+
+        /* The operation */
+        $op = $project->destroy($project->id); // FIXME: destroy param!?
+
+        /* Notification & Mail */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully rejected the project request!', 'success');
+            Mail::to($project->user->email)->send(new ProjectRejected($project));
+        } else {
+            $notification = new Notification(500, 'Error while rejecting the project request!', 'error');
+        }
+
+        // FIXME: not working flash because of redirect
+        // FIXME: another bug, project request doesn't show error when entering already existing project id
+
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dashboard');
     }
 
 

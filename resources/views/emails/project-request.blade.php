@@ -1,6 +1,6 @@
-A new project needs to be created.
+A new project needs approval at https://{!! env('APP_URL') !!}/admin/
 
-TUB project number: {!! $project['project_id'] !!}
+TUB project number: {!! $project['identifier'] !!}
 Name: {!! $project['name'] !!}
 Email: {!! $project['email'] !!}
 Identifier: {!! $project['tub_om'] !!}

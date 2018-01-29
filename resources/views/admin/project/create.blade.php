@@ -8,14 +8,14 @@
 
 @section('body')
 
-    {!! AppHelper::varDump($return_route) !!}
+    {!! AppHelper::varDump($project) !!}
 
     @includeWhen($project, 'admin.project.form', [
         'project' => $project,
-        'user' => $project->user,
-        'mode' => 'edit',
-        'action' => 'update',
-        'method' => 'PUT',
+        //'template' => $project,
+        'mode' => 'create',
+        'action' => 'store',
+        'method' => 'POST',
     ])
 
 @stop

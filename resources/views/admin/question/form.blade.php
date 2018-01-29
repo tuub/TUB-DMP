@@ -7,30 +7,11 @@
 @stop
 
 @section('body')
-    <!-- http://bootstrapswitch.com/options.html -->
-    <script>
-        $( function() {
-            $( "input[type=checkbox]" ).bootstrapSwitch({
-                size: 'mini',
-                onText: 'Yes',
-                onColor: 'success',
-                offText: 'No',
-                offColor: 'default',
-            });
-        } );
-    </script>
-
-    <style>
-        * { outline: 0px #336699 solid; }
-        label { padding-right: 20px; }
-        textarea { resize: vertical; }
-    </style>
 
     {!! Form::model($question, ['method' => $method, 'route' => ['admin.question.' . $action, $question->id], 'class' => '', 'role' => 'form']) !!}
         <legend>{{ trans('admin/question.title.' . $mode) }}</legend>
         {!! Form::hidden('order', ($position ?? $question->order)) !!}
         {!! Form::hidden('template_id', $template->id) !!}
-
         <div class="row">
             <div class="form-group col-md-2">
                 {!! Form::Label( 'keynumber', trans('admin/question.form.label.keynumber') ) !!}
