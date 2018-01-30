@@ -20,7 +20,7 @@
                 {{ $section->full_name }}
             </h3>
             <div class="section-text">
-                @foreach( $section->questions()->active()->ordered()->get() as $question )
+                @foreach(\App\Question::roots()->active()->where('section_id', $section->id)->orderBy('order', 'asc')->get() as $question)
                     @include('partials.question.show', $question)
                 @endforeach
             </div>

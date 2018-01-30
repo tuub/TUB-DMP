@@ -1,6 +1,7 @@
 @if ($question->isChild())
     <div class="col-md-offset-{!! $question->getLevel() !!}">
 @endif
+
 <div class="row">
     <div class="col-md-24">
         <span class="question-text">
@@ -15,27 +16,33 @@
                     {{ $question->keynumber }}
                 @endif
             </div>
+
             @if( $question->output_text )
                 {{ $question->output_text }}
             @else
                 {{ $question->text }}
             @endif
+
             @if( $question->input_type == 'headline')
                 </span>
             @endif
         </span>
     </div>
-    <div class="col-md-24">
-        <div style="display: inline-block; margin-top: 10px; margin-left: 18px;">
-            <div class="question-answer-text">
-                @if( $question->input_type != 'headline')
+    @if( $question->input_type != 'headline')
+        <div class="col-md-24">
+            <div style="display: inline-block; margin-top: 10px; margin-left: 18px;">
+                <div class="question-answer-text">
                     {!! App\Answer::get( $survey, $question, 'html' ) !!}
-                @endif
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 </div>
 <br/>
 @if ($question->isChild())
     </div>
 @endif
+
+@foreach($question->getImmediateDescendants() as $question)
+    @include('partials.question.show', $question)
+@endforeach

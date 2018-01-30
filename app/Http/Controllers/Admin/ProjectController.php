@@ -22,18 +22,35 @@ use App\Library\Notification;
 
 class ProjectController extends Controller
 {
+    /**
+     * @var Project
+     */
     protected $project;
+    /**
+     * @var User
+     */
     protected $user;
 
+
+    /**
+     * ProjectController constructor.
+     *
+     * @param Project $project
+     * @param User    $user
+     */
     public function __construct(Project $project, User $user)
     {
         $this->project = $project;
         $this->user = $user;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(User $user)
     {
-        //dd($user);
         $user = $this->user->find($user->id);
         // Get only parent projects so we can include the child projects via view
         $projects = $this->project->withCount('plans')->where('user_id', $user->id)->get()->toHierarchy();
@@ -41,6 +58,11 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @param User $user
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create(User $user)
     {
         $user = $this->user->find($user->id);
@@ -52,6 +74,11 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @param CreateProjectRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(CreateProjectRequest $request)
     {
         /* Clean input */
@@ -86,12 +113,22 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function show($id)
     {
         return $this->project->findOrFail($id);
     }
 
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $project = $this->project->findOrFail($id);
@@ -104,6 +141,12 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @param UpdateProjectRequest $request
+     * @param                      $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateProjectRequest $request, $id)
     {
         $project = $this->project->findOrFail($id);
@@ -134,6 +177,11 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id)
     {
         $project = $this->project->findOrFail($id);
@@ -142,12 +190,20 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getLookup() {
         $data_sources = DataSource::get()->pluck('identifier','id')->prepend('Select a datasource','');
         return view('admin.project.lookup', compact('data_sources'));
     }
 
 
+    /**
+     * @param ProjectLookupRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function postLookup(ProjectLookupRequest $request)
     {
         $data = Project::lookupDataSource($request->identifier);
@@ -179,6 +235,11 @@ class ProjectController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function approve(Request $request) {
         $project = $this->project->findOrFail($request->id);
 
@@ -202,6 +263,11 @@ class ProjectController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function reject(Request $request) {
         $project = $this->project->findOrFail($request->id);
 
@@ -225,6 +291,9 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     *
+     */
     public function random_ivmc() {
         $connection = odbc_connect( "IVMC_MSSQL_2", env('ODBC_USERNAME'), env('ODBC_PASSWORD') );
 	
@@ -239,6 +308,9 @@ class ProjectController extends Controller
     }
 
     /* FIXME: REMOVE AFTER TESTING */
+    /**
+     * @param $project_number
+     */
     public function raw_ivmc( $project_number )
     {
         $connection = odbc_connect( "IVMC_MSSQL_2", "WIN\svc-ub-dmp", "vByZ80az" );

@@ -62,16 +62,8 @@ class Section extends \Eloquent
 
     public function getFullNameAttribute()
     {
-        return $this->keynumber . '.' . $this->name;
+        return $this->keynumber . '. ' . $this->name;
     }
-
-    /*
-    public function getTitle()
-    {
-        $response = $this->keynumber . ' ' . $this->name;
-        return $response;
-    }
-    */
 
 
     /*

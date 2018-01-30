@@ -40,6 +40,16 @@ class SurveyController extends Controller
     public function show($id)
     {
         $survey = $this->survey->findOrFail($id);
+        $sections = $survey->template->sections;
+
+        //$questions = Question::get()->toHierarchy();
+        //\AppHelper::varDump($questions);
+
+        //foreach ($sections as $section) {
+        //    $questions[$section->id] = $section->questions()->parent()->active()->ordered()->get();
+        //}
+
+        //dump($questions);
 
         return view('survey.show', compact('survey'));
     }

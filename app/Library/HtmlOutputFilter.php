@@ -55,10 +55,10 @@ class HtmlOutputFilter implements OutputInterface
                         switch ($this->content_type->identifier) {
                             case 'list':
                                 //$output = $value->implode(', ', $value);
-                                \AppHelper::varDump($value);
+                                //\AppHelper::varDump($value);
                                 break;
                             case 'person':
-                                var_dump($value);
+                                //var_dump($value);
                                 break;
                             default:
                                 $output = nl2br($value);

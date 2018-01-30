@@ -6,11 +6,6 @@ use Baum\Node;
 use App\Library\Traits\Uuids;
 use Iatstuti\Database\Support\NullableFields;
 
-/**
- * Question
- *
- * @mixin Eloquent
- */
 class Question extends Node
 {
     use Uuids;
@@ -137,25 +132,11 @@ class Question extends Node
         return false;
     }
 
-    /*
-    public static function getQuestions( Template $template ) {
-        $result = Question::where('template_id', $template->id)->where('is_active', 1)->get();
-        return $result;
-    }
-
-    public static function getQuestion( $id ) {
-        $result = Question::where('id', $id)->where('is_active', 1)->get();
-        return $result;
-    }
-
-    public function getQuestionText( $id ) {
-        return $this->text;
-    }
-    */
 
     public function getChildren() {
         return Question::where('parent_id', $this->id)->get();
     }
+
 
     /**
      * @param $data
@@ -166,11 +147,14 @@ class Question extends Node
     {
         foreach ($data as $items) {
             foreach ($items as $position => $id) {
-                Question::find($id)->update(['order' => $position+1]);
+                $q = Question::find($id);
+                $q->order = $position+1;
+                $q->save();
             }
         }
         return true;
     }
+
 
     public static function getNextOrderPosition(Section $section)
     {
