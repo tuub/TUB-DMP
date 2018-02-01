@@ -186,7 +186,7 @@ class ProjectController extends Controller
 
             $this->project->create($project);
 
-            Mail::send( [ 'text' => 'emails.project-request' ], [ 'project' => $project ],
+            Mail::send( [ 'text' => 'emails.project.request' ], [ 'project' => $project ],
                 function ( $message ) use ( $project ) {
                     $subject = 'TUB-DMP Project Request';
                     $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
