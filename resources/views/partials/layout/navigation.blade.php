@@ -46,4 +46,8 @@
         </div>
     </nav>
 
+    @if(env('APP_SERVER') == 'test')
+        @include('partials.layout.testsystem.banner')
+    @endif
+
 @show
