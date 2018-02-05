@@ -1,7 +1,5 @@
 @section('navigation')
 
-    {{-- env('APP_ENV') --}}
-
     <nav class="navbar navbar-default navbar-fixed-top" id="main-navbar">
         <div class="container">
             <a href="/" class="navbar-brand navbar-right">{!! HTML::image('images/logo-dmp.png', 'TUB-DMP', array('class' => 'thumb', 'title' => 'TUB-DMP', 'style' => 'height: 38px; padding-top: 6px;')) !!}</a>
@@ -46,8 +44,8 @@
         </div>
     </nav>
 
-    @if(env('APP_SERVER') == 'test')
-        @include('partials.layout.testsystem.banner')
+    @if(env('APP_SERVER') == 'demo')
+        @include('partials.layout.demosystem.banner')
     @endif
 
 @show

@@ -184,7 +184,7 @@ class ShibbolethController extends Controller
 
         $referer = $this->getServerVariable('HTTP_REFERER');
 
-        die("Goodbye, fair user. <a href='$referer'>Return from whence you came</a>!");
+        die("Goodbye. <a href='/'>Return to home page</a>!");
     }
 
     /**
