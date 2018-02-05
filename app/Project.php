@@ -411,4 +411,14 @@ class Project extends Node
 
         return $this;
     }
+
+
+    public function hasParent() {
+        return $this->parent_id ? true : false;
+    }
+
+
+    public function getParent() {
+        return Project::where('id', $this->parent_id)->first();
+    }
 }

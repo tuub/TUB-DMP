@@ -7,6 +7,30 @@
                 <h4 class="modal-title">{{ trans('project.show.title') }}</h4>
             </div>
             <div class="modal-body">
+
+                @if ($project->hasParent())
+                    <div class="alert alert-info">
+                        <h4>Parent Project</h4>
+                        <p>
+                            <label>{{ $project->getMetadataLabel('identifier') }}:</label>
+                            {{ $project->getParent()->identifier }}
+                        </p>
+                        <p>
+                            @if( $project->getParent()->getMetadata('title') )
+                                <label>{{ str_plural($project->getParent()->getMetadataLabel('title'), $project->getParent()->getMetadata('title')->count()) }}:</label>
+                                <br/>
+                                @foreach( $project->getParent()->getMetadata('title') as $title )
+                                    {{ $title['content'] }}
+                                    @unless( $loop->last )
+                                        <br/>
+                                    @endunless
+                                @endforeach
+                                <br/><br/>
+                            @endif
+                        </p>
+                    </div>
+                @endif
+
                 @if( $project->identifier )
                     <label>{{ $project->getMetadataLabel('identifier') }}:</label>
                     {{ $project->identifier }}
@@ -20,7 +44,7 @@
                 @endif
 
                 @if( $project->children_count )
-                    <label>{{ str_plural('project.show.sub_project', $project->children_count) }}:</label>
+                    <label>{{ str_plural(trans('project.show.sub_project'), $project->children_count) }}:</label>
                     {{ $project->children_count }}
                     <br/>
                 @endif
@@ -29,7 +53,7 @@
                     <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
                     <br/>
                     @foreach( $project->getMetadata('title') as $title )
-                        {{ strtoupper($title['language']) }}: {{ $title['content'] }}
+                        {{ $title['content'] }}
                         @unless( $loop->last )
                             <br/>
                         @endunless
@@ -54,7 +78,7 @@
                     <label>{{ str_plural($project->getMetadataLabel('abstract'), $project->getMetadata('abstract')->count()) }}:</label>
                     <br/>
                     @foreach( $project->getMetadata('abstract') as $abstract )
-                        {{ strtoupper($abstract['language']) }}: {{ $abstract['content'] }}
+                        {{ $abstract['content'] }}
                         @unless( $loop->last )
                             <br/>
                         @endunless

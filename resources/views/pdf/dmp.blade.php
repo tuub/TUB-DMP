@@ -125,17 +125,20 @@
             <br/><br/>
             <div class="row">
                 <!--<div class="col-xs-offset-6 col-xs-12 text-justify">-->
-                    <p>
-                        Copyright information: The above plan creator(s) have agreed that others may use
-                        as much of the text of this plan as they would like in their own plans, and customize
-                        it as necessary. You do not need to credit the creators as the source of the
-                        language used, but using any of their plan's text does not imply that the creator(s)
-                        endorse, or have any relationship to, your project or proposal.
-                    </p>
+                <p>
+                    This DMP was created with <a href="{!! env('APP_URL') !!}">TUB-DMP</a>.<br/>
+                    Template: {!! $survey->template->name !!}
+                </p>
+                <p>
+                    Copyright information: The above plan creator(s) have agreed that others may use
+                    as much of the text of this plan as they would like in their own plans, and customize
+                    it as necessary. You do not need to credit the creators as the source of the
+                    language used, but using any of their plan's text does not imply that the creator(s)
+                    endorse, or have any relationship to, your project or proposal.
+                </p>
                 <!--</div>-->
             </div>
         </div>
-
         @if( $project->getMetadata('abstract') )
             <div class="container page">
                 <div class="row">
@@ -147,6 +150,37 @@
                         {!! nl2br($abstract['content']) !!}
                         <br/><br/>
                     @endforeach
+                </div>
+            </div>
+        @endif
+        @if($project->hasParent())
+            <div class="container page">
+                <div class="parent-project">
+                    <div class="row">
+                        <h2>
+                            Parent Project
+                        </h2>
+
+                        <div class="alert-xs alert-info">
+                            <p>
+                                <label>{{ $project->getMetadataLabel('identifier') }}:</label>
+                                {{ $project->getParent()->identifier }}
+                            </p>
+                            <p>
+                                @if( $project->getParent()->getMetadata('title') )
+                                    <label>{{ str_plural($project->getParent()->getMetadataLabel('title'), $project->getParent()->getMetadata('title')->count()) }}:</label>
+                                    <br/>
+                                    @foreach( $project->getParent()->getMetadata('title') as $title )
+                                        {{ strtoupper($title['language']) }}: {{ $title['content'] }}
+                                        @unless( $loop->last )
+                                            <br/>
+                                        @endunless
+                                    @endforeach
+                                    <br/><br/>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         @endif
@@ -183,7 +217,4 @@
                     </div>
                 @endunless
             @endforeach
-        </div>
-
-    </body>
-</html>
+        </div></body></html>

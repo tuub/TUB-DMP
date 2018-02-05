@@ -259,8 +259,20 @@ class Plan extends Model
         $pdf = PDF::loadView('pdf.dmp',  compact('plan', 'project', 'survey'));
 
         if ($pdf) {
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => FALSE,
+                    'verify_peer_name' => FALSE,
+                    'allow_self_signed'=> TRUE
+                ]
+            ]);
+            $pdf->getDomPDF()->setHttpContext($context);
+
             return $pdf->stream($filename);
-            //return view('pdf.dmp', compact('plan', 'project', 'survey'));
+
+            /* For debugging, switch the return with the following:
+             * return view('pdf.dmp', compact('plan', 'project', 'survey'));
+             */
         }
         throw new NotFoundHttpException;
     }

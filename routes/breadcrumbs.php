@@ -36,6 +36,17 @@ Breadcrumbs::register('projects', function ($breadcrumbs, $user) {
     $breadcrumbs->push('Projects');
 });
 
+// Admin > User > Projects > Create/Edit Project
+Breadcrumbs::register('project_form', function ($breadcrumbs, $user, $project, $mode) {
+    $breadcrumbs->parent('users', $user);
+    $breadcrumbs->push('Projects', route('admin.user.projects.index', $user));
+    if($project->identifier) {
+        $breadcrumbs->push(trans('admin/project.title.' . $mode) . ' "' . $project->identifier . '"');
+    } else {
+        $breadcrumbs->push(trans('admin/project.title.' . $mode));
+    }
+});
+
 // Admin > User > Project > Plan
 Breadcrumbs::register('plans', function ($breadcrumbs, $project) {
     $breadcrumbs->parent('users', $project->user);
