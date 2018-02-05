@@ -253,7 +253,7 @@
                 <div class="errors"></div>
                 {!! BootForm::hidden('project_id')->id('project_id') !!}
                 {!! BootForm::text(trans('plan.create.input.title.label'), 'title')->placeholder(trans('plan.create.input.title.placeholder')) !!}
-                {!! BootForm::select(trans('plan.create.input.template.label'), 'template_id')->options($templates->pluck('name', 'id')) !!}
+                {!! BootForm::select(trans('plan.create.input.template.label'), 'template_id')->options($templates->sortBy('name')->pluck('name', 'id')) !!}
                 {!! BootForm::text(trans('plan.create.input.version.label'), 'version')->placeholder(trans('plan.create.input.version.placeholder')) !!}
             </div>
             <div class="modal-footer">
