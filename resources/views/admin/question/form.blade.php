@@ -73,7 +73,7 @@
         <div class="row">
             <div class="form-group col-md-6">
                 {!! Form::Label( 'content_type_id', trans('admin/question.form.label.content_type') ) !!}
-                {!! Form::select('content_type_id', $content_types->toArray(), $question->content_type->id ?? null, ['class' => 'form-control']) !!}
+                {!! Form::select('content_type_id', $content_types->toArray(), $question->content_type->id ?? \App\ContentType::getDefault()->id, ['class' => 'form-control']) !!}
                 <span class="help-block {{ ($errors->first('content_type_id') ? 'form-error' : '') }}">{{ $errors->first('content_type_id') }}</span>
             </div>
         </div>

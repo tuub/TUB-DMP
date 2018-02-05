@@ -43,4 +43,19 @@ class ContentType extends Model
         return $this->belongsTo(InputType::class);
     }
 
+
+    /**
+     * Determine the default content type for survey questions
+     *
+     * @return ContentType
+     */
+    public static function getDefault() {
+        $default = self::first();
+        if (env('DEFAULT_CONTENT_TYPE')) {
+            $default = self::where('identifier', env('DEFAULT_CONTENT_TYPE'))->first();
+        }
+
+        return $default;
+    }
+
 }
