@@ -6,6 +6,8 @@
                 {{ HTML::link('http://www.szf.tu-berlin.de/', trans('general.footer.link-01'), ['target' => '_blank']) }}
             </div>
             <div class="text-center">
+                {{ HTML::link('https://gitlab.tubit.tu-berlin.de/onIT/tub-dmp/', trans('general.footer.version') . env('APP_VERSION'), ['target' => '_blank']) }}
+                |
                 {{ HTML::link('http://www.szf.tu-berlin.de/menue/dienste_tools/datenmanagementplan_tub_dmp/', trans('general.footer.link-02'), ['target' => '_blank']) }}
                 |
                 {{ HTML::link('http://www.szf.tu-berlin.de/menue/ansprechpartnerinnen/', trans('general.footer.link-03'), ['target' => '_blank']) }}
