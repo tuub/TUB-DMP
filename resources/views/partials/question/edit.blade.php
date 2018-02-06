@@ -45,3 +45,7 @@
 @if ($question->isChild())
     </div>
 @endif
+
+@foreach($question->getImmediateDescendants() as $question)
+    @include('partials.question.edit', $question)
+@endforeach

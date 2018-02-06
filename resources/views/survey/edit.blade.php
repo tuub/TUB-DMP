@@ -44,7 +44,7 @@
                         {{ $section->guidance }}
                     </span>
                 @endif
-                @foreach( $section->questions()->active()->ordered()->get() as $question )
+                @foreach(\App\Question::roots()->active()->where('section_id', $section->id)->orderBy('order', 'asc')->get() as $question)
                     @include('partials.question.edit', $question)
                 @endforeach
             </section>
