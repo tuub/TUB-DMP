@@ -502,3 +502,13 @@ tr.parent td {
     font-weight: bold;
     background-color: #ededed;
 }
+
+.section-title {
+    font-weight: bold;
+    font-size: 1.6em;
+    margin-bottom: 10px;
+}
+
+.headline-text {
+    font-size: 1.2em;
+}

@@ -35,9 +35,9 @@
                 {{ $section->full_name }}
             </h4>
             <section id="section-{{ $section->keynumber }}">
-                <h4 style="font-weight: bold;">
+                <div class="section-title">
                     {{ $section->full_name }}
-                </h4>
+                </div>
                 @if( $section->guidance )
                     <span class="help-block">
                         <strong>Guidance:</strong>

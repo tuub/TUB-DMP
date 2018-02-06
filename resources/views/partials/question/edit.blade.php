@@ -2,23 +2,19 @@
     <div class="col-md-offset-1">
 @endif
 <div class="row form-group">
-    <label for="{{ $question->id }}" class="control-label col-md-6 col-xs-24">
-        <span class="question-text">
-            @if( $question->input_type == 'headline')
-                <span class="headline_question">
-            @endif
+    @if( $question->content_type->identifier == 'plain')
+        <label for="{{ $question->id }}" class="question-text headline-text control-label col-md-24 col-xs-24">
+    @else
+        <label for="{{ $question->id }}" class="question-text control-label col-md-6 col-xs-24">
+    @endif
+        @if(is_numeric( $question->keynumber ) || str_contains($question->keynumber, '/'))
+            {{ $question->keynumber }}.
+        @else
+            {{ $question->keynumber }}
+        @endif
 
-            @if(is_numeric( $question->keynumber ) || str_contains($question->keynumber, '/'))
-                {{ $question->keynumber }}.
-            @else
-                {{ $question->keynumber }}
-            @endif
+        {!! HTML::decode($question->text) !!}
 
-            {!! HTML::decode($question->text) !!}
-            @if( $question->input_type == 'headline')
-                </span>
-            @endif
-        </span>
         @if( $question->guidance or $question->comment or $question->reference or $question->hint )
             <br/>
             <a href="#" class="show-question-info" data-rel="{{  $question->id }}"
