@@ -308,6 +308,17 @@ class Project extends Node
         return false;
     }
 
+    public static function generateRandomIdentifier()
+    {
+        if (env('PROJECT_IDENTIFIER_RANDOM_PREFIX') && env('PROJECT_IDENTIFIER_RANDOM_LENGTH')) {
+            $min = 1 . str_repeat(0, env('PROJECT_IDENTIFIER_RANDOM_LENGTH')-1);
+            $max = str_repeat(9, env('PROJECT_IDENTIFIER_RANDOM_LENGTH'));
+            return env('PROJECT_IDENTIFIER_RANDOM_PREFIX') . mt_rand($min, $max);
+        }
+
+        return null;
+    }
+
     public function approve()
     {
         $this->update(['is_active' => true]);

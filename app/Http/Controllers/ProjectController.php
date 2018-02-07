@@ -184,7 +184,14 @@ class ProjectController extends Controller
 
             // FIXME: If child project then create the big one as well (if not present!)
 
-            $this->project->create($project);
+            $new_project = $this->project->create($project);
+
+            // FIXME: Throw exception when Project::generateRandomIdentifier() returns NULL
+
+            if (!$new_project->hasValidIdentifier()) {
+                $new_project->identifier = Project::generateRandomIdentifier();
+                $new_project->save();
+            }
 
             Mail::send( [ 'text' => 'emails.project.request' ], [ 'project' => $project ],
                 function ( $message ) use ( $project ) {
