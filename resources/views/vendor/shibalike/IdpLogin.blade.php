@@ -45,7 +45,7 @@
 
     <div class="login-box">
         <h2 class="title">Demo-Login</h2>
-        <form action="" method="post">
+        <form action="" method="post" id="demo-login-form">
             <input type="hidden" name="_token" value="<?php echo csrf_token();?>">
             <strong>{{ $error or "Please login below." }}</strong>
             <p>

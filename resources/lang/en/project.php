@@ -14,7 +14,7 @@ return [
     */
     'request' => [
         'title' => 'Request new Project DMP',
-        'subtitle' => 'For privacy and legal reasons, we have to check manually your connection to the provided research project.',
+        'subtitle' => 'For privacy and legal reasons, an administrator has to check manually your affiliation with the provided research project.<br/>After verification, you will get informed via e-mail and your project DMP is ready for editing.',
         'label' => [
             'identifier' => 'Project ID',
             'name' => 'Your name',

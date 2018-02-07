@@ -26,15 +26,6 @@ $(window).on('load', function()
         'cookieName': 'simple-expand'
     });
 
-    /* Prevent Form Submission by Enter Key, except for ENTERs in Tags Input Fields */
-    $('form input').not('div.tagsinput input').on('keyup keypress', function(e) {
-        var code = e.keyCode || e.which;
-        if (code === 13) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
     /*
     var $text_inputs = $('form :input[class^="question"]').not( ':radio' );
     var $choice_inputs = $('form input[type=radio],form input[type=checkbox]');

@@ -13,6 +13,10 @@
                 <a href="#" class="project-request btn btn-success btn-success btn-xl large-text" data-toggle="modal" data-target="#project-request" title="{{ trans('project.request.title') }}">
                     <i class="fa fa-plus" aria-hidden="true"></i> {{ trans('project.request.title') }}</a>
                 </a>
+                <br/><br/>
+                <p>
+                    {!! trans('project.request.subtitle') !!}
+                </p>
             </div>
             <br/>
             @foreach ($projects as $project)
