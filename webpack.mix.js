@@ -41,7 +41,7 @@ var paths = {
 
 mix.sass('resources/assets/sass/app.scss','public/css/app.css');
 
-mix.copy(paths.images + '**', 'public/images/');
+mix.copy(paths.images, 'public/images/', false);
 mix.copy(paths.css + 'pdf.css', 'public/css/');
 mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
 
