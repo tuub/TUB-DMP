@@ -32,23 +32,14 @@ return array(
 
     'emulate_idp'       => true,
     'emulate_idp_users' => array(
-        'user' => array(
-            'uid'         => 'user',
+        'dmp' => array(
+            'uid'         => 'dmp',
             'givenName'   => 'Example',
             'sn'          => 'User',
             'o'           => 'ACME University',
             'tubPersonKostenstelle'	=> '123456',
             'tubPersonOM' => '123456',
-            'mail'        => 'user@example.org',
-        ),
-        'admin' => array(
-            'uid'         => 'admin',
-            'givenName'   => 'Example',
-            'sn'          => 'Admin',
-            'o'           => 'ACME University',
-            'tubPersonKostenstelle'	=> '654321',
-            'tubPersonOM' => '654321',
-            'mail'        => 'admin@example.org',
+            'mail'        => 'dmp@example.org',
         ),
     ),
 

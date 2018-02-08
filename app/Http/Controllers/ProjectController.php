@@ -180,7 +180,11 @@ class ProjectController extends Controller
             $project['contact_email'] = $request->get( 'contact_email' );
             $project['message'] = $request->get( 'message' );
 
-            $project['is_active'] = false;
+            if (env('DEMO_MODE')) {
+                $project['is_active'] = true;
+            } else {
+                $project['is_active'] = false;
+            }
 
             // FIXME: If child project then create the big one as well (if not present!)
 

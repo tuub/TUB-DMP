@@ -18,7 +18,6 @@ return [
     'label-password' => 'Your password',
     'label-submit' => [
         'demo' => 'Demo-Login',
-        'test' => 'Login via Test-Shibboleth',
         'production' => 'Login via Shibboleth',
     ],
     'privacy-statement-intro' => 'Please confirm:',

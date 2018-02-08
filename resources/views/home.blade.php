@@ -4,8 +4,8 @@
 
     @include('partials.layout.login')
 
-    @if(env('APP_SERVER') == 'test')
-        @include('partials.layout.testsystem.box')
+    @if (env('DEMO_MODE'))
+        @include('partials.layout.demosystem.box')
     @endif
 
 @stop

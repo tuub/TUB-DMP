@@ -48,12 +48,14 @@
                         </label>
                     </div>
                     <div class="col-md-24 text-center">
-                        <button type="submit" class="btn btn-default">
+                        <button type="submit" class="btn btn-default" style="font-weight: bold">
                             {!! HTML::image('images/logo/logo-tu-small.png', 'TU Berlin') !!}
-                            &nbsp;&nbsp;
-                            <strong>
-                            {!! trans('login.label-submit.' . env('APP_SERVER')) !!}
-                            </strong>
+
+                            @if (env('DEMO_MODE'))&nbsp;&nbsp;
+                                {!! trans('login.label-submit.demo') !!}
+                            @else
+                                {!! trans('login.label-submit.production') !!}
+                            @endif
                         </button>
                     </div>
                 </div>

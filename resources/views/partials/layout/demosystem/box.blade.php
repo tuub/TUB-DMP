@@ -6,16 +6,14 @@
         <u>{!! trans('demosystem.box.paragraph-01') !!}</u>
     </p>
     <p>
-        <strong>{!! trans('demosystem.box.paragraph-02') !!}</strong>
+        {!! trans('demosystem.box.paragraph-02') !!}
     </p>
+    <br/>
     <p>
-        <strong>{!! trans('demosystem.box.paragraph-03') !!}</strong>
+        {!! trans('demosystem.box.paragraph-03') !!}
     </p>
-    <br/><br/>
+    <br/>
     <p>
         {!! trans('demosystem.box.paragraph-04') !!}
-    </p>
-    <p>
-        {!! trans('demosystem.box.paragraph-05') !!}
     </p>
 </div>

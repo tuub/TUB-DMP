@@ -47,7 +47,7 @@
         <h2 class="title">Demo-Login</h2>
         <form action="" method="post" id="demo-login-form">
             <input type="hidden" name="_token" value="<?php echo csrf_token();?>">
-            <strong>{{ $error or "Please login below." }}</strong>
+            <strong class="text-danger">{{ $error or '' }}</strong>
             <p>
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" />
@@ -62,8 +62,8 @@
         </form>
     </div>
 
-    @if(env('APP_SERVER') == 'demo')
-        @include('partials.layout.demosystem.box')
+    @if (env('DEMO_MODE'))
+        @include('partials.layout.demosystem.login-info')
     @endif
 
 @stop

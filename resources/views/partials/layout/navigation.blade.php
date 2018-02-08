@@ -44,7 +44,7 @@
         </div>
     </nav>
 
-    @if(env('APP_SERVER') == 'demo')
+    @if (env('DEMO_MODE'))
         @include('partials.layout.demosystem.banner')
     @endif
 
