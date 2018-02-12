@@ -8,14 +8,16 @@
 
 @section('body')
 
-    {!! Form::model($question, ['method' => $method, 'route' => ['admin.question.' . $action, $question->id], 'class' => '', 'role' => 'form']) !!}
+    {{ Breadcrumbs::render('question_form', $template, $section, $question, $mode) }}
+
+    {!! Form::model($question, ['method' => $method, 'route' =>  ['admin.question.' . $action, $question->id], 'class' => '', 'role' => 'form']) !!}
         <legend>{{ trans('admin/question.title.' . $mode) }}</legend>
         {!! Form::hidden('order', ($position ?? $question->order)) !!}
         {!! Form::hidden('template_id', $template->id) !!}
         <div class="row">
             <div class="form-group col-md-2">
                 {!! Form::Label( 'keynumber', trans('admin/question.form.label.keynumber') ) !!}
-                {!! Form::Text( 'keynumber', Input::old('keynumber'), array('class' => 'form-control ') ) !!}
+                {!! Form::Text( 'keynumber', $question->keynumber ?? $position, array('class' => 'form-control ') ) !!}
                 <span class="help-block {{ ($errors->first('keynumber') ? 'form-error' : '') }}">{{ $errors->first('keynumber') }}</span>
             </div>
             <div class="control-group col-md-4 col-md-offset-18 text-right">
@@ -126,6 +128,7 @@
         </div>
         <div class="col-md-24 text-center">
             {!! Form::submit(trans('admin/question.form.label.submit.' . $mode), array('class' => 'button btn btn-success')) !!}
+            {!! HTML::link(URL::previous(), trans('form.label.cancel'), ['class' => 'btn btn-default']) !!}
         </div>
     {!! Form::close() !!}
 

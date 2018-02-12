@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\CreateTemplateRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Template;
@@ -9,6 +10,7 @@ use App\Institution;
 use App\Http\Requests\Admin\UpdateTemplateRequest;
 use Session;
 use App\Library\Notification;
+use App\Library\Sanitizer;
 
 
 class TemplateController extends Controller
@@ -22,86 +24,94 @@ class TemplateController extends Controller
         $this->institution = $institution;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $templates = $this->template->get();
         return view('admin.template.index', compact('templates'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         $template = new $this->template;
         $institutions = $this->institution->get()->pluck('name', 'id');
-        return view('admin.template.new', compact('template','institutions'));
+        $return_route = 'admin.dashboard';
+
+        return view('admin.template.create', compact('template','institutions', 'return_route'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(CreateTemplateRequest $request)
     {
-        $template = new $this->template;
-        $template->name       = $request->get('name');
-        $template->institution_id = $request->get('institution_id');
-        $template->is_active      = $request->get('is_active');
-        $template->save();
-        Session::flash('message', 'Successfully created the template!');
-        return redirect()->route('admin.dashboard');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* The validation */
+
+        /* The return route */
+        $return_route = $request->return_route;
+        array_forget($data, 'return_route');
+
+        /* The operation */
+        $template = $op = $this->template->create($data);
+
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully created the template!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while creating the template!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route($return_route, $template);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $template = $this->template->find($id);
         $institutions = $this->institution->get()->pluck('name', 'id');
-        return view('admin.template.edit', compact('template','institutions'));
+        $return_route = 'admin.dashboard';
+
+        return view('admin.template.edit', compact('template','institutions', 'return_route'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(UpdateTemplateRequest $request, $id)
     {
-        $template = $this->template->find($id);
-        $data = $request->except('_token');
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
-        $template->update( $data );
-        return redirect()->route('admin.dashboard');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* The validation */
+
+        /* The return route */
+        $return_route = $request->return_route;
+        array_forget($data, 'return_route');
+
+        /* Get object */
+        $template = $this->template->findOrFail($id);
+
+        /* The operation */
+        $op = $template->update($data);
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully updated the template!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while updating the template!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route($return_route, $template);
     }
 
     /**

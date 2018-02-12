@@ -9,6 +9,8 @@ use App\Http\Requests\Admin\UpdateSectionRequest;
 use App\Section;
 use App\Template;
 use Illuminate\Http\Request;
+use App\Library\Sanitizer;
+use App\Library\Notification;
 
 class SectionController extends Controller {
 
@@ -52,10 +54,12 @@ class SectionController extends Controller {
      */
     public function create(Request $request)
     {
-        $section = new $this->section;
         $template = $this->template->where('id', $request->template)->first();
+        $section = new $this->section;
         $position = $this->section->getNextOrderPosition($template);
-        return view('admin.section.new', compact('section','template', 'position'));
+        $return_route = 'admin.template.sections.index';
+
+        return view('admin.section.create', compact('template','section','position', 'return_route'));
     }
 
 
@@ -67,27 +71,29 @@ class SectionController extends Controller {
      */
     public function store(CreateSectionRequest $request)
     {
-        $data = array_filter($request->all(), 'strlen');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
 
-        if ($section = $this->section->create($data)) {
-            $notification = [
-                'status' => 200,
-                'message' => 'Successfully created the section!',
-                'alert-type' => 'success'
-            ];
+        /* The validation */
+
+        /* The return route */
+        $return_route = $request->return_route;
+        array_forget($data, 'return_route');
+
+        /* The operation */
+        $template = $this->template->find($data['template_id']);
+        $op = $this->section->create($data);
+
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully created the section!', 'success');
         } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Error while creating the section!',
-                'alert-type' => 'error'
-            ];
+            $notification = new Notification(500, 'Error while creating the section!', 'error');
         }
+        $notification->toSession($request);
 
-        /* Create Flash session with return values for notification */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
-
-        return redirect()->route('admin.template.sections.index', $section->template->id);
+        return redirect()->route($return_route, $template);
     }
 
 
@@ -99,9 +105,11 @@ class SectionController extends Controller {
      */
     public function edit($id)
     {
-        $section = $this->section->find($id);
-        $templates = $this->template->get()->pluck('name', 'id');
-        return view('admin.section.edit', compact('section','templates'));
+        $section = $this->section->findOrFail($id);
+        $template = $section->template;
+        $return_route = 'admin.template.sections.index';
+
+        return view('admin.section.edit', compact('section','template', 'return_route'));
     }
 
 
@@ -114,31 +122,31 @@ class SectionController extends Controller {
      */
     public function update(UpdateSectionRequest $request, $id)
     {
-        $section = $this->section->find($id);
-        $data = $request->except('_token');
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
 
-        if ($section = $section->update($data)) {
-            $notification = [
-                'status' => 200,
-                'message' => 'Successfully updated the section!',
-                'alert-type' => 'success'
-            ];
+        /* The validation */
+
+        /* The return route */
+        $return_route = $request->return_route;
+        array_forget($data, 'return_route');
+
+        /* Get object */
+        $section = $this->section->findOrFail($id);
+
+        /* The operation */
+        $op = $section->update($data);
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully updated the section!', 'success');
         } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Error while updating the section!',
-                'alert-type' => 'error'
-            ];
+            $notification = new Notification(500, 'Error while updating the section!', 'error');
         }
+        $notification->toSession($request);
 
-        /* Create Flash session with return values for notification */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
-
-        return redirect()->route('admin.template.sections.index', $request->get('template_id'));
+        return redirect()->route($return_route, $section->template_id);
     }
 
 

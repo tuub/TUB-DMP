@@ -54,6 +54,7 @@
     </div>
     <div class="col-md-24 text-center">
         {!! Form::submit(trans('admin/project.form.label.submit.' . $mode), array('class' => 'button btn btn-success')) !!}
+        {!! HTML::link(URL::previous(), trans('form.label.cancel'), ['class' => 'btn btn-default']) !!}
     </div>
     {!! Form::close() !!}
 

@@ -8,8 +8,6 @@
 
 @section('body')
 
-    {!! AppHelper::varDump($return_route) !!}
-
     @includeWhen($project, 'admin.project.form', [
         'project' => $project,
         'user' => $project->user,

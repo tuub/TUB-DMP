@@ -10,9 +10,9 @@
 
     @includeWhen($template, 'admin.template.form', [
         'template' => $template,
-        'mode' => 'edit',
-        'action' => 'update',
-        'method' => 'PUT',
+        'mode' => 'create',
+        'action' => 'store',
+        'method' => 'POST',
     ])
 
 @stop

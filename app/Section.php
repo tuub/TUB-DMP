@@ -75,6 +75,7 @@ class Section extends \Eloquent
     public static function getNextOrderPosition(Template $template)
     {
         $position = Section::where('template_id', $template->id)->max('order') + 1;
+
         return $position;
     }
 

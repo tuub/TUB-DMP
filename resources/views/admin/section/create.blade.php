@@ -8,8 +8,8 @@
 
 @section('body')
 
-    @includeWhen($project, 'admin.project.form', [
-        'project' => $project,
+    @includeWhen($section, 'admin.section.form', [
+        'section' => $section,
         //'template' => $project,
         'mode' => 'create',
         'action' => 'store',

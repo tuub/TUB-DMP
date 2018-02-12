@@ -12,8 +12,10 @@ return [
     |
     |
     */
+    'label' => [
+        'cancel' => 'Cancel',
+    ],
     'dropdown' => [
         'null' => '-- Please choose --',
     ],
-
 ];

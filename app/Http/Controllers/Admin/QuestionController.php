@@ -84,8 +84,10 @@ class QuestionController extends Controller {
     {
         $question = $this->question->find($id);
         $template = $question->template;
+        $section = $question->section;
         $content_types = $this->content_type->get()->pluck('title', 'id');
-        return view('admin.question.edit', compact('question','template', 'content_types'));
+
+        return view('admin.question.edit', compact('question','template', 'section', 'content_types'));
     }
 
 

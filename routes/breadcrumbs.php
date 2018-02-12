@@ -17,11 +17,38 @@ Breadcrumbs::register('sections', function ($breadcrumbs, $template) {
     $breadcrumbs->push('Sections');
 });
 
+// Admin > Template > Sections > Create/Edit Section
+Breadcrumbs::register('section_form', function ($breadcrumbs, $template, $section, $mode) {
+    $breadcrumbs->parent('templates', $template);
+    $breadcrumbs->push('Sections', route('admin.template.sections.index', $template));
+
+    if ($section->name) {
+        $breadcrumbs->push(trans('admin/section.title.' . $mode) . ' "' . $section->name . '"');
+    } else {
+        $breadcrumbs->push(trans('admin/section.title.' . $mode));
+    }
+    //$breadcrumbs->push('Section "' . $section->name . '"', route('admin.template.sections.index', $section->template));
+});
+
 // Admin > Template > Section > Questions
 Breadcrumbs::register('questions', function ($breadcrumbs, $section) {
     $breadcrumbs->parent('templates', $section->template);
     $breadcrumbs->push('Section "' . $section->name . '"', route('admin.template.sections.index', $section->template));
     $breadcrumbs->push('Questions');
+});
+
+// Admin > Template > Section > Questions > Create/Edit Question
+Breadcrumbs::register('question_form', function ($breadcrumbs, $template, $section, $question, $mode) {
+    $breadcrumbs->parent('templates', $template);
+    $breadcrumbs->push('Section "' . $section->name . '"', route('admin.template.sections.index', $template));
+    $breadcrumbs->push('Questions', route('admin.section.questions.index', $section));
+    if ($question->output_text) {
+        $breadcrumbs->push(trans('admin/question.title.' . $mode) . ' "' . $question->output_text . '"');
+    } else if ($question->text) {
+        $breadcrumbs->push(trans('admin/question.title.' . $mode) . ' "' . $question->text . '"');
+    } else {
+        $breadcrumbs->push(trans('admin/question.title.' . $mode));
+    }
 });
 
 // Admin > Users
