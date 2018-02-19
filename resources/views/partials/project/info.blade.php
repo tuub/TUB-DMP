@@ -1,5 +1,5 @@
 <tr>
-    <td>
+    <td  data-sort="{{ $project->identifier }}">
         <strong>{{ $project->identifier }}</strong>
         @if( $project->isChild() )
             <br/>Parent Project: {{ $project->parent->identifier }}
