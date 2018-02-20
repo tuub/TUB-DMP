@@ -22,6 +22,7 @@
                             <th data-orderable="false">#</th>
                             <th>Keynumber</th>
                             <th>Text</th>
+                            <th>Answers</th>
                             <th>Created</th>
                             <th>Updated</th>
                             <th data-orderable="false">Tools</th>
@@ -29,9 +30,7 @@
                     </thead>
                     <tbody>
                         @foreach( $questions as $question )
-                            @if (true)
-                                @include('admin.partials.question.info', $question)
-                            @endif
+                            @include('admin.partials.question.info', $question)
                         @endforeach
                     </tbody>
                 </table>

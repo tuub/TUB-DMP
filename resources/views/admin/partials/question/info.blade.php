@@ -8,6 +8,7 @@
     @endif
         {{ $question->text }}
     </td>
+    <td class="text-center">{{ $question->answers()->count() }}</td>
     <td>@date( $question->created_at ) @time( $question->created_at )</td>
     <td>
         @if( $question->updated_at )
