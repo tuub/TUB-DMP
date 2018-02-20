@@ -26,11 +26,11 @@ class DashboardController extends Controller
 
     public function index()
 	{
-	    $projects = $this->project->where('is_active', false)->get();
+	    $pending_projects = $this->project->roots()->where('is_active', false)->get();
         $templates = $this->template->get();
         $data_sources = $this->data_source->orderBy('name', 'asc')->get();
         $users = $this->user->withCount('plans', 'projects')->orderBy('email', 'asc')->get();
-        return view('admin.dashboard', compact('projects', 'templates', 'data_sources', 'users'));
+        return view('admin.dashboard', compact('pending_projects', 'templates', 'data_sources', 'users'));
 	}
 
 }

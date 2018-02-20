@@ -1,6 +1,5 @@
 <tr title="{{ $project->id }}">
-
-    <td>{{ $project->identifier }}</td>
+    <td data-order="{{ $project->identifier }}">{{ $project->identifier }}</td>
     <td>{{ $project->user->email ? HTML::mailto($project->user->email) : trans('admin/table.value.null') }}</td>
     <td>{{ $project->contact_email ? HTML::mailto($project->contact_email) : trans('admin/table.value.null') }}</td>
     <td>@date( $project->created_at ) @time( $project->created_at )</td>
@@ -19,5 +18,5 @@
     </td>
 </tr>
 @foreach($project->getImmediateDescendants() as $project)
-    @include('admin.partials.project.info', $project)
+    @include('admin.partials.project.pending_info', $project)
 @endforeach

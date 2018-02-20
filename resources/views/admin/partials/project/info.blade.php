@@ -1,9 +1,9 @@
 <tr title="{{ $project->id }}">
 
     @if ($project->isChild())
-        <td style="padding-left:{!! ($project->getLevel()+1)*0.9 !!}em">
+        <td style="padding-left:{!! ($project->getLevel()+1)*0.9 !!}em" data-order="{{ $project->identifier }}">
     @else
-        <td>
+        <td data-order="{{ $project->identifier }}">
     @endif
 
     @if ($project->isRoot())

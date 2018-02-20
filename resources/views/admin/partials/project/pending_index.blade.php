@@ -15,7 +15,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach( $projects as $project )
+                    @foreach( $pending_projects as $project )
                         @include('admin.partials.project.pending_info', $project)
                     @endforeach
                 </tbody>

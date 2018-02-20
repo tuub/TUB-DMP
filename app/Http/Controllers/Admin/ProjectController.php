@@ -53,7 +53,7 @@ class ProjectController extends Controller
     {
         $user = $this->user->find($user->id);
         // Get only parent projects so we can include the child projects via view
-        $projects = $this->project->withCount('plans')->where('user_id', $user->id)->get()->toHierarchy();
+        $projects = $this->project->roots()->withCount('plans')->where('user_id', $user->id)->get()->toHierarchy();
         return view('admin.project.index', compact('user', 'projects'));
     }
 

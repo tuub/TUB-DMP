@@ -9,7 +9,7 @@
     {{ Breadcrumbs::render('admin') }}
 
     <h2>To-Do</h2>
-    @include('admin.partials.project.pending_index', $projects)
+    @include('admin.partials.project.pending_index', $pending_projects)
 
     <h2>Data Management</h2>
     @include('admin.partials.template.index', $templates)
