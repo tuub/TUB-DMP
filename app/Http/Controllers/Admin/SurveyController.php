@@ -6,6 +6,7 @@ use App\Answer;
 use App\Http\Controllers\Controller;
 use App\Plan;
 use App\Survey;
+use Illuminate\Http\Request;
 
 class SurveyController extends Controller
 {
@@ -18,6 +19,8 @@ class SurveyController extends Controller
         $this->plan = $plan;
     }
 
+
+    // FIXME: Plan?
     public function index(Plan $plan)
     {
         $questions = $plan->survey->template->questions;
@@ -25,12 +28,12 @@ class SurveyController extends Controller
         foreach ($questions as $question) {
             $survey[$question->text] = Answer::get($plan->survey, $question);
         }
-        //\AppHelper::varDump($survey);
 
         return view('admin.survey.index', compact('survey', 'plan'));
     }
 
 
+    // FIXME: User?
     public function create(User $user)
     {
         $user = $this->user->find($user->id);
@@ -41,7 +44,8 @@ class SurveyController extends Controller
     }
 
 
-    public function store(ProjectRequest $request)
+    // FIXME: Needed?
+    public function store(Request $request)
     {
         $data = array_filter($request->all(), 'strlen');
         $user = $this->user->find($data['user_id']);

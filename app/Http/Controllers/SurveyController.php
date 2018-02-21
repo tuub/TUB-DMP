@@ -2,25 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\HtmlOutputFilter;
-use App\Answer;
-use App\Question;
-
-use Request;
 use App\Http\Requests\SurveyRequest;
 use App\Survey;
-
-//use PhpSpec\Process\Shutdown\UpdateConsoleAction;
-use Jenssegers\Optimus\Optimus;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Laracasts\Flash\Flash;
-
-//use Auth;
-//use Exporters;
-//use Redirect;
-//use Log;
-//use Mail;
-//use View;
 
 /**
  * Class SurveyController
@@ -41,15 +24,6 @@ class SurveyController extends Controller
     {
         $survey = $this->survey->findOrFail($id);
         $sections = $survey->template->sections;
-
-        //$questions = Question::get()->toHierarchy();
-        //\AppHelper::varDump($questions);
-
-        //foreach ($sections as $section) {
-        //    $questions[$section->id] = $section->questions()->parent()->active()->ordered()->get();
-        //}
-
-        //dump($questions);
 
         return view('survey.show', compact('survey'));
     }

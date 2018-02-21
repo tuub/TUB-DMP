@@ -34,8 +34,8 @@ $(document).ready(function ()
         if (!$.cookie('tub-dmp_dashboard')) {
             setVisibleProjects();
         } else {
-            var opened = $.cookie('tub-dmp_dashboard');
-            var projects = opened.split(',');
+            let opened = $.cookie('tub-dmp_dashboard');
+            let projects = opened.split(',');
             $('.dashboard-project-plans').filter(function () {
                 return $.inArray($(this).attr('data-content'), projects) > -1;
             }).removeClass('hidden');
@@ -53,7 +53,7 @@ $(document).ready(function ()
      */
     function setVisibleProjects()
     {
-        var open = [];
+        let open = [];
         $('div.dashboard-project-plans').not('.hidden').each(function(){
             open.push($(this).data('content'));
         });
@@ -71,8 +71,8 @@ $(document).ready(function ()
      */
     function showAjaxErrors(json)
     {
-        var errors = json.responseJSON.errors;
-        var errorsHtml = '<ul>';
+        let errors = json.responseJSON.errors;
+        let errorsHtml = '<ul>';
         $.each( errors , function( key, value ) {
             errorsHtml += '<li>' + value[0] + '</li>';
         });
@@ -82,7 +82,7 @@ $(document).ready(function ()
 
 
     function hasValue(nodes, value) {
-        var deletes = [];
+        let deletes = [];
         nodes.each(function() {
             if ($(this).val() === value || $(this).attr('title') === value ) {
                 deletes.push($(this).val());
@@ -122,7 +122,7 @@ $(document).ready(function ()
      * - Demo Login Form
      */
     $('form:not(#demo-login-form) input').not('div.tagsinput input').on('keyup keypress', function(e) {
-        var code = e.keyCode || e.which;
+        let code = e.keyCode || e.which;
         if (code === 13) {
             e.preventDefault();
             return false;
@@ -175,8 +175,8 @@ $(document).ready(function ()
     {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).parent();
+        let form    = $(this);
+        let div     = $(this).parent();
 
         $.ajax({
             url     : form.attr('action'),
@@ -188,7 +188,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     // http://stackoverflow.com/questions/13177426/how-to-destroy-bootstrap-modal-window-completely/18169689
                     div.modal('hide');
                     form.find("#message").val('').end();
@@ -224,8 +224,8 @@ $(document).ready(function ()
     $('#project-request-form').bind('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).parent();
+        let form    = $(this);
+        let div     = $(this).parent();
 
         $.ajax({
             url     : form.attr('action'),
@@ -237,7 +237,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
                     location.reload();
                 }
@@ -254,8 +254,8 @@ $(document).ready(function ()
     $('a.toggle-plans').bind('click', function (e) {
         e.preventDefault();
 
-        var project_id  = $(this).data('href');
-        var toggleState = ($(this).find('i').hasClass('fa-caret-down')) ? 'open' : 'closed';
+        let project_id  = $(this).data('href');
+        let toggleState = ($(this).find('i').hasClass('fa-caret-down')) ? 'open' : 'closed';
 
         if( toggleState === 'open' ) {
             $(this).find('i').removeClass('fa-caret-down').addClass('fa-caret-up');
@@ -283,8 +283,8 @@ $(document).ready(function ()
     $('a.create-plan').bind('click', function (e) {
         e.preventDefault();
 
-        var form    = $('#create-plan-form');
-        var div     = form.parent();
+        let form    = $('#create-plan-form');
+        let div     = form.parent();
 
         $.ajax({
             type    : 'GET',
@@ -308,8 +308,8 @@ $(document).ready(function ()
     $('#create-plan-form').bind('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).parent();
+        let form    = $(this);
+        let div     = $(this).parent();
 
         $.ajax({
             url     : form.attr('action'),
@@ -343,8 +343,8 @@ $(document).ready(function ()
     $('a.edit-plan').bind('click', function (e) {
         e.preventDefault();
 
-        var form    = $('#edit-plan-form');
-        var div     = form.parent();
+        let form    = $('#edit-plan-form');
+        let div     = form.parent();
 
         $.ajax({
             type    : 'GET',
@@ -363,8 +363,8 @@ $(document).ready(function ()
     $('#edit-plan-form').bind('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).parent();
+        let form    = $(this);
+        let div     = $(this).parent();
 
         $.ajax({
             url     : form.attr('action'),
@@ -388,8 +388,8 @@ $(document).ready(function ()
     $('a.create-plan-snapshot').bind('click', function (e) {
         e.preventDefault();
 
-        var form    = $('#create-plan-snapshot-form');
-        var div     = form.parent();
+        let form    = $('#create-plan-snapshot-form');
+        let div     = form.parent();
 
         $.ajax({
             type    : 'GET',
@@ -408,8 +408,8 @@ $(document).ready(function ()
     $('#create-plan-snapshot-form').bind('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).parent();
+        let form    = $(this);
+        let div     = $(this).parent();
 
         $.ajax({
             url     : form.attr('action'),
@@ -421,7 +421,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
                     location.reload();
                 }
@@ -432,8 +432,8 @@ $(document).ready(function ()
     $('a.email-plan').bind('click', function (e) {
         e.preventDefault();
 
-        var form    = $('#email-plan-form');
-        var div     = form.parent();
+        let form    = $('#email-plan-form');
+        let div     = form.parent();
 
         $.ajax({
             type    : 'GET',
@@ -451,8 +451,8 @@ $(document).ready(function ()
     $('#email-plan-form').bind('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).parent();
+        let form    = $(this);
+        let div     = $(this).parent();
 
         $.ajax({
             url     : form.attr('action'),
@@ -464,9 +464,10 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
-                    form.find("#message").val('').end();
+                    location.reload();
+                    //form.find('.form-group').children().filter('input, textarea').val('').end();
                 }
             }
         });
@@ -476,9 +477,8 @@ $(document).ready(function ()
     $('a.export-plan').bind('click', function (e) {
         e.preventDefault();
 
-        //var form    = $('#export-plan-form');
-        var plan_id = $(this).data('rel');
-        var div     = $('div#export-plan-' + plan_id);
+        let plan_id = $(this).data('rel');
+        let div     = $('div#export-plan-' + plan_id);
 
         $.ajax({
             type    : 'GET',
@@ -496,8 +496,8 @@ $(document).ready(function ()
     $('a.delete-plan').bind('click', function (e) {
         e.preventDefault();
 
-        var plan_id = $(this).data('rel');
-        var div     = $('div#delete-plan-' + plan_id);
+        let plan_id = $(this).data('rel');
+        let div     = $('div#delete-plan-' + plan_id);
 
         $.ajax({
             type    : 'GET',
@@ -515,8 +515,8 @@ $(document).ready(function ()
     $('form.delete-plan-form').on('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).closest('modal');
+        let form    = $(this);
+        let div     = $(this).closest('modal');
 
         $.ajax({
             url     : form.attr('action'),
@@ -528,7 +528,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
                     location.reload();
                 }
@@ -540,9 +540,9 @@ $(document).ready(function ()
     $('a.show-project').bind('click', function (e) {
         e.preventDefault();
 
-        //var form    = $('#show-project-form');
-        var project_id  = $(this).data('rel');//form.parent();
-        var div         = $('#show-project-' + project_id);//form.parent();
+        //let form    = $('#show-project-form');
+        let project_id  = $(this).data('rel');//form.parent();
+        let div         = $('#show-project-' + project_id);//form.parent();
 
         $.ajax({
             type    : 'GET',
@@ -561,9 +561,9 @@ $(document).ready(function ()
     $('a.edit-project').bind('click', function (e) {
         e.preventDefault();
 
-        var project_id  = $(this).data('rel');
-        var div     = $('#edit-project-' + project_id);
-        var form    = div.find('#edit-project-form');
+        let project_id  = $(this).data('rel');
+        let div     = $('#edit-project-' + project_id);
+        let form    = div.find('#edit-project-form');
 
         $.ajax({
             type    : 'GET',
@@ -587,8 +587,8 @@ $(document).ready(function ()
     $('form.edit-project-form').on('submit', function (e) {
         e.preventDefault();
 
-        var form    = $(this);
-        var div     = $(this).closest('modal');
+        let form    = $(this);
+        let div     = $(this).closest('modal');
 
         $.ajax({
             url     : form.attr('action'),
@@ -600,7 +600,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
                     location.reload();
                 }
@@ -612,7 +612,7 @@ $(document).ready(function ()
     $('a.import-project').bind('click', function (e) {
         e.preventDefault();
 
-        var project_id  = $(this).data('rel');
+        let project_id  = $(this).data('rel');
 
         $.ajax({
             type    : 'GET',
@@ -622,7 +622,7 @@ $(document).ready(function ()
                 console.log(json.responseText);
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     location.reload();
                 }
             }
@@ -633,15 +633,12 @@ $(document).ready(function ()
     $('.modal')
         .on('click', '.add-form-group', function(e){
             e.preventDefault();
-            //var project_id = $(this).data('rel');
-
-            //var form = $(this).parents('div#edit-project-' + project_id).find('form');
-            var current_form_group = $(this).closest('.form-group');
+            let current_form_group = $(this).closest('.form-group');
             current_form_group.find('button.remove-form-group').remove();
-            var next_form_group = current_form_group.clone();
-            var current_index = current_form_group.data('rel');
-            var next_index = current_index + 1;
-            var plus_button = current_form_group.children().last().find('button');
+            let next_form_group = current_form_group.clone();
+            let current_index = current_form_group.data('rel');
+            let next_index = current_index + 1;
+            let plus_button = current_form_group.children().last().find('button');
 
             next_form_group.attr('data-rel', next_index);
 
@@ -653,7 +650,7 @@ $(document).ready(function ()
             });
 
             /* Create minus button from plus button */
-            var minus_button = plus_button.clone();
+            let minus_button = plus_button.clone();
             minus_button.removeClass('add-form-group')
                 .addClass('remove-form-group')
                 .find('i.fa')
@@ -675,12 +672,12 @@ $(document).ready(function ()
             e.preventDefault();
 
             /* Get the current form group and grep its buttons */
-            var current_form_group = $(this).closest('.form-group');
-            var buttons = current_form_group.find('button');
+            let current_form_group = $(this).closest('.form-group');
+            let buttons = current_form_group.find('button');
             buttons.first().append('&nbsp;');
 
             /* Get the previous form group, replace its buttons with the grepped buttons */
-            var previous_form_group = current_form_group.prev();
+            let previous_form_group = current_form_group.prev();
             previous_form_group.find('button').remove();
             previous_form_group.children().last().append(buttons);
 
@@ -721,21 +718,4 @@ $( window ).on('load', function() {
     });
 
     $('.dropdown-toggle').dropdown();
-
-    /*
-    $('input.slider').slider({
-        tooltip: 'hide'
-    }).on('slide', function(slideEvt)
-    {
-        $(this).parent().next('span.slider-value').html(slideEvt.value);
-    });
-
-    $('input.slider-range').slider({
-        tooltip: 'hide'
-    }).on('slide', function(slideEvt)
-    {
-        $(this).parent().siblings('input.slider-range-input-alpha').val(slideEvt.value[0]).next('input.slider-range-input-omega').val(slideEvt.value[1]);
-        $(this).parent().siblings('span.slider-range-display-alpha').html(slideEvt.value[0]).next('span.slider-range-display-omega').html(slideEvt.value[1]);
-    });
-    */
 });

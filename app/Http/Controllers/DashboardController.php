@@ -14,6 +14,8 @@ class DashboardController extends Controller
         //$this->beforeFilter('auth');
     }
 
+
+    // FIXME
     public function feedback( FeedbackRequest $request )
     {
         $feedback['name'] = $request->get( 'name' );

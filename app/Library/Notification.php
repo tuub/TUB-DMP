@@ -17,7 +17,6 @@ class Notification
     public $status;
     public $message;
     public $type;
-    public $notification;
 
     public function __construct($status, $message, $type)
     {
@@ -30,16 +29,12 @@ class Notification
     /**
      * Create Flash session with return values for notification
      *
+     * @param $request
      * @return mixed
      */
     public function toSession($request) {
-        $request->session()->flash('message', $this->notification['message']);
-        $request->session()->flash('alert-type', $this->notification['alert-type']);
-        /*
-        session()->put([
-            'message' => $this->notification['message'],
-            'alert-type' => $this->notification['alert-type'],
-        ]);
-        */
+        $request->session()->flash('status', $this->status);
+        $request->session()->flash('message', $this->message);
+        $request->session()->flash('type', $this->type);
     }
 }

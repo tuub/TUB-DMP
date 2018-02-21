@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use App\Http\Requests\Request;
-use Route;
 
-class CreateProjectRequest extends Request
+class DeleteDataSourceRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,6 +16,7 @@ class CreateProjectRequest extends Request
         return true;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,9 +24,6 @@ class CreateProjectRequest extends Request
      */
     public function rules()
     {
-        $id = Route::input('project');
-        return [
-            'identifier' => 'required|max:50|unique:projects,identifier' . ($id ? ',' . $id : ''),
-        ];
+        return [];
     }
 }

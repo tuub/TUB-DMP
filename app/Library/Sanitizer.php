@@ -17,12 +17,13 @@ class Sanitizer
         $this->request = $request;
     }
 
-    public function cleanUp() {
+    public function cleanUp($fields_to_remove = []) {
         //$data = array_filter($this->request->all(), 'strlen');
         $data = $this->request->all();
         array_walk($data, function (&$item) {
             $item = ($item == '') ? null : $item;
         });
+        array_forget($data, $fields_to_remove);
 
         return $data;
     }

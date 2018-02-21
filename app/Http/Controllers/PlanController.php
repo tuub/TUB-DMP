@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeletePlanRequest;
-use App\Http\Requests\PlanRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\CreatePlanRequest;
+use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\SnapshotPlanRequest;
 use App\Events\PlanUpdated;
 use App\Plan;
 use App\Template;
-
+use App\Library\Sanitizer;
+use App\Library\Notification;
 use Event;
 
 //use App\HtmlOutputFilter;
-use Request;
 //use Illuminate\Support\Facades\Gate;
 
 
@@ -38,50 +39,49 @@ class PlanController extends Controller
      * Stores a new plan instance with accompanying survey instance via
      * model method createWithSurvey()
      *
-     * @param PlanRequest $request
+     * @param CreatePlanRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(PlanRequest $request)
+    public function store(CreatePlanRequest $request)
     {
-        /* Filter out all empty inputs */
-        $data = array_filter($request->all(), 'strlen');
+        if ($request->ajax()) {
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $data = $dirty->cleanUp();
 
-        /* Create Plan with corresponding Survey */
-        if ($this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id'])) {
-            $notification = [
-                'status'     => 200,
-                'message'    => 'Plan was successfully created!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status'     => 500,
-                'message'    => 'Plan was not created!',
-                'alert-type' => 'error'
-            ];
+            /* Validate input */
+
+            /* The operation */
+            $op = $this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'],
+                $data['template_id']);
+
+            /* Notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully created the plan!', 'success');
+            } else {
+                $notification = new Notification(500, 'Error while creating the plan!', 'error');
+            }
+            $notification->toSession($request);
+
+            /* The JSON response */
+            return response()->json([
+                'response' => $notification->status,
+                'message'  => $notification->message,
+                'type'     => $notification->type
+            ]);
         }
 
-        /* Create Flash session with return values for notification */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
-
-        /* Create the response in JSON */
-        if ($request->ajax()) {
-            return response()->json([
-                'response' => $notification['status'],
-                'message'  => $notification['message']
-            ]);
-        };
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $plan = $this->plan->findOrFail($id);
         $this->authorize('show', $plan);
 
-        if (Request::ajax()) {
+        if ($request->ajax()) {
             if (!$plan) {
                 return response()->json([
                     'response' => 404,
@@ -99,159 +99,119 @@ class PlanController extends Controller
     /**
      * Updates the plan instance.
      *
-     * @param PlanRequest $request
+     * @param UpdatePlanRequest $request
+     * @param $id
      *
      * @return bool|\Illuminate\Http\JsonResponse
      */
-    public function update(PlanRequest $request)
+    public function update(UpdatePlanRequest $request)
     {
-        $plan = $this->plan->findOrFail($request->id);
-
         if ($request->ajax()) {
-            $data = array_filter($request->all(), 'strlen');
 
-            if ($plan->update($data)) {
-                $notification = [
-                    'status'     => 200,
-                    'message'    => 'Plan was successfully updated!',
-                    'alert-type' => 'success'
-                ];
-                Event::fire(new PlanUpdated($plan));
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $data = $dirty->cleanUp();
+
+            /* The validation */
+
+            /* Get object */
+            $plan = $this->plan->findOrFail($data['id']);
+
+            /* The operation */
+            $op = $plan->update($data);
+
+            /* Notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully updated the plan!', 'success');
             } else {
-                $notification = [
-                    'status'     => 500,
-                    'message'    => 'Plan was not updated!',
-                    'alert-type' => 'error'
-                ];
+                $notification = new Notification(500, 'Error while updating the plan!', 'error');
             }
+            $notification->toSession($request);
 
-            /* Response */
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
+            //Event::fire(new PlanUpdated($plan));
 
             return response()->json([
-                'response' => $notification['status'],
-                'message'  => $notification['message']
+                'response' => $notification->status,
+                'message'  => $notification->message
             ]);
-
-        } else {
-            abort(403, 'Direct access is not allowed.');
         }
 
-        return false;
-    }
-
-
-    /**
-     * Sets the final flag.
-     *
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function toggleState($id)
-    {
-        $plan = $this->plan->findOrFail($id);
-
-        if ($plan) {
-            if ($plan->isSnapshot()) {
-                $plan->setFinalFlag(false);
-                $notification = [
-                    'status' => 200,
-                    'message' => 'Plan unfinalized successfully!',
-                    'alert-type' => 'success'
-                ];
-            } else {
-                $plan->setFinalFlag(true);
-                $notification = [
-                    'status' => 200,
-                    'message' => 'Plan finalized successfully!',
-                    'alert-type' => 'success'
-                ];
-            }
-        } else {
-            abort(404, 'Plan was not found.');
-            $notification = [
-                'status' => 404,
-                'message' => 'Error while finalizing plan!',
-                'alert-type' => 'error'
-            ];
-        }
-
-        return redirect()->route('dashboard')->with($notification);
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
     public function snapshot(SnapshotPlanRequest $request)
     {
-        $data = $request->except(['_token']);
-
-        if (isset($data['clone_current'])) {
-            $message = 'Snapshot and new version';
-        } else {
-            $message = 'Snapshot';
-        }
-
-        if ($this->plan->createNextVersion($data)) {
-            $notification = [
-                'status' => 200,
-                'message' => $message . ' created!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status' => 500,
-                'message' => $message . ' failed!',
-                'alert-type' => 'error'
-            ];
-        }
-
-        /* Render the response */
         if ($request->ajax()) {
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
+
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $data = $dirty->cleanUp();
+
+            /* The validation */
+
+            /* The operation */
+            $op = $this->plan->createNextVersion($data);
+
+            /* Type of operation */
+            $op_result = 'snapshot';
+            if (isset($data['clone_current'])) {
+                $op_result .= ' and new version';
+            }
+
+            /* Notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully created the ' . $op_result . '!', 'success');
+            } else {
+                $notification = new Notification(500, 'Error while creating the ' . $op_result . '!', 'error');
+            }
+            $notification->toSession($request);
+
             return response()->json([
-                'response' => $notification['status'],
-                'message' => $notification['message']
+                'status' => $notification->status,
+                'message' => $notification->message,
+                'type' => $notification->type
             ]);
-        } else {
-            abort(403, 'Direct access is not allowed.');
-        };
+        }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
     public function email(EmailPlanRequest $request)
     {
-        $data = $request->except(['_token']);
-
-        if ($this->plan->emailToRecipient($data)) {
-            $notification = [
-                'status' => 200,
-                'message' => 'Mail was sent!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Mail was not sent!',
-                'alert-type' => 'error'
-            ];
-        }
-
-        /* Response */
         if ($request->ajax()) {
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
+
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $data = $dirty->cleanUp();
+
+            /* The validation */
+
+            // FIXME: $this->plan?
+            /* The operation */
+            $op = $this->plan->emailToRecipient($data);
+
+            /* Notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully emailed the plan!', 'success');
+            } else {
+                $notification = new Notification(500, 'Error while emailing the plan!', 'error');
+            }
+            $notification->toSession($request);
+
             return response()->json([
-                'response' => $notification['status'],
-                'message' => $notification['message']
+                'status' => $notification->status,
+                'message'  => $notification->message,
+                'type'  => $notification->type
             ]);
-        } else {
-            abort(403, 'Direct access is not allowed.');
         }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
-    // TODO: Snappy & WKHTML2PDF
+    // FIXME: Needed?
     public function export($id)
     {
         $plan = $this->plan->findOrFail($id);
@@ -260,38 +220,30 @@ class PlanController extends Controller
     }
 
 
-    public function destroy(DeletePlanRequest $request)
+    public function destroy(Request $request)
     {
-        $plan = $this->plan->findOrFail($request->id);
-
-        /* Delete Plan with corresponding Survey(s) */
         if ($request->ajax()) {
-            if ($this->plan->deleteWithSurvey($plan)) {
-                $notification = [
-                    'status'     => 200,
-                    'message'    => 'Plan was successfully deleted!',
-                    'alert-type' => 'success'
-                ];
+
+            /* Get object */
+            $plan = $this->plan->findOrFail($request->id);
+
+            /* The operation */
+            $op = $this->plan->deleteWithSurvey($plan);
+
+            /* The notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully deleted the plan!', 'success');
             } else {
-                $notification = [
-                    'status'     => 500,
-                    'message'    => 'Plan was not deleted!',
-                    'alert-type' => 'error'
-                ];
+                $notification = new Notification(500, 'Error while deleting the plan!', 'error');
             }
-
-            /* Create Flash session with return values for notification */
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
-
-            /* Create the response in JSON */
             return response()->json([
-                'response' => $notification['status'],
-                'message'  => $notification['message']
+                'status' => $notification->status,
+                'message'  => $notification->message,
+                'type'  => $notification->type
             ]);
-        } else {
-            abort(403, 'Direct access is not allowed.');
-        };
+        }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
     // TODO!

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use Gate;
-use App\Plan;
+use App\Http\Requests\Request;
+use Route;
 
-class PlanRequest extends Request
+class CreatePlanRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,13 +14,8 @@ class PlanRequest extends Request
      */
     public function authorize()
     {
-        /*
-        $plan = Plan::findOrFail($this->id);
-        return Gate::allows('update', $plan);
-        */
         return true;
     }
-
 
     /**
      * Get the validation rules that apply to the request.
@@ -29,9 +24,6 @@ class PlanRequest extends Request
      */
     public function rules()
     {
-        return [
-            'title' => 'required',
-            'version' => 'required',
-        ];
+        return [];
     }
 }

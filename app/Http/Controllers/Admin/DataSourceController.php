@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\DataSourceRequest;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Http\Requests\Admin\PlanRequest;
-
-use App\Project;
+use App\Http\Requests\Admin\CreateDataSourceRequest;
+use App\Http\Requests\Admin\UpdateDataSourceRequest;
+use App\Http\Requests\Admin\DeleteDataSourceRequest;
 use App\DataSource;
+use App\Library\Sanitizer;
+use App\Library\Notification;
 
 class DataSourceController extends Controller
 {
@@ -20,11 +19,13 @@ class DataSourceController extends Controller
         $this->data_source = $data_source;
     }
 
+
     public function index()
     {
         $data_sources = $this->data_source->orderBy('name', 'asc')->get();
         return view('admin.data_source.index', compact('data_sources'));
     }
+
 
     // FIXME:
     public function create()
@@ -38,61 +39,89 @@ class DataSourceController extends Controller
      * Stores a new plan instance with accompanying survey instance via
      * model method createWithSurvey()
      *
-     * @param PlanRequest $request
+     * @param CreateDataSourceRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(DataSourceRequest $request)
+    public function store(CreateDataSourceRequest $request)
     {
-        /* Filter out all empty inputs */
-        $data = array_filter($request->all(), 'strlen');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
 
-        /* Create DataSource with corresponding Survey */
-        if ($this->data_source->create($data)) {
-            $notification = [
-                'status'     => 200,
-                'message'    => 'Data source was successfully created!',
-                'alert-type' => 'success'
-            ];
+        /* Validate input */
+
+        /* The operation */
+        $op = $this->data_source->create($data);
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully created the data source!', 'success');
         } else {
-            $notification = [
-                'status'     => 500,
-                'message'    => 'Data source was not created!',
-                'alert-type' => 'error'
-            ];
+            $notification = new Notification(500, 'Error while creating the data source!', 'error');
         }
+        $notification->toSession($request);
 
-        /* Create Flash session with return values for notification */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
-
-        /* Create the redirect to index */
         return redirect()->route('admin.dashboard');
     }
+
 
     public function show($id)
     {
         //
     }
+#
 
+    // FIXME
     public function edit($id)
     {
         $data_source = $this->data_source->findOrFail($id);
         return view('admin.data_source.edit', compact('data_source'));
     }
 
-    public function update(DataSourceRequest $request, $id)
+
+    public function update(UpdateDataSourceRequest $request, $id)
     {
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* The validation */
+
+        /* Get object */
         $data_source = $this->data_source->findOrFail($id);
-        $data = $request->all();
-        $data_source->update($data);
-        return Redirect::route('admin.data_source.index');
+
+        /* The operation */
+        $op = $data_source->update($data);
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully updated the data source!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while updating the data source!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dashboard');
     }
 
-    public function destroy($id)
+
+    public function destroy(DeleteDataSourceRequest $request, $id)
     {
+        /* Get object */
         $data_source = $this->data_source->findOrFail($id);
-        $data_source->delete();
-        return Redirect::route('admin.data_source.index');
+
+        /* The operation */
+        $op = $data_source->delete();
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully deleted the data source!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while deleting the data source!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dashboard');
     }
 }

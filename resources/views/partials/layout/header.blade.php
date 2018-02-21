@@ -22,7 +22,7 @@
                 {!! HTML::style('css/app.css') !!}
                 {!! HTML::style('css/vendor.css') !!}
                 {!! HTML::style('css/my.style.css') !!}
-                {!! HTML::script('https://code.jquery.com/jquery-2.2.4.min.js') !!}
+
                 {!! HTML::script('js/vue.min.js') !!}
                 {!! HTML::script('js/app.js') !!}
             @show
@@ -31,15 +31,32 @@
                 $(document).ready(function(){
 
                     toastr.options = {
+                        'closeButton': false,
+                        'debug': false,
+                        'newestOnTop': false,
+                        'progressBar': false,
+                        'positionClass': 'toast-top-right',
+                        'preventDuplicates': false,
+                        'onclick': null,
+                        'showDuration': '300',
+                        'hideDuration': '1000',
+                        'timeOut': '5000',
+                        'extendedTimeOut': '1000',
+                        'showEasing': 'swing',
+                        'hideEasing': 'linear',
+                        'showMethod': 'fadeIn',
+                        'hideMethod': 'fadeOut'
+                        /*
                         'positionClass': 'toast-top-right',
                         'preventDuplicates': true,
                         'timeOut': 2000,
-                        'fadeOut': 1500,
-                        'fadeIn': 1500
+                        'showDuration': 1500,
+                        'hideDuration': 1500
+                        */
                     };
 
                     @if(Session::has('message'))
-                        var type = "{{ Session::get('alert-type', 'info') }}";
+                        var type = "{{ Session::get('type', 'info') }}";
                         switch (type) {
                             case 'info':
                                 toastr.info("{{ Session::get('message') }}");

@@ -44,15 +44,15 @@ class TemplateController extends Controller
 
     public function store(CreateTemplateRequest $request)
     {
-        /* Clean input */
-        $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
-
-        /* The validation */
-
         /* The return route */
         $return_route = $request->return_route;
-        array_forget($data, 'return_route');
+
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
+
+        /* The validation */
 
         /* The operation */
         $template = $op = $this->template->create($data);
@@ -87,15 +87,15 @@ class TemplateController extends Controller
 
     public function update(UpdateTemplateRequest $request, $id)
     {
-        /* Clean input */
-        $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
-
-        /* The validation */
-
         /* The return route */
         $return_route = $request->return_route;
-        array_forget($data, 'return_route');
+
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
+
+        /* The validation */
 
         /* Get object */
         $template = $this->template->findOrFail($id);
@@ -114,19 +114,26 @@ class TemplateController extends Controller
         return redirect()->route($return_route, $template);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function destroy(Request $request, $id)
     {
+        /* Get object */
         $template = $this->template->find($id);
-        $template->delete();
-        Session::flash('message', 'Successfully deleted template!');
+
+        /* The operation */
+        $op = $template->delete();
+
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully deleted the template!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while deleting the template!', 'error');
+        }
+        $notification->toSession($request);
+
         return redirect()->route('admin.dashboard');
     }
+
 
     public function copy(Request $request)
     {

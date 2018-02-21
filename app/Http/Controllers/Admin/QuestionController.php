@@ -6,9 +6,9 @@ use App\Question;
 use App\Template;
 use App\Section;
 use App\ContentType;
+use Illuminate\Http\Request;
 use App\Http\Requests\Admin\CreateQuestionRequest;
 use App\Http\Requests\Admin\UpdateQuestionRequest;
-use Illuminate\Http\Request;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
@@ -26,7 +26,7 @@ class QuestionController extends Controller {
         $this->section = $section;
         $this->content_type = $content_type;
 
-        $this->question->rebuild(true);
+        //$this->question->rebuild(true);
     }
 
 
@@ -117,7 +117,7 @@ class QuestionController extends Controller {
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy(DeleteQuestionRequest $request, $id)
     {
         /* Get object */
         $question = $this->question->find($id);
@@ -125,7 +125,7 @@ class QuestionController extends Controller {
         /* The operation */
         $op = $question->delete();
 
-        /* Notification */
+        /* The notification */
         if ($op) {
             $notification = new Notification(200, 'Successfully deleted the question!', 'success');
         } else {
@@ -144,17 +144,19 @@ class QuestionController extends Controller {
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sort(Request $request) {
-        $data = $request->all();
-        $op = $this->question->updatePositions($data);
+    public function sort(Request $request)
+    {
+        /* The operation */
+        $op = $this->question->updatePositions($request->all());
 
+        /* The notification */
         if ($op) {
             $notification = new Notification(200, 'Sorting updated!', 'success');
         } else {
             $notification = new Notification(500, 'Sorting not updated!', 'error');
         }
 
-        /* Create the response in JSON */
+        /* The JSON response */
         if ($request->ajax()) {
             return response()->json([
                 'response' => $notification->status,
@@ -162,6 +164,6 @@ class QuestionController extends Controller {
             ]);
         } else {
             abort(403, 'Direct access is not allowed.');
-        };
-    }#
+        }
+    }
 }

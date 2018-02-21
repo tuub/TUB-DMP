@@ -71,15 +71,15 @@ class SectionController extends Controller {
      */
     public function store(CreateSectionRequest $request)
     {
-        /* Clean input */
-        $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
-
-        /* The validation */
-
         /* The return route */
         $return_route = $request->return_route;
-        array_forget($data, 'return_route');
+
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
+
+        /* The validation */
 
         /* The operation */
         $template = $this->template->find($data['template_id']);
@@ -122,15 +122,15 @@ class SectionController extends Controller {
      */
     public function update(UpdateSectionRequest $request, $id)
     {
-        /* Clean input */
-        $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
-
-        /* The validation */
-
         /* The return route */
         $return_route = $request->return_route;
-        array_forget($data, 'return_route');
+
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
+
+        /* The validation */
 
         /* Get object */
         $section = $this->section->findOrFail($id);
@@ -159,25 +159,19 @@ class SectionController extends Controller {
      */
     public function destroy(Request $request, $id)
     {
+        /* Get object */
         $section = $this->section->find($id);
 
-        if ($section->delete()) {
-            $notification = [
-                'status' => 200,
-                'message' => 'Successfully deleted the section!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Error while deleting the section!',
-                'alert-type' => 'error'
-            ];
-        }
+        /* The operation */
+        $op = $section->delete();
 
-        /* Create Flash session with return values for notification */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully deleted the section!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while deleting the section!', 'error');
+        }
+        $notification->toSession($request);
 
         return redirect()->route('admin.template.sections.index', $section->template->id);
     }

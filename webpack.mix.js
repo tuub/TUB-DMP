@@ -14,6 +14,7 @@ let mix = require('laravel-mix');
 var vendor_path = './node_modules/';
 
 var paths = {
+    'jquery': vendor_path + 'jquery/',
     'bootstrap': vendor_path + 'bootstrap/',
     'bootstrap_switch': vendor_path + 'bootstrap-switch/',
     'jqueryui': vendor_path + 'components-jqueryui/',
@@ -45,6 +46,7 @@ mix.copy(paths.images, 'public/images/', false);
 mix.copy(paths.css + 'pdf.css', 'public/css/');
 mix.copy(paths.bootstrap + 'fonts/**', 'public/fonts/bootstrap/');
 
+//mix.js(paths.jquery + 'dist/jquery.min.js', 'public/js/');
 mix.js(paths.vue + 'dist/vue.min.js', 'public/js/');
 mix.js(paths.js + 'app.js', 'public/js');
 

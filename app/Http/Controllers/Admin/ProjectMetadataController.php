@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\ProjectMetadata;
+use App\Http\Requests\Admin\CreateProjectMetadataRequest;
+use App\Http\Requests\Admin\UpdateProjectMetadataRequest;
+use App\Library\Sanitizer;
+use App\Library\Notification;
 
 class ProjectMetadataController extends Controller
 {
@@ -15,35 +20,45 @@ class ProjectMetadataController extends Controller
         $this->project_metadata = $project_metadata;
     }
 
+
     public function index()
     {
-        // Get only parent projects so we can include the child projects via view
-        $projects = $this->project->get()->toHierarchy();
-        return view('admin.project.index', compact('projects'));
+
     }
 
 
     public function create()
     {
-        $project = $this->project;
-        $projects = $this->project->all()->pluck('identifier','id')->prepend('Select a parent','');
-        $users = User::all()->pluck('email','id')->prepend('Select an owner','');
-        $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
-        return view('admin.project.new', compact('project','projects','users','data_sources'));
+
     }
 
 
-    public function store(ProjectRequest $request)
+    public function store(CreateProjectMetadataRequest $request)
     {
-        $data = array_filter($request->all(), 'strlen');
-        $this->project->create($data);
-        return Redirect::route('admin.project.index');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* Validate input */
+
+        /* The operation */
+        $op = $this->project_metadata->create($data);
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully created the project metadatum!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while creating the project metadatum!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dashboard');
     }
 
 
     public function show($id)
     {
-        return $this->project->findOrFail($id);
+        return $this->project_metadata->findOrFail($id);
     }
 
 
@@ -57,26 +72,53 @@ class ProjectMetadataController extends Controller
     }
 
 
-    public function update(ProjectRequest $request, $id)
+    public function update(UpdateProjectMetadataRequest $request, $id)
     {
-        $project = $this->project->findOrFail($id);
-        // TODO: field just does not get updated
-        // $data = array_filter($request->all(), 'strlen');
-        $data = $request->all();
-        array_walk($data, function (&$item) {
-            $item = ($item == '') ? null : $item;
-        });
-        $project->update($data);
-        return Redirect::route('admin.project.index');
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $data = $dirty->cleanUp();
+
+        /* The validation */
+
+        /* Get object */
+        $project_metadata = $this->project_metadata->findOrFail($id);
+
+        /* The operation */
+        $op = $project_metadata->update($data);
+
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully updated the project metadatum!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while updating the project metadatum!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dashboard');
     }
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $project = $this->project->findOrFail($id);
-        $project->delete();
-        return Redirect::route('admin.project.index');
+        /* Get object */
+        $project_metadata = $this->project_metadata->find($id);
+
+        /* The operation */
+        $op = $project_metadata->delete();
+
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully deleted the project metadata!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while deleting the project metadata!', 'error');
+        }
+        $notification->toSession($request);
+
+        return redirect()->route('admin.dasboard');
     }
+
+
+
 
 
     /* TODO: REMOVE AFTER TESTING */

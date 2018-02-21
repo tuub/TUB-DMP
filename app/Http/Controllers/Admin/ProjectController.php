@@ -81,15 +81,15 @@ class ProjectController extends Controller
      */
     public function store(CreateProjectRequest $request)
     {
-        /* Clean input */
-        $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
-
-        /* The validation */
-
         /* The return route */
         $return_route = $request->return_route;
-        array_forget($data, 'return_route');
+
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
+
+        /* The validation */
 
         /* The operation */
         $user = $this->user->find($data['user_id']);
@@ -137,6 +137,7 @@ class ProjectController extends Controller
         $users = User::orderBy('email', 'asc')->get()->pluck('email','id')->prepend('Select an owner','');
         $data_sources = DataSource::all()->pluck('name','id')->prepend('Select a data source','');
         $return_route = 'admin.user.projects.index';
+
         return view('admin.project.edit', compact('project','projects','user','users','data_sources', 'return_route'));
     }
 
@@ -149,17 +150,18 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, $id)
     {
-        $project = $this->project->findOrFail($id);
+        /* The return route */
+        $return_route = $request->return_route;
 
         /* Clean input */
         $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
 
         /* The validation */
 
-        /* The return route */
-        $return_route = $request->return_route;
-        array_forget($data, 'return_route');
+        /* Get object */
+        $project = $this->project->findOrFail($id);
 
         /* The operation */
         $op = $project->update($data);
@@ -177,15 +179,22 @@ class ProjectController extends Controller
     }
 
 
-    /**
-     * @param $id
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $project = $this->project->findOrFail($id);
-        $project->delete();
+        /* Get object */
+        $project = $this->project->find($id);
+
+        /* The operation */
+        $op = $project->delete();
+
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully deleted the project!', 'success');
+        } else {
+            $notification = new Notification(500, 'Error while deleting the project!', 'error');
+        }
+        $notification->toSession($request);
+
         return redirect()->route('admin.user.projects.index', $project->user->id);
     }
 

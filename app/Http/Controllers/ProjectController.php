@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImportProjectRequest;
-use App\Http\Requests\ProjectRequest;
-use App\Http\Requests\CreateProjectRequest;
-use App\MetadataRegistry;
 use App\Project;
-use App\Question;
 use App\Template;
-use Request;
+use Illuminate\Http\Request;
 use Mail;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Library\Sanitizer;
+use App\Library\Notification;
 
 class ProjectController extends Controller
 {
     protected $project;
-
 
     /**
      * ProjectController constructor.
@@ -58,18 +54,18 @@ class ProjectController extends Controller
     }
 
 
-    public function show($id)
+    // FIXME: Exception Handling
+    public function show(Request $request)
     {
-        $project = $this->project->with('metadata.metadata_registry')->findOrFail($id);
-        if( $project) {
-            if (Request::ajax()) {
+        if ($request->ajax()) {
+            $project = $this->project->with('metadata.metadata_registry')->findOrFail($request->id);
+            if ($project) {
                 return $project->toJson();
-            } else {
-                abort(403, 'Direct access is not allowed.');
             }
-        } else {
             throw new NotFoundHttpException;
         }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
@@ -77,87 +73,82 @@ class ProjectController extends Controller
      * Receives request from edit project form (modal) and passes the data to
      * the intermediate method saveMetadata() in project model.
      *
-     * @param ProjectRequest $request
+     * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function update(ProjectRequest $request)
+    public function update(Request $request)
     {
-        /* Get the project instance */
-        $project = $this->project->findOrFail($request->id);
-
-        /* Get the request data while kicking out non-metadata values */
-        $data = $request->except(['_token', '_method', 'id']);
-
-        /* Save the metadata (or not) and assign response variables */
-        if ($project->saveMetadata($data)) {
-            $notification = [
-                'status'     => 200,
-                'message'    => 'Project Metadata was successfully updated!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status'     => 500,
-                'message'    => 'Project Metadata not updated!',
-                'alert-type' => 'error'
-            ];
-        };
-
-        /* Send the response*/
         if($request->ajax()) {
 
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $remove = ['id', '_token', '_method'];
+            $data = $dirty->cleanUp($remove);
+
+            /* The validation */
+
+            /* Get object */
+            $project = $this->project->findOrFail($request->id);
+
+            /* The operation */
+            $op = $project->saveMetadata($data);
+
+            /* Notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully updated the project metadata!', 'success');
+            } else {
+                $notification = new Notification(500, 'Error while updating the project metadata!', 'error');
+            }
+            $notification->toSession($request);
 
             return response()->json([
-                'response' => $notification['status'],
-                'message'  => $notification['message']
+                'status' => $notification->status,
+                'message'  => $notification->message,
+                'type'  => $notification->type
             ]);
-
-        } else {
-            abort(403, 'Direct access is not allowed.');
         }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
     public function import(ImportProjectRequest $request)
     {
-        /* Get the project instance */
-        $project = $this->project->findOrFail($request->id);
-
-        /* Import the metadata (or not) and assign response variables */
-        if ($project->importFromDataSource()) {
-            $notification = [
-                'status' => 200,
-                'message' => 'Data import successfull!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Data import not successfull!',
-                'alert-type' => 'error'
-            ];
-        };
-
-        /* Send the response*/
         if($request->ajax()) {
 
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $data = $dirty->cleanUp();
+
+            /* The validation */
+
+            /* Get object */
+            $project = $this->project->findOrFail($request->id);
+
+            /* The operation */
+            $op = $project->importFromDataSource();
+
+            /* Notification */
+            if ($op) {
+                $notification = new Notification(200, 'Successfully imported the project metadata!', 'success');
+            } else {
+                $notification = new Notification(500, 'Error while importing the project metadata!', 'error');
+            }
+            $notification->toSession($request);
 
             return response()->json([
-                'response' => $notification['status'],
-                'message'  => $notification['message']
+                'status' => $notification->status,
+                'message'  => $notification->message,
+                'type'  => $notification->type
             ]);
-
-        } else {
-            abort(403, 'Direct access is not allowed.');
         }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
-    public function testImport(ProjectRequest $request)
+    public function testImport(CreateProjectRequest $request)
     {
         /* Get the project instance */
         $project = $this->project->findOrFail($request->id);
@@ -167,69 +158,58 @@ class ProjectController extends Controller
     }
 
 
-    public function request(CreateProjectRequest $request)
+    public function request(Request $request)
     {
-        if (Request::ajax()) {
+        if ($request->ajax()) {
 
-            $project['user_id'] = $request->get('user_id');
-            $project['identifier'] = $request->get( 'identifier' );
-            $project['name'] = $request->get( 'name' );
-            $project['email'] = $request->get( 'email' );
-            $project['tub_om'] = $request->get( 'tub_om' );
-            $project['institution_identifier'] = $request->get( 'institution_identifier' );
-            $project['contact_email'] = $request->get( 'contact_email' );
-            $project['message'] = $request->get( 'message' );
+            /* Clean input */
+            $dirty = new Sanitizer($request);
+            $data = $dirty->cleanUp();
 
-            if (env('DEMO_MODE')) {
-                $project['is_active'] = true;
-            } else {
-                $project['is_active'] = false;
-            }
+            /* The validation */
 
+            /* Prepare data */
+            env('DEMO_MODE') ? $data['is_active'] = true : $data['is_active'] = false;
+
+            /* The operation */
             // FIXME: If child project then create the big one as well (if not present!)
-
-            $new_project = $this->project->create($project);
-
             // FIXME: Throw exception when Project::generateRandomIdentifier() returns NULL
+            $op = $new_project = $this->project->create($data);
 
             if (!$new_project->hasValidIdentifier()) {
                 $new_project->identifier = Project::generateRandomIdentifier();
                 $new_project->save();
             }
 
-            Mail::send( [ 'text' => 'emails.project.request' ], [ 'project' => $project ],
-                function ( $message ) use ( $project ) {
+            /* The mail */
+            Mail::send( [ 'text' => 'emails.project.request' ], [ 'project' => $data ],
+                function ( $message ) use ( $data ) {
                     $subject = 'TUB-DMP Project Request';
                     $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
                     $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
-                    $message->replyTo( $project['email'], $project['name'] );
+                    $message->replyTo( $data['email'], $data['name'] );
                 }
             );
 
+            /* Notification */
             if (Mail::failures()) {
-                $notification = [
-                    'status' => 500,
-                    'message' => 'Project request was not sent successfully!',
-                    'alert-type' => 'error'
-                ];
+                $notification = new Notification(500, 'Error while sending the project request!', 'error');
             } else {
-                $notification = [
-                    'status' => 200,
-                    'message' => 'Project request was sent successfully!',
-                    'alert-type' => 'success'
-                ];
+                if ($op) {
+                    $notification = new Notification(200, 'Successfully requested the project!', 'success');
+                } else {
+                    $notification = new Notification(500, 'Error while requesting the project!', 'error');
+                }
             }
-
-            $request->session()->flash('message', $notification['message']);
-            $request->session()->flash('alert-type', $notification['alert-type']);
+            $notification->toSession($request);
 
             return response()->json([
-                'response' => $notification['status'],
-                'message'  => $notification['message']
+                'status' => $notification->status,
+                'message'  => $notification->message,
+                'type'  => $notification->type
             ]);
-
-        } else {
-            abort(403, 'Direct access is not allowed.');
         }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 }

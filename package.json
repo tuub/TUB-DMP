@@ -21,7 +21,7 @@
     "datatables.net": "^1.10.16",
     "datatables.net-bs": "^1.10.16",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.3.1",
+    "jquery": "^2.2.4",
     "jquery-collapse": "^1.1.2",
     "jquery-ui": "^1.12.1",
     "jquery-ui-bootstrap": "^1.0.0",
