@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataSource;
 use App\Http\Requests\ImportProjectRequest;
 use App\Project;
 use App\Template;
@@ -176,7 +177,9 @@ class ProjectController extends Controller
             // FIXME: Throw exception when Project::generateRandomIdentifier() returns NULL
             $op = $new_project = $this->project->create($data);
 
-            if (!$new_project->hasValidIdentifier()) {
+            if ($new_project->hasValidIdentifier()) {
+                $new_project->setDataSource('ivmc');
+            } else {
                 $new_project->identifier = Project::generateRandomIdentifier();
                 $new_project->save();
             }

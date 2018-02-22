@@ -201,11 +201,6 @@ class Project extends Node
     }
 
 
-    /**
-     * @param String $attribute
-     *
-     * @return Collection
-     */
     public function getMetadataRegistryIdByIdentifier($identifier)
     {
         $data = null;
@@ -285,10 +280,13 @@ class Project extends Node
         }
         */
 
+        /* Determine database connection */
+        env('DEMO_MODE') ? $connection = 'odbc-demo' : $connection = 'odbc';
+
         foreach ($data_sources as $data_source) {
             $namespaces = $data_source->namespaces()->get();
             foreach ($namespaces as $namespace) {
-                $external_data[$namespace->name] = DB::connection('odbc')->table($namespace->name)
+                $external_data[$namespace->name] = DB::connection($connection)->table($namespace->name)
                     ->where('Projekt_Nr', 'LIKE', $identifier)
                     ->get()->toJson();
             }
@@ -296,6 +294,7 @@ class Project extends Node
 
         return $external_data;
     }
+
 
     public function hasValidIdentifier()
     {
@@ -308,6 +307,7 @@ class Project extends Node
         return false;
     }
 
+
     public static function generateRandomIdentifier()
     {
         if (env('PROJECT_IDENTIFIER_RANDOM_PREFIX') && env('PROJECT_IDENTIFIER_RANDOM_LENGTH')) {
@@ -319,15 +319,42 @@ class Project extends Node
         return null;
     }
 
-    public function approve()
+    public function setDataSource($identifier)
     {
-        $this->update(['is_active' => true]);
+        $this->data_source_id = $this->data_source->where('identifier', $identifier)->first()['id'];
+
+        dd($this->data_source());
+
         return true;
     }
 
+
+
+
+
+
+
+    public function approve()
+    {
+        $this->importFromDataSource();
+        $this->update(['is_active' => true]);
+
+        return true;
+    }
+
+
     public function importFromDataSource()
     {
-        if ($this->data_source) {
+        /* Determine database connection & data source */
+        if (env('DEMO_MODE')) {
+            $connection = 'odbc-demo';
+            $data_source = $this->data_source->where('identifier', 'ivmc')->first();
+        } else {
+            $connection = 'odbc';
+            $data_source = $this->data_source;
+        }
+
+        if ($data_source) {
 
             $namespaces = $this->data_source->namespaces;
 
@@ -349,7 +376,7 @@ class Project extends Node
 
                     foreach ($mappings as $mapping) {
                         /* Get the external data by source */
-			            $external_data = DB::connection('odbc')->table($namespace->name)
+			            $external_data = DB::connection($connection)->table($namespace->name)
                             ->select($mapping->data_source_entity[0])
                             ->where('Projekt_Nr', 'LIKE', $this->identifier)
                             ->get();
@@ -411,6 +438,7 @@ class Project extends Node
                         }
 
                         $data = [$metadata_field->identifier => $new_full_item];
+
 			            $this->saveMetadata($data);
                     }
                 }

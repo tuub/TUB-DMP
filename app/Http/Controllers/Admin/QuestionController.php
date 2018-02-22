@@ -25,8 +25,6 @@ class QuestionController extends Controller {
         $this->template = $template;
         $this->section = $section;
         $this->content_type = $content_type;
-
-        //$this->question->rebuild(true);
     }
 
 
@@ -112,6 +110,8 @@ class QuestionController extends Controller {
             $notification = new Notification(500, 'Error while updating the question!', 'error');
         }
         $notification->toSession($request);
+
+        $this->question->rebuild(false);
 
         return redirect()->route('admin.section.questions.index', $question->section_id);
     }

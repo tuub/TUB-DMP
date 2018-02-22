@@ -153,6 +153,10 @@ Route::group(['middleware' => 'auth'], function()
         'uses' => 'ProjectController@import',
         'as' => 'project.import'
     ]);
+    Route::get('/my/project/{id}/testimport', [
+        'uses' => 'ProjectController@testImport',
+        'as' => 'project.testimport'
+    ]);
 
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function()

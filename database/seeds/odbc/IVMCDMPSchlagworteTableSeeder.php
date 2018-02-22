@@ -12,30 +12,30 @@ class IVMCDMPSchlagworteTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('t_821396_IVMC_DMP_Schlagworte')->insert([
+        DB::table('t_821320_IVMC_DMP_Schlagworte')->insert([
             [
                 'ID' => '1468410',
                 'ID_KTR' => '1124114',
-                'Projekt_Nr' => '123-456',
+                'Projekt_Nr' => '12345678',
                 'Schlagwort' => 'Physikalische Chemie',
             ],
             [
                 'ID' => '1468411',
                 'ID_KTR' => '1124114',
-                'Projekt_Nr' => '123-456',
+                'Projekt_Nr' => '12345678',
                 'Schlagwort' => 'Verfahrenstechnik',
             ],
             [
                 'ID' => '1468412',
                 'ID_KTR' => '1124114',
-                'Projekt_Nr' => '123-456',
+                'Projekt_Nr' => '12345678',
                 'Schlagwort' => 'Membrantechnik',
             ],
             [
                 'ID' => '1468413',
                 'ID_KTR' => '1124114',
-                'Projekt_Nr' => '123-456',
-                'Schlagwort' => 'Pickering- Emulsionen',
+                'Projekt_Nr' => '12345678',
+                'Schlagwort' => 'Pickering-Emulsionen',
             ],
 
 

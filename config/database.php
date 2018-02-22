@@ -83,34 +83,27 @@ return [
             'username'  => env('ODBC_USERNAME', ''),
             'password'  => env('ODBC_PASSWORD', ''),
             'database'  => env('ODBC_DATABASE', ''),
-            //'grammar'   => 'DB2',
             'grammar' => [
                 'query' => Illuminate\Database\Query\Grammars\SqlServerGrammar::class,
                 'schema' => Illuminate\Database\Schema\Grammars\SqlServerGrammar::class,
             ],
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            //'prefix'    => '',
         ),
 
-	/*
-        'odbc' => array(
-            'driver'    => env('ODBC_DRIVER', 'odbc'),
-            'dsn'       => env('ODBC_DSN', ''),
-            'host'      => env('ODBC_HOST', ''),
-            'username'  => env('ODBC_USERNAME', ''),
-            'password'  => env('ODBC_PASSWORD', ''),
-            'database'  => env('ODBC_DATABASE', ''),
-            //'grammar'   => 'DB2',
+        'odbc-demo' => array(
+            'driver'    => env('DB_DRIVER', 'pgsql'),
+            'host'      => env('DB_HOST', 'localhost'),
+            'username'  => env('DB_USERNAME', 'dmp'),
+            'password'  => env('DB_PASSWORD', 'dmp'),
+            'database'  => env('DB_DATABASE', 'dmp'),
             'grammar' => [
-                'query' => Illuminate\Database\Query\Grammars\PostgresGrammar::class,
-                'schema' => Illuminate\Database\Schema\Grammars\PostgresGrammar::class,
+                'query' => Illuminate\Database\Query\Grammars\SqlServerGrammar::class,
+                'schema' => Illuminate\Database\Schema\Grammars\SqlServerGrammar::class,
             ],
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            //'prefix'    => '',
         ),
-	*/
 
         'pgsql' => [
             'driver'   => 'pgsql',
