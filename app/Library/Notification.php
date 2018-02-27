@@ -37,4 +37,14 @@ class Notification
         $request->session()->flash('message', $this->message);
         $request->session()->flash('type', $this->type);
     }
+
+
+    public function toJson($request) {
+
+        return response()->json([
+            'status' => $this->status,
+            'message' => $this->message,
+            'type' => $this->type
+        ]);
+    }
 }

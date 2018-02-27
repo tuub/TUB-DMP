@@ -1,4 +1,4 @@
-var table = $('table.data-table').DataTable({
+let table = $('table.data-table').DataTable({
     'paging': false,
     'info': false,
     'order-column': true,
@@ -19,9 +19,9 @@ $('table.sortable tbody').sortable({
     dropOnEmpty: true,
     animation: 150,
     update: function (event, ui) {
-        var data = $(this).sortable('serialize',{expression: /(.+)_(.+)/ });
-        var model = $(this).children().filter('.ui-sortable-handle').removeClass('ui-sortable-handle').attr('class');
-        var url = '/admin/' + model + '/sort';
+        let data = $(this).sortable('serialize',{expression: /(.+)_(.+)/ });
+        let model = $(this).children().filter('.ui-sortable-handle').removeClass('ui-sortable-handle').attr('class');
+        let url = '/admin/' + model + '/sort';
         $.ajax({
             data: data,
             type: 'POST',

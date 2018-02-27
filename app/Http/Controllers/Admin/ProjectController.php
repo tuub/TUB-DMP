@@ -215,33 +215,17 @@ class ProjectController extends Controller
      */
     public function postLookup(ProjectLookupRequest $request)
     {
-        $data = Project::lookupDataSource($request->identifier);
+        /* The operation */
+        $op = $data = Project::lookupDataSource($request->identifier);
 
-        if ($data) {
-            $notification = [
-                'status' => 200,
-                'data' => $data,
-                'message' => 'Project Lookup successfull!',
-                'alert-type' => 'success'
-            ];
+        /* The notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully looked up the project!', 'success');
         } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Project Lookup not successfull!',
-                'alert-type' => 'error'
-            ];
+            $notification = new Notification(500, 'Error while looking up the project!', 'error');
         }
-
-        /* Response */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
-
-        return response()->json([
-            'status' => $notification['status'],
-            'data' => $notification['data'],
-            'message'  => $notification['message']
-        ]);
-
+        $notification->toSession($request);
+        return json_encode($data);
     }
 
     /**

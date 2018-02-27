@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\DataSource;
+// FIXME
+use App\Http\Requests\Admin\UpdateProjectRequest;
+
 use App\Http\Requests\ImportProjectRequest;
 use App\Project;
 use App\Template;
 use Illuminate\Http\Request;
 use Mail;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
@@ -55,15 +56,13 @@ class ProjectController extends Controller
     }
 
 
-    // FIXME: Exception Handling
-    public function show(Request $request)
+    public function show(Request $request, $id)
     {
         if ($request->ajax()) {
-            $project = $this->project->with('metadata.metadata_registry')->findOrFail($request->id);
+            $project = $this->project->with('metadata.metadata_registry')->findOrFail($id);
             if ($project) {
                 return $project->toJson();
             }
-            throw new NotFoundHttpException;
         }
 
         return abort(403, 'Direct access is not allowed.');
@@ -78,7 +77,7 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update(UpdateProjectRequest $request)
     {
         if($request->ajax()) {
 
@@ -101,13 +100,8 @@ class ProjectController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while updating the project metadata!', 'error');
             }
-            $notification->toSession($request);
 
-            return response()->json([
-                'status' => $notification->status,
-                'message'  => $notification->message,
-                'type'  => $notification->type
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');
@@ -136,26 +130,11 @@ class ProjectController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while importing the project metadata!', 'error');
             }
-            $notification->toSession($request);
 
-            return response()->json([
-                'status' => $notification->status,
-                'message'  => $notification->message,
-                'type'  => $notification->type
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');
-    }
-
-
-    public function testImport(CreateProjectRequest $request)
-    {
-        /* Get the project instance */
-        $project = $this->project->findOrFail($request->id);
-
-        /* Import the metadata (or not) and assign response variables */
-        $project->testImportFromDataSource();
     }
 
 
@@ -204,13 +183,8 @@ class ProjectController extends Controller
                     $notification = new Notification(500, 'Error while requesting the project!', 'error');
                 }
             }
-            $notification->toSession($request);
 
-            return response()->json([
-                'status' => $notification->status,
-                'message'  => $notification->message,
-                'type'  => $notification->type
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');

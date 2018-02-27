@@ -62,14 +62,9 @@ class PlanController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while creating the plan!', 'error');
             }
-            $notification->toSession($request);
 
             /* The JSON response */
-            return response()->json([
-                'response' => $notification->status,
-                'message'  => $notification->message,
-                'type'     => $notification->type
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');
@@ -78,21 +73,16 @@ class PlanController extends Controller
 
     public function show(Request $request, $id)
     {
-        $plan = $this->plan->findOrFail($id);
-        $this->authorize('show', $plan);
-
         if ($request->ajax()) {
-            if (!$plan) {
-                return response()->json([
-                    'response' => 404,
-                    'message' => 'Plan was not found.'
-                ]);
-            }
+            $plan = $this->plan->findOrFail($id);
+            //$this->authorize('show', $plan);
 
-            return $plan->toJson();
-        } else {
-            abort(403, 'Direct access is not allowed.');
+            if ($plan) {
+                return $plan->toJson();
+            }
         }
+
+        return abort(403, 'Direct access is not allowed.');
     }
 
 
@@ -127,13 +117,8 @@ class PlanController extends Controller
                 $notification = new Notification(500, 'Error while updating the plan!', 'error');
             }
             $notification->toSession($request);
-
             //Event::fire(new PlanUpdated($plan));
-
-            return response()->json([
-                'response' => $notification->status,
-                'message'  => $notification->message
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');
@@ -165,13 +150,8 @@ class PlanController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while creating the ' . $op_result . '!', 'error');
             }
-            $notification->toSession($request);
 
-            return response()->json([
-                'status' => $notification->status,
-                'message' => $notification->message,
-                'type' => $notification->type
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');
@@ -198,13 +178,8 @@ class PlanController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while emailing the plan!', 'error');
             }
-            $notification->toSession($request);
 
-            return response()->json([
-                'status' => $notification->status,
-                'message'  => $notification->message,
-                'type'  => $notification->type
-            ]);
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');
@@ -236,11 +211,8 @@ class PlanController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while deleting the plan!', 'error');
             }
-            return response()->json([
-                'status' => $notification->status,
-                'message'  => $notification->message,
-                'type'  => $notification->type
-            ]);
+
+            return $notification->toJson($request);
         }
 
         return abort(403, 'Direct access is not allowed.');

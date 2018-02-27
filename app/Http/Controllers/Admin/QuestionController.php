@@ -117,7 +117,7 @@ class QuestionController extends Controller {
     }
 
 
-    public function destroy(DeleteQuestionRequest $request, $id)
+    public function destroy(Request $request, $id)
     {
         /* Get object */
         $question = $this->question->find($id);
@@ -146,24 +146,22 @@ class QuestionController extends Controller {
      */
     public function sort(Request $request)
     {
-        /* The operation */
-        $op = $this->question->updatePositions($request->all());
-
-        /* The notification */
-        if ($op) {
-            $notification = new Notification(200, 'Sorting updated!', 'success');
-        } else {
-            $notification = new Notification(500, 'Sorting not updated!', 'error');
-        }
-
-        /* The JSON response */
         if ($request->ajax()) {
-            return response()->json([
-                'response' => $notification->status,
-                'message' => $notification->message
-            ]);
-        } else {
-            abort(403, 'Direct access is not allowed.');
+
+            /* The operation */
+            $op = $this->question->updatePositions($request->all());
+
+            /* The notification */
+            if ($op) {
+                $notification = new Notification(200, 'Sorting updated!', 'success');
+            } else {
+                $notification = new Notification(500, 'Sorting not updated!', 'error');
+            }
+
+            /* The JSON response */
+            return $notification->toJson($request);
         }
+
+        abort(403, 'Direct access is not allowed.');
     }
 }

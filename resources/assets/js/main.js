@@ -300,7 +300,7 @@ $(document).ready(function ()
     /**
      * Create Plan
      *
-     * Serializes the creatw plan form and passes the form data to controller method.
+     * Serializes the create plan form and passes the form data to controller method.
      * If successsful, close the modal and reload the page. Otherwise errors in modal.
      * *
      * @return {Json} json
@@ -321,7 +321,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
                     location.reload();
                 }
@@ -376,7 +376,7 @@ $(document).ready(function ()
                 div.modal();
             },
             success : function (json) {
-                if (json.response === 200) {
+                if (json.status === 200) {
                     div.modal('hide');
                     location.reload();
                 }
@@ -405,6 +405,7 @@ $(document).ready(function ()
         });
     });
 
+
     $('#create-plan-snapshot-form').bind('submit', function (e) {
         e.preventDefault();
 
@@ -429,6 +430,7 @@ $(document).ready(function ()
         });
     });
 
+
     $('a.email-plan').bind('click', function (e) {
         e.preventDefault();
 
@@ -447,6 +449,7 @@ $(document).ready(function ()
             }
         });
     });
+
 
     $('#email-plan-form').bind('submit', function (e) {
         e.preventDefault();
@@ -493,6 +496,7 @@ $(document).ready(function ()
         });
     });
 
+
     $('a.delete-plan').bind('click', function (e) {
         e.preventDefault();
 
@@ -511,6 +515,7 @@ $(document).ready(function ()
             }
         });
     });
+
 
     $('form.delete-plan-form').on('submit', function (e) {
         e.preventDefault();
@@ -580,8 +585,6 @@ $(document).ready(function ()
             }
         });
     });
-
-
 
 
     $('form.edit-project-form').on('submit', function (e) {

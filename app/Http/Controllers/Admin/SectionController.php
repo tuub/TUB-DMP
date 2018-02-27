@@ -185,34 +185,23 @@ class SectionController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function sort(SortSectionRequest $request) {
-        $data = $request->all();
 
-        if ($this->section->updatePositions($data)) {
-            $notification = [
-                'status' => 200,
-                'message' => 'Sorting updated!',
-                'alert-type' => 'success'
-            ];
-        } else {
-            $notification = [
-                'status' => 500,
-                'message' => 'Sorting not updated!',
-                'alert-type' => 'error'
-            ];
+        if ($request->ajax()) {
+
+            /* The operation */
+            $op = $this->section->updatePositions($request->all());
+
+            /* The notification */
+            if ($op) {
+                $notification = new Notification(200, 'Sorting updated!', 'success');
+            } else {
+                $notification = new Notification(500, 'Sorting not updated!', 'error');
+            }
+
+            /* The JSON response */
+            return $notification->toJson($request);
         }
 
-        /* Create Flash session with return values for notification */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
-
-        /* Create the response in JSON */
-        if ($request->ajax()) {
-            return response()->json([
-                'response' => $notification['status'],
-                'message' => $notification['message']
-            ]);
-        } else {
-            abort(403, 'Direct access is not allowed.');
-        };
+        abort(403, 'Direct access is not allowed.');
     }
 }
