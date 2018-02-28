@@ -107,9 +107,10 @@ class SectionController extends Controller {
     {
         $section = $this->section->findOrFail($id);
         $template = $section->template;
+        $position = $this->section->getNextOrderPosition($template);
         $return_route = 'admin.template.sections.index';
 
-        return view('admin.section.edit', compact('section','template', 'return_route'));
+        return view('admin.section.edit', compact('section','template', 'return_route', 'position'));
     }
 
 
