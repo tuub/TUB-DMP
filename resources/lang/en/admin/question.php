@@ -20,7 +20,7 @@ return [
         'label' => [
             'keynumber' => 'Keynumber',
             'is_active' => 'Active',
-            'is_mandatory' => 'Mandatory',
+            'is_mandatory' => 'Include in Completion Rate',
             'read_only' => 'Read-only',
             'export_always' => 'Export always',
             'export_keynumber' => 'Export Keynumber',

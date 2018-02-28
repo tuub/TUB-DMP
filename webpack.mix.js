@@ -69,7 +69,7 @@ mix.scripts([
     paths.simple_expand + 'src/simple-expand.min.js'
 ], './public/js/vendor.js');
 
-mix.scripts([
+mix.babel([
     paths.js + 'main.js',
     paths.js + 'admin.js',
     paths.js + 'survey.js'

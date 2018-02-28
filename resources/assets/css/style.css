@@ -511,4 +511,16 @@ tr.parent td {
 
 .headline-text {
     font-size: 1.2em;
+    font-weight: bold;
+    padding-left: 10px;
+    margin-bottom: 10px !important;
+}
+
+.guidance {
+    font-style: italic;
+    font-size: 0.85em;
+    background-color: #f8f8f8;
+    padding: 10px;
+    outline: 0.5px #93a1a1 solid;
+    margin-bottom:10px;
 }
