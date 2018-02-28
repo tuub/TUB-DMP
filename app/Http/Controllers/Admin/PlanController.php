@@ -132,7 +132,7 @@ class PlanController extends Controller
         return redirect()->route('admin.project.plans.index', $project);
     }
 
-    public function destroy(DeleteQuestionRequest $request, $id)
+    public function destroy(Request $request, $id)
     {
         /* Get the project object */
         $project = $this->project->find($request->project_id);
