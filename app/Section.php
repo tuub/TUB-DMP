@@ -18,7 +18,7 @@ class Section extends \Eloquent
     protected $table = 'sections';
     public $incrementing = false;
     public $timestamps = true;
-    public $fillable = ['keynumber', 'order', 'template_id', 'name', 'guidance'];
+    public $fillable = ['keynumber', 'order', 'template_id', 'name', 'guidance', 'is_active', 'export_keynumber'];
     protected $guarded = [];
 
     /*

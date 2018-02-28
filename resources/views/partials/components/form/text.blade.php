@@ -14,6 +14,7 @@
             'data-type' => 'text',
             'class' => 'question form-control',
             'title' => $question->output_text,
+            'placeholder' => $question->comment,
             $read_only
         ]) }}
 @endif

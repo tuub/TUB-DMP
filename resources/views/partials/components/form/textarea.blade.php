@@ -16,6 +16,7 @@
         'rows' => 2,
         'class' => 'question form-control',
         'title' => $question->output_text,
+        'placeholder' => $question->comment,
         $read_only
     ]) }}
 @endif

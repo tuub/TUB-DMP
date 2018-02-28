@@ -1,5 +1,5 @@
 @if ($question->isChild())
-    <div class="col-md-offset-1">
+    <div class="col-md-offset-{!! $question->getLevel() !!}">
 @endif
 <div class="row form-group">
     @if( $question->content_type->identifier == 'plain')
@@ -7,6 +7,7 @@
     @else
         <label for="{{ $question->id }}" class="question-text control-label col-md-6 col-xs-24">
     @endif
+
         @if(is_numeric( $question->keynumber ) || str_contains($question->keynumber, '/'))
             {{ $question->keynumber }}.
         @else

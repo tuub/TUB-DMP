@@ -190,7 +190,12 @@
                     <div class="section">
                         <p>
                             <div class="row section-title">
-                                <h3>{{ $section->name }}</h3>
+                                <h3>
+                                    @if($section->export_keynumber)
+                                        {{ $section->keynumber }}
+                                    @endif
+                                    {{ $section->name }}
+                                </h3>
                             </div>
 
                             @foreach($section->questions()->active()->ordered()->get() as $question)
@@ -198,19 +203,30 @@
                                     $answer = \App\Answer::get($survey, $question, 'html');
                                 @endphp
 
-                                @unless(is_null($answer))
-                                    <div class="row question">
-                                        <strong>
-                                            @if(is_null($question->output_text))
-                                                {{ $question->text }}
-                                            @else
-                                                {{ $question->output_text }}
-                                            @endif
-                                        </strong>
-                                        <br/>
-                                        {!! $answer  !!}
-                                    </div>
+                                @unless($question->export_always === false && null === $answer)
+
+                                <div class="row question">
+                                    @if ($question->isChild())
+                                        <div style="padding-left:{!! ($question->getLevel()+1*0.4) !!}em">
+                                    @endif
+
+                                    <strong>
+                                        @if($question->export_keynumber)
+                                            {{ $question->keynumber }}
+                                        @endif
+                                        @if(null === $question->output_text)
+                                            {{ $question->text }}
+                                        @else
+                                            {{ $question->output_text }}
+                                        @endif
+                                    </strong>
                                     <br/>
+                                    {!! $answer  !!}
+                                    @if ($question->isChild())
+                                        </div>
+                                    @endif
+                                </div>
+                                <br/>
                                 @endunless
                             @endforeach
                         </p>

@@ -21,11 +21,16 @@
             {!! Form::Text( 'keynumber', $section->keynumber ?? $position, array('class' => 'form-control ') ) !!}
             <span class="help-block {{ ($errors->first('keynumber') ? 'form-error' : '') }}">{{ $errors->first('keynumber') }}</span>
         </div>
-        <div class="control-group col-md-4 col-md-offset-18 text-right">
+        <div class="control-group col-md-6 col-md-offset-16 text-right">
             <div class="controls">
                 {!! Form::Label( 'is_active', trans('admin/section.form.label.is_active') ) !!}
                 {!! Form::hidden('is_active', '0') !!}
                 {!! Form::checkbox('is_active', 1, old('is_active', $section->is_active)) !!}
+            </div>
+            <div class="controls">
+                {!! Form::Label( 'export_keynumber', trans('admin/section.form.label.export_keynumber') ) !!}
+                {!! Form::hidden('export_keynumber', '0') !!}
+                {!! Form::checkbox('export_keynumber', 1, old('export_keynumber', $section->export_keynumber)) !!}
             </div>
         </div>
     </div>

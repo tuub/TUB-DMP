@@ -20,7 +20,7 @@
                 {!! Form::Text( 'keynumber', $question->keynumber ?? $position, array('class' => 'form-control ') ) !!}
                 <span class="help-block {{ ($errors->first('keynumber') ? 'form-error' : '') }}">{{ $errors->first('keynumber') }}</span>
             </div>
-            <div class="control-group col-md-4 col-md-offset-18 text-right">
+            <div class="control-group col-md-6 col-md-offset-16 text-right">
                 <div class="controls">
                     {!! Form::Label( 'is_active', trans('admin/question.form.label.is_active') ) !!}
                     {!! Form::hidden('is_active', '0') !!}
@@ -35,6 +35,16 @@
                     {!! Form::Label( 'read_only', trans('admin/question.form.label.read_only') ) !!}
                     {!! Form::hidden('read_only', '0') !!}
                     {!! Form::checkbox('read_only', 1, old('read_only', $question->read_only)) !!}
+                </div>
+                <div class="controls">
+                    {!! Form::Label( 'export_always', trans('admin/question.form.label.export_always') ) !!}
+                    {!! Form::hidden('export_always', '0') !!}
+                    {!! Form::checkbox('export_always', 1, old('export_always', $question->export_always)) !!}
+                </div>
+                <div class="controls">
+                    {!! Form::Label( 'export_keynumber', trans('admin/question.form.label.export_keynumber') ) !!}
+                    {!! Form::hidden('export_keynumber', '0') !!}
+                    {!! Form::checkbox('export_keynumber', 1, old('export_keynumber', $question->export_keynumber)) !!}
                 </div>
             </div>
         </div>

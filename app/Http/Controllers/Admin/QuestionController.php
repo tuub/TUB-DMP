@@ -43,7 +43,7 @@ class QuestionController extends Controller {
         $question->is_active = 1;
         $question->is_mandatory = 1;
         $template = $section->template;
-        $content_types = $this->content_type->get()->pluck('title', 'id');
+        $content_types = $this->content_type->active()->get()->pluck('title', 'id');
         $position = $this->question->getNextOrderPosition($section);
         return view('admin.question.create', compact('question','template', 'section', 'content_types', 'position'));
     }
@@ -83,7 +83,7 @@ class QuestionController extends Controller {
         $question = $this->question->find($id);
         $template = $question->template;
         $section = $question->section;
-        $content_types = $this->content_type->get()->pluck('title', 'id');
+        $content_types = $this->content_type->active()->get()->pluck('title', 'id');
 
         return view('admin.question.edit', compact('question','template', 'section', 'content_types'));
     }

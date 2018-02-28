@@ -44,6 +44,12 @@ class ContentType extends Model
     }
 
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+
     /**
      * Determine the default content type for survey questions
      *

@@ -25,7 +25,7 @@
             </div>
             <br/>
             @foreach ($projects as $project)
-                @include('partials.project.infocard', $project)
+                @include('partials.project.info', $project)
                 @include('partials.project.modal', $project)
             @endforeach
         </div>

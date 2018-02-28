@@ -56,7 +56,7 @@ return [
         ]
 
     ],
-    'infocard' => [
+    'info' => [
         'status' => [
             'label' => 'Status',
         ],
