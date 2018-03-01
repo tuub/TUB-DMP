@@ -145,13 +145,16 @@ class Question extends Node
      */
     public function updatePositions($data)
     {
-        foreach ($data as $items) {
-            foreach ($items as $position => $id) {
-                $q = Question::find($id);
-                $q->order = $position+1;
-                $q->save();
+        ksort($data);
+        foreach ($data as $level => $item) {
+            foreach ($item as $position => $id) {
+                $question = Question::find($id);
+                if ($question->getLevel() == $level) {
+                    $question->update(['order' => $position+1]);
+                }
             }
         }
+
         return true;
     }
 

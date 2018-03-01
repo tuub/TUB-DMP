@@ -84,7 +84,7 @@ class QuestionController extends Controller {
         $template = $question->template;
         $section = $question->section;
         $content_types = $this->content_type->active()->get()->pluck('title', 'id');
-        $position = $this->question->getNextOrderPosition($section);
+        $position = $question->order;
 
         return view('admin.question.edit', compact('question','template', 'section', 'content_types', 'position'));
     }

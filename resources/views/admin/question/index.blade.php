@@ -19,8 +19,6 @@
                 <table class="table table-fixed sortable">
                     <thead>
                         <tr>
-                            <th data-orderable="false">#</th>
-                            <th>Keynumber</th>
                             <th>Text</th>
                             <th>Answers</th>
                             <th>Created</th>

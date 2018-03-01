@@ -1,11 +1,11 @@
-<tr class="question" id="question_{{ $question->id }}" title="{{ $question->id }}">
-    <td>{{ $question->order }}</td>
-    <td>{{ $question->keynumber }}</td>
+<tr class="question" id="{{ $question->getLevel() }}_{{ $question->id }}" title="{{ $question->id }}">
     @if( $question->parent_id )
         <td style="padding-left:{!! ($question->getLevel()+1)*1.2 !!}em">
     @else
         <td>
     @endif
+        {{ $question->keynumber }}
+        &nbsp;
         {{ $question->text }}
     </td>
     <td class="text-center">{{ $question->answers()->count() }}</td>
