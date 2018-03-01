@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         /* Formats given date after $date_pattern */
         Blade::directive('date', function ($expression) {
-            return "<?php echo ($expression)->format('Y/m/d'); ?>";
+            return "<?php echo ($expression)->format('Y-m-d'); ?>";
         });
 
         /* Formats given date after $date_pattern */

@@ -27,6 +27,7 @@ html {
     margin-left: 19.4mm;
     margin-right: 20mm;
     margin-top: 20mm;
+    margin-bottom: 20mm;
     text-align: justify;
 }
 
@@ -49,11 +50,13 @@ h1 {
 
 a {
     text-decoration: none !important;
+    color: #c50e1f;
 }
 
 div.metadata {
     font-size: 10pt;
 }
+
 
 div.page  {
     overflow: hidden;
@@ -64,6 +67,7 @@ div.page  {
 div.question {
     orphans: 5;
 }
+
 
 div.question-text {
     font-weight: bold;
@@ -82,4 +86,28 @@ div.parent-project {
     color: #000;
     padding: 15px;
     outline: 1px #000 solid;
+}
+
+div.frontpage {
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+}
+
+div.frontpage#title {
+    top: 40px;
+    left: 40px;
+    right: 40px;
+}
+
+div.frontpage#date {
+    bottom: 60px;
+    left: 40px;
+    right: 40px;
+}
+
+div.frontpage#generator {
+    bottom: 20px;
+    left: 40px;
+    right: 40px;
 }

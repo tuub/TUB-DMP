@@ -20,9 +20,9 @@
                     <thead>
                         <tr>
                             <th>Text</th>
+                            <th>Output Text</th>
                             <th>Answers</th>
                             <th>Created</th>
-                            <th>Updated</th>
                             <th data-orderable="false">Tools</th>
                         </tr>
                     </thead>

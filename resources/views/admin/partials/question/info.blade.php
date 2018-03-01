@@ -8,13 +8,11 @@
         &nbsp;
         {{ $question->text }}
     </td>
+    <td>
+        {{ $question->output_text ? $question->output_text : trans('admin/table.value.null') }}
+    </td>
     <td class="text-center">{{ $question->answers()->count() }}</td>
     <td>@date( $question->created_at ) @time( $question->created_at )</td>
-    <td>
-        @if( $question->updated_at )
-            @date( $question->updated_at ) @time( $question->updated_at )
-        @endif
-    </td>
     <td>
         {!! Form::open(['method' => 'GET', 'route' => ['admin.question.edit', $question->id], 'style'=>'display:inline-block', 'class' => 'form-inline', 'role' => 'form']) !!}
         {!! Form::button('<i class="fa ' . trans('admin/table.icon.edit') . '"></i>', ['type' => 'submit', 'class' => 'btn btn-link btn-xs nopadding', 'title' => trans('admin/table.label.edit')] )  !!}
