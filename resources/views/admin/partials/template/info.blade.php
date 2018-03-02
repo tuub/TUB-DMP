@@ -2,7 +2,6 @@
     <td>
         {{ $template->name }}
     </td>
-    <td>{{ $template->institution->name }}</td>
     <td>{{ $template->sections()->count() }}</td>
     <td>{{ $template->surveys()->count() }}</td>
     <td>{{ $template->is_active ? trans('admin/table.value.true') : trans('admin/table.value.false') }}</td>

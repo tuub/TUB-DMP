@@ -8,7 +8,6 @@
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Institution</th>
                     <th>Sections</th>
                     <th>Usage Count</th>
                     <th>Active</th>

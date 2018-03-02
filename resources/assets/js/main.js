@@ -15,7 +15,7 @@ $(document).ready(function ()
     $('#login-form div.checkbox input').attr('checked', false);
 
     /* http://bootstrapswitch.com/options.html */
-    $('form:not(#login-form) input[type=checkbox]').bootstrapSwitch({
+    $('form input[type=checkbox]').not('.classic').bootstrapSwitch({
         size: 'mini',
         onText: 'Yes',
         onColor: 'success',

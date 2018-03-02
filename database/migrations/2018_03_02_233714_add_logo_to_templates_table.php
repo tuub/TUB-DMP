@@ -1,11 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropNameColumnFromUsersTable extends Migration
+class AddLogoToTemplatesTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -13,8 +13,8 @@ class DropNameColumnFromUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('name');
+        Schema::table('templates', function (Blueprint $table) {
+            $table->string('logo_file')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class DropNameColumnFromUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('name')->nullable();
+        Schema::table('templates', function (Blueprint $table) {
+            $table->dropColumn('logo_file');
         });
     }
 }

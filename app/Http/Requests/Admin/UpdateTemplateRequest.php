@@ -31,7 +31,7 @@ class UpdateTemplateRequest extends Request
     {
         return [
             'name' => 'required|min:3',
-            'institution_id' => ['required','uuid'],
+            'logo_file' => 'image',
         ];
     }
 }

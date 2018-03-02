@@ -19,7 +19,11 @@ return [
     'form' => [
         'label' => [
             'name' => 'Name',
-            'institution' => 'Institution',
+            'is_active' => 'Active',
+            'description' => 'Description',
+            'copyright' => 'Copyright Note',
+            'logo_file' => 'Logo File',
+            'delete_logo_file' => 'Remove Logo File',
             'submit' => [
                 'create' => 'Create Template',
                 'edit' => 'Update Template',

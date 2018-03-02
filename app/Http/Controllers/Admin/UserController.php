@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Institution;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Library\Sanitizer;
@@ -13,12 +12,10 @@ use App\Library\Notification;
 class UserController extends Controller
 {
     protected $user;
-    protected $institution;
 
-    public function __construct( User $user, Institution $institution )
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->institution = $institution;
     }
 
 

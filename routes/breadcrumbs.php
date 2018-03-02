@@ -6,9 +6,14 @@ Breadcrumbs::register('admin', function ($breadcrumbs) {
 });
 
 // Admin > Templates
-Breadcrumbs::register('templates', function ($breadcrumbs, $template) {
+Breadcrumbs::register('template_form', function ($breadcrumbs, $template, $mode) {
     $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Template "' . $template->name . '"', route('admin.dashboard'));
+
+    if ($template->name) {
+        $breadcrumbs->push(trans('admin/template.title.' . $mode) . ' "' . $template->name . '"');
+    } else {
+        $breadcrumbs->push(trans('admin/template.title.' . $mode));
+    }
 });
 
 // Admin > Template > Sections
@@ -27,7 +32,6 @@ Breadcrumbs::register('section_form', function ($breadcrumbs, $template, $sectio
     } else {
         $breadcrumbs->push(trans('admin/section.title.' . $mode));
     }
-    //$breadcrumbs->push('Section "' . $section->name . '"', route('admin.template.sections.index', $section->template));
 });
 
 // Admin > Template > Section > Questions

@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Admin\CreateTemplateRequest;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Template;
-use App\Institution;
+use Illuminate\Http\Request;
+use App\Http\Requests\Admin\CreateTemplateRequest;
 use App\Http\Requests\Admin\UpdateTemplateRequest;
-use Session;
 use App\Library\Notification;
 use App\Library\Sanitizer;
-
 
 class TemplateController extends Controller
 {
     protected $template;
-    protected $institution;
 
-    public function __construct( Template $template, Institution $institution )
+    public function __construct(Template $template)
     {
         $this->template = $template;
-        $this->institution = $institution;
     }
 
 
@@ -35,10 +30,9 @@ class TemplateController extends Controller
     public function create()
     {
         $template = new $this->template;
-        $institutions = $this->institution->get()->pluck('name', 'id');
         $return_route = 'admin.dashboard';
 
-        return view('admin.template.create', compact('template','institutions', 'return_route'));
+        return view('admin.template.create', compact('template','return_route'));
     }
 
 
@@ -47,15 +41,24 @@ class TemplateController extends Controller
         /* The return route */
         $return_route = $request->return_route;
 
+        /* The uploaded file */
+        $logo_file = $request->file('logo_file');
+
         /* Clean input */
         $dirty = new Sanitizer($request);
-        $remove = ['return_route'];
+        $remove = ['return_route', 'logo_file'];
         $data = $dirty->cleanUp($remove);
 
         /* The validation */
 
         /* The operation */
         $template = $op = $this->template->create($data);
+        if ($logo_file) {
+            $logo_file_extension = $logo_file->extension();
+            $logo_file = $logo_file->storePubliclyAs('images/logo', $template->id . '.' . $logo_file_extension, 'public_uploads');
+            $template->logo_file = $logo_file;
+            $template->save();
+        }
 
         /* The notification */
         if ($op) {
@@ -78,10 +81,9 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $template = $this->template->find($id);
-        $institutions = $this->institution->get()->pluck('name', 'id');
         $return_route = 'admin.dashboard';
 
-        return view('admin.template.edit', compact('template','institutions', 'return_route'));
+        return view('admin.template.edit', compact('template','return_route'));
     }
 
 
@@ -90,9 +92,13 @@ class TemplateController extends Controller
         /* The return route */
         $return_route = $request->return_route;
 
+        /* The uploaded file */
+        $logo_file = $request->file('logo_file');
+        $delete_logo_file = $request->file('delete_logo_file');
+
         /* Clean input */
         $dirty = new Sanitizer($request);
-        $remove = ['return_route'];
+        $remove = ['return_route', 'logo_file', 'delete_logo_file'];
         $data = $dirty->cleanUp($remove);
 
         /* The validation */
@@ -101,6 +107,20 @@ class TemplateController extends Controller
         $template = $this->template->findOrFail($id);
 
         /* The operation */
+        if (null === $delete_logo_file) {
+            if (file_exists(public_path($logo_file))) {
+                unlink(public_path($template->logo_file));
+            }
+            $data['logo_file'] = null;
+        }
+        if ($logo_file) {
+            if (file_exists(public_path($logo_file))) {
+                unlink(public_path($template->logo_file));
+            }
+            $logo_file_extension = $logo_file->extension();
+            $logo_file = $logo_file->storePubliclyAs('images/logo', $template->id . '.' . $logo_file_extension, 'public_uploads');
+            $data['logo_file'] = $logo_file;
+        }
         $op = $template->update($data);
 
         /* Notification */
@@ -121,6 +141,9 @@ class TemplateController extends Controller
         $template = $this->template->find($id);
 
         /* The operation */
+        if ($template->logo_file && file_exists(public_path($template->logo_file))) {
+            unlink(public_path($template->logo_file));
+        }
         $op = $template->delete();
 
         /* The notification */

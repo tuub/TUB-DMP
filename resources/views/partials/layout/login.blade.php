@@ -35,21 +35,21 @@
                     <u>{{ trans('login.privacy-statement-intro') }}</u>
                     <div class="checkbox">
                         <label>
-                            {!! Form::checkbox('privacy-statement-1', null, array('class' => 'form-control')) !!}
+                            {!! Form::checkbox('privacy-statement-1', null, array('class' => 'classic form-control')) !!}
                             {{ trans('login.privacy-statement-1') }}
                             <span class="help-block {{ ($errors->first('privacy-statement-1') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-1') }}</span>
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
-                            {!! Form::checkbox('privacy-statement-2', null, array('class' => 'form-control')) !!}
+                            {!! Form::checkbox('privacy-statement-2', null, array('class' => 'classic form-control')) !!}
                             {{ trans('login.privacy-statement-2') }}
                             <span class="help-block {{ ($errors->first('privacy-statement-2') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-2') }}</span>
                         </label>
                     </div>
                     <div class="col-md-24 text-center">
                         <button type="submit" class="btn btn-default" style="font-weight: bold">
-                            {!! HTML::image('images/logo/logo-tu-small.png', 'TU Berlin') !!}
+                            {!! HTML::image('images/logo-tu-small.png', 'TU Berlin') !!}
 
                             @if (env('DEMO_MODE'))&nbsp;&nbsp;
                                 {!! trans('login.label-submit.demo') !!}
