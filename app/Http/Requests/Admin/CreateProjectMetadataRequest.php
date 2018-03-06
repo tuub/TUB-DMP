@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Http\Requests\Request;
 use Route;
 
-class UpdateProjectMetadataRequest extends Request
+class CreateProjectMetadataRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
