@@ -116,8 +116,7 @@ class PlanController extends Controller
             } else {
                 $notification = new Notification(500, 'Error while updating the plan!', 'error');
             }
-            $notification->toSession($request);
-            //Event::fire(new PlanUpdated($plan));
+
             return $notification->toJson($request);
         }
 

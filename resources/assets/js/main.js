@@ -5,6 +5,12 @@ $(document).ready(function ()
 {
     'use strict';
 
+    /* Display toastr notifications from AJAX calls who are saved in localStorage */
+    if(localStorage.getItem('flash-status')) {
+        toastr[localStorage.getItem('flash-type')](localStorage.getItem('flash-message'));
+        localStorage.clear();
+    }
+
     /* Make sure that the privacy statements on login page aren't check (looking at you, Chrome!) */
     $('#login-form div.checkbox input').attr('checked', false);
 
@@ -192,6 +198,7 @@ $(document).ready(function ()
                     // http://stackoverflow.com/questions/13177426/how-to-destroy-bootstrap-modal-window-completely/18169689
                     div.modal('hide');
                     form.find("#message").val('').end();
+                    toastr[json.type](json.message);
                 }
             }
         });
@@ -239,6 +246,9 @@ $(document).ready(function ()
             success : function (json) {
                 if (json.status === 200) {
                     div.modal('hide');
+                    localStorage.setItem("flash-status", json.status);
+                    localStorage.setItem("flash-message", json.message);
+                    localStorage.setItem("flash-type", json.type);
                     location.reload();
                 }
             }
@@ -323,6 +333,9 @@ $(document).ready(function ()
             success : function (json) {
                 if (json.status === 200) {
                     div.modal('hide');
+                    localStorage.setItem("flash-status", json.status);
+                    localStorage.setItem("flash-message", json.message);
+                    localStorage.setItem("flash-type", json.type);
                     location.reload();
                 }
             }
@@ -378,6 +391,9 @@ $(document).ready(function ()
             success : function (json) {
                 if (json.status === 200) {
                     div.modal('hide');
+                    localStorage.setItem("flash-status", json.status);
+                    localStorage.setItem("flash-message", json.message);
+                    localStorage.setItem("flash-type", json.type);
                     location.reload();
                 }
             }
@@ -424,6 +440,9 @@ $(document).ready(function ()
             success : function (json) {
                 if (json.status === 200) {
                     div.modal('hide');
+                    localStorage.setItem("flash-status", json.status);
+                    localStorage.setItem("flash-message", json.message);
+                    localStorage.setItem("flash-type", json.type);
                     location.reload();
                 }
             }
@@ -469,6 +488,9 @@ $(document).ready(function ()
             success : function (json) {
                 if (json.status === 200) {
                     div.modal('hide');
+                    localStorage.setItem("flash-status", json.status);
+                    localStorage.setItem("flash-message", json.message);
+                    localStorage.setItem("flash-type", json.type);
                     location.reload();
                     //form.find('.form-group').children().filter('input, textarea').val('').end();
                 }
@@ -535,6 +557,9 @@ $(document).ready(function ()
             success : function (json) {
                 if (json.status === 200) {
                     div.modal('hide');
+                    localStorage.setItem("flash-status", json.status);
+                    localStorage.setItem("flash-message", json.message);
+                    localStorage.setItem("flash-type", json.type);
                     location.reload();
                 }
             }
