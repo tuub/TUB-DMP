@@ -35,14 +35,14 @@
                     <u>{{ trans('login.privacy-statement-intro') }}</u>
                     <div class="checkbox">
                         <label>
-                            {!! Form::checkbox('privacy-statement-1', null, array('class' => 'classic form-control')) !!}
+                            {!! Form::checkbox('privacy-statement-1', null, null, array('class' => 'classic')) !!}
                             {{ trans('login.privacy-statement-1') }}
                             <span class="help-block {{ ($errors->first('privacy-statement-1') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-1') }}</span>
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
-                            {!! Form::checkbox('privacy-statement-2', null, array('class' => 'classic form-control')) !!}
+                            {!! Form::checkbox('privacy-statement-2', null, null, array('class' => 'classic')) !!}
                             {{ trans('login.privacy-statement-2') }}
                             <span class="help-block {{ ($errors->first('privacy-statement-2') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-2') }}</span>
                         </label>
