@@ -48,9 +48,9 @@ return [
             'root'   => public_path(),
         ],
 
-        'public_uploads' => [
+        'public_logo' => [
             'driver' => 'local',
-            'root'   => public_path(),
+            'root'   => public_path('images/logo'),
         ],
 
         'ftp' => [

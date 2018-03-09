@@ -20,7 +20,8 @@
         "mrclay/shibalike": "^1.0",
         "webpatser/laravel-uuid": "^3.0",
         "davejamesmiller/laravel-breadcrumbs": "^4.2",
-        "iatstuti/laravel-nullable-fields": "^1.5"
+        "iatstuti/laravel-nullable-fields": "^1.5",
+        "intervention/image": "^2.4"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

@@ -1,6 +1,10 @@
 <tr title="{{ $template->id  }}">
+    <td>{{ $template->name }}</td>
     <td>
-        {{ $template->name }}
+
+        @if($template->logo_file)
+            {{ HTML::image($template->getLogoFile('header'), $template->logo_file, ['style' => 'height: 20px;']) }}
+        @endif
     </td>
     <td>{{ $template->sections()->count() }}</td>
     <td>{{ $template->surveys()->count() }}</td>

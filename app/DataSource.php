@@ -47,8 +47,12 @@ class DataSource extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function getTypeAttribute($value)
-    {
+    public function getTypeAttribute($value) {
         return strtoupper($value);
+    }
+
+
+    public static function getByIdentifier($identifier) {
+        return self::where('identifier', $identifier)->first();
     }
 }

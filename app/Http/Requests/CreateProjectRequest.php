@@ -24,6 +24,10 @@ class CreateProjectRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => 'required',
+            'email' => 'required|email',
+            'tub_om' => 'required',
+            'institution_identifier' => 'required',
             'contact_email' => 'required|email|max:255',
         ];
     }

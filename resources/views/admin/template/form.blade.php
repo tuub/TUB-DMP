@@ -46,7 +46,7 @@
             {!! Form::Label( 'logo_file', trans('admin/template.form.label.logo_file') ) !!}
             @if ($template->logo_file)
                 <p>
-                    {!! HTML::image(asset($template->logo_file), $template->logo_file, ['class' => 'thumbnail', 'style' => 'width: 100px;']) !!}
+                    {!! HTML::image(\App\Library\ImageFile::getVersion($template->logo_file, 'export'), $template->logo_file, ['class' => 'thumbnail', 'style' => 'width: 100px;']) !!}
                 </p>
                 <div class="row">
                     <div class="form-group col-md-24">

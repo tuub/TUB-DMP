@@ -271,18 +271,10 @@ class Project extends Node
         $data_sources = DataSource::get();
         $external_data = [];
 
-        /*
-        foreach ($data_sources as $data_source) {
-            $namespaces = $data_source->namespaces()->get();
-            foreach ($namespaces as $namespace) {
-                $external_data[] = $namespace;
-            }
-        }
-        */
-
         /* Determine database connection */
         env('DEMO_MODE') ? $connection = 'odbc-demo' : $connection = 'odbc';
 
+        /* The loop */
         foreach ($data_sources as $data_source) {
             $namespaces = $data_source->namespaces()->get();
             foreach ($namespaces as $namespace) {
@@ -319,19 +311,24 @@ class Project extends Node
         return null;
     }
 
-    public function setDataSource($identifier)
+    public static function isValidIdentifier($identifier)
     {
-        $this->data_source_id = $this->data_source->where('identifier', $identifier)->first()['id'];
+        if (env('PROJECT_IDENTIFIER_PATTERN')) {
+            if (preg_match(env('PROJECT_IDENTIFIER_PATTERN'), $identifier)) {
+                return true;
+            }
+        }
 
-        dd($this->data_source());
-
-        return true;
+        return false;
     }
 
 
+    public function setDataSource($identifier)
+    {
+        $this->data_source_id = $this->data_source()->where('identifier', $identifier)->first()['id'];
 
-
-
+        return true;
+    }
 
 
     public function approve()
@@ -452,12 +449,14 @@ class Project extends Node
     }
 
 
-    public function hasParent() {
+    public function hasParent()
+    {
         return $this->parent_id ? true : false;
     }
 
 
-    public function getParent() {
+    public function getParent()
+    {
         return Project::where('id', $this->parent_id)->first();
     }
 }

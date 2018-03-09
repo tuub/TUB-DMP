@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\Uuids;
-use Webpatser\Uuid\Uuid;
+use App\Library\ImageFile;
 
 class Template extends Model
 {
@@ -129,4 +129,8 @@ class Template extends Model
         return false;
     }
 
+
+    public function getLogoFile($version) {
+        return ImageFile::getVersion($this->logo_file, $version);
+    }
 }

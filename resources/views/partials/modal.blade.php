@@ -36,13 +36,25 @@
                 <div class="errors"></div>
                 {!! BootForm::hidden('user_id')->value(auth()->user()->id) !!}
                 {!! BootForm::text(trans('project.request.label.identifier'), 'identifier')->helpBlock(trans('project.request.help.identifier')) !!}
+                <span class="help-block {{ ($errors->first('identifier') ? 'form-error' : '') }}">{{ $errors->first('identifier') }}</span>
 
                 {!! BootForm::text(trans('project.request.label.name'), 'name')->placeholder(trans('project.request.placeholder.name'))->value(auth()->user()->name)->readonly() !!}
+                <span class="help-block {{ ($errors->first('name') ? 'form-error' : '') }}">{{ $errors->first('name') }}</span>
+
                 {!! BootForm::text(trans('project.request.label.email'), 'email')->placeholder(trans('project.request.placeholder.email'))->value(auth()->user()->email)->readonly() !!}
+                <span class="help-block {{ ($errors->first('email') ? 'form-error' : '') }}">{{ $errors->first('email') }}</span>
+
                 {!! BootForm::text(trans('project.request.label.tub_om'), 'tub_om')->placeholder(trans('project.request.placeholder.person_identifier'))->value(auth()->user()->tub_om)->readonly() !!}
-                {!! BootForm::text(trans('project.request.label.institution_identifier'), 'institution_identifier')->placeholder(trans('project.request.institution_identifier'))->value(auth()->user()->institution_identifier)->readonly() !!}
+                <span class="help-block {{ ($errors->first('tub_om') ? 'form-error' : '') }}">{{ $errors->first('tub_om') }}</span>
+
+                {!! BootForm::text(trans('project.request.label.institution_identifier'), 'institution_identifier')->placeholder(trans('project.request.placeholder.institution_identifier'))->value(auth()->user()->institution_identifier)->readonly() !!}
+                <span class="help-block {{ ($errors->first('institution_identifier') ? 'form-error' : '') }}">{{ $errors->first('institution_identifier') }}</span>
+
                 {!! BootForm::text(trans('project.request.label.contact_email'), 'contact_email')->placeholder(trans('project.request.placeholder.contact_email'))->helpBlock(trans('project.request.help.contact_email')) !!}
+                <span class="help-block {{ ($errors->first('contact_email') ? 'form-error' : '') }}">{{ $errors->first('contact_email') }}</span>
+
                 {!! BootForm::textarea(trans('project.request.label.message'), 'message') !!}
+                <span class="help-block {{ ($errors->first('message') ? 'form-error' : '') }}">{{ $errors->first('message') }}</span>
             </div>
             <div class="modal-footer">
                 {!! BootForm::button(trans('project.request.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}

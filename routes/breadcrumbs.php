@@ -6,6 +6,12 @@ Breadcrumbs::register('admin', function ($breadcrumbs) {
 });
 
 // Admin > Templates
+Breadcrumbs::register('templates', function ($breadcrumbs, $template) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Template "' . $template->name . '"', route('admin.dashboard'));
+});
+
+// Admin > Templates > Create/Edit Template
 Breadcrumbs::register('template_form', function ($breadcrumbs, $template, $mode) {
     $breadcrumbs->parent('admin');
 

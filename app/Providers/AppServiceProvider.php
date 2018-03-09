@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Blade;
+use App\Library\ImageFile;
 
 class AppServiceProvider extends ServiceProvider
 {

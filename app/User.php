@@ -74,6 +74,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return session()->get('name');
     }
 
+
+    public function getInstitutionIdentifierAttribute()
+    {
+        return session()->get('institution_identifier');
+    }
+
+
     /*
     public function getNameWithEmailAttribute()
     {

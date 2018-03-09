@@ -10,7 +10,15 @@
     <body>
         <script type="text/php">
 
-        $GLOBALS["template_logo"] = "{{$survey->template->logo_file}}";
+        /* SETUP THE LOGO */
+        if (strlen("{{$survey->template->logo_file}}") > 0) {
+            $template_logo_version = "{{$survey->template->getLogoFile('header')}}";
+            $template_logo_file = new App\Library\ImageFile($template_logo_version);
+
+            $GLOBALS["template_logo"] = $template_logo_file->getFullPath();
+            $GLOBALS["template_logo_x"] = $template_logo_file->getWidth();
+            $GLOBALS["template_logo_y"] = $template_logo_file->getHeight();
+        }
 
         if (isset($pdf)) {
 
@@ -28,9 +36,7 @@
 
 
             /* THE HEADER */
-
             $header = $pdf->open_object();
-
             $pdf->page_script('
 
                 /* SETUP */
@@ -39,12 +45,14 @@
                 $first_page = 3;
 
                 /* HEADER LOGO */
-                $logo_file = "images/logo-tu-long.png";
-                $logo_x = 200 / 4;
-                $logo_y = 111 / 4;
-                $logo_pos_x = $w - $logo_x - 60;
-                $logo_pos_y = 15;
-                $logo_res = "";
+                if (isset($GLOBALS["template_logo"])) {
+                    $logo_file = $GLOBALS["template_logo"];
+                    $logo_x = $GLOBALS["template_logo_x"] / 5;
+                    $logo_y = $GLOBALS["template_logo_y"] / 5;
+                    $logo_pos_x = $w - $logo_x - 60;
+                    $logo_pos_y = 15;
+                    $logo_res = "";
+                }
 
                 /* HEADER TEXT */
                 $text_pos_x = 55;
@@ -56,8 +64,10 @@
 
                 /* BRINGING IT ALL BACK HOME */
                 if ($PAGE_NUM >= $GLOBALS["start_page"]) {
+
                     $pdf->text($text_pos_x, $text_pos_y, "$text_content", $text_font, $text_size, $text_color);
-                    if(strlen("{{$survey->template->logo_file}}") > 0) {
+
+                    if (isset($GLOBALS["template_logo"])) {
                         $pdf->image("$logo_file", $logo_pos_x, $logo_pos_y, $logo_x, $logo_y);
                     }
 
@@ -68,9 +78,7 @@
             $pdf->add_object($header, 'all');
 
             /* THE FOOTER */
-
             $footer = $pdf->open_object();
-
             $pdf->page_script('
 
                 /* SETUP */
@@ -368,24 +376,22 @@
                                 $GLOBALS['toc'][$pdf->get_page_number() - 1] = "@if($section->export_keynumber){{$section->keynumber}} @endif{{ $section->name }}";
                             }
                         </script>
-                        <p>
-                            <div class="row section-title">
-                                <h3>
-                                    @if($section->export_keynumber)
-                                        {{ $section->keynumber }}
-                                    @endif
-                                    {{ $section->name }}
-                                </h3>
-                            </div>
-
-                            @foreach($section->questions()->active()->ordered()->get() as $question)
-
-                                @if ($question->isRoot())
-                                    @include('partials.question.pdf', [$survey, $question])
+                        <div class="row section-title">
+                            <h3>
+                                @if($section->export_keynumber)
+                                    {{ $section->keynumber }}
                                 @endif
+                                {{ $section->name }}
+                            </h3>
+                        </div>
 
-                            @endforeach
-                        </p>
+                        @foreach($section->questions()->active()->ordered()->get() as $question)
+
+                            @if ($question->isRoot())
+                                @include('partials.question.pdf', [$survey, $question])
+                            @endif
+
+                        @endforeach
                     </div>
                 @endunless
             @endforeach

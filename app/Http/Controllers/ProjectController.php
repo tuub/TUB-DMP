@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 // FIXME
+use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\Admin\UpdateProjectRequest;
 
 use App\Http\Requests\ImportProjectRequest;
 use App\Project;
+use App\DataSource;
 use App\Template;
 use Illuminate\Http\Request;
 use Mail;
@@ -16,15 +18,17 @@ use App\Library\Notification;
 class ProjectController extends Controller
 {
     protected $project;
+    protected $data_source;
 
     /**
      * ProjectController constructor.
      *
      * @param Project $project
      */
-    public function __construct(Project $project)
+    public function __construct(Project $project, DataSource $data_source)
     {
         $this->project = $project;
+        $this->data_source = $data_source;
     }
 
 
@@ -138,30 +142,32 @@ class ProjectController extends Controller
     }
 
 
-    public function request(Request $request)
+    public function request(CreateProjectRequest $request)
     {
         if ($request->ajax()) {
 
             /* Clean input */
             $dirty = new Sanitizer($request);
             $data = $dirty->cleanUp();
-
+    
             /* The validation */
 
             /* Prepare data */
+
+            // If valid TUB identifier, set data_source to to DEFAULT_DATASOURCE,
+            // If not, generate random identifier and leave data_source to NULL
+            if ($this->project->isValidIdentifier($data['identifier'])) {
+                $data['data_source_id'] = $this->data_source->getByIdentifier(env('PROJECT_DEFAULT_DATASOURCE'));
+            } else {
+                $data['identifier'] = $this->project->generateRandomIdentifier();
+            }
+
+            // In Demo Mode, auto-approve all projects
             env('DEMO_MODE') ? $data['is_active'] = true : $data['is_active'] = false;
 
             /* The operation */
             // FIXME: If child project then create the big one as well (if not present!)
-            // FIXME: Throw exception when Project::generateRandomIdentifier() returns NULL
             $op = $new_project = $this->project->create($data);
-
-            if ($new_project->hasValidIdentifier()) {
-                $new_project->setDataSource('ivmc');
-            } else {
-                $new_project->identifier = Project::generateRandomIdentifier();
-                $new_project->save();
-            }
 
             /* The mail */
             Mail::send( [ 'text' => 'emails.project.request' ], [ 'project' => $data ],

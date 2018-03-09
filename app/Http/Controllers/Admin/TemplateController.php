@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\CreateTemplateRequest;
 use App\Http\Requests\Admin\UpdateTemplateRequest;
 use App\Library\Notification;
 use App\Library\Sanitizer;
+use App\Library\ImageFile;
 
 class TemplateController extends Controller
 {
@@ -52,12 +53,19 @@ class TemplateController extends Controller
         /* The validation */
 
         /* The operation */
+        //$data['name'] = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10);
         $template = $op = $this->template->create($data);
         if ($logo_file) {
-            $logo_file_extension = $logo_file->extension();
-            $logo_file = $logo_file->storePubliclyAs('images/logo', $template->id . '.' . $logo_file_extension, 'public_uploads');
-            $template->logo_file = $logo_file;
+            $options = [
+                'storage_path' => 'images/logo/',
+                'identifier' => $template->id,
+                'extension' => $logo_file->extension(),
+            ];
+
+            $template->logo_file = $options['storage_path'] . $options['identifier'] . '/';
             $template->save();
+
+            ImageFile::createVersions($logo_file, $options);
         }
 
         /* The notification */
@@ -94,7 +102,7 @@ class TemplateController extends Controller
 
         /* The uploaded file */
         $logo_file = $request->file('logo_file');
-        $delete_logo_file = $request->file('delete_logo_file');
+        $delete_logo_file = $request->delete_logo_file;
 
         /* Clean input */
         $dirty = new Sanitizer($request);
@@ -107,20 +115,23 @@ class TemplateController extends Controller
         $template = $this->template->findOrFail($id);
 
         /* The operation */
-        if (null === $delete_logo_file) {
-            if (file_exists(public_path($logo_file))) {
-                unlink(public_path($template->logo_file));
-            }
+        if (null !== $delete_logo_file) {
+            ImageFile::deleteVersions($logo_file, ['disk' => 'public_logo']);
             $data['logo_file'] = null;
         }
         if ($logo_file) {
-            if (file_exists(public_path($logo_file))) {
-                unlink(public_path($template->logo_file));
-            }
-            $logo_file_extension = $logo_file->extension();
-            $logo_file = $logo_file->storePubliclyAs('images/logo', $template->id . '.' . $logo_file_extension, 'public_uploads');
-            $data['logo_file'] = $logo_file;
+
+            $options = [
+                'storage_path' => 'images/logo/',
+                'identifier' => $template->id,
+                'extension' => $logo_file->extension(),
+            ];
+
+            ImageFile::deleteVersions($logo_file, ['disk' => 'public_logo']);
+            ImageFile::createVersions($logo_file, $options);
+            $data['logo_file'] = $options['storage_path'] . $options['identifier'] . '/';
         }
+
         $op = $template->update($data);
 
         /* Notification */
@@ -141,8 +152,9 @@ class TemplateController extends Controller
         $template = $this->template->find($id);
 
         /* The operation */
-        if ($template->logo_file && file_exists(public_path($template->logo_file))) {
-            unlink(public_path($template->logo_file));
+        if ($template->logo_file) {
+
+            ImageFile::deleteVersions($template->logo_file, ['disk' => 'public_logo']);
         }
         $op = $template->delete();
 

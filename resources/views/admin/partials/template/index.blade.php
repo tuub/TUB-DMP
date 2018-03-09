@@ -8,6 +8,7 @@
                 <thead>
                 <tr>
                     <th>Name</th>
+                    <th data-orderable="false">Logo</th>
                     <th>Sections</th>
                     <th>Usage Count</th>
                     <th>Active</th>
