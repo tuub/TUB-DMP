@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -7,15 +8,29 @@ use App\Library\Notification;
 use Illuminate\Support\Facades\Mail;
 
 
+/**
+ * Class DashboardController
+ *
+ * @package App\Http\Controllers
+ */
 class DashboardController extends Controller
 {
+    /**
+     * DashboardController constructor.
+     */
     public function __construct()
     {
         //$this->beforeFilter('auth');
     }
 
 
-    // FIXME
+    /**
+     * Processes feedback form.
+     * @todo Refactor to mailable.
+     *
+     * @param FeedbackRequest $request
+     * @return \Illuminate\Http\JsonResponse|null
+     */
     public function feedback( FeedbackRequest $request )
     {
         if ($request->ajax()) {
@@ -33,16 +48,16 @@ class DashboardController extends Controller
                 }
             );
 
-            if (!Mail::failures()) {
-                $notification = new Notification(200, 'Successfully sent the feedback!', 'success');
-            } else {
+            if (Mail::failures()) {
                 $notification = new Notification(500, 'Error while sending the feedback!', 'error');
+            } else {
+                $notification = new Notification(200, 'Successfully sent the feedback!', 'success');
             }
 
             /* The JSON response */
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 }

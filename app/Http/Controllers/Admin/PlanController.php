@@ -1,27 +1,38 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\DeleteQuestionRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 use App\Project;
 use App\Plan;
 use App\Template;
 use App\Http\Requests\Admin\CreatePlanRequest;
 use App\Http\Requests\Admin\UpdatePlanRequest;
-use App\Http\Requests\Admin\DeletePlanRequest;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
 
+/**
+ * Class PlanController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class PlanController extends Controller
 {
     protected $plan;
     protected $project;
 
 
+    /**
+     * Constructor.
+     *
+     * @param Plan $plan
+     * @param Project $project
+     */
     public function __construct(Plan $plan, Project $project)
     {
         $this->plan = $plan;
@@ -30,26 +41,48 @@ class PlanController extends Controller
 
 
     // FIXME: Do we really need the $project here, can we solve it with relation?
+
+
+    /**
+     * Index of plans for given project
+     *
+     * @param Project $project
+     * @return mixed
+     * @throws ModelNotFoundException
+     */
     public function index(Project $project)
     {
-        $project = $this->project->find($project->id);
+        $view_name = 'admin.plan.index';
+
         $plans = $this->plan->where('project_id', $project->id)->with('survey')->orderBy('updated_at', 'desc')->get();
-        return view('admin.plan.index', compact('plans', 'project'));
+
+        return view($view_name, compact('plans', 'project'));
     }
 
 
-    // FIXME:
-    // really $request->project or $request->project_id?
-    // $plan->title?
-    // New-View or Create-View?
-    // Template?
+    /**
+     * Renders create form.
+     *
+     * @todo: Had old FIXME: really $request->project or $request->project_id?
+     * @todo: Had old FIXME: $plan->title?
+     * @todo: Had old FIXME: New-View or Create-View?
+     * @todo: Had old FIXME: Template?
+     *
+     * @param CreatePlanRequest $request
+     * @return mixed
+     */
     public function create(CreatePlanRequest $request)
     {
+        $view_name = 'admin.plan.create';
+        $return_route = 'admin.project.plans.index';
+
         $project = $this->project->where('id', $request->project)->first();
         $plan = new $this->plan;
-        $plan->title = "Data Management Plan";
-        $templates = Template::get()->pluck('name','id');
-        return view('admin.plan.new', compact('plan','project','templates'));
+        $plan->title = trans('plan.create.input.title.default');
+        $plan->version = trans('plan.create.input.version.default');
+        $templates = Template::orderBy('name', 'asc')->get()->pluck('name','id');
+
+        return view($view_name, compact('plan','project','templates', 'return_route'));
     }
 
 
@@ -57,24 +90,29 @@ class PlanController extends Controller
      * Stores a new plan instance with accompanying survey instance via
      * model method createWithSurvey()
      *
-     * @param PlanRequest $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @uses Sanitizer::cleanUp()
+     * @uses Notification::toSession()
+     * @uses Plan::createWithSurvey()
+     * @param CreatePlanRequest $request
+     * @return mixed
      */
     public function store(CreatePlanRequest $request)
     {
+        /* The return route */
+        $return_route = $request->return_route;
+
         /* Clean input */
         $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
 
-        /* Validate input */
+        /* Validate */
 
         /* Get the project object */
         $project = $this->project->find($data['project_id']);
 
-        /* FIXME: Generalize?
-        The operation Create Plan with corresponding Survey */
-        $op = $this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'], $data['template_id']);
+        /* The operation Create Plan with corresponding Survey */
+        $op = $this->plan->createWithSurvey($data);
 
         /* Notification */
         if ($op) {
@@ -84,36 +122,62 @@ class PlanController extends Controller
         }
         $notification->toSession($request);
 
-        return redirect()->route('admin.project.plans.index', $project);
+        return redirect()->route($return_route, $project);
     }
 
 
-    public function show($id)
-    {
-        //
-    }
-
-
-    // FIXME:
-    // Plan?
+    /**
+     * Renders edit form for given plan id.
+     *
+     * @todo: Had old FIXME: Plan?
+     *
+     * @param string $id
+     * @return mixed
+     * @throws ModelNotFoundException
+     */
     public function edit($id)
     {
+        $view_name = 'admin.plan.edit';
+        $return_route = 'admin.project.plans.index';
+
         $plan = $this->plan->findOrFail($id);
-        $projects = Project::where('user_id', $plan->project->user->id)->orderBy('identifier', 'asc')->get()->pluck('identifier','id');
-        return view('admin.plan.edit', compact('plan','projects'));
+        $project = $plan->project;
+        $projects = $this->project->where('user_id', $plan->project->user->id)
+            ->orderBy('identifier')
+            ->get()
+            ->pluck('identifier','id');
+        $templates = Template::orderBy('name', 'asc')->get()->pluck('name','id');
+
+        return view($view_name, compact('plan','project', 'projects', 'templates', 'return_route'));
     }
 
 
-    public function update(UpdatePlanRequest $request, $id)
+    /**
+     * Updates an existing plan instance with given request data for given id.
+     *
+     * @todo: Check if ID in $request and probably save the extra param $id.
+     *
+     * @uses Sanitizer::cleanUp()
+     * @uses Notification::toSession()
+     * @param UpdatePlanRequest $request
+     * @param string $id
+     * @return RedirectResponse
+     * @throws \Exception
+     */
+    public function update(UpdatePlanRequest $request, $id) : RedirectResponse
     {
+        /* The return route */
+        $return_route = $request->return_route;
+
         /* Clean input */
         $dirty = new Sanitizer($request);
-        $data = $dirty->cleanUp();
+        $remove = ['return_route'];
+        $data = $dirty->cleanUp($remove);
 
         /* The validation */
 
         /* Get the project object */
-        $project = $this->project->find($request->project_id);
+        $project = $this->project->find($data['project_id']);
 
         /* Get object */
         $plan = $this->plan->findOrFail($id);
@@ -129,16 +193,31 @@ class PlanController extends Controller
         }
         $notification->toSession($request);
 
-        return redirect()->route('admin.project.plans.index', $project);
+        return redirect()->route($return_route, $project);
     }
 
-    public function destroy(Request $request, $id)
+
+    /**
+     * Deletes an existing plan instance with given plan id.
+     *
+     * @todo: Can we use a dynamic return_route? Where should that come from?
+     *
+     * @uses Notification::toSession()
+     * @param Request $request
+     * @param string $id
+     * @return RedirectResponse
+     * @throws \Exception
+     */
+    public function destroy(Request $request, $id) : RedirectResponse
     {
-        /* Get the project object */
-        $project = $this->project->find($request->project_id);
+        /* The return route */
+        $return_route = 'admin.project.plans.index';
 
         /* Get object */
         $plan = $this->plan->find($id);
+
+        /* Get the project object */
+        $project = $plan->project;
 
         /* The operation */
         $op = $plan->delete();
@@ -151,6 +230,6 @@ class PlanController extends Controller
         }
         $notification->toSession($request);
 
-        return redirect()->route('admin.section.questions.index', $project);
+        return redirect()->route($return_route, $project);
     }
 }

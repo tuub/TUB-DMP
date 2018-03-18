@@ -91,6 +91,17 @@ Breadcrumbs::register('plans', function ($breadcrumbs, $project) {
     $breadcrumbs->push('Plans', route('admin.project.plans.index', $project));
 });
 
+// Admin > User > Project > Plan > Create/Edit Plan
+Breadcrumbs::register('plan_form', function ($breadcrumbs, $project, $plan, $mode) {
+    $breadcrumbs->parent('plans', $project);
+
+    if ($plan->title) {
+        $breadcrumbs->push(trans('admin/plan.title.' . $mode) . ' "' . $plan->title . '"');
+    } else {
+        $breadcrumbs->push(trans('admin/plan.title.' . $mode));
+    }
+});
+
 // Admin > User > Project > Plan > Survey
 Breadcrumbs::register('survey', function ($breadcrumbs, $plan) {
     //$breadcrumbs->parent('users');

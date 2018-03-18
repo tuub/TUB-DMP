@@ -66,4 +66,16 @@ class AppHelper {
 
         return false;
     }
+
+    public static function camelCaseToWord(string $string)
+    {
+        $pattern = '/
+              (?<=[a-z])
+              (?=[A-Z])
+            | (?<=[A-Z])
+              (?=[A-Z][a-z])
+            /x';
+
+        return implode(' ', preg_split($pattern, $string));
+    }
 }

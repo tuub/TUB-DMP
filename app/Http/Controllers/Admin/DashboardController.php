@@ -1,7 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
-
 
 use App\Http\Controllers\Controller;
 use App\Project;
@@ -9,6 +9,12 @@ use App\Template;
 use App\DataSource;
 use App\User;
 
+
+/**
+ * Class DashboardController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class DashboardController extends Controller
 {
     protected $breadcrumbs;
@@ -16,6 +22,15 @@ class DashboardController extends Controller
     protected $data_source;
     protected $user;
 
+
+    /**
+     * DashboardController constructor.
+     *
+     * @param Project    $project
+     * @param Template   $template
+     * @param DataSource $data_source
+     * @param User       $user
+     */
     public function __construct(Project $project, Template $template, DataSource $data_source, User $user)
     {
         $this->project = $project;
@@ -24,6 +39,12 @@ class DashboardController extends Controller
         $this->user = $user;
     }
 
+
+    /**
+     * Renders the admin dashboard.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
 	{
 	    $pending_projects = $this->project->roots()->where('is_active', false)->get();
@@ -32,5 +53,4 @@ class DashboardController extends Controller
         $users = $this->user->withCount('plans', 'projects')->orderBy('email', 'asc')->get();
         return view('admin.dashboard', compact('pending_projects', 'templates', 'data_sources', 'users'));
 	}
-
 }

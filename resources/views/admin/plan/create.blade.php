@@ -8,11 +8,12 @@
 
 @section('body')
 
-    @includeWhen($section, 'admin.section.form', [
-        'section' => $section,
+    @includeWhen($plan, 'admin.plan.form', [
+        'plan' => $plan,
         'mode' => 'create',
         'action' => 'store',
         'method' => 'POST',
+        'return_route' => $return_route
     ])
 
 @stop

@@ -1,9 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * Class CreateProjectRequest
+ *
+ * @package App\Http\Requests\Admin
+ */
 class CreateProjectRequest extends FormRequest
 {
     /**
@@ -23,7 +30,9 @@ class CreateProjectRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            'contact_email' => 'required|email|max:255'
+        ];
     }
 
 
@@ -34,6 +43,10 @@ class CreateProjectRequest extends FormRequest
      */
     public function messages()
     {
-        return [];
+        parent::messages();
+        return [
+            'contact_email.required' => 'An institutional contact e-mail address is required to process your request.',
+            'contact_email.email' => 'The provided institutional e-mail address is not valid.'
+        ];
     }
 }

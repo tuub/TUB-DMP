@@ -1,11 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Answer;
 use App\Library\Traits\Uuids;
+use Illuminate\Support\Collection;
 
+
+/**
+ * Class Survey
+ *
+ * @package App
+ */
 class Survey extends Model
 {
     use Uuids;
@@ -16,7 +23,6 @@ class Survey extends Model
     |--------------------------------------------------------------------------
     */
 
-    public $timestamps = true;
     public $incrementing = false;
     protected $table = 'surveys';
     protected $dates = ['created_at', 'updated_at'];
@@ -29,16 +35,33 @@ class Survey extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * 1 Survey belongs to 1 Plan, 1:1
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function plan()
     {
         return $this->belongsTo(Plan::class);
     }
 
+
+    /**
+     * 1 Survey belongs to a Template, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function template()
     {
         return $this->belongsTo(Template::class);
     }
 
+
+    /**
+     * 1 Survey has many Answers through its Questions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function answers()
     {
         return $this->hasManyThrough(Answer::class, Question::class);
@@ -50,6 +73,13 @@ class Survey extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @return int
+     */
     public function calculateCompletionRate()
     {
         if ($this->getAnswerCount() > 0) {
@@ -60,30 +90,51 @@ class Survey extends Model
     }
 
 
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @return bool
+     */
     public function setCompletionRate()
     {
-        $this->update([
+        return $this->update([
             'completion' => $this->calculateCompletionRate()
         ]);
-
-        return true;
     }
 
 
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @param $data
+     * @return bool
+     */
     public function saveAnswers($data)
     {
         if ($data) {
             $data = array_filter(array_map('array_filter', $data));
             Answer::saveAll($this, $data);
-            $this->setCompletionRate();
+            return $this->setCompletionRate();
         }
 
-        return true;
+        return false;
     }
 
 
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @return bool
+     */
     public function setDefaults()
     {
+        /* @var $questions Question[] */
         $questions = $this->template->questions()->active()->get();
         $data = [];
         foreach( $questions as $question ) {
@@ -91,35 +142,53 @@ class Survey extends Model
                 $data[$question->id] = [$question->default];
             }
         }
-        $this->saveAnswers($data);
 
-        return true;
+        return $this->saveAnswers($data);
     }
 
 
-
-
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @return int
+     */
     public function getQuestionCount()
     {
-        $count = $this->template->questions()->active()->mandatory()->count();
-        return $count;
+        return $this->template->questions()->active()->mandatory()->count();
     }
 
+
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @return Collection
+     */
     public function getMandatoryQuestions()
     {
         return $this->template->questions()->active()->mandatory()->get();
     }
 
+
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     * See: http://stackoverflow.com/questions/28651727/laravel-eloquent-distinct-and-count-not-working-properly-together
+     * Does not work: $counter[] = Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupBy( 'question_id' )->count();
+     * Works as well $counter[] = count(Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupby('question_id')->distinct()->get());
+     *
+     * @return int
+     */
     public function getAnswerCount()
     {
         $counter = [];
-        foreach( $this->getMandatoryQuestions() as $question ) {
-            /* See: http://stackoverflow.com/questions/28651727/laravel-eloquent-distinct-and-count-not-working-properly-together */
-            /* Does not work */ //$counter[] = Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupBy( 'question_id' )->count();
-            /* Works as well */ //$counter[] = count(Answer::where('question_id', $question->id)->where('plan_id', $this->id)->where('user_id', $this->user_id)->groupby('question_id')->distinct()->get());
+        foreach ($this->getMandatoryQuestions() as $question) {
             $counter[] = Answer::where('question_id', $question->id)->where('survey_id', $this->id)->distinct('question_id')->count('question_id');
         }
-        $count = array_sum( $counter );
-        return $count;
+        return array_sum($counter);
     }
 }

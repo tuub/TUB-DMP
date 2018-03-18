@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -10,17 +11,35 @@ use App\Http\Requests\Admin\UpdateTemplateRequest;
 use App\Library\Notification;
 use App\Library\Sanitizer;
 use App\Library\ImageFile;
+use Illuminate\Support\Facades\Storage;
 
+
+/**
+ * Class TemplateController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class TemplateController extends Controller
 {
     protected $template;
 
+
+    /**
+     * TemplateController constructor.
+     *
+     * @param Template $template
+     */
     public function __construct(Template $template)
     {
         $this->template = $template;
     }
 
 
+    /**
+     * Renders the templates index.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $templates = $this->template->get();
@@ -28,6 +47,11 @@ class TemplateController extends Controller
     }
 
 
+    /**
+     * Renders create form for a new template.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $template = new $this->template;
@@ -37,6 +61,13 @@ class TemplateController extends Controller
     }
 
 
+    /**
+     * Stores a new template.
+     *
+     * @uses ImageFile::createVersions()
+     * @param CreateTemplateRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(CreateTemplateRequest $request)
     {
         /* The return route */
@@ -52,17 +83,22 @@ class TemplateController extends Controller
 
         /* The validation */
 
-        /* The operation */
-        //$data['name'] = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10);
+        /**
+         * The operation
+         *
+         * For testing, uncomment the following random filename generator:
+         * $data['name'] = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10);
+         */
         $template = $op = $this->template->create($data);
+
         if ($logo_file) {
             $options = [
-                'storage_path' => 'images/logo/',
+                'disk' => 'public_logo',
                 'identifier' => $template->id,
-                'extension' => $logo_file->extension(),
+                'extension' => $logo_file->extension()
             ];
 
-            $template->logo_file = $options['storage_path'] . $options['identifier'] . '/';
+            $template->logo_file = Storage::disk($options['disk'])->url('/') . $options['identifier'] . '/';
             $template->save();
 
             ImageFile::createVersions($logo_file, $options);
@@ -80,21 +116,32 @@ class TemplateController extends Controller
     }
 
 
-    public function show($id)
-    {
-        //
-    }
-
-
+    /**
+     * Renders the edit form for the given template ID.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
-        $template = $this->template->find($id);
+        $template = $this->template->findOrFail($id);
         $return_route = 'admin.dashboard';
 
         return view('admin.template.edit', compact('template','return_route'));
     }
 
 
+    /**
+     * Updates template with the given id.
+     *
+     * See https://github.com/laravel/framework/issues/13610#issuecomment-374750518
+     *
+     * @uses ImageFile::deleteVersions()
+     * @uses ImageFile::createVersions()
+     * @param UpdateTemplateRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateTemplateRequest $request, $id)
     {
         /* The return route */
@@ -115,21 +162,22 @@ class TemplateController extends Controller
         $template = $this->template->findOrFail($id);
 
         /* The operation */
-        if (null !== $delete_logo_file) {
+        if ($delete_logo_file !== null) {
             ImageFile::deleteVersions($logo_file, ['disk' => 'public_logo']);
             $data['logo_file'] = null;
         }
         if ($logo_file) {
 
             $options = [
-                'storage_path' => 'images/logo/',
+                'disk' => 'public_logo',
                 'identifier' => $template->id,
-                'extension' => $logo_file->extension(),
+                'extension' => $logo_file->extension()
             ];
 
-            ImageFile::deleteVersions($logo_file, ['disk' => 'public_logo']);
+            ImageFile::deleteVersions($logo_file, $options);
             ImageFile::createVersions($logo_file, $options);
-            $data['logo_file'] = $options['storage_path'] . $options['identifier'] . '/';
+
+            $data['logo_file'] = Storage::disk($options['disk'])->url('/') . $options['identifier'] . '/';
         }
 
         $op = $template->update($data);
@@ -146,6 +194,13 @@ class TemplateController extends Controller
     }
 
 
+    /**
+     * Deletes template with the given ID.
+     *
+     * @param Request $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Request $request, $id)
     {
         /* Get object */
@@ -170,6 +225,15 @@ class TemplateController extends Controller
     }
 
 
+    /**
+     * Copies the template with the given ID (in the request).
+     *
+     * @todo: Documentation
+     *
+     * @uses Template::copy()
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function copy(Request $request)
     {
         $template = $this->template->findOrFail($request->id);

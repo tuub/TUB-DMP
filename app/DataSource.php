@@ -1,10 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\Uuids;
 
+
+/**
+ * Class DataSource
+ *
+ * @package App
+ */
 class DataSource extends Model
 {
     use Uuids;
@@ -26,16 +33,33 @@ class DataSource extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * 1 DataSource for many Project, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function projects()
     {
-        return $this->hasMany('App\Project');
+        return $this->hasMany('App\Project::class');
     }
 
+
+    /**
+     * 1 DataSource has many DataSourceNamespace, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function namespaces()
     {
         return $this->hasMany(DataSourceNamespace::class);
     }
 
+
+    /**
+     * 1 DataSource has many DataSourceMapping, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function mappings()
     {
         return $this->hasMany(DataSourceMapping::class);
@@ -47,11 +71,23 @@ class DataSource extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Returns type attribute in uppercase form.
+     *
+     * @param string $value
+     * @return string
+     */
     public function getTypeAttribute($value) {
         return strtoupper($value);
     }
 
 
+    /**
+     * Queries and returns DataSource by given identifier string.
+     *
+     * @param string $identifier
+     * @return DataSource
+     */
     public static function getByIdentifier($identifier) {
         return self::where('identifier', $identifier)->first();
     }

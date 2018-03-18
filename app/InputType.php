@@ -1,10 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\Uuids;
 
+
+/**
+ * Class InputType
+ *
+ * @package App
+ */
 class InputType extends Model
 {
     use Uuids;
@@ -25,10 +32,18 @@ class InputType extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * 1 InputType belongs to many ContentType
+     *
+     * @todo: Really?
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function content_type()
     {
-        $this->belongsToMany(ContentType::class);
+        return $this->belongsToMany(ContentType::class);
     }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +51,15 @@ class InputType extends Model
     |--------------------------------------------------------------------------
     */
 
-    public static function getCategory( $input_type_method )
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @param string $input_type_method
+     * @return string
+     */
+    public static function getCategory($input_type_method)
     {
         return self::where('identifier', $input_type_method)->pluck('category');
     }

@@ -1,29 +1,30 @@
 <?php
-
-// TODO: CLEANUP!!! GET THOSE EAGER LOADED RELATIONS RUNNING!
+declare(strict_types=1);
 
 namespace App;
 
+use App\Exceptions\ConfigException;
 use App\Library\Traits\Uuids;
 use Baum\Node;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
 class Project extends Node
 {
-    use Uuids;
+    // =======================================================================//
+    // ! Model Options                                                        //
+    // =======================================================================//
 
-    /*
-	|--------------------------------------------------------------------------
-	| Model Options
-	|--------------------------------------------------------------------------
-	*/
+    use Uuids;
 
     protected $table        = 'projects';
     public    $incrementing = false;
-    public    $timestamps   = true;
     protected $dates = [
         'created_at',
         'updated_at',
@@ -48,24 +49,17 @@ class Project extends Node
     ];
     protected $casts = [
         'id' => 'string',
-        'parent_id' => 'string',
+        'parent_id' => 'string'
     ];
 
-    /* Nested Sets */
-    protected $parentColumn = 'parent_id';
-    protected $leftColumn   = 'lft';
-    protected $rightColumn  = 'rgt';
-    protected $depthColumn  = 'depth';
-    protected $orderColumn  = null;
-    protected $scoped       = [];
+    // =======================================================================//
+    // ! Model Relationships                                                  //
+    // =======================================================================//
 
-    /*
-	|--------------------------------------------------------------------------
-	| Model Relationships
-	|--------------------------------------------------------------------------
-	*/
 
     /**
+     * User relation
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
@@ -75,7 +69,9 @@ class Project extends Node
 
 
     /**
-     * @return mixed
+     * Plan relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function plans()
     {
@@ -84,7 +80,9 @@ class Project extends Node
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Plan relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function data_source()
     {
@@ -93,7 +91,9 @@ class Project extends Node
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * ProjectMetadata relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function metadata()
     {
@@ -101,45 +101,36 @@ class Project extends Node
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Model Scopes
-    |--------------------------------------------------------------------------
-    */
+    // =======================================================================//
+    // ! Model Methods                                                        //
+    // =======================================================================//
 
     /**
-     * @param $query
-     * @param $flag
+     * Get metadatum for given identifier.
      *
-     * @return mixed
-     */
-    public function scopeIsPrefilled($query, $flag)
-    {
-        return $query->where('is_prefilled', $flag);
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Model Methods
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * @param String $attribute
+     * Queries the relation and returns data and content type. Then calls formatter and returns
+     * formatted collection.
+     *
+     * @uses ProjectMetadata::formatForOutput  To set the formatting for the returning collection.
+     *
+     * @param string $identifier  A metadata identifier
      *
      * @return Collection|null
      */
-    public function getMetadata($attribute)
+   public function getMetadata($identifier)
     {
         $data = null;
-        $content_type = new ContentType();
+        $content_type = new ContentType;
 
         if ($this->metadata->count()) {
-            foreach ($this->metadata as $metadata) {
-                if ($metadata->metadata_registry->identifier == $attribute) {
-                    $data = collect($metadata->content);
-                    $content_type = $metadata->metadata_registry->content_type;
+
+            /* @var $metadata ProjectMetadata[] */
+            $metadata = $this->metadata;
+
+            foreach ($metadata as $metadatum) {
+                if ($metadatum->metadata_registry->identifier === $identifier) {
+                    $data = collect($metadatum->content);
+                    $content_type = $metadatum->metadata_registry->content_type;
                 }
             }
 
@@ -151,46 +142,66 @@ class Project extends Node
 
 
     /**
-     * @param String $attribute
+     * Get metadata title for given identifier.
      *
-     * @return Collection
+     * For usage in labels.
+     * If present, this queries the relation first. Otherwise uses language file.
+     *
+     * @todo Reinvestigate relation. Right now, it usually falls back to the language file.
+     *
+     * @param string $identifier  A metadata identifier
+     *
+     * @return string|null
      */
-    public function getMetadataLabel($attribute)
+    public function getMetadataLabel($identifier) : ?string
     {
-        $data = null;
+        /*
         if ($this->metadata->count()) {
             foreach ($this->metadata as $metadata) {
-                if ($metadata->metadata_registry->identifier == $attribute) {
+                if ($metadata->metadata_registry->identifier === $identifier) {
                     $data = $metadata->metadata_registry->title;
                 }
             }
         } else {
-            $data = trans('project.metadata.' . $attribute);
-        }
-
-        return trans('project.metadata.' . $attribute);
+        */
+        return trans('project.metadata.' . $identifier);
     }
 
 
+
     /**
-     * Renders a status string based on begin and end date.
+     * Get status string based on begin and end date.
+     *
+     * Checks for a project's metadata values begin & end.
+     * If present, determines if the project is still running by date comparison.
+     * Returns string from language file.
+     *
+     * @uses Project::getMetadata()
      *
      * @return string
      */
-    public function getStatusAttribute()
+    public function getStatusAttribute() : ?string
     {
-        if ($this->getMetadata('begin') && $this->getMetadata('begin')->count()) {
-            if (Carbon::parse($this->getMetadata('begin')->first()) > (Carbon::now())) {
-                $status = trans('project.status.not_started');
-            } else {
-                $status = trans('project.status.running');
+        $status = null;
+
+        if ($this->getMetadata('begin')) {
+            $date = $this->getMetadata('begin')->first();
+            if ($date !== null) {
+                if (Carbon::parse($date) > Carbon::now()) {
+                    $status = trans('project.status.not_started');
+                } else {
+                    $status = trans('project.status.running');
+                }
             }
 
-            if ($this->getMetadata('end') && $this->getMetadata('end')->count()) {
-                if (Carbon::parse($this->getMetadata('end')->first()) > (Carbon::now())) {
-                    $status = trans('project.status.running');
-                } else {
-                    $status = trans('project.status.ended');
+            if ($this->getMetadata('end')) {
+                $date = $this->getMetadata('end')->first();
+                if ($date !== null) {
+                    if (Carbon::parse($date) > Carbon::now()) {
+                        $status = trans('project.status.running');
+                    } else {
+                        $status = trans('project.status.ended');
+                    }
                 }
             }
         } else {
@@ -201,54 +212,58 @@ class Project extends Node
     }
 
 
-    public function getMetadataRegistryIdByIdentifier($identifier)
+    /**
+     * Queries metadata registry id for given identifier.
+     *
+     * Looks in namespace "project".
+     *
+     * @uses MetadataRegistry
+     *
+     * @param string $identifier  Metadata identifier, e.g. 'title'
+     *
+     * @return string|null
+     */
+    public function getMetadataRegistryIdByIdentifier($identifier) : ?string
     {
-        $data = null;
-
-        /*
-        if ($this->metadata->count()) {
-            foreach ($this->metadata as $metadata) {
-                if ($metadata->metadata_registry->identifier == $identifier) {
-                    $data = $metadata->metadata_registry->id;
-                }
-            }
-
-            \AppHelper::varDump($data);
-
-        } else {
-        */
         $data = MetadataRegistry::where([
             'namespace'  => 'project',
-            'identifier' => $identifier,
+            'identifier' => $identifier
         ])->first()['id'];
-
-        //}
 
         return $data;
     }
 
 
     /**
-     * @param $data
+     * Updates the project with the given metadata.
      *
+     * @uses ProjectMetadata::saveAll()
+     * @used-by Project::importFromDataSource()
+     * @param $data
      * @return bool
      */
-    public function saveMetadata($data)
+    public function saveMetadata($data) : bool
     {
         if ($data) {
             ProjectMetadata::saveAll($this, $data);
-
             return true;
-        } else {
-            throw new NotFoundHttpException;
         }
+
+        return false;
     }
 
 
-    public function setImportStatus($status = true)
+    /**
+     * Sets the given import status of the project
+     *
+     * @param bool $status
+     * @return bool
+     */
+    public function setImportStatus($status = null) : bool
     {
-        if (is_bool($status)) {
-            $this->update(['imported' => $status]);
+        if (\is_bool($status)) {
+            $this->imported = $status;
+            $this->save();
 
             return true;
         }
@@ -257,7 +272,12 @@ class Project extends Node
     }
 
 
-    public function setImportTimestamp()
+    /**
+     * Sets the import timestamp of the project to current datetime.
+     *
+     * @return bool
+     */
+    public function setImportTimestamp() : bool
     {
         $this->update(['imported_at' => Carbon::now()]);
 
@@ -265,9 +285,22 @@ class Project extends Node
     }
 
 
-    public static function lookupDatasource($identifier)
+    /**
+     * Lookup any given project identifier in data sources.
+     *
+     * This loops and queries all data sources (e.g. Database) and its namespaces (e.g. Tables) for
+     * the given identifier and returns an array with json-encoded return values.
+     *
+     * In Demo mode, the data source is always set to "odbc-demo" (see config/database.php)
+     *
+     * @todo Is not ready for other data sources or APIs than TUB's IVMC.
+     *
+     * @param string $identifier  A project identifier
+     * @return array
+     */
+    public static function lookupDataSource($identifier) : array
     {
-        /* Get the datasource */
+        /* @var $data_sources DataSource[] */
         $data_sources = DataSource::get();
         $external_data = [];
 
@@ -288,80 +321,109 @@ class Project extends Node
     }
 
 
-    public function hasValidIdentifier()
+    /**
+     * Validate current project identifier.
+     *
+     * Configuration from .env file: PROJECT_IDENTIFIER_PATTERN
+     *
+     * @return bool  False if not matching pattern or no config provided
+     */
+    public function hasValidIdentifier() : bool
     {
-        if (env('PROJECT_IDENTIFIER_PATTERN')) {
-            if (preg_match(env('PROJECT_IDENTIFIER_PATTERN'), $this->identifier)) {
-                return true;
+        return env('PROJECT_IDENTIFIER_PATTERN') &&
+            preg_match(env('PROJECT_IDENTIFIER_PATTERN'), $this->identifier);
+    }
+
+
+    /**
+     * Generate a project identifier.
+     *
+     * Configuration from .env file: PROJECT_IDENTIFIER_RANDOM_PREFIX, PROJECT_IDENTIFIER_RANDOM_LENGTH
+     *
+     * @todo: NULL return value would violate the database constraint for identifier
+     *
+     * @return string|null  The generated random identifier or null if no config provided.
+     */
+    public static function generateRandomIdentifier() : ?string
+    {
+        $identifier = null;
+
+        try {
+            if (env('PROJECT_IDENTIFIER_RANDOM_PREFIX') && env('PROJECT_IDENTIFIER_RANDOM_LENGTH')) {
+                $min = 1 . str_repeat(0, env('PROJECT_IDENTIFIER_RANDOM_LENGTH')-1);
+                $max = str_repeat(9, env('PROJECT_IDENTIFIER_RANDOM_LENGTH'));
+                $identifier = env('PROJECT_IDENTIFIER_RANDOM_PREFIX') . random_int($min, $max);
+            } else {
+                throw new ConfigException('Missing config variables');
             }
+        } catch (ConfigException $e) {
+            $e->report();
+            //$e->render();
         }
 
-        return false;
+        return $identifier;
     }
 
 
-    public static function generateRandomIdentifier()
+    /**
+     * Validate any given project identifier.
+     *
+     * Configuration from .env file: PROJECT_IDENTIFIER_PATTERN
+     *
+     * @since 2.0
+     * @param string $identifier  A project identifier
+     * @return bool  false if not matching pattern or no config provided
+     */
+    public static function isValidIdentifier($identifier) : bool
     {
-        if (env('PROJECT_IDENTIFIER_RANDOM_PREFIX') && env('PROJECT_IDENTIFIER_RANDOM_LENGTH')) {
-            $min = 1 . str_repeat(0, env('PROJECT_IDENTIFIER_RANDOM_LENGTH')-1);
-            $max = str_repeat(9, env('PROJECT_IDENTIFIER_RANDOM_LENGTH'));
-            return env('PROJECT_IDENTIFIER_RANDOM_PREFIX') . mt_rand($min, $max);
-        }
-
-        return null;
+        return env('PROJECT_IDENTIFIER_PATTERN') &&
+            preg_match(env('PROJECT_IDENTIFIER_PATTERN'), $identifier);
     }
 
-    public static function isValidIdentifier($identifier)
+
+    /**
+     * Approve pending project.
+     *
+     * Starts the data source import and sets the project active
+     *
+     * @since 2.0
+     * @return bool
+     */
+    public function approve() : bool
     {
-        if (env('PROJECT_IDENTIFIER_PATTERN')) {
-            if (preg_match(env('PROJECT_IDENTIFIER_PATTERN'), $identifier)) {
-                return true;
-            }
-        }
+        $this->is_active = true;
 
-        return false;
+        return $this->save();
     }
 
 
-    public function setDataSource($identifier)
-    {
-        $this->data_source_id = $this->data_source()->where('identifier', $identifier)->first()['id'];
-
-        return true;
-    }
-
-
-    public function approve()
-    {
-        $this->importFromDataSource();
-        $this->update(['is_active' => true]);
-
-        return true;
-    }
-
-
+    /**
+     * @todo Documentation
+     *
+     * @return bool
+     */
     public function importFromDataSource()
     {
-        /* Determine database connection & data source */
         if (env('DEMO_MODE')) {
-            $connection = 'odbc-demo';
-            $data_source = $this->data_source->where('identifier', 'ivmc')->first();
+            $connection = env('PROJECT_DEMO_CONNECTION');
+            $this->data_source_id = DataSource::where('identifier', env('PROJECT_DEMO_DATASOURCE'))->first()->id;
         } else {
-            $connection = 'odbc';
-            $data_source = $this->data_source;
+            $connection = env('ODBC_DRIVER');
         }
 
-        if ($data_source) {
-
+        if ($this->data_source && env('PROJECT_ALLOW_DATASOURCE_IMPORT')) {
+            /* @var $namespaces DataSourceNamespace[] */
             $namespaces = $this->data_source->namespaces;
-
+            /* @var $metadata_fields MetadataRegistry[] */
             $metadata_fields = MetadataRegistry::where('namespace', 'project')->get();
+
             foreach ($metadata_fields as $metadata_field) {
 
                 $content_type = $metadata_field->content_type;
                 $required = $content_type->structure;
 
                 foreach ($namespaces as $namespace) {
+                    /* @var $mappings DataSourceMapping[] */
                     $mappings = $this->data_source->mappings()
                         ->where('data_source_id', $this->data_source->id)
                         ->where('data_source_namespace_id', $namespace->id)
@@ -371,72 +433,99 @@ class Project extends Node
                     $i = 0;
                     $new_item = [];
 
+                    /* In Demo Mode we always grab the example dataset */
+                    if (env('DEMO_MODE')) {
+                        $identifier = env('PROJECT_DEMO_IDENTIFIER');
+                    } else {
+                        $identifier = $this->identifier;
+                    }
+
                     foreach ($mappings as $mapping) {
                         /* Get the external data by source */
-			            $external_data = DB::connection($connection)->table($namespace->name)
+                        /* @var $external_data Collection[] */
+                        $external_data = DB::connection($connection)->table($namespace->name)
                             ->select($mapping->data_source_entity[0])
-                            ->where('Projekt_Nr', 'LIKE', $this->identifier)
+                            ->where('Projekt_Nr', 'LIKE', $identifier)
                             ->get();
 
-			            /* Convert to array */
+                        /* Convert to array */
                         $external_data = $external_data->map(function ($x) { return (array)$x; })->toArray();
 
+                        /* @var $target_content Collection[] */
                         $target_content = $mapping->target_content;
 
-                        switch ($content_type->identifier) {
-                            case 'person':
-                                $k = 0;
-                                foreach ($external_data as $external_datum) {
-                                    foreach ($target_content as $target_content_key => $target_content_value) {
-                                        if ($target_content_value === 'CONTENT') {
-                                            $new_item[ $k ][ $target_content_key ] = $external_datum[ $mapping->data_source_entity[0] ];
-                                        }
-                                    }
-                                    $k++;
-                                }
-                                break;
-                            default:
+                        if ($content_type->identifier === 'person') {
+                            $k = 0;
+                            foreach ($external_data as $external_datum) {
                                 foreach ($target_content as $target_content_key => $target_content_value) {
                                     if ($target_content_value === 'CONTENT') {
-                                        foreach ($external_data as $external_datum) {
-                                            $target_content[ $target_content_key ] = $external_datum[ $mapping->data_source_entity[0] ];
-                                            $target_content = array_filter($target_content);
-                                            $new_item[ $i ] = $target_content;
-                                            $i++;
-                                        }
+                                        $new_item[ $k ][ $target_content_key ] = $external_datum[ $mapping->data_source_entity[0] ];
                                     }
                                 }
-                                break;
+                                $k++;
+                            }
+                        } else {
+                            foreach ($target_content as $target_content_key => $target_content_value) {
+                                if ($target_content_value === 'CONTENT') {
+                                    foreach ($external_data as $external_datum) {
+                                        $target_content[ $target_content_key ] = $external_datum[ $mapping->data_source_entity[0] ];
+                                        $target_content = array_filter($target_content);
+                                        $new_item[ $i ] = $target_content;
+                                        $i++;
+                                    }
+                                }
+                            }
                         }
                     }
+
 
                     $new_full_item = [];
 
                     foreach ($new_item as $item) {
-                        $item = $item + array_diff_key($required, $item);
+                        $item += array_diff_key($required, $item);
                         $new_full_item[] = $item;
                     }
 
-                    if (count($new_full_item) > 0) {
+                    if (\count($new_full_item) > 0) {
+
+                        /* @todo: refactor call_user_func_array calls. */
+
+                        //\Log::info('BEFORE');
+                        //\Log::info($new_full_item);
 
                         switch ($content_type->identifier) {
                             case 'text_simple':
-                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                $new_full_item = \call_user_func_array('array_merge', $new_full_item);
                                 break;
                             case 'organization':
-                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                $new_full_item = \call_user_func_array('array_merge', $new_full_item);
                                 break;
                             case 'date':
-                                $new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                $new_full_item = \call_user_func_array('array_merge', $new_full_item);
                                 break;
                             default:
-                                //$new_full_item = call_user_func_array('array_merge', $new_full_item);
+                                //$new_full_item = \call_user_func_array('array_merge', $new_full_item);
                                 break;
                         }
 
-                        $data = [$metadata_field->identifier => $new_full_item];
+                        /*
+                        // Recursively iterate the array iterator
+                        $new_full_item_obj = new \RecursiveIteratorIterator(
+                            new \RecursiveArrayIterator($new_full_item)
+                        );
 
-			            $this->saveMetadata($data);
+                        // Copy the iterator into an array
+                        $new_full_item = iterator_to_array($new_full_item_obj, false);
+                        */
+
+                        //\Log::info('AFTER');
+                        //\Log::info($new_full_item);
+
+                        $data = [
+                            $metadata_field->identifier => $new_full_item
+                        ];
+
+                        $this->saveMetadata($data);
                     }
                 }
             }
@@ -445,18 +534,28 @@ class Project extends Node
             $this->setImportTimestamp();
         }
 
-        return $this;
+        return true;
     }
 
 
-    public function hasParent()
+    /**
+     * Checks parent relation.
+     *
+     * @return bool  false if parent_id is null
+     */
+    public function hasParent() : bool
     {
         return $this->parent_id ? true : false;
     }
 
 
+    /**
+     * Gets parent relation.
+     *
+     * @return Model|null  The parent project or null if not found
+     */
     public function getParent()
     {
-        return Project::where('id', $this->parent_id)->first();
+        return $this->where('id', $this->parent_id)->first();
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -12,6 +14,12 @@ use App\Http\Requests\Admin\UpdateQuestionRequest;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
+
+/**
+ * Class QuestionController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class QuestionController extends Controller {
 
     protected $question;
@@ -19,6 +27,15 @@ class QuestionController extends Controller {
     protected $section;
     protected $content_type;
 
+
+    /**
+     * QuestionController constructor.
+     *
+     * @param Question    $question
+     * @param Template    $template
+     * @param Section     $section
+     * @param ContentType $content_type
+     */
     public function __construct( Question $question, Template $template, Section $section, ContentType $content_type )
     {
         $this->question = $question;
@@ -28,14 +45,31 @@ class QuestionController extends Controller {
     }
 
 
+    /**
+     * Renders the questions for the given section object.
+     *
+     * @param Section $section
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Section $section)
     {
-        $questions = $this->question->roots()->where('section_id', $section->id)->orderBy('order', 'asc')->get();
+        $questions = $this->question->roots()->where('section_id', $section->id)->orderBy('order')->get();
         $template = $section->template;
+
         return view('admin.question.index', compact('section', 'questions', 'template'));
     }
 
 
+    /**
+     * Renders the create form for the given section (in request).
+     *
+     * @todo: Refactor so it does not need a request var here!
+     *
+     * @uses Question::getNextOrderPosition()
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create(Request $request)
     {
         $section = $this->section->find($request->section);
@@ -45,10 +79,17 @@ class QuestionController extends Controller {
         $template = $section->template;
         $content_types = $this->content_type->active()->get()->pluck('title', 'id');
         $position = $this->question->getNextOrderPosition($section);
+
         return view('admin.question.create', compact('question','template', 'section', 'content_types', 'position'));
     }
 
 
+    /**
+     * Stores a new question.
+     *
+     * @param CreateQuestionRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(CreateQuestionRequest $request)
     {
         /* Clean input */
@@ -72,12 +113,12 @@ class QuestionController extends Controller {
     }
 
 
-    public function show($id)
-    {
-        //
-    }
-
-
+    /**
+     * Renders the edit form for the given question ID.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $question = $this->question->find($id);
@@ -90,6 +131,15 @@ class QuestionController extends Controller {
     }
 
 
+    /**
+     * Updates a question with the given ID.
+     *
+     * Description
+     *
+     * @param UpdateQuestionRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateQuestionRequest $request, $id)
     {
         /* Clean input */
@@ -112,12 +162,19 @@ class QuestionController extends Controller {
         }
         $notification->toSession($request);
 
-        $this->question->rebuild(false);
+        $this->question->rebuild();
 
         return redirect()->route('admin.section.questions.index', $question->section_id);
     }
 
 
+    /**
+     * Deletes a question with the given ID.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Request $request, $id)
     {
         /* Get object */
@@ -143,7 +200,7 @@ class QuestionController extends Controller {
      *
      * @uses \App\Question::updatePositions
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|null
      */
     public function sort(Request $request)
     {
@@ -163,6 +220,6 @@ class QuestionController extends Controller {
             return $notification->toJson($request);
         }
 
-        abort(403, 'Direct access is not allowed.');
+        return null;
     }
 }

@@ -13,7 +13,7 @@
         'user' => $project->user,
         'mode' => 'edit',
         'action' => 'update',
-        'method' => 'PUT',
+        'method' => 'PUT'
     ])
 
 @stop

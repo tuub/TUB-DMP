@@ -14,7 +14,7 @@ config/ide-helper.php
 .gitattributes
 bootstrap/compiled.php
 database/seeds/Fake*
-_ide_helper.php
+storage/_ide_helper.php
 *.meta.php
 *.log
 yarn.lock

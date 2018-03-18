@@ -51,6 +51,7 @@ return [
         'public_logo' => [
             'driver' => 'local',
             'root'   => public_path('images/logo'),
+            'url' => '/images/logo/'
         ],
 
         'ftp' => [

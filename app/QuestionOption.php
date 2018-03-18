@@ -1,10 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\Uuids;
 
+
+/**
+ * Class QuestionOption
+ *
+ * @package App
+ */
 class QuestionOption extends Model
 {
     use Uuids;
@@ -25,6 +32,11 @@ class QuestionOption extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * 1 QuestionOption belongs to 1 Question, 1:1
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function question()
     {
         return $this->belongsTo(Question::class);
@@ -36,37 +48,54 @@ class QuestionOption extends Model
     |--------------------------------------------------------------------------
     */
 
-    public static function exists( $option_id )
+    /**
+     * Queries QuestionOption for existance.
+     *
+     * @param string $option_id
+     * @return bool
+     */
+    public static function exists($option_id)
     {
-        $exists = QuestionOption::where('id', '=', $option_id)->exists();
-        return $exists;
+        return self::where('id', '=', $option_id)->exists();
     }
 
-    public static function getOptionText( $option_id )
+
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @param string $option_id
+     * @return string|null
+     */
+    public static function getOptionText($option_id)
     {
-        $option = QuestionOption::where( 'id', '=', $option_id )->first();
-        if( $option )
-        {
+        $option = self::where( 'id', $option_id )->first();
+        if ($option) {
             return $option->text;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
+
+    /**
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @param $question
+     * @return null
+     */
     public static function getDefaultValue( $question )
     {
-        $default_option = QuestionOption::where( 'question_id', '=', $question['id'] )->where( 'default', '=', 1 )->first();
+        $default_option = self::where( 'question_id', '=', $question['id'] )->where( 'default', '=', 1 )->first();
 
-        if( $default_option )
-        {
+        if ($default_option) {
             return $default_option->id;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
 }

@@ -173,8 +173,7 @@ Route::group(['middleware' => 'auth'], function()
         Route::post( '/project/{id}/reject', 'Admin\ProjectController@reject', ['as' => 'admin'])->name('admin.project.reject');
 
         Route::get( '/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', ['as' => 'admin'] )->name('admin.log_viewer');
-        //Route::get( '/project/{project_number}/raw_ivmc', 'Admin\ProjectController@raw_ivmc', ['as' => 'admin'])->name('admin.raw_ivmc');
-        Route::get( '/project/random_ivmc', 'Admin\ProjectController@random_ivmc', ['as' => 'admin'])->name('admin.random_ivmc');
+        Route::get( '/project/random_identifier', 'Admin\ProjectController@random_identifier', ['as' => 'admin'])->name('admin.random_identifier');
 
         /* REST ENTITIES */
         Route::resource( 'template', 'Admin\TemplateController', ['as' => 'admin']  );

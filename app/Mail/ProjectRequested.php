@@ -9,11 +9,11 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class ProjectRejected
+ * Class ProjectRequested
  *
  * @package App\Mail
  */
-class ProjectRejected extends Mailable
+class ProjectRequested extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,12 +24,13 @@ class ProjectRejected extends Mailable
      * Create a new message instance.
      *
      * @param Project $project
+     *
      * @return void
      */
     public function __construct(Project $project)
     {
         $this->project = $project;
-        $this->subject = '[' . env('APP_NAME') . '] ' . trans('admin/email.project.rejected');
+        $this->subject = '[' . env('APP_NAME') . '] ' . trans('admin/email.project.requested');
     }
 
 
@@ -40,9 +41,10 @@ class ProjectRejected extends Mailable
      */
     public function build()
     {
-        return $this->text('emails.project.rejected')
+        return $this->text('emails.project.requested')
             ->subject($this->subject)
-            ->from( env('ADMIN_MAIL_ADDRESS'), env('ADMIN_MAIL_NAME') )
-            ->replyTo( env('ADMIN_MAIL_ADDRESS'), env('ADMIN_MAIL_NAME') );
+            ->to(env('ADMIN_MAIL_ADDRESS'), env('ADMIN_MAIL_NAME'))
+            ->from(env('SERVER_MAIL_ADDRESS'), env('SERVER_NAME'))
+            ->replyTo($this->project->user->email, $this->project->user->name);
     }
 }

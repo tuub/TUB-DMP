@@ -1,4 +1,4 @@
-@if( $recipient['name'] )
+@if($recipient['name'])
     Dear {!! $recipient['name'] !!},
 @else
     Hello,
@@ -6,9 +6,9 @@
 
 In the attachment please find the Data Management Plan "{!! $plan->title !!}" (Version {!! $plan->version !!}).
 
-@if( $sender['message'] )
-Additional Message:
-{!! $sender['message'] !!}
+@if($msg)
+    Additional Message:
+    {!! $msg !!}
 @endif
 
 Best regards,

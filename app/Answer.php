@@ -1,22 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
-use App\Survey;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Library\HtmlOutputFilter;
 use App\Library\FormOutputFilter;
 use App\Library\PdfOutputFilter;
 use App\Library\Traits\Uuids;
 
-use Illuminate\Support\Facades\Log;
-/*
-use AnswerInterface;
-implements AnswerInterface
-*/
 
+/**
+ * Class Answer
+ *
+ * @todo use AnswerInterface; implements AnswerInterface
+ *
+ * @package App
+ */
 class Answer extends Model
 {
     use Uuids;
@@ -29,10 +30,9 @@ class Answer extends Model
 
     protected $table    = 'answers';
     public $incrementing = false;
-    public $timestamps  = true;
     protected $guarded  = [];
     protected $casts    = [
-        'value' => 'array',
+        'value' => 'array'
     ];
 
     /*
@@ -41,11 +41,22 @@ class Answer extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * n:1 All answers belong to a question
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function question()
     {
         return $this->belongsTo(Question::class);
     }
 
+
+    /**
+     * n:1 All answers belong to a survey
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function survey()
     {
         return $this->belongsTo(Survey::class);
@@ -57,10 +68,24 @@ class Answer extends Model
     |--------------------------------------------------------------------------
     */
 
-    public static function get( Survey $survey = null, Question $question = null, $format = 'html' )
+    /**
+     * Queries and renders answer value for given survey and given question
+     * in a specific format.
+     *
+     * @param Survey|null   $survey
+     * @param Question|null $question
+     * @param string|null   $format
+     * @return Collection|null|string
+     */
+    public static function get(Survey $survey = null, Question $question = null, string $format = null)
     {
+        $format = $format ?? 'html';
+        $answers = null;
         $output = null;
-        $answers = Answer::check( $survey, $question );
+
+        if ($survey && $question) {
+            $answers = self::check($survey, $question);
+        }
 
         if ($answers) {
             switch ($format) {
@@ -74,15 +99,30 @@ class Answer extends Model
                     $output = new PdfOutputFilter($answers, $question->content_type);
                     break;
             }
+
+            return $output->render();
         }
 
-        return $output->render();
+        return $output;
     }
 
 
+    /**
+     * What does it do
+     *
+     * Description
+     *
+     * * @param Survey $survey
+     * @param Question $question
+     *  About Param
+     *
+     * @return mixed
+     *  About Return Value
+     *
+     */
     public static function check( Survey $survey, Question $question )
     {
-        $result = Answer::where([
+        $result = self::where([
             'survey_id' => $survey->id,
             'question_id' => $question->id
         ])->get();
@@ -91,28 +131,33 @@ class Answer extends Model
     }
 
 
-    public static function saveAll( Survey $survey, $data )
+    /**
+     * Replaces the survey's existing answers with new answers with the given data
+     *
+     * Description
+     *
+     * @uses self::formatForInput()
+     * @param Survey $survey
+     * @param array  $data
+     * @return bool
+     */
+    public static function saveAll( Survey $survey, array $data )
     {
         self::where('survey_id', $survey->id)->delete();
 
         foreach ($data as $question_id => $answer_value) {
-            if (is_array($answer_value)) {
-                $answer_value = array_filter($answer_value, 'strlen');
-                $answer = self::formatForInput(
-                    collect($answer_value),
+            if (\is_array($answer_value)) {
+                $answer_value = self::formatForInput(
+                    collect(array_filter($answer_value, '\strlen')),
                     Question::find($question_id)->content_type
                 );
-            } else {
-                // TODO: Ever the case?
-                $answer = $answer_value;
             }
 
             self::create([
                 'survey_id'   => $survey->id,
                 'question_id' => $question_id,
-                'value'       => $answer
+                'value'       => $answer_value
             ]);
-
         }
 
         return true;
@@ -120,19 +165,20 @@ class Answer extends Model
 
 
     /**
-     * @param EloquentCollection $answers
-     * @param ContentType $content_type
-     * @return EloquentCollection|Collection
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @param Collection    $data
+     * @param ContentType   $content_type
+     * @return Collection
      */
-    public static function formatForOutput( EloquentCollection $answers, ContentType $content_type )
+    public static function formatForOutput(Collection $data, ContentType $content_type) : ?Collection
     {
-        $result = collect([]);
-        switch ($content_type->identifier) {
-            case 'list':
-                $result = collect([$answers->implode(',', 'value')]);
-                break;
-            default:
-                $result = $answers;
+        if ($content_type->identifier === 'list') {
+            $result = collect([$data->implode(',', 'value')]);
+        } else {
+            $result = $data;
         }
 
         return $result;
@@ -140,19 +186,20 @@ class Answer extends Model
 
 
     /**
-     * @param Collection $answers
-     * @param ContentType $content_type
-     * @return array|Collection
+     * What does it do
+     *
+     * @todo: Documentation
+     *
+     * @param Collection    $data
+     * @param ContentType   $content_type
+     * @return Collection
      */
-    public static function formatForInput( Collection $answers, ContentType $content_type )
+    public static function formatForInput(Collection $data, ContentType $content_type) : ?Collection
     {
-        $result = collect([]);
-        switch ($content_type->identifier) {
-            case 'list':
-                $result = explode(',', $answers->first());
-                break;
-            default:
-                $result = $answers;
+        if ($content_type->identifier === 'list') {
+            $result = collect(explode(',', $data->first()));
+        } else {
+            $result = $data;
         }
 
         return $result;

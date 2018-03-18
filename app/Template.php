@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
@@ -6,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\Uuids;
 use App\Library\ImageFile;
 
+
+/**
+ * Class Template
+ *
+ * @package App
+ */
 class Template extends Model
 {
     use Uuids;
@@ -27,16 +34,33 @@ class Template extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * 1 Template has many Survey, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function surveys()
     {
         return $this->hasMany(Survey::class);
     }
 
+
+    /**
+     * 1 Template has many Sections, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function sections()
     {
         return $this->hasMany(Section::class);
     }
 
+
+    /**
+     * 1 Template has many Question, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function questions()
     {
         return $this->hasMany(Question::class);
@@ -49,6 +73,12 @@ class Template extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Scopes active templates.
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -61,31 +91,11 @@ class Template extends Model
     */
 
     /**
+     * @todo: Documentation
      *
      * @author fab
      * @guru mri
-     *
-     * @param $new_section
-     * @param $original
-     * @param $copy
-     */
-    public static function copyKids($new_section, $original, $copy) {
-        foreach($original->children as $original_child) {
-            $node = $new_section->questions()->create($original_child->toArray());
-            $node->template_id = $copy->template_id;
-            $node->section_id = $copy->section_id;
-            $node->parent_id = $copy->id;
-            $node->save();
-            self::copyKids($new_section, $original_child, $node);
-        }
-    }
-
-
-    /**
-     *
-     * @author fab
-     * @guru mri
-     *
+     * @uses Template::copyKids()
      * @return bool
      */
     public function copy()
@@ -130,6 +140,35 @@ class Template extends Model
     }
 
 
+    /**
+     * @todo: Documentation
+     * @todo: Move to other location?
+     *
+     * @author fab
+     * @guru mri
+     *
+     * @param $new_section
+     * @param $original
+     * @param $copy
+     */
+    public static function copyKids($new_section, $original, $copy) {
+        foreach($original->children as $original_child) {
+            $node = $new_section->questions()->create($original_child->toArray());
+            $node->template_id = $copy->template_id;
+            $node->section_id = $copy->section_id;
+            $node->parent_id = $copy->id;
+            $node->save();
+            self::copyKids($new_section, $original_child, $node);
+        }
+    }
+
+
+    /**
+     * Returns templates logo file path for given version.
+     *
+     * @param string $version
+     * @return string
+     */
     public function getLogoFile($version) {
         return ImageFile::getVersion($this->logo_file, $version);
     }

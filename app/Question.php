@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
@@ -6,6 +7,20 @@ use Baum\Node;
 use App\Library\Traits\Uuids;
 use Iatstuti\Database\Support\NullableFields;
 
+
+/**
+ * Class Question
+ *
+ * Uses nested set:
+ * protected $parentColumn = 'parent_id';
+ * protected $leftColumn = 'lft';
+ * protected $rightColumn = 'rgt';
+ * protected $depthColumn = 'depth';
+ * protected $orderColumn = 'order';
+ * protected $scoped = [];
+ *
+ * @package App
+ */
 class Question extends Node
 {
     use Uuids;
@@ -19,22 +34,22 @@ class Question extends Node
 
     protected $table = 'questions';
     public $incrementing = false;
-    public $timestamps = true;
     protected $guarded = ['id', 'lft', 'rgt', 'depth'];
     protected $casts = [
-        'id' => 'string',
+        'id' => 'string'
     ];
     protected $nullable = [
-        'output_text', 'parent_id', 'default', 'prepend', 'append', 'comment', 'reference', 'guidance', 'hint',
+        'output_text',
+        'parent_id',
+        'default',
+        'prepend',
+        'append',
+        'comment',
+        'reference',
+        'guidance',
+        'hint'
     ];
 
-    /* Nested Sets */
-    protected $parentColumn = 'parent_id';
-    protected $leftColumn = 'lft';
-    protected $rightColumn = 'rgt';
-    protected $depthColumn = 'depth';
-    protected $orderColumn = 'order';
-    protected $scoped = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -42,26 +57,57 @@ class Question extends Node
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * 1 Question belongs to 1 Template, 1:1
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function template()
     {
         return $this->belongsTo(Template::class);
     }
 
+
+    /**
+     * 1 Question belongs to 1 Section, 1:1
+     *
+     * @todo: belongs to Section which belongs to Template?
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function section()
     {
         return $this->belongsTo(Section::class);
     }
 
+
+    /**
+     * 1 Question has 1 ContentType, 1:1
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function content_type()
     {
         return $this->belongsTo(ContentType::class);
     }
 
+
+    /**
+     * 1 Question can have many Answer, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function answers()
     {
         return $this->hasMany(Answer::class);
     }
 
+
+    /**
+     * 1 Question can have many QuestionOption, 1:n
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function options()
     {
         return $this->hasMany(QuestionOption::class);
@@ -73,22 +119,48 @@ class Question extends Node
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Scopes only root questions.
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeParent($query)
     {
         return $query->where('parent_id', null);
     }
 
+
+    /**
+     * Scopes only mandatory questions.
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeMandatory($query)
     {
         return $query->where('questions.is_mandatory', true);
     }
 
+
+    /**
+     * Scopes only active questions.
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeActive($query)
     {
         return $query->where('questions.is_active', true);
     }
 
 
+    /**
+     * Scopes only ordered questions.
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeOrdered($query)
     {
         return $query->reOrderBy('questions.order', 'asc');
@@ -101,55 +173,38 @@ class Question extends Node
     */
 
     /**
-     * @return string
-     */
-    public function getDefaultValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param Plan $plan
+     * What does it do
      *
-     * @return bool
+     * Description
+     *
+     *
+     *  About Param
+     *
+     * @return mixed
+     *  About Return Value
+     *
      */
-    public function setDefaultValue( Plan $plan )
-    {
-        $default_value = [];
-        //$save_method = $this->input_type->category;
-        $default_value[] = $this->getDefaultValue();
-        //$default_value = array_filter( $default_value );
-        $user = User::find($plan->user_id);        
-
-        if (count($default_value) > 0) {
-            if (is_null(Answer::check($this, $plan))) {
-                Answer::setAnswer( $plan, $this, $user, $default_value );
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-
     public function getChildren() {
-        return Question::where('parent_id', $this->id)->get();
+        return self::where('parent_id', $this->id)->get();
     }
 
 
     /**
-     * @param $data
+     * What does it do
      *
+     * @todo Documentation
+     *
+     * @param array $data
      * @return bool
      */
     public function updatePositions($data)
     {
         ksort($data);
         foreach ($data as $level => $item) {
+            /* @var array $item */
             foreach ($item as $position => $id) {
-                $question = Question::find($id);
-                if ($question->getLevel() == $level) {
+                $question = self::find($id);
+                if ($question->getLevel() === $level) {
                     $question->update(['order' => $position+1]);
                 }
             }
@@ -159,9 +214,14 @@ class Question extends Node
     }
 
 
+    /**
+     * Returns next order position for question in given section.
+     *
+     * @param Section $section
+     * @return int
+     */
     public static function getNextOrderPosition(Section $section)
     {
-        $position = Question::where('section_id', $section->id)->max('order') + 1;
-        return $position;
+        return self::where('section_id', $section->id)->max('order') + 1;
     }
 }

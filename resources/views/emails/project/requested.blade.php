@@ -3,10 +3,10 @@ Hi,
 A new project needs approval at {!! env('APP_URL') !!}/admin/
 
 TUB project number: {!! $project['identifier'] !!}
-Name: {!! $project['name'] !!}
-Email: {!! $project['email'] !!}
-Identifier: {!! $project['tub_om'] !!}
-Institution Identifier: {!! $project['institution_identifier'] !!}
+Name: {!! $project->user->name !!}
+Email: {!! $project->user->email !!}
+Identifier: {!! $project->user->tub_om !!}
+Institution Identifier: {!! $project->user->institution_identifier !!}
 Institutional contact email address: {!! $project['contact_email'] !!}
 
 Message: {!! $project['message'] !!}

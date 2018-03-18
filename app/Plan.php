@@ -1,81 +1,83 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Barryvdh\DomPDF\Facade as PDF;
-use App\Http\Requests\SnapshotPlanRequest;
-use App\Http\Requests\EmailPlanRequest;
-
 use Illuminate\Support\Facades\Event;
 use App\Events\PlanCreated;
-
 use Carbon\Carbon;
-use Exporters;
-use Illuminate\Support\Facades\Mail;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Library\Traits\Uuids;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PlanToRecipient;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
 class Plan extends Model
 {
+    // =======================================================================//
+    // ! Model Options                                                        //
+    // =======================================================================//
+
     use Uuids;
 
-    /*
-	|--------------------------------------------------------------------------
-	| Model Options
-	|--------------------------------------------------------------------------
-	*/
-
-    public $timestamps  = true;
     public $incrementing = false;
     protected $table    = 'plans';
     protected $dates    = ['created_at', 'updated_at', 'snapshot_at'];
     protected $fillable = ['title', 'project_id', 'version', 'template_id', 'is_active', 'is_snapshot', 'snapshot_at'];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Model Relationships
-    |--------------------------------------------------------------------------
-    */
+    // =======================================================================//
+    // ! Model Relationships                                                  //
+    // =======================================================================//
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\hasOne
+     */
     public function survey()
     {
         return $this->hasOne(Survey::class);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Model Scopes
-    |--------------------------------------------------------------------------
-    */
 
+    // =======================================================================//
+    // ! Model Scopes                                                         //
+    // =======================================================================//
+
+
+    /**
+     * Scope plans to order
+     *
+     * @param mixed     $query A query
+     * @return mixed    $query The refined query
+     */
     public function scopeOrdered($query)
     {
         return $query->orderBy( 'updated_at', 'desc' );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Model Methods
-    |--------------------------------------------------------------------------
-    */
 
-    public function isComplete()
-    {
-        if ($this->survey->completion == 100) {
-            return true;
-        }
+    // =======================================================================//
+    // ! Model Methods                                                        //
+    // =======================================================================//
 
-        return false;
-    }
-
-
-    public function isSnapshot()
+    /**
+     * Checks plan snapshot state.
+     *
+     * @return bool False if not snapshot
+     */
+    public function isSnapshot() : bool
     {
         if ($this->is_snapshot) {
             return true;
@@ -85,66 +87,98 @@ class Plan extends Model
     }
 
 
-    public function setFinalFlag($status)
+    /**
+     * Checks plan completion state.
+     *
+     * Queries the plan survey completion attribute
+     *
+     * @return bool  False if complete != 100
+     */
+    public function isComplete() : bool
     {
-        if (is_bool($status)) {
+        return $this->survey->completion === 100;
+    }
+
+
+    /**
+     * Sets the plan's final flag to given boolean value.
+     *
+     * @uses Plan::isComplete()
+     *
+     * @param bool $status  Boolean status
+     * @param bool $strict  If true, set the final flag only to plans with completion attribute = 100
+     *
+     * @return bool  False if $status is not boolean
+     */
+    public function setFinalFlag($status, $strict = null) : bool
+    {
+        $is_complete = true;
+        if ($strict !== null) {
+            $is_complete = $this->isComplete();
+        }
+
+        if (\is_bool($status) && $is_complete) {
             $this->is_snapshot = $status;
             $this->save();
             return true;
         }
 
-        // Use this if you want to finalize only 100% completed plans */
-        /*
-        if ($this->isComplete())
-        {
-            if (is_bool($status))
-            {
-                $this->is_snapshot = $status;
-                $this->save();
-                return true;
-            }
-
-            return false;
-        }
-        */
-
         return false;
     }
 
 
-    public function getGateInfo()
+    /**
+     * Sets snapshot status.
+     *
+     * @return bool
+     */
+    public function toSnapshot() : bool
     {
-        \AppHelper::varDump(Gate::forUser(auth()->user())->allows('update-plan', $this));
-    }
+        $this->is_snapshot = true;
+        $this->snapshot_at = Carbon::now();
+        $this->save();
 
-
-    public function createSnapshot(Plan $plan)
-    {
-        $plan->is_snapshot = true;
-        $plan->snapshot_at = Carbon::now();
-        $plan->save();
         return true;
     }
 
-    public function createWithSurvey($title, $project_id, $version, $template_id, $answer_data = null)
+
+    /**
+     * Creates a new plan with corresponding survey.
+     *
+     * Creates a new instance of Plan with the given $data array. Then creates a
+     * instance of Survey. If $answer_data array is given (most probably called
+     * from the snapshot action), the answers are copied to new instance. Otherwise, the default
+     * values for the questions are copied.
+     *
+     * @todo: Have a look at events.
+     *
+     * @uses Survey::setDefaults()
+     * @uses Survey::saveAnswers()
+     * @param array $data  Data for new plan
+     * @param array|null $answer_data  Optional existing answers for already existing survey (snapshot action).
+     * @return bool
+     */
+    public static function createWithSurvey($data, $answer_data = null) : bool
     {
         /* Create a new plan instance */
-        $plan = $this->create([
-            'title' => $title,
-            'project_id' => $project_id,
-            'version' => $version,
+        $plan = new self([
+            'title' => $data['title'],
+            'project_id' => $data['project_id'],
+            'version' => $data['version']
         ]);
 
-        if ($plan) {
+        $op = $plan->save();
+
+        if ($op) {
             /* Create a new survey instance and attach plan to it */
             $survey = new Survey;
             $survey->plan()->associate($plan);
-            $survey->template_id = $template_id;
+            $survey->template_id = $data['template_id'];
             $survey->save();
 
             if ($survey) {
                 /* Depending on answer data, set answers or default values */
-                if (is_null($answer_data)) {
+                if ($answer_data === null) {
                     $survey->setDefaults();
                 } else {
                     $survey->saveAnswers($answer_data);
@@ -155,37 +189,48 @@ class Plan extends Model
 
                 return true;
             }
-        } else {
-            throw new NotFoundHttpException;
         }
-    }
 
-    public function deleteWithSurvey($data)
-    {
-        $plan = $this->find($data['id']);
-        $plan->delete();
-
-        return true;
+        return false;
     }
 
 
-    public function createNextVersion($data)
+    /**
+     * Creates a snapshot of an existing plan with corresponding survey.
+     *
+     * Creates a new instance of Plan with the given $data array.
+     * If $data includes a "clone_current" value, the existing answers of
+     * the exiting plan are copied and associated with the new plan.
+     *
+     * @uses Answer::check()
+     * @uses Plan::createWithSurvey()
+     * @param array $data  Data of plan instance
+     * @return bool
+     */
+    public function createSnapshot($data) : bool
     {
-        $current_plan = $this->find($data['id']);
-        $answers = null;
+        $data['template_id'] = $this->survey->template_id;
+        $answers = [];
 
-        if ($this->createSnapshot($current_plan)) {
+        // Snapshot current plan
+        $op = $this->toSnapshot();
+
+        if ($op) {
+            // Clone answers if clone_current is set
             if (isset($data['clone_current'])) {
-                $cloned_answers = [];
-
-                foreach ($current_plan->survey->template->questions as $question) {
-                    foreach (Answer::check($current_plan->survey, $question) as $answer) {
-                        $cloned_answers[$question->id] = $answer->value;
+                /* @var $questions Question[] */
+                $questions = $this->survey->template->questions;
+                foreach ($questions as $question) {
+                    /* @var $answers Answer[] */
+                    $answers = Answer::check($this->survey, $question);
+                    if ($answers !== null) {
+                        foreach ($answers as $answer) {
+                            $answers[$question->id] = $answer->value;
+                        }
                     }
                 }
-                $answers = $cloned_answers;
 
-                $this->createWithSurvey($data['title'], $data['project_id'], $data['version'], $current_plan->survey->template_id, $answers);
+                self::createWithSurvey($data, $answers);
             }
 
             return true;
@@ -195,66 +240,70 @@ class Plan extends Model
     }
 
 
-    public function emailToRecipient($data)
+    /**
+     * Deletes a plan with corresponding survey.
+     *
+     * Simply deletes the plan. Deletes survey by relation / database cascading.
+     *
+     * @todo: Necessary?
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteWithSurvey() : bool
     {
-        $sender['name'] = auth()->user()->name;
-        $sender['email'] = auth()->user()->email;
-        $sender['message'] = $data['message'];
-        $recipient['name'] = $data['name'];
-        $recipient['email'] = $data['email'];
+        return $this->delete();
+    }
 
-        $plan = $this->findOrFail($data['id']);
+
+    /**
+     * Sends Email with export file to given recipient.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function emailToRecipient($data) : bool
+    {
+        $plan = $this->find($data['id']);
 
         if ($plan) {
-            $project_id = null;
-            $subject = 'Data Management Plan "' . $plan->title . '"';
+            $options = [
+                'sender' => [
+                    'name' => auth()->user()->name,
+                    'email' => auth()->user()->email
+                ],
+                'recipient' => [
+                    'name' => $data['name'],
+                    'email' => $data['email']
+                ],
+                'msg' => $data['message'],
+                'plan' => $plan,
+                'attachment' => $plan->exportPlan()
+            ];
 
-            if ($plan->project->id) {
-                $project_id = $plan->project->identifier;
-                $subject .= ' for project ' . $project_id;
-            }
-
-            $subject .= ' / Version ' . $plan->version;
-
-            $pdf = $plan->exportPlan();
-            $pdf_filename = $plan->project->identifier . '_' . str_replace(' ', '', $plan->title) . '-' . $plan->version . '_' . $plan->updated_at->format( 'Ymd' ) . '.pdf';
-
-            Mail::send(['text' => 'emails.plan'], ['plan' => $plan, 'recipient' => $recipient, 'sender' => $sender ],
-                function($email) use ($sender, $recipient, $subject, $pdf, $pdf_filename)
-                {
-                    $email->from(env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP'));
-                    if ($recipient['name']) {
-                        $email->to($recipient['email'], $recipient['name']);
-                    } else {
-                        $email->to($recipient['email']);
-                    }
-                    $email->subject($subject);
-                    $email->replyTo($sender['email'], $sender['name']);
-                    $email->attachData($pdf, $pdf_filename);
-                }
-            );
+            Mail::send(new PlanToRecipient($options));
 
             if (Mail::failures()) {
                 return false;
             }
 
             return true;
-
-        } else {
-            throw new NotFoundHttpException;
         }
+
+        return false;
     }
 
 
+    /**
+     * @todo
+     *
+     * @return PDF
+     */
     public function exportPlan()
     {
         $plan = $this;
         $project = $plan->project;
         $survey = $plan->survey;
         $filename = $plan->project->identifier . ' - ' . $plan->title . '.pdf';
-
-        $header_html = (string) view('pdf.header');
-        $footer = $plan->project->identifier . ' - ' . $plan->title . ', [page]';
 
         $pdf = PDF::loadView('pdf.dmp',  compact('plan', 'project', 'survey'));
 
@@ -274,36 +323,30 @@ class Plan extends Model
              * return view('pdf.dmp', compact('plan', 'project', 'survey'));
              */
         }
-        throw new NotFoundHttpException;
+
+        return null;
     }
 
 
-    /* TODO: Experimental, not in use */
+    /**
+     * @todo Experimental, not in use
+     *
+     * @return string
+     */
     public function getColoredCompletionRate()
     {
         $step = 2.55;
         $percentage = $this->survey->completion;
         $green = $percentage;
         $red = 100 - $green;
-        $color = sprintf( '#%02X%02X00', round($red * $step), round($green * $step));
-        return $color;
+        return sprintf( '#%02X%02X00', round($red * $step), round($green * $step));
     }
 
-
     /**
-     * TO-DO!
-     *
-     * @param $filename
-     * @param $pdf
-     * @return bool
+     * @deprecated
      */
-    public function saveToDisk( $filename, $pdf ) {
-        $storage_path = env( 'PDF_STORAGE_PATH', public_path() . '/plan/' );
-        if( Storage::put( $storage_path . $filename, 'foo') ) {
-            //\Log::info( $storage_path );
-            //\Log::info( 'saved' );
-            return true;
-        };
-        return false;
+    public function getGateInfo()
+    {
+        //AppHelper::varDump(Gate::forUser(auth()->user())->allows('update-plan', $this));
     }
 }

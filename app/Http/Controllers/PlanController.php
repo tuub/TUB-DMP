@@ -1,19 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreatePlanRequest;
 use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Requests\EmailPlanRequest;
 use App\Http\Requests\SnapshotPlanRequest;
-use App\Events\PlanUpdated;
 use App\Plan;
 use App\Template;
 use App\Library\Sanitizer;
 use App\Library\Notification;
-use Event;
-
+//use Event;
+//use App\Events\PlanUpdated;
 //use App\HtmlOutputFilter;
 //use Illuminate\Support\Facades\Gate;
 
@@ -28,6 +29,13 @@ class PlanController extends Controller
     protected $plan;
     protected $template;
 
+
+    /**
+     * PlanController constructor.
+     *
+     * @param Template $template
+     * @param Plan     $plan
+     */
     public function __construct(Template $template, Plan $plan)
     {
         $this->template = $template;
@@ -53,8 +61,7 @@ class PlanController extends Controller
             /* Validate input */
 
             /* The operation */
-            $op = $this->plan->createWithSurvey($data['title'], $data['project_id'], $data['version'],
-                $data['template_id']);
+            $op = $this->plan->createWithSurvey($data);
 
             /* Notification */
             if ($op) {
@@ -67,22 +74,29 @@ class PlanController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
+    /**
+     * @todo: Documentation
+     *
+     * @param Request $request
+     * @param $id
+     * @return null|string
+     * @throws ModelNotFoundException
+     */
     public function show(Request $request, $id)
     {
         if ($request->ajax()) {
             $plan = $this->plan->findOrFail($id);
-            //$this->authorize('show', $plan);
 
             if ($plan) {
                 return $plan->toJson();
             }
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
@@ -90,9 +104,8 @@ class PlanController extends Controller
      * Updates the plan instance.
      *
      * @param UpdatePlanRequest $request
-     * @param $id
-     *
      * @return bool|\Illuminate\Http\JsonResponse
+     * @throws ModelNotFoundException
      */
     public function update(UpdatePlanRequest $request)
     {
@@ -120,10 +133,16 @@ class PlanController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
+    /**
+     * @todo: Documentation
+     *
+     * @param SnapshotPlanRequest $request
+     * @return \Illuminate\Http\JsonResponse|null
+     */
     public function snapshot(SnapshotPlanRequest $request)
     {
         if ($request->ajax()) {
@@ -134,8 +153,11 @@ class PlanController extends Controller
 
             /* The validation */
 
+            /* Get object */
+            $plan = $this->plan->find($data['id']);
+
             /* The operation */
-            $op = $this->plan->createNextVersion($data);
+            $op = $plan->createSnapshot($data);
 
             /* Type of operation */
             $op_result = 'snapshot';
@@ -153,10 +175,16 @@ class PlanController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
+    /**
+     * @todo: Documentation
+     *
+     * @param EmailPlanRequest $request
+     * @return \Illuminate\Http\JsonResponse|null
+     */
     public function email(EmailPlanRequest $request)
     {
         if ($request->ajax()) {
@@ -181,19 +209,18 @@ class PlanController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
-    // FIXME: Needed?
-    public function export($id)
-    {
-        $plan = $this->plan->findOrFail($id);
-
-        return $plan->exportPlan();
-    }
-
-
+    /**
+     * @todo: Documentation
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|null
+     * @throws ModelNotFoundException
+     * @throws \Exception
+     */
     public function destroy(Request $request)
     {
         if ($request->ajax()) {
@@ -202,7 +229,7 @@ class PlanController extends Controller
             $plan = $this->plan->findOrFail($request->id);
 
             /* The operation */
-            $op = $this->plan->deleteWithSurvey($plan);
+            $op = $plan->delete();
 
             /* The notification */
             if ($op) {
@@ -214,12 +241,21 @@ class PlanController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
-    // TODO!
-    public function copy($id)
-    {
 
+    /**
+     * @todo: Documentation / deprecated?
+     *
+     * @param $id
+     * @return mixed
+     * @throws ModelNotFoundException
+     */
+    public function export($id)
+    {
+        $plan = $this->plan->findOrFail($id);
+
+        return $plan->exportPlan();
     }
 }

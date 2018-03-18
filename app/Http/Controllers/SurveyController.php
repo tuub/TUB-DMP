@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SurveyRequest;
+use App\Library\Notification;
+use App\Library\Sanitizer;
 use App\Survey;
 
 /**
@@ -14,21 +17,39 @@ class SurveyController extends Controller
 {
     protected $survey;
 
+
+    /**
+     * SurveyController constructor.
+     *
+     * @param Survey $survey
+     */
     public function __construct(Survey $survey)
     {
         $this->survey = $survey;
     }
 
 
+    /**
+     * Displays the survey with ther given ID.
+     *
+     * @param string $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|null
+     */
     public function show($id)
     {
         $survey = $this->survey->findOrFail($id);
-        $sections = $survey->template->sections;
 
         return view('survey.show', compact('survey'));
     }
 
 
+    /**
+     * Renders the edit form for the given survey ID.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|null
+     */
     public function edit($id)
     {
         $survey = $this->survey->findOrFail($id);
@@ -36,33 +57,39 @@ class SurveyController extends Controller
     }
 
 
+    /**
+     * Updates the survey with the given request data.
+     *
+     * @todo: Refactor to include $id in the signature.
+     *
+     * @param SurveyRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(SurveyRequest $request)
     {
-        /* Get the survey */
+        /* Clean input */
+        $dirty = new Sanitizer($request);
+        $remove = ['_token', '_method', 'save'];
+        $data = $dirty->cleanUp($remove);
+
+        /* The validation */
+
+        /* Get object */
         $survey = $this->survey->findOrFail($request->id);
 
-        /* Get the request data */
-        $data = $request->except(['_token', '_method', 'save']);
+        /* The operation */
+        $op = $survey->saveAnswers($data);
 
-        /* Save the answers */
-        if ($survey->saveAnswers($data)) {
-            $notification = [
-                'status'     => 200,
-                'message'    => 'Survey was successfully updated!',
-                'alert-type' => 'success'
-            ];
-            //Event::fire(new PlanUpdated($plan));
+        /* Notification */
+        if ($op) {
+            $notification = new Notification(200, 'Successfully updated the survey!', 'success');
         } else {
-            $notification = [
-                'status'     => 500,
-                'message'    => 'Survey was not updated!',
-                'alert-type' => 'error'
-            ];
+            $notification = new Notification(500, 'Error while updating the survey!', 'error');
         }
 
-        /* Response */
-        $request->session()->flash('message', $notification['message']);
-        $request->session()->flash('alert-type', $notification['alert-type']);
+        //Event::fire(new PlanUpdated($plan));
+
+        $notification->toSession($request);
 
         return redirect()->route('dashboard');
     }

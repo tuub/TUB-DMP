@@ -20,7 +20,7 @@
     @if (!env('DEMO_MODE'))
         <h2>Helpers</h2>
         {{ HTML::link(route('admin.project.get_lookup'), 'Lookup', ['class' => 'btn btn-default']) }}
-        {{ HTML::link(route('admin.random_ivmc'), 'Random IVMC', ['class' => 'btn btn-default']) }}
+        {{ HTML::link(route('admin.random_identifier'), 'Random Identifier', ['class' => 'btn btn-default']) }}
     @endif
 
     @if (!env('DEMO_MODE'))

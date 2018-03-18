@@ -1,18 +1,28 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RequestProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
+use App\Library\Utility;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\Admin\UpdateProjectRequest;
 use App\Http\Requests\ImportProjectRequest;
 use App\Project;
 use App\DataSource;
 use App\Template;
-use Illuminate\Http\Request;
-use Mail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProjectRequested;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
+/**
+ * Class ProjectController
+ *
+ * @package App\Http\Controllers
+ */
 class ProjectController extends Controller
 {
     protected $project;
@@ -22,6 +32,7 @@ class ProjectController extends Controller
      * ProjectController constructor.
      *
      * @param Project $project
+     * @param DataSource $data_source
      */
     public function __construct(Project $project, DataSource $data_source)
     {
@@ -39,25 +50,35 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = $this->project
-                    ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template',
-                        'metadata', 'metadata.metadata_registry', 'metadata.metadata_registry.content_type')
-                    ->withCount('plans')
-                    ->withCount('children')
-                    ->where([
-                        'user_id' => auth()->user()->id,
-                        'is_active' => true,
-                    ])
-                    ->orderBy('updated_at', 'desc')
-                    ->get()
-                    ->toHierarchy();
+            ->with('user', 'plans', 'data_source', 'plans.survey', 'plans.survey.template',
+                'metadata', 'metadata.metadata_registry', 'metadata.metadata_registry.content_type')
+            ->withCount('plans')
+            ->withCount('children')
+            ->where([
+                'user_id' => auth()->user()->id,
+                'is_active' => true
+            ])
+            ->orderBy('updated_at', 'desc')
+            ->get()
+            ->toHierarchy();
 
         // For Modals
         $templates = Template::active()->get();
+
+        \AppHelper::varDump( Utility::getValuesForDropdown('MetadataRegistry', ['title', 'id'], ['title', 'desc']) );
 
         return view('dashboard', compact('projects', 'templates'));
     }
 
 
+    /**
+     * @todo: Documentation
+
+     * @param Request $request
+     * @param string $id
+     * @return string|null
+     * @throws ModelNotFoundException
+     */
     public function show(Request $request, $id)
     {
         if ($request->ajax()) {
@@ -67,7 +88,7 @@ class ProjectController extends Controller
             }
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
@@ -75,9 +96,9 @@ class ProjectController extends Controller
      * Receives request from edit project form (modal) and passes the data to
      * the intermediate method saveMetadata() in project model.
      *
-     * @param Request $request
-     *
+     * @param UpdateProjectRequest $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @throws ModelNotFoundException
      */
     public function update(UpdateProjectRequest $request)
     {
@@ -106,10 +127,17 @@ class ProjectController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
+    /**
+     * @todo: Documentation
+     *
+     * @param ImportProjectRequest $request
+     * @return JsonResponse|null
+     * @throws ModelNotFoundException
+     */
     public function import(ImportProjectRequest $request)
     {
         if($request->ajax()) {
@@ -121,12 +149,12 @@ class ProjectController extends Controller
             /* The validation */
 
             /* Get object */
-            $project = $this->project->findOrFail($request->id);
+            $project = $this->project->findOrFail($data['id']);
 
             /* The operation */
             $op = $project->importFromDataSource();
 
-            /* Notification */
+            /* The notification */
             if ($op) {
                 $notification = new Notification(200, 'Successfully imported the project metadata!', 'success');
             } else {
@@ -136,18 +164,26 @@ class ProjectController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 
 
-    public function request(RequestProjectRequest $request)
+    /**
+     * @todo: Documentation
+     * @todo: If child project then create the big one as well (if not present!)
+     *
+     * @param CreateProjectRequest $request
+     * @return string|null
+     * @throws \Exception
+     */
+    public function request(CreateProjectRequest $request)
     {
         if ($request->ajax()) {
 
             /* Clean input */
             $dirty = new Sanitizer($request);
             $data = $dirty->cleanUp();
-    
+
             /* The validation */
 
             /* Prepare data */
@@ -157,27 +193,26 @@ class ProjectController extends Controller
             if ($this->project->isValidIdentifier($data['identifier'])) {
                 $data['data_source_id'] = $this->data_source->getByIdentifier(env('PROJECT_DEFAULT_DATASOURCE'));
             } else {
-                $data['identifier'] = $this->project->generateRandomIdentifier();
+                $data['identifier'] = $this->project->generateRandomIdentifier() ?? abort(500, 'Config Error!');
+            }
+
+            /* The operation */
+            $op = $project = $this->project->create($data);
+
+            /* The metadata import */
+            if (env('PROJECT_ALLOW_DATASOURCE_IMPORT')) {
+                $project->importFromDataSource();
             }
 
             // In Demo Mode, auto-approve all projects
-            env('DEMO_MODE') ? $data['is_active'] = true : $data['is_active'] = false;
-
-            /* The operation */
-            // FIXME: If child project then create the big one as well (if not present!)
-            $op = $new_project = $this->project->create($data);
+            if (env('DEMO_MODE')) {
+                $project->approve();
+            }
 
             /* The mail */
-            Mail::send( [ 'text' => 'emails.project.request' ], [ 'project' => $data ],
-                function ( $message ) use ( $data ) {
-                    $subject = 'TUB-DMP Project Request';
-                    $message->from( env('SERVER_MAIL_ADDRESS', 'server@localhost'), env('SERVER_NAME', 'TUB-DMP') );
-                    $message->to( env('ADMIN_MAIL_ADDRESS', 'root@localhost'), env('ADMIN_NAME', 'TUB-DMP Administrator') )->subject( $subject );
-                    $message->replyTo( $data['email'], $data['name'] );
-                }
-            );
+            Mail::send(new ProjectRequested($project));
 
-            /* Notification */
+            /* The notification */
             if (Mail::failures()) {
                 $notification = new Notification(500, 'Error while sending the project request!', 'error');
             } else {
@@ -191,6 +226,6 @@ class ProjectController extends Controller
             return $notification->toJson($request);
         }
 
-        return abort(403, 'Direct access is not allowed.');
+        return null;
     }
 }

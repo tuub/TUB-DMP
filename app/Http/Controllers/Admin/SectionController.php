@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -12,10 +13,17 @@ use Illuminate\Http\Request;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
+
+/**
+ * Class SectionController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class SectionController extends Controller {
 
     protected $section;
     protected $template;
+
 
     /**
      * SectionController constructor.
@@ -33,23 +41,24 @@ class SectionController extends Controller {
     /**
      * Gets a section list of the specified template.
      *
-     * @param $template_id
+     * @param Template $template
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Template $template)
     {
         $template = $this->template->find($template->id);
-        $sections = $this->section->withCount('questions')->where('template_id', $template->id)->orderBy('order', 'asc')
-                ->get();
+        $sections = $this->section->withCount('questions')->where('template_id', $template->id)->orderBy('order')->get();
+
         return view('admin.section.index', compact('template', 'sections'));
     }
 
 
     /**
-     * Displays the form for creating a new section.
+     * Displays the form for creating a new section for the given Template (in request).
+     *
+     * @todo: Refactor so it does not need a request var here! See also Admin\QuestionController.
      *
      * @param \Illuminate\Http\Request $request
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
@@ -183,7 +192,7 @@ class SectionController extends Controller {
      *
      * @uses \App\Section::updatePositions
      * @param \App\Http\Requests\Admin\SortSectionRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|null
      */
     public function sort(SortSectionRequest $request) {
 
@@ -203,6 +212,6 @@ class SectionController extends Controller {
             return $notification->toJson($request);
         }
 
-        abort(403, 'Direct access is not allowed.');
+        return null;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -9,16 +10,35 @@ use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Library\Sanitizer;
 use App\Library\Notification;
 
+
+/**
+ * Class UserController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class UserController extends Controller
 {
     protected $user;
 
+
+    /**
+     * UserController constructor.
+     *
+     * @param User $user
+     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
 
+    /**
+     * Renders the edit form for user with the given ID.
+     *
+     * @param string $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $user = $this->user->find($id);
@@ -27,6 +47,13 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Updates the user with the given ID.
+     *
+     * @param UpdateUserRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateUserRequest $request, $id)
     {
         /* Clean input */
@@ -53,6 +80,16 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Deletes/Deactivates a user with thje given ID and the given request values.
+     *
+     * Does not really delete the user since the DMPs should stay in the system.
+     * Only email and om are set to null.
+     *
+     * @param Request $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Request $request, $id)
     {
         /* Get object */

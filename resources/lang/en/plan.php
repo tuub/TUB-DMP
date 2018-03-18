@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 
@@ -21,19 +22,21 @@ return [
             'title' => [
                 'label' => 'DMP Title',
                 'placeholder' => 'e.g. My Data Management Plan',
+                'default' => 'Data Management Plan'
             ],
             'template' => [
                 'label' => 'Template',
-                'placeholder' => '',
+                'placeholder' => ''
             ],
             'version' => [
                 'label' => 'Version Description',
                 'placeholder' => 'e.g. First DMP version',
-            ],
+                'default' => '1.0'
+            ]
         ],
         'button' => [
             'cancel' => 'Cancel',
-            'submit' => 'Create',
+            'submit' => 'Create'
         ]
     ],
 
@@ -43,16 +46,16 @@ return [
         'input' => [
             'title' => [
                 'label' => 'DMP Title',
-                'placeholder' => '',
+                'placeholder' => ''
             ],
             'version' => [
                 'label' => 'Version Description',
-                'placeholder' => 'e.g. First DMP version',
-            ],
+                'placeholder' => 'e.g. First DMP version'
+            ]
         ],
         'button' => [
             'cancel' => 'Cancel',
-            'submit' => 'Save',
+            'submit' => 'Save'
         ]
     ],
 
@@ -62,20 +65,20 @@ return [
         'input' => [
             'name' => [
                 'label' => 'Name',
-                'placeholder' => 'e.g. John Doe',
+                'placeholder' => 'e.g. John Doe'
             ],
             'email' => [
                 'label' => 'Email',
-                'placeholder' => 'e.g. john.doe@example.org',
+                'placeholder' => 'e.g. john.doe@example.org'
             ],
             'message' => [
                 'label' => 'Your Message (optional)',
-                'placeholder' => '',
-            ],
+                'placeholder' => ''
+            ]
         ],
         'button' => [
             'cancel' => 'Cancel',
-            'submit' => 'Send Email',
+            'submit' => 'Send Email'
         ]
     ],
 
@@ -84,7 +87,7 @@ return [
         'description' => 'Are you sure?',
         'button' => [
             'cancel' => 'Cancel',
-            'submit' => 'OK',
+            'submit' => 'OK'
         ]
     ],
 
@@ -95,11 +98,11 @@ return [
             'pdf' => [
                 'label' => 'PDF',
                 'description' => 'Exports your DMP with all automatically and manually provided data.',
-                'link'  => 'Open / Download',
-            ],
+                'link'  => 'Open / Download'
+            ]
         ],
         'button' => [
-            'cancel' => 'Cancel',
+            'cancel' => 'Cancel'
         ]
     ],
 
@@ -110,19 +113,19 @@ return [
         'input' => [
             'title' => [
                 'label' => 'DMP Title',
-                'placeholder' => '',
+                'placeholder' => ''
             ],
             'version' => [
                 'label' => 'Version Description',
-                'placeholder' => 'e.g. First DMP version',
+                'placeholder' => 'e.g. First DMP version'
             ],
             'clone_current' => [
-                'label' => 'Create new version from current plan',
-            ],
+                'label' => 'Create new version from current plan'
+            ]
         ],
         'button' => [
             'cancel' => 'Cancel',
-            'submit' => 'Continue',
+            'submit' => 'Continue'
         ]
     ],
 
@@ -133,8 +136,8 @@ return [
             'email' => 'Email to Colleague',
             'export' => 'Export',
             'snapshot' => 'Create Snapshot & New Version',
-            'delete' => 'Delete',
-        ],
-    ],
+            'delete' => 'Delete'
+        ]
+    ]
 
 ];

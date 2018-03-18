@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -9,17 +10,35 @@ use App\Http\Requests\Admin\DeleteDataSourceRequest;
 use App\DataSource;
 use App\Library\Sanitizer;
 use App\Library\Notification;
+use Illuminate\Support\Facades\Redirect;
 
+
+/**
+ * Class DataSourceController
+ *
+ * @package App\Http\Controllers\Admin
+ */
 class DataSourceController extends Controller
 {
     protected $data_source;
 
+
+    /**
+     * DataSourceController constructor.
+     *
+     * @param DataSource $data_source
+     */
     public function __construct(DataSource $data_source)
     {
         $this->data_source = $data_source;
     }
 
 
+    /**
+     * Show all data sources.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $data_sources = $this->data_source->orderBy('name', 'asc')->get();
@@ -27,7 +46,11 @@ class DataSourceController extends Controller
     }
 
 
-    // FIXME:
+    /**
+     * Renders the create form for new data source.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $data_source = $this->data_source;
@@ -36,12 +59,10 @@ class DataSourceController extends Controller
 
 
     /**
-     * Stores a new plan instance with accompanying survey instance via
-     * model method createWithSurvey()
+     * Stores a new data source instance.
      *
      * @param CreateDataSourceRequest $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return Redirect
      */
     public function store(CreateDataSourceRequest $request)
     {
@@ -66,13 +87,12 @@ class DataSourceController extends Controller
     }
 
 
-    public function show($id)
-    {
-        //
-    }
-#
-
-    // FIXME
+    /**
+     * Renders the edit form for the given data source id.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $data_source = $this->data_source->findOrFail($id);
@@ -80,6 +100,17 @@ class DataSourceController extends Controller
     }
 
 
+    /**
+     * Saves new values for the given data source id.
+     *
+     * @param UpdateDataSourceRequest $request
+     * @param $id
+     *  About Param
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *  About Return Value
+     *
+     */
     public function update(UpdateDataSourceRequest $request, $id)
     {
         /* Clean input */
@@ -106,6 +137,13 @@ class DataSourceController extends Controller
     }
 
 
+    /**
+     * Deletes data source intance with the given id.
+     *
+     * @param DeleteDataSourceRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(DeleteDataSourceRequest $request, $id)
     {
         /* Get object */

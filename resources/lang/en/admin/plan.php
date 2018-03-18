@@ -14,19 +14,18 @@ return [
     |
     */
     'title' => [
-        'create' => 'Create Project',
-        'edit' => 'Edit Project'
+        'create' => 'Create Plan',
+        'edit' => 'Edit Plan'
     ],
     'form' => [
         'label' => [
-            'identifier' => 'Project ID',
+            'title' => 'DMP Title',
             'is_active' => 'Active',
-            'parent' => 'Parent Project',
-            'data_source' => 'Data Source',
-            'contact_email' => 'Institutional Contact Email',
+            'template' => 'Template',
+            'version' => 'DMP Version',
             'submit' => [
-                'create' => 'Create Project',
-                'edit' => 'Update Project'
+                'create' => 'Create Plan',
+                'edit' => 'Update Plan'
             ]
         ]
     ]
