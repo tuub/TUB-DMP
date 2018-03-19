@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,13 +23,7 @@ class CreateProjectRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required',
-            'email' => 'required|email',
-            'tub_om' => 'required',
-            'institution_identifier' => 'required',
-            'contact_email' => 'required|email|max:255',
-        ];
+        return [];
     }
 
 
@@ -40,9 +34,6 @@ class CreateProjectRequest extends FormRequest
      */
     public function messages()
     {
-        return [
-            'contact_email.required' => 'An institutional contact e-mail address is required to process your request.',
-            'contact_email.email' => 'The provided institutional e-mail address is not valid.',
-        ];
+        return [];
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin;
-
-use App\Http\Requests\Request;
+namespace App\Http\Requests;
 
 class UpdateProjectRequest extends Request
 {

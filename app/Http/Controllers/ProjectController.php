@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-// FIXME
-use App\Http\Requests\CreateProjectRequest;
-use App\Http\Requests\Admin\UpdateProjectRequest;
-
+use App\Http\Requests\RequestProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Requests\ImportProjectRequest;
 use App\Project;
 use App\DataSource;
@@ -142,7 +140,7 @@ class ProjectController extends Controller
     }
 
 
-    public function request(CreateProjectRequest $request)
+    public function request(RequestProjectRequest $request)
     {
         if ($request->ajax()) {
 
