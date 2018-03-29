@@ -31,22 +31,28 @@
                     <p class="lead">
                         {{ trans('login.header') }}
                     </p>
+                    @if (env('DEMO_MODE'))
 
-                    <u>{{ trans('login.privacy-statement-intro') }}</u>
-                    <div class="checkbox">
-                        <label>
-                            {!! Form::checkbox('privacy-statement-1', null, null, array('class' => 'classic')) !!}
-                            {{ trans('login.privacy-statement-1') }}
-                            <span class="help-block {{ ($errors->first('privacy-statement-1') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-1') }}</span>
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            {!! Form::checkbox('privacy-statement-2', null, null, array('class' => 'classic')) !!}
-                            {{ trans('login.privacy-statement-2') }}
-                            <span class="help-block {{ ($errors->first('privacy-statement-2') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-2') }}</span>
-                        </label>
-                    </div>
+                        @include('partials.layout.demosystem.box')
+
+                    @else
+                        <u>{{ trans('login.privacy-statement-intro') }}</u>
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('privacy-statement-1', null, null, array('class' => 'classic')) !!}
+                                {{ trans('login.privacy-statement-1') }}
+                                <span class="help-block {{ ($errors->first('privacy-statement-1') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-1') }}</span>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('privacy-statement-2', null, null, array('class' => 'classic')) !!}
+                                {{ trans('login.privacy-statement-2') }}
+                                <span class="help-block {{ ($errors->first('privacy-statement-2') ? 'form-error' : '') }}">{{ $errors->first('privacy-statement-2') }}</span>
+                            </label>
+                        </div>
+                    @endif
+
                     <div class="col-md-24 text-center">
                         <button type="submit" class="btn btn-default" style="font-weight: bold">
                             {!! HTML::image('images/logo-tu-small.png', 'TU Berlin') !!}
