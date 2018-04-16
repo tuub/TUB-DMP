@@ -160,23 +160,18 @@ class ImageFile
 
 
     /**
-     * What does it do
+     * Deletes file versions in specified directory $path underneath specified storage disk (in $options).
      *
-     * Description
-     *
-     * @param string $identifier
+     * @param string $path
      * @param array $options
      * @return bool
      */
-    public static function deleteVersions($identifier, $options) {
-
-        if ($options['disk']) {
-            $path = Storage::disk($options['disk'])->getAdapter()->getPathPrefix() . $identifier;
-        } else {
-            $path = 'local';
+    public static function deleteVersions($path, $options) {
+        if (Storage::disk($options['disk'])->exists($path)) {
+            return Storage::disk($options['disk'])->deleteDirectory($path);
         }
 
-        return Storage::exists($path) && Storage::deleteDirectory($path);
+        return false;
     }
 
 

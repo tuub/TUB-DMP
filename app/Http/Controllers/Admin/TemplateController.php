@@ -163,7 +163,7 @@ class TemplateController extends Controller
 
         /* The operation */
         if ($delete_logo_file !== null) {
-            ImageFile::deleteVersions($logo_file, ['disk' => 'public_logo']);
+            ImageFile::deleteVersions($template->id, ['disk' => 'public_logo']);
             $data['logo_file'] = null;
         }
         if ($logo_file) {
@@ -174,10 +174,11 @@ class TemplateController extends Controller
                 'extension' => $logo_file->extension()
             ];
 
-            ImageFile::deleteVersions($logo_file, $options);
+            $data['logo_file'] = Storage::disk($options['disk'])->url('/') . $options['identifier'] . '/';
+
+            ImageFile::deleteVersions($options['identifier'], $options);
             ImageFile::createVersions($logo_file, $options);
 
-            $data['logo_file'] = Storage::disk($options['disk'])->url('/') . $options['identifier'] . '/';
         }
 
         $op = $template->update($data);
