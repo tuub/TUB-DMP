@@ -1,9 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * Class RequestProjectRequest
+ *
+ * @package App\Http\Requests
+ */
 class RequestProjectRequest extends FormRequest
 {
     /**

@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Library\Utility;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\RequestProjectRequest;
 use App\Http\Requests\Admin\UpdateProjectRequest;
 use App\Http\Requests\ImportProjectRequest;
 use App\Project;
@@ -64,8 +63,6 @@ class ProjectController extends Controller
 
         // For Modals
         $templates = Template::active()->get();
-
-        \AppHelper::varDump( Utility::getValuesForDropdown('MetadataRegistry', ['title', 'id'], ['title', 'desc']) );
 
         return view('dashboard', compact('projects', 'templates'));
     }
@@ -176,7 +173,7 @@ class ProjectController extends Controller
      * @return string|null
      * @throws \Exception
      */
-    public function request(CreateProjectRequest $request)
+    public function request(RequestProjectRequest $request)
     {
         if ($request->ajax()) {
 
