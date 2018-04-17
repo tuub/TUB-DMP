@@ -49,6 +49,13 @@ class Question extends Node
         'guidance',
         'hint'
     ];
+    /* Nested Sets */
+    protected $parentColumn = 'parent_id';
+    protected $leftColumn = 'lft';
+    protected $rightColumn = 'rgt';
+    protected $depthColumn = 'depth';
+    protected $orderColumn = 'order';
+    protected $scoped = [];
 
 
     /*
