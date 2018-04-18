@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "laravel/framework": "5.5.*",
         "laravelcollective/html": "5.5.*",
         "iamcal/lib_autolink": "^1.7",
@@ -36,7 +36,8 @@
         "barryvdh/laravel-debugbar": "^2.2",
         "laracasts/generators": "dev-master as 1.1.4",
         "themsaid/laravel-langman": "^1.1",
-        "barryvdh/laravel-ide-helper": "^2.4"
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "roave/security-advisories": "dev-master"
     },
     "autoload": {
         "classmap": [
