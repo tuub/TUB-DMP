@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Collective\Html\HtmlFacade as HTML;
 use Illuminate\Support\Facades\DB;
 use App\Library\Traits\Uuids;
-use AppHelper;
+use App\Helpers\AppHelper;
 
 /**
  * Class ProjectMetadata
@@ -236,7 +236,7 @@ class ProjectMetadata extends Model
                         $value = [];
                         $required = ['content', 'language'];
                         foreach ($values as $foo) {
-                            if (!\AppHelper::hasEmptyValues($foo) && \AppHelper::hasKeys($foo, $required)) {
+                            if (!AppHelper::hasEmptyValues($foo) && AppHelper::hasKeys($foo, $required)) {
                                 $value[] = $foo;
                             }
                         }
