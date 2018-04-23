@@ -524,3 +524,7 @@ tr.parent td {
     outline: 0.5px #93a1a1 solid;
     margin-bottom:10px;
 }
+
+.inactive {
+    opacity: 0.5;
+}

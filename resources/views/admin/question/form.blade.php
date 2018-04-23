@@ -97,6 +97,20 @@
             </div>
         </div>
         <div class="row">
+            <div class="form-group col-md-24">
+                {!! Form::Label( 'comment', trans('admin/question.form.label.comment') ) !!}
+                {!! Form::Text( 'comment', Input::old('comment'), array('class' => 'form-control') ) !!}
+                <span class="help-block {{ ($errors->first('comment') ? 'form-error' : '') }}">{{ $errors->first('comment') }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-24">
+                {!! Form::Label( 'guidance', trans('admin/question.form.label.guidance') ) !!}
+                {!! Form::Textarea( 'guidance', Input::old('guidance'), array('class' => 'form-control') ) !!}
+                <span class="help-block {{ ($errors->first('guidance') ? 'form-error' : '') }}">{{ $errors->first('guidance') }}</span>
+            </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-12">
                 {!! Form::Label( 'prepend', trans('admin/question.form.label.prepend') ) !!}
                 {!! Form::Text( 'prepend', Input::old('prepend'), array('class' => 'form-control') ) !!}
@@ -110,23 +124,9 @@
         </div>
         <div class="row">
             <div class="form-group col-md-24">
-                {!! Form::Label( 'comment', trans('admin/question.form.label.comment') ) !!}
-                {!! Form::Text( 'comment', Input::old('comment'), array('class' => 'form-control') ) !!}
-                <span class="help-block {{ ($errors->first('comment') ? 'form-error' : '') }}">{{ $errors->first('comment') }}</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-24">
                 {!! Form::Label( 'reference', trans('admin/question.form.label.reference') ) !!}
                 {!! Form::Text( 'reference', Input::old('reference'), array('class' => 'form-control') ) !!}
                 <span class="help-block {{ ($errors->first('reference') ? 'form-error' : '') }}">{{ $errors->first('reference') }}</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-24">
-                {!! Form::Label( 'guidance', trans('admin/question.form.label.guidance') ) !!}
-                {!! Form::Textarea( 'guidance', Input::old('guidance'), array('class' => 'form-control') ) !!}
-                <span class="help-block {{ ($errors->first('guidance') ? 'form-error' : '') }}">{{ $errors->first('guidance') }}</span>
             </div>
         </div>
         <div class="row">

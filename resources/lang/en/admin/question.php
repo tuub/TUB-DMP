@@ -34,9 +34,9 @@ return [
             'prepend' => 'Prepend',
             'append' => 'Append',
             'comment' => 'Placeholder Value',
-            'reference' => 'Reference Information',
+            'reference' => 'Reference Information (deprecated!)',
             'guidance' => 'Guidance',
-            'hint' => 'Hint / More Information',
+            'hint' => 'Hint / More Information (deprecated!)',
             'submit' => [
                 'create' => 'Create Question',
                 'edit' => 'Update Question',

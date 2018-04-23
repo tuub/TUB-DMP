@@ -1,4 +1,8 @@
-<tr title="{{ $template->id  }}">
+@if($template->is_active)
+    <tr title="{{ $template->id }}">
+@else
+    <tr title="{{ $template->id }}" class="inactive">
+@endif
     <td>{{ $template->name }}</td>
     <td>
 
