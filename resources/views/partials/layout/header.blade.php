@@ -2,7 +2,7 @@
     <!DOCTYPE html>
     <html lang="en">
         <head>
-            <title>TUB-DMP</title>
+            <title>TUB-DMP : {!! \App\Helpers\AppHelper::uriToPageTitle(parse_url(url()->current())); !!}</title>
             <meta charset="utf-8">
 
             <!-- Startup configuration -->

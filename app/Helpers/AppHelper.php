@@ -117,4 +117,16 @@ class AppHelper {
 
         return implode(' ', preg_split($pattern, $string));
     }
+
+
+    public static function uriToPageTitle(array $path_info)
+    {
+        if ($path_info['path']) {
+            $path = $path_info['path'];
+            $path_array = explode('/', $path);
+            $path_array = array_filter($path_array, function($value) { return $value !== ''; });
+            $path_array = array_map(function($word) { return ucfirst($word); }, $path_array);
+            return implode(' > ', $path_array);
+        }
+    }
 }
