@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-md-24">
         <span class="question-text">
-            @if( $question->input_type == 'headline')
+            @if($question->content_type->identifier === 'plain')
                 <span class="headline_question">
             @endif
 
@@ -23,12 +23,13 @@
                 {{ $question->text }}
             @endif
 
-            @if( $question->input_type == 'headline')
+            @if($question->content_type->identifier === 'plain')
                 </span>
             @endif
         </span>
     </div>
-    @if( $question->input_type != 'headline')
+
+    @if($question->content_type->identifier !== 'plain')
         <div class="col-md-24">
             <div style="display: inline-block; margin-top: 10px; margin-left: 18px;">
                 <div class="question-answer-text">

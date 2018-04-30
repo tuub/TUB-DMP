@@ -2,16 +2,21 @@
     $answer = \App\Answer::get($survey, $question, 'html');
 @endphp
 
-@unless($question->export_always === false && null === $answer)
+@if(($question->export_always !== false
+    || $answer !== null)
+    || ($question->content_type->identifier === 'plain'
+        && $question->getImmediateDescendants()->count() > 0
+        && $question->childrenHaveAnswers($survey)
+    ))
     <div class="row question">
-        @if ($question->isChild())
+        @if ($question->content_type->identifier === 'plain' || $question->isChild())
             <div style="padding-left:{!! ($question->getLevel()+1*0.4) !!}em">
         @endif
         <strong>
             @if($question->export_keynumber)
                 {{ $question->keynumber }}
             @endif
-            @if(null === $question->output_text)
+            @if($question->output_text === null)
                 {{ $question->text }}
             @else
                 {{ $question->output_text }}
@@ -26,7 +31,7 @@
         @endif
     </div>
     <br/>
-@endunless
+@endif
 
 @foreach($question->getImmediateDescendants() as $question)
     @include('partials.question.pdf', [$survey, $question])

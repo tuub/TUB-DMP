@@ -31,19 +31,20 @@
     <div id="plan-section-steps">
 
         @foreach( $survey->template->sections()->active()->ordered()->get() as $section )
-            <h4 style="font-weight: bold;">
+            <div class="section-title">
                 {{ $section->full_name }}
-            </h4>
+            </div>
             <section id="section-{{ $section->keynumber }}">
                 <div class="section-title">
                     {{ $section->full_name }}
                 </div>
                 @if( $section->guidance )
-                    <span class="help-block">
-                        <strong>Guidance:</strong>
-                        {{ $section->guidance }}
-                    </span>
+                    <div class="guidance">
+                        <strong>Guidance: </strong>
+                        {!! HTML::decode($section->guidance) !!}
+                    </div>
                 @endif
+
                 @foreach(\App\Question::roots()->active()->where('section_id', $section->id)->orderBy('order', 'asc')->get() as $question)
                     @include('partials.question.edit', $question)
                 @endforeach

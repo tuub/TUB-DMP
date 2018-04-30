@@ -149,7 +149,7 @@ $(document).ready(function ()
      * @return {String} errorsHtml
      */
     $("#plan-section-steps").steps({
-        headerTag: "h4",
+        headerTag: "div.section-title",
         bodyTag: "section",
         transitionEffect: "slideLeft",
         autoFocus: true,

@@ -231,4 +231,22 @@ class Question extends Node
     {
         return self::where('section_id', $section->id)->max('order') + 1;
     }
+
+
+    /**
+     * Checks if any of the questions children has an answer.
+     *
+     * @param Survey $survey
+     * @return bool
+     */
+    public function childrenHaveAnswers(Survey $survey) : bool
+    {
+        foreach ($this->getChildren() as $children) {
+            if (Answer::check($survey, $children)->count() > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
