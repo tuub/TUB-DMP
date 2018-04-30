@@ -121,7 +121,7 @@ class AppHelper {
 
     public static function uriToPageTitle(array $path_info)
     {
-        if ($path_info['path']) {
+        if (array_key_exists('path', $path_info)) {
             $path = $path_info['path'];
             $path_array = explode('/', $path);
             $path_array = array_filter($path_array, function($value) { return $value !== ''; });
