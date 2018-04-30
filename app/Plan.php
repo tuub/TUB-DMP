@@ -222,10 +222,11 @@ class Plan extends Model
                 $questions = $this->survey->template->questions;
                 foreach ($questions as $question) {
                     /* @var $answers Answer[] */
-                    $answers = Answer::check($this->survey, $question);
-                    if ($answers !== null) {
-                        foreach ($answers as $answer) {
-                            $answers[$question->id] = $answer->value;
+                    $existing_answers = Answer::check($this->survey, $question);
+
+                    if ($existing_answers !== null) {
+                        foreach ($existing_answers as $existing_answer) {
+                            $answers[$question->id] = $existing_answer->value;
                         }
                     }
                 }
@@ -318,7 +319,6 @@ class Plan extends Model
             $pdf->getDomPDF()->setHttpContext($context);
 
             return $pdf->stream($filename);
-
             /* For debugging, switch the return with the following:
              * return view('pdf.dmp', compact('plan', 'project', 'survey'));
              */
