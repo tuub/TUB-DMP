@@ -42,6 +42,11 @@
                     {!! Form::checkbox('export_always', 1, old('export_always', $question->export_always)) !!}
                 </div>
                 <div class="controls">
+                    {!! Form::Label( 'export_never', trans('admin/question.form.label.export_never') ) !!}
+                    {!! Form::hidden('export_never', '0') !!}
+                    {!! Form::checkbox('export_never', 1, old('export_never', $question->export_never)) !!}
+                </div>
+                <div class="controls">
                     {!! Form::Label( 'export_keynumber', trans('admin/question.form.label.export_keynumber') ) !!}
                     {!! Form::hidden('export_keynumber', '0') !!}
                     {!! Form::checkbox('export_keynumber', 1, old('export_keynumber', $question->export_keynumber)) !!}

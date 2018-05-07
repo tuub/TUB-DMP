@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddExportAlwaysToQuestionsTable extends Migration
+class AddExportNeverToQuestionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddExportAlwaysToQuestionsTable extends Migration
     public function up()
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->boolean('export_always')->default(false);
+            $table->boolean('export_never')->default(false);
         });
     }
 
@@ -26,7 +26,7 @@ class AddExportAlwaysToQuestionsTable extends Migration
     public function down()
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->dropColumn('export_always');
+            $table->dropColumn('export_never');
         });
     }
 }

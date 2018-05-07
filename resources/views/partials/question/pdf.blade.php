@@ -2,7 +2,8 @@
     $answer = \App\Answer::get($survey, $question, 'html');
 @endphp
 
-@if(($question->export_always !== false
+@if(($question->export_always === true
+    || $question->export_never === false
     || $answer !== null)
     || ($question->content_type->identifier === 'plain'
         && $question->getImmediateDescendants()->count() > 0

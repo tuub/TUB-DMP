@@ -23,6 +23,7 @@ return [
             'is_mandatory' => 'Include in Completion Rate',
             'read_only' => 'Read-only',
             'export_always' => 'Export always',
+            'export_never' => 'Export never',
             'export_keynumber' => 'Export Keynumber',
             'text' => 'Text',
             'output_text' => 'Output Text in Export Formats',
