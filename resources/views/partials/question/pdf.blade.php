@@ -3,11 +3,11 @@
 @endphp
 
 @if(($question->export_always === true
-    || $question->export_never === false
     || $answer !== null)
     || ($question->content_type->identifier === 'plain'
         && $question->getImmediateDescendants()->count() > 0
         && $question->childrenHaveAnswers($survey)
+        && $question->export_never === false
     ))
     <div class="row question">
         @if ($question->content_type->identifier === 'plain' || $question->isChild())
