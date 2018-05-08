@@ -9,6 +9,7 @@ use Illuminate\Support\Collection as Collection;
 use App\Plan;
 use App\Question;
 use App\Answer;
+use GrahamCampbell\Markdown\Facades\Markdown;
 
 class HtmlOutputFilter implements OutputInterface
 {
@@ -84,7 +85,8 @@ class HtmlOutputFilter implements OutputInterface
                                 //var_dump($value);
                                 break;
                             default:
-                                $output = nl2br($value);
+                                //$output = nl2br($value);
+                                $output = Markdown::convertToHtml($value);
                                 break;
                         }
                     }

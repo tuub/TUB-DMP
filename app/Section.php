@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\Uuids;
 

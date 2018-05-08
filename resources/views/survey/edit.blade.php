@@ -41,7 +41,7 @@
                 @if( $section->guidance )
                     <div class="guidance">
                         <strong>Guidance: </strong>
-                        {!! HTML::decode($section->guidance) !!}
+                        {% $section->guidance %}
                     </div>
                 @endif
 

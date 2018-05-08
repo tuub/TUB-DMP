@@ -4,18 +4,12 @@
 <div class="row form-group">
     <div class="col-md-22 col-xs-22">
         <label for="{{ $question->id }}" class="question-text control-label">
-            @if(is_numeric( $question->keynumber ) || str_contains($question->keynumber, '/'))
-                {{ $question->keynumber }}.
-            @else
-                {{ $question->keynumber }}
-            @endif
-            {!! HTML::decode($question->text) !!}
+            {% $question->getQuestionText() %}
         </label>
 
         @if($question->guidance)
-            <div class="guidance">
-                <strong>Guidance: </strong>
-                {!! HTML::decode($question->guidance) !!}
+            <div class="row">
+                @infobox({% $question->guidance %})
             </div>
         @endif
 

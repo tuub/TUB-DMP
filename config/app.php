@@ -168,6 +168,8 @@ return [
         Laravel\Tinker\TinkerServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        GrahamCampbell\Markdown\MarkdownServiceProvider::class,
+        Haleks\Writedown\WritedownServiceProvider::class
     ],
 
     /*
@@ -224,7 +226,7 @@ return [
         'Flash'     => Laracasts\Flash\Flash::class,
         'BootForm'  => AdamWathan\BootForms\Facades\BootForm::class,
         'PDF'       => Barryvdh\DomPDF\Facade::class,
-
-    ],
-
+        'Markdown'  => GrahamCampbell\Markdown\Facades\Markdown::class,
+        'Writedown' => Haleks\Writedown\Facades\Writedown::class
+    ]
 ];

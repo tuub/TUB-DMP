@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Blade;
-use App\Library\ImageFile;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +22,42 @@ class AppServiceProvider extends ServiceProvider
         /* Formats given date after $date_pattern */
         Blade::directive('time', function ($expression) {
             return "<?php echo ($expression)->format('g:i A'); ?>";
+        });
+
+        /* Formats given date after $date_pattern */
+        Blade::directive('infobox', function ($content) {
+            $output = '<div class="col-xs-24">
+                            <div class="alert alert-guidance" role="alert">
+                                <div class="row">
+                                    <div class="col-xs-1 vertical-align">
+                                        <i class="fa fa-info-circle fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-22">
+                                        ' . $content . '
+                                    </div>
+                                </div>
+                            </div>
+                       </div>';
+
+            return $output;
+        });
+
+        /* Formats given date after $date_pattern */
+        Blade::directive('infobox2', function ($content) {
+            $output = '<div class="col-xs-24">
+                            <div class="alert alert-guidance" role="alert">
+                                <div class="row">
+                                    <div class="col-xs-1 vertical-align">
+                                        <i class="fa fa-info fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-22">
+                                        ' . $content . '
+                                    </div>
+                                </div>
+                            </div>
+                       </div>';
+
+            return $output;
         });
     }
 

@@ -19,8 +19,8 @@ use App\Library\Notification;
  *
  * @package App\Http\Controllers\Admin
  */
-class SectionController extends Controller {
-
+class SectionController extends Controller
+{
     protected $section;
     protected $template;
 
@@ -116,7 +116,7 @@ class SectionController extends Controller {
     {
         $section = $this->section->findOrFail($id);
         $template = $section->template;
-        $position = $this->section->getNextOrderPosition($template);
+        $position = $section->order;
         $return_route = 'admin.template.sections.index';
 
         return view('admin.section.edit', compact('section','template', 'return_route', 'position'));

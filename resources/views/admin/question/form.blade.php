@@ -12,6 +12,9 @@
 
     {!! Form::model($question, ['method' => $method, 'route' =>  ['admin.question.' . $action, $question->id], 'class' => '', 'role' => 'form']) !!}
         <legend>{{ trans('admin/question.title.' . $mode) }}</legend>
+
+        {!! trans('form.markdown_support') !!}
+
         {!! Form::hidden('order', ($position ?? $question->order)) !!}
         {!! Form::hidden('template_id', $template->id) !!}
         <div class="row">

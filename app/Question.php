@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Helpers\AppHelper;
 use Baum\Node;
 use App\Library\Traits\Uuids;
 use Iatstuti\Database\Support\NullableFields;
@@ -50,10 +51,6 @@ class Question extends Node
         'hint'
     ];
     /* Nested Sets */
-    protected $parentColumn = 'parent_id';
-    protected $leftColumn = 'lft';
-    protected $rightColumn = 'rgt';
-    protected $depthColumn = 'depth';
     protected $orderColumn = 'order';
     protected $scoped = [];
 
@@ -180,6 +177,33 @@ class Question extends Node
     */
 
     /**
+     * Renders a question's text depending on
+     * - keynumber: numeric, with dot or else
+     * - output text: available or not
+     *
+     * @return string
+     */
+    public function getQuestionText()
+    {
+        $output = '';
+
+        if ($this->keynumber) {
+            $suffix = '';
+            if (preg_match('/^[0-9]$/', $this->keynumber)) {
+                $suffix = '.';
+            } elseif (preg_match('/[a-zA-Z]/', $this->keynumber)) {
+                $suffix = ')';
+            }
+            $output = $this->keynumber . $suffix . '&nbsp;';
+        }
+
+        $output .= ($this->output_text ?? $this->text);
+
+        return $output;
+    }
+
+
+    /**
      * What does it do
      *
      * Description
@@ -241,12 +265,57 @@ class Question extends Node
      */
     public function childrenHaveAnswers(Survey $survey) : bool
     {
-        foreach ($this->getChildren() as $children) {
+        foreach ($this->getImmediateDescendants() as $children) {
             if (Answer::check($survey, $children)->count() > 0) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public function display(Survey $survey, Question $question, $debug = false)
+    {
+        $answer = \App\Answer::get($survey, $question, 'html');
+
+        if ($answer !== null && \strlen($answer) === 0) {
+            $answer = null;
+        }
+
+        //AppHelper::varDump($answer);
+
+        if ($answer !== null || ($question->content_type->identifier === 'plain' && $question->export_never === false)) {
+            //echo '<h4>' . $question->text . '</h4>';
+            //echo $answer;
+            //echo '<h5>' . $question->text . '</h5>';
+            //echo 'Hat eine Antwort ODER ist exportable plain!';
+            $result = true;
+        } else {
+            if ($question->export_always === true || ($question->getImmediateDescendants()->count() > 0 && $question->childrenHaveAnswers($survey))) {
+                //echo '<h4>' . $question->text . '</h4>';
+                //echo $answer;
+                $result = true;
+            } else {
+                //echo '<h4>' . $question->text . '</h4>';
+                //echo 'RAUS!';
+                $result = false;
+            }
+        }
+
+        if($result == true && $debug) {
+            echo '<div style="background-color: #ccc;">';
+            AppHelper::varDump($answer);
+            echo '<ul>';
+            echo '<li>question->text:' . $question->text ?? $question->output_text. '</li>';
+            //echo '<li>question->export_always:' . $question->export_always . '</li>';
+            //echo '<li>answer:' . $answer . '</li>';
+            //echo '<li>question->content_type->identifier:' . $question->content_type->identifier . '</li>';
+            //echo '<li>Kids:' . ($question->getImmediateDescendants()->count() > 0 && $question->childrenHaveAnswers($survey)) . '</li>';
+            echo '<li>question->export_never:' . $question->export_never . '</li>';
+            echo '</ul>';
+            echo '</div>';
+        }
+
+        return $result;
     }
 }

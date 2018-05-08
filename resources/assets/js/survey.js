@@ -1,8 +1,57 @@
-$(window).on('load', function()
+$(document).ready(function ()
 {
+    /**
+     * Builds the section tabs for survey edit
+     * FIXME: Was not working in survey.js anymore after switch to webpack mix
+     *
+     * @param {Json} json
+     *
+     * @return {String} errorsHtml
+     */
+    $("#plan-section-steps").steps({
+        headerTag: "div.section-title",
+        bodyTag: "section",
+        transitionEffect: "slideLeft",
+        autoFocus: true,
+        enableAllSteps: true,
+        saveState: true,
+        enablePagination: false,
+        titleTemplate: '#title#',
+        stepsOrientation: 1,
+        transitionEffectSpeed: 100,
+        onStepChanging: function (event, currentIndex, newIndex) {
+            if($(window).scrollTop() > 0) {
+                $('html, body').animate({
+                    scrollTop:0
+                }, 300);
+            }
+
+            return true;
+        },
+    });
+
+    //$('textarea').autobox();
+
+    $('body').autoboxBind();
+
+    /*
+    $('textarea').each(function(){
+        autosize(this);
+    });
+    */
+
+    /*
+    $('textarea').flexible();
+
+    $('textarea').off("keyup.textarea").on("keyup.textarea", function() {
+        console.log('Resizing ...');
+        $('textarea').trigger('updateHeight');
+    });
+    */
+
+
     /* Autoheight for textareas with prefilled content, based on line breaks
      * TODO: Still room for improvement.
-     */
 
     $('textarea').each(function(e){
         if( $(this).val().length > 0 )
@@ -15,6 +64,9 @@ $(window).on('load', function()
             $(this).attr('rows', 2);
         }
     });
+    */
+
+
 
     $("div.tagsinput select").tagsinput('items');
 

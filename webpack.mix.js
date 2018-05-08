@@ -31,6 +31,9 @@ var paths = {
     'jquery_collapse': vendor_path + 'jquery-collapse/',
     'jquery_expander': vendor_path + 'jquery-expander/',
     'simple_expand': vendor_path + 'simple-expand/',
+    //'autosize': vendor_path + 'autosize/',
+    'autobox': vendor_path + 'jquery.autobox/',
+    //'flexible_area': vendor_path + 'flexibleArea.js/',
     'jquery_cookie': vendor_path + 'jquery.cookie/',
     'jquery_steps': vendor_path + 'jquery-steps/',
     'vue': vendor_path + 'vue/',
@@ -66,7 +69,10 @@ mix.scripts([
     paths.typeahead + 'dist/typeahead.jquery.js',
     paths.jquery_cookie + 'jquery.cookie.js',
     paths.jquery_expander + 'jquery.expander.js',
-    paths.simple_expand + 'src/simple-expand.min.js'
+    paths.simple_expand + 'src/simple-expand.min.js',
+    paths.autobox + 'dist/jquery.autobox.js',
+    //paths.flexible_area + 'jquery.flexibleArea.js',
+    //paths.autosize + 'dist/autosize.min.js'
 ], './public/js/vendor.js');
 
 mix.babel([

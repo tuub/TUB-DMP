@@ -12,7 +12,7 @@
 
     {!! Form::model($section, ['method' => $method, 'route' => ['admin.section.' . $action, $section->id], 'class' => '', 'role' => 'form']) !!}
     <legend>{{ trans('admin/section.title.' . $mode) }}</legend>
-    {!! Form::hidden('order', ($position ?? $section->order)) !!}
+    {!! Form::hidden('order', ($section->order ?? $position)) !!}
     {!! Form::hidden('template_id', $template->id) !!}
     {!! Form::hidden('return_route', $return_route) !!}
     <div class="row">

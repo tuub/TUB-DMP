@@ -140,35 +140,6 @@ $(document).ready(function ()
      */
     $("form#demo-login-form input#username").focus();
 
-    /**
-     * Builds the section tabs for survey edit
-     * FIXME: Was not working in survey.js anymore after switch to webpack mix
-     *
-     * @param {Json} json
-     *
-     * @return {String} errorsHtml
-     */
-    $("#plan-section-steps").steps({
-        headerTag: "div.section-title",
-        bodyTag: "section",
-        transitionEffect: "slideLeft",
-        autoFocus: true,
-        enableAllSteps: true,
-        saveState: true,
-        enablePagination: false,
-        titleTemplate: '#title#',
-        stepsOrientation: 1,
-        transitionEffectSpeed: 100,
-        onStepChanging: function (event, currentIndex, newIndex) {
-            if($(window).scrollTop() > 0) {
-                $('html, body').animate({
-                    scrollTop:0
-                }, 300);
-            }
-            return true;
-        },
-    });
-
 
     /**
      * Serializes the feedback form and passes the form data to controller method

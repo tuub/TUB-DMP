@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AppHelper;
 use App\Http\Controllers\Controller;
 use App\Question;
 use App\Template;
@@ -13,6 +14,7 @@ use App\Http\Requests\Admin\CreateQuestionRequest;
 use App\Http\Requests\Admin\UpdateQuestionRequest;
 use App\Library\Sanitizer;
 use App\Library\Notification;
+use GrahamCampbell\Markdown\Facades\Markdown;
 
 
 /**
@@ -122,6 +124,7 @@ class QuestionController extends Controller {
     public function edit($id)
     {
         $question = $this->question->find($id);
+
         $template = $question->template;
         $section = $question->section;
         $content_types = $this->content_type->active()->get()->pluck('title', 'id');

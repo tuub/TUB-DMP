@@ -6,38 +6,40 @@
     "type": "project",
     "require": {
         "php": ">=7.1.0",
-        "laravel/framework": "5.5.*",
-        "laravelcollective/html": "5.5.*",
-        "iamcal/lib_autolink": "^1.7",
-        "laracasts/flash": "^2.0",
-        "felixkiss/uniquewith-validator": "^2.0",
-        "baum/baum": "^1.1",
         "adamwathan/bootforms": "^0.8.4",
         "barryvdh/laravel-dompdf": "^0.8.0",
-        "tck/odbc": "dev-master",
-        "laravel/tinker": "^1.0",
-        "razorbacks/laravel-shibboleth": "^2.2",
-        "mrclay/shibalike": "^1.0",
-        "webpatser/laravel-uuid": "^3.0",
+        "baum/baum": "^1.1",
         "davejamesmiller/laravel-breadcrumbs": "^4.2",
+        "felixkiss/uniquewith-validator": "^2.0",
+        "graham-campbell/markdown": "^10.0",
+        "haleks/writedown": "^2.1",
+        "iamcal/lib_autolink": "^1.7",
         "iatstuti/laravel-nullable-fields": "^1.5",
-        "intervention/image": "^2.4"
+        "intervention/image": "^2.4",
+        "laracasts/flash": "^2.0",
+        "laravel/framework": "5.5.*",
+        "laravel/tinker": "^1.0",
+        "laravelcollective/html": "5.5.*",
+        "mrclay/shibalike": "^1.0",
+        "razorbacks/laravel-shibboleth": "^2.2",
+        "roave/security-advisories": "dev-master",
+        "tck/odbc": "dev-master",
+        "webpatser/laravel-uuid": "^3.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^2.2",
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "doctrine/dbal": "~2.3",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
+        "laracasts/generators": "dev-master as 1.1.4",
         "mockery/mockery": "0.9.*",
+        "phpspec/phpspec": "~2.1",
         "phpunit/phpunit": "~6.0",
+        "rap2hpoutre/laravel-log-viewer": "^0.5.3",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
-        "phpspec/phpspec": "~2.1",
-        "rap2hpoutre/laravel-log-viewer": "^0.5.3",
-        "doctrine/dbal": "~2.3",
-        "barryvdh/laravel-debugbar": "^2.2",
-        "laracasts/generators": "dev-master as 1.1.4",
-        "themsaid/laravel-langman": "^1.1",
-        "barryvdh/laravel-ide-helper": "^2.4",
-        "roave/security-advisories": "dev-master"
+        "themsaid/laravel-langman": "^1.1"
     },
     "autoload": {
         "classmap": [
@@ -82,6 +84,7 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }

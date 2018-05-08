@@ -319,6 +319,7 @@ class Plan extends Model
             $pdf->getDomPDF()->setHttpContext($context);
 
             return $pdf->stream($filename);
+            //return view('pdf.dmp', compact('plan', 'project', 'survey'));
             /* For debugging, switch the return with the following:
              * return view('pdf.dmp', compact('plan', 'project', 'survey'));
              */

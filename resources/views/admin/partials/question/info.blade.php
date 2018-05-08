@@ -4,9 +4,7 @@
     @else
         <td>
     @endif
-        {{ $question->keynumber }}
-        &nbsp;
-        {{ $question->text }}
+        {% $question->getQuestionText() %}
     </td>
     <td>
         {{ $question->output_text ? $question->output_text : trans('admin/table.value.null') }}
