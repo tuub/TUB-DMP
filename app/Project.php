@@ -350,9 +350,11 @@ class Project extends Node
 
         try {
             if (env('PROJECT_IDENTIFIER_RANDOM_PREFIX') && env('PROJECT_IDENTIFIER_RANDOM_LENGTH')) {
-                $min = 1 . str_repeat(0, env('PROJECT_IDENTIFIER_RANDOM_LENGTH')-1);
-                $max = str_repeat(9, env('PROJECT_IDENTIFIER_RANDOM_LENGTH'));
-                $identifier = env('PROJECT_IDENTIFIER_RANDOM_PREFIX') . random_int($min, $max);
+                //$min = 1 . str_repeat('1', env('PROJECT_IDENTIFIER_RANDOM_LENGTH')-1);
+                //$max = str_repeat('9', env('PROJECT_IDENTIFIER_RANDOM_LENGTH'));
+                //$identifier = env('PROJECT_IDENTIFIER_RANDOM_PREFIX') . random_int($min, $max);
+                $identifier = env('PROJECT_IDENTIFIER_RANDOM_PREFIX') . implode('', array_map(function($value) {
+                    return $value === 1 ? random_int(1, 9) : random_int(0, 9); }, range(1, env('PROJECT_IDENTIFIER_RANDOM_LENGTH'))));
             } else {
                 throw new ConfigException('Missing config variables');
             }
