@@ -376,7 +376,7 @@
                                 $GLOBALS['toc'][$pdf->get_page_number() - 1] = "@if($section->export_keynumber){{$section->keynumber}} @endif{{ $section->name }}";
                             }
                         </script>
-                        <div class="row section-title">
+                        <div class="row section-title nobreak">
                             <h3>
                                 @if($section->export_keynumber)
                                     {{ $section->keynumber }}

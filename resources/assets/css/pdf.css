@@ -111,3 +111,15 @@ div.frontpage#generator {
     left: 40px;
     right: 40px;
 }
+
+p {
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+    margin-bottom: 0px !important;
+    margin-top: 15px !important;
+}
+
+.nobreak {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+}
