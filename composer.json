@@ -34,12 +34,14 @@
         "fzaninotto/faker": "~1.4",
         "laracasts/generators": "dev-master as 1.1.4",
         "mockery/mockery": "0.9.*",
+        "orangehill/iseed": "^2.5",
         "phpspec/phpspec": "~2.1",
         "phpunit/phpunit": "~6.0",
         "rap2hpoutre/laravel-log-viewer": "^0.5.3",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
-        "themsaid/laravel-langman": "^1.1"
+        "themsaid/laravel-langman": "^1.1",
+        "xethron/migrations-generator": "^2.0"
     },
     "autoload": {
         "classmap": [
@@ -85,6 +87,7 @@
     },
     "config": {
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "discard-changes": true
     }
 }

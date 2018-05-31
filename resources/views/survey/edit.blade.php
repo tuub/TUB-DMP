@@ -11,7 +11,7 @@
             outline: 0px #336699 solid;
         }
 
-        #plan-section-steps h4 {
+        #plan-section-steps .section-title {
             margin-top: 0 !important;
         }
 
