@@ -188,7 +188,7 @@ class ProjectController extends Controller
             // If valid TUB identifier, set data_source to to DEFAULT_DATASOURCE,
             // If not, generate random identifier and leave data_source to NULL
             if ($this->project->isValidIdentifier($data['identifier'])) {
-                $data['data_source_id'] = $this->data_source->getByIdentifier(env('PROJECT_DEFAULT_DATASOURCE'));
+                $data['data_source_id'] = $this->data_source->getByIdentifier(env('PROJECT_DEFAULT_DATASOURCE'))->id;
             } else {
                 $data['identifier'] = $this->project->generateRandomIdentifier() ?? abort(500, 'Config Error!');
             }
