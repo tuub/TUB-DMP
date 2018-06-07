@@ -4,67 +4,26 @@ TUB-DMP is a tool for handling data management planning efficiently, based on th
 
 ## Installation
 
-TUB-DMP 1.3 is a web application, implemented in [Laravel] 5.5
+TUB-DMP 2.1 is a web application, implemented in [Laravel] 5.5
 
 ### Prerequisites
 TUB-DMP has several requirements:
-* Linux, Apache2, PHP7.x, PDO-Driver, php-mbstring, php-xml, php-mcrypt, php-zip, php-dom
-* Database of your choice, preferably PostgreSQL with UUID extension + the corresponding php lib
-* [Node, NVM, NPM]
-* [Yarn]
-* [Composer]
-* VirtualHost Configuration (see below for example)
-* sudo a2enmod rewrite && sudo service apache2 restart
+* Linux, Webserver (Apache2), PHP7.1
+* Database of your choice, preferably PostgreSQL
 
-`Example Apache2 config`:
- ```sh
-<VirtualHost *:80>
-    ServerName dmp.localhost
-    DocumentRoot "/srv/tub-dmp/public/"
-    ServerAdmin webmaster@localhost
- 
-    <Directory "/srv/tub-dmp/public">
-            AllowOverride all
-            Require all granted
-    </Directory>
-</VirtualHost>
-```
+### Installation
+The script takes care of most configuration steps.
+Tricky parts like authentication (Shibboleth only at the moment) 
+and the import from data sources are described below.
 
-`3rd party components`:
-* [Twitter Bootstrap] - UI boilerplate for modern web apps
-* [Composer] - PHP Dependency Manager
-* [Yarn] - node.js/npm based Packet & Dependency Manager
+1. Copy .env.example to .env
+2. Modify it to your needs (mainly database setup)
+3. cd installer && chmod u+x install.sh && ./install.sh
 
-### Installation of main app
-1. Clone the git repository to your web root: git clone git@gitlab.tubit.tu-berlin.de:onIT/tub-dmp.git
-2. Create a database ("tub-dmp" for example) and setup user permissions
-3. Copy the environment file: cp .env.example .env
-4. Modify .env with your database credentials
-5. Review the files in the config directory, e.g. session.php
-6. Set permissions: chmod -R 777 storage
-7. Set permissions: chmod -R 777 bootstrap/cache
-
-### Installation of vendor components
-1. Run Composer: composer install --no-scripts && composer update
-2. Run Yarn: yarn && yarn run [dev, production]
-3. Set a new app encryption key by running: php artisan config:clear && php artisan key:generate
-
-Installation of additional components or changes to the Assets require calling of
-* yarn info *query* / yarn add *package*
-* yarn run [dev, production]
-
-### Run the data migrations
-1. Setup the migrations support in the database: php artisan migrate:install
-2. Create the database tables: php artisan migrate
-3. Insert data to the tables: php artisan db:seed
-4. Setup the hierarchies in the nested question sets: php artisan db:hierarchy
-5. If PostgreSQL: Update the sequences via
-```
-php artisan db:sequences
-```
+_Note: Only PostgreSQL and MySQL are currently supported in the installer script._
 
 ### Activate Data Source Imports
-In order to import project metadata from external source you might have to configure ODBC and add a cronjob:
+Tricky part: In order to import project metadata from external source you might have to configure ODBC and add a cronjob:
 
 ##### Example connection with SQL Server #####
 [https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx](https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx)
@@ -191,16 +150,11 @@ Seed to the new database:
 composer dump-autoload && php artisan db:seed --class=IVMCDMPProjektTableSeeder
 ```
 
-##### Setting up scheduler in a cronjob #####
-Optional, we do not use this right now.
-
-```sh
-* * * * * php /srv/tub-dmp/artisan schedule:run >> /dev/null 2>&1
-```
-
-### Activate Shibboleth ###
-Shibboleth is enabled by default. You could also fall back to the built-in [Laravel Authentication] with passwords, 
+### Authentication: Shibboleth ###
+Shibboleth is enabled by default. You could also fall back to the built-in [Laravel Authentication] with passwords,
 remember tokens, registration.
+
+**An upcoming version of the installer script will handle this automatically!**
 
 ##### Modify config/shibboleth.php #####
 For testing out the Shibboleth authentication in an environment without working IdP, you can use Shibalike.
@@ -272,7 +226,6 @@ public function getInstitutionIdentifierAttribute()
 ```
 
 ##### Overwrite vendor class with app/Library/ShibbolethController.php #####
-We do it this way since overriding OOP-style was complicated.
 
 ```sh
 cp app/Library/ShibbolethController.php vendor/razorbacks/laravel-shibboleth/src/StudentAffairsUwm/Shibboleth/Controllers/
