@@ -12,7 +12,7 @@ class IVMCDMPSchlagworteTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('t_821320_IVMC_DMP_Schlagworte')->insert([
+        DB::table('t_821396_IVMC_DMP_Schlagworte')->insert([
             [
                 'ID' => '1468410',
                 'ID_KTR' => '1124114',
