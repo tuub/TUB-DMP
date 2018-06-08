@@ -4,6 +4,12 @@
 ## Usage: xxx
 ##
 #?
+
+# ?????
+set -e
+set -u
+# ?????
+
 echo
 echo -e "TUB-DMP-INSTALLER"
 echo -e "(C) 2018 UB TU Berlin."
@@ -12,7 +18,6 @@ echo -e "The following script might need require curl to install missing libs."
 echo -e "The following script might need require sudo rights to install missing libs (requires Ubuntu)."
 echo
 echo -e "Database with user will be created during the procedure."
-echo -e "The following script might need require sudo rights to install missing libs."
 source env.cfg
 shopt -s extglob
 
@@ -45,6 +50,8 @@ do
             DB_DRIVER="$value"
         elif [ $key = "DB_HOST" ]; then
             DB_HOST="$value"
+        elif [ $key = "DB_HOST" ]; then
+            DB_HOST="$value"
         elif [ $key = "DB_DATABASE" ]; then
             DB_NAME="$value"
         elif [ $key = "DB_USERNAME" ]; then
@@ -55,26 +62,25 @@ do
     fi
 done < ".env"
 
-
-
 # Assign driver specific database operations
 if [ ${DB_DRIVER} = "pgsql" ]; then
-    DB_EXISTS="sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw ${DB_NAME}"
-    DB_USER_EXISTS="sudo -u postgres psql -t -c '\du' | cut -d \| -f 1 | grep -qw ${DB_USER}"
-    DB_DROP_CMD="sudo -u postgres psql -q -c 'DROP DATABASE \"${DB_NAME}\"'"
-    DB_CREATE_CMD="sudo -u postgres psql -q -c 'CREATE DATABASE \"${DB_NAME}\"'"
-    DB_UUID_CMD="sudo -u postgres psql -q -d ${DB_NAME} -c 'CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"'"
-    DB_DELETE_USER_CMD="sudo -u postgres psql -q -c 'DROP ROLE IF EXISTS ${DB_USER}'"
-    DB_CREATE_USER_CMD="sudo -u postgres psql -q -c \"CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASSWORD}'\""
-    DB_GRANT_USER_CMD="sudo -u postgres psql -q -c 'GRANT ALL PRIVILEGES ON DATABASE \"${DB_NAME}\" TO ${DB_USER}'"
+
+    export PGHOST=${DB_HOST-localhost}
+    export PGDATABASE=${DB_NAME}
+    export PGUSER=${DB_USER}
+    export PGPASSWORD=${DB_PASSWORD}
+
+    DB_EXISTS="psql -lqt | cut -d \| -f 1 | grep -qw ${DB_NAME}"
+    DB_USER_EXISTS="psql -t -c '\du' | cut -d \| -f 1 | grep -qw ${DB_USER}"
+    DB_DROP_CMD="sudo -u ${DB_USER} psql -q -c 'DROP DATABASE \"${DB_NAME}\"'"
+    DB_CREATE_CMD="sudo -u ${DB_USER} psql -q -c 'CREATE DATABASE \"${DB_NAME}\"'"
+    DB_UUID_CMD="sudo -u ${DB_USER} psql -q -d ${DB_NAME} -c 'CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"'"
+    DB_GRANT_USER_CMD="sudo -u ${DB_USER} psql -q -c 'GRANT ALL PRIVILEGES ON DATABASE \"${DB_NAME}\" TO ${DB_USER}'"
 elif [ ${DB_DRIVER} = "mysql" ]; then
     DB_EXISTS="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"SHOW DATABASES\" | grep $DB_NAME"
-    DB_USER_EXISTS="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"DROP USER IF EXISTS '$DB_USER'@'$DB_HOST'\""
     DB_DROP_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"DROP DATABASE \"$DB_NAME\"\""
     DB_CREATE_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"CREATE DATABASE \"$DB_NAME\"\""
     DB_UUID_CMD=""
-    DB_DELETE_USER_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"DROP USER '$DB_USER'@'$DB_HOST'\""
-    DB_CREATE_USER_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD'\""
     DB_GRANT_USER_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST'\""
 else
     echo -e "Your database is not yet supported by this script."
@@ -92,6 +98,8 @@ if hash yarn 2>/dev/null; then
     YARN_INSTALLED=true
 fi
 
+RELOAD_SERVER=false
+
 echo
 
 # Display config
@@ -108,11 +116,13 @@ echo -e "* PHP Version: $PHP_VERSION"
 
 echo
 read -n1 -p "Continue? [y,n]: " CONTINUE
+
+echo
 echo
 
 echo -e "The following script might require sudo rights for:"
 echo -e "* installing components (Composer, NPM, Yarn)"
-echo -e "* setting up the database environment (using a root user)"
+echo -e "* setting up the database environment (database user must exist)"
 echo
 
 if [[ "$CONTINUE" == [Yy] ]]; then
@@ -157,7 +167,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
         echo -n "OK"
     fi
 
-    if [ "$RELOAD_SERVER" = true ]; then
+    if [ "$RELOAD_SERVER" == true ]; then
             echo
             echo -n "Reloading Apache2 ... "
             sudo service apache2 reload
@@ -234,7 +244,6 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     fi
 
     echo
-    echo
 
     echo -e "--------------------------------------------------------------------"
     echo -e "INSTALL DEPENDENCIES"
@@ -275,8 +284,12 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     echo -e "--------------------------------------------------------------------"
 
     if [ "$DB_RESET" = true ]; then
+
+        echo -e "Some database operations need administrative access to succeed."
+        echo -e "You might get asked for your password."
+
         if eval ${DB_EXISTS}; then
-            echo -n "* Dropping existing database \"$DB_NAME\" ... "
+            echo -n "* Dropping existing database \"$DB_NAME\" using root account ... "
             read -n1 -p "Continue? [y,n] " CONTINUE
             if [[ "$CONTINUE" == [yY] ]]; then
                 eval ${DB_DROP_CMD}
@@ -287,7 +300,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
             echo
         fi
 
-        echo -n "* Creating database \"$DB_NAME\" ... "
+        echo -n "* Creating database \"$DB_NAME\" using root account ... "
         if eval ${DB_EXISTS}; then
             echo -n "DATABASE ALREADY EXISTS. SKIP."
         else
@@ -296,30 +309,12 @@ if [[ "$CONTINUE" == [Yy] ]]; then
         fi
         echo
 
-        echo -n "* Enabling UUID support on \"$DB_NAME\" ... "
+        echo -n "* Enabling UUID support on \"$DB_NAME\" using root account  ... "
         eval ${DB_UUID_CMD}
         echo -n "OK"
         echo
 
-        echo -n "* Adding user \"$DB_USER\" ... "
-        if eval ${DB_USER_EXISTS}; then
-            echo -n "* Dropping existing user \"$DB_NAME\" ... "
-            echo -n "DATABASE USER ALREADY EXISTS. "
-            read -n1 -p "Replace? [y,n] " CONTINUE
-            if [[ "$CONTINUE" == [yY] ]]; then
-                eval ${DB_DELETE_USER_CMD}
-                eval ${DB_CREATE_USER_CMD}
-                echo -n "OK"
-            else
-                echo -n "SKIP"
-            fi
-        else
-            eval ${DB_CREATE_USER_CMD}
-            echo -n "OK"
-        fi
-        echo
-
-        echo -n "* Granting user \"$DB_USER\" the privileges to database  \"$DB_NAME\" ... "
+        echo -n "* Granting user \"$DB_USER\" the privileges to database  \"$DB_NAME\" using root account  ... "
         eval ${DB_GRANT_USER_CMD}
         echo -n "OK"
         echo
@@ -351,10 +346,10 @@ if [[ "$CONTINUE" == [Yy] ]]; then
 
     echo -n "* Setting permissions to \"bootstrap/cache\" and \"storage\" and \"public\" ... "
     #mysql -u $target_db_user -p$target_db_pw -e "DROP DATABASE $DB_NAME"
-    sudo chmod -R 755 $APP_ROOT/bootstrap/cache
+    sudo chmod -R 774 $APP_ROOT/bootstrap/cache
     sudo chown -R $USER:www-data $APP_ROOT/storage
-    sudo chmod -R 755 $APP_ROOT/storage
-    sudo chmod -R 755 $APP_ROOT/public
+    sudo chmod -R 774 $APP_ROOT/storage
+    sudo chmod -R 774 $APP_ROOT/public
     echo -n "OK"
     echo
 
