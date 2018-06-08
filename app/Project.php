@@ -304,8 +304,13 @@ class Project extends Node
         $data_sources = DataSource::get();
         $external_data = [];
 
-        /* Determine database connection */
-        env('DEMO_MODE') ? $connection = 'odbc-demo' : $connection = 'odbc';
+        /* Determine database connection and identifier */
+        if (env('DEMO_MODE')) {
+            $connection = 'odbc-demo';
+            $identifier = '12345678';
+        } else {
+            $connection = 'odbc';
+        }
 
         /* The loop */
         foreach ($data_sources as $data_source) {

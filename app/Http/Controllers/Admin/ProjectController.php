@@ -217,7 +217,11 @@ class ProjectController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getLookup() {
-        $data_sources = DataSource::get()->pluck('identifier','id')->prepend('Select a datasource','');
+        if (env('PROJECT_ALLOW_DATASOURCE_IMPORT')) {
+            $data_sources = DataSource::get()->pluck('name','id')->prepend('Select a data source','');
+        } else {
+            $data_sources = collect([null => 'Disabled by configuration']);
+        }
         return view('admin.project.lookup', compact('data_sources'));
     }
 

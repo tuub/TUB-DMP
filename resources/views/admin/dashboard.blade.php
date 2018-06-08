@@ -17,11 +17,9 @@
     <h2>Users</h2>
     @include('admin.partials.user.index')
 
-    @if (!env('DEMO_MODE'))
-        <h2>Helpers</h2>
-        {{ HTML::link(route('admin.project.get_lookup'), 'Lookup', ['class' => 'btn btn-default']) }}
-        {{ HTML::link(route('admin.random_identifier'), 'Random Identifier', ['class' => 'btn btn-default']) }}
-    @endif
+    <h2>Helpers</h2>
+    {{ HTML::link(route('admin.project.get_lookup'), 'Lookup', ['class' => 'btn btn-default']) }}
+    {{ HTML::link(route('admin.random_identifier'), 'Random Identifier', ['class' => 'btn btn-default']) }}
 
     @if (!env('DEMO_MODE'))
         <h2>Data Sources</h2>
