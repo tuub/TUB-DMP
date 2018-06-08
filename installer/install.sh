@@ -172,7 +172,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     echo -e "--------------------------------------------------------------------"
 
     # Composer Check
-    if [ ! COMPOSER_INSTALLED ]; then
+    if [ COMPOSER_INSTALLED ]; then
         echo -e "* Composer installation found."
     else
         echo -n "* Composer is not present. Downloading and installing ... "
@@ -189,7 +189,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     fi
 
     # NPM Check
-    if [ ! NPM_INSTALLED ]; then
+    if [ NPM_INSTALLED ]; then
         echo -e "* NPM installation found."
     else
         echo
@@ -214,7 +214,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     fi
 
     # Yarn Check
-    if [ ! YARN_INSTALLED ]; then
+    if [ YARN_INSTALLED ]; then
         echo -e "* Yarn installation found."
     else
         echo
