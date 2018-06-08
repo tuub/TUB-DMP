@@ -58,7 +58,11 @@
             </div>
             <div class="modal-footer">
                 {!! BootForm::button(trans('project.request.button.cancel'))->class('btn btn-default')->data(['dismiss' => 'modal']) !!}
-                {!! BootForm::submit(trans('project.request.button.submit'))->class('btn btn-success') !!}
+                @if (env('DEMO_MODE'))
+                    {!! BootForm::submit(trans('project.request.button.submit.demo'))->class('btn btn-success') !!}
+                @else
+                    {!! BootForm::submit(trans('project.request.button.submit.production'))->class('btn btn-success') !!}
+                @endif
             </div>
         </div>
     </div>

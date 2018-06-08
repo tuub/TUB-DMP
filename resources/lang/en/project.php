@@ -36,7 +36,10 @@ return [
             'contact_email' => 'sekretariat@...',
         ],
         'button' => [
-            'submit' => 'Submit to SZF Team',
+            'submit' => [
+                'demo' => 'Create Project',
+                'production' => 'Request Project'
+            ],
             'cancel' => 'Cancel',
         ]
     ],
