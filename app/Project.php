@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Exceptions\ConfigException;
+use App\Helpers\AppHelper;
 use App\Library\Traits\Uuids;
 use Baum\Node;
 use Carbon\Carbon;
@@ -99,6 +100,27 @@ class Project extends Node
     {
         return $this->hasMany(ProjectMetadata::class);
     }
+
+
+
+    /**
+     * Returns email attribute.
+     *
+     * Since we have to take care of privacy issues, the display of email addresses
+     * may be deactivated through .env configuration HIDE_EMAIL_ADDRESSES.
+     *
+     * @return string
+     */
+    public function getContactEmailAttribute()
+    {
+        if (array_key_exists('contact_email', $this->getAttributes()) && $this->attributes['contact_email'] !== null) {
+            if (env('HIDE_EMAIL_ADDRESSES')) {
+                return AppHelper::hideEmailAddress($this->attributes['contact_email']);
+            } else {
+                return $this->attributes['contact_email'];
+            }
+        }
+   }
 
 
     // =======================================================================//
@@ -305,7 +327,7 @@ class Project extends Node
         $external_data = [];
 
         /* Determine database connection and identifier */
-        if (env('DEMO_MODE')) {
+        if (env('DEMO_MODE') || env('FAKE_DATASOURCE_IMPORT')) {
             $connection = 'odbc-demo';
             $identifier = '12345678';
         } else {
@@ -408,7 +430,7 @@ class Project extends Node
      */
     public function importFromDataSource()
     {
-        if (env('DEMO_MODE')) {
+        if (env('DEMO_MODE') || env('FAKE_DATASOURCE_IMPORT')) {
             $connection = env('PROJECT_DEMO_CONNECTION');
             $this->data_source_id = DataSource::where('identifier', env('PROJECT_DEMO_DATASOURCE'))->first()->id;
         } else {
@@ -438,7 +460,7 @@ class Project extends Node
                     $new_item = [];
 
                     /* In Demo Mode we always grab the example dataset */
-                    if (env('DEMO_MODE')) {
+                    if (env('DEMO_MODE') || env('FAKE_DATASOURCE_IMPORT')) {
                         $identifier = env('PROJECT_DEMO_IDENTIFIER');
                     } else {
                         $identifier = $this->identifier;

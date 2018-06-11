@@ -16,8 +16,8 @@ The script takes care of most configuration steps.
 Tricky parts like authentication (Shibboleth only at the moment) 
 and the import from data sources are described below.
 
-1. Copy .env.example to .env
-2. Create database user with sufficient rights on the database (e.g. who can create databases)
+1. Create database with user
+2. Copy .env.example to .env
 3. Modify it to your needs (mainly database setup)
 4. cd installer && chmod u+x install.sh && ./install.sh
 

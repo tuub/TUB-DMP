@@ -209,9 +209,9 @@
 
                     @if( $project->getMetadata('title') )
                         <strong>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}</strong>
-
+                        <br/>
                         @foreach( $project->getMetadata('title') as $title )
-                            <br/>"{{ $title['content'] }}"<br/>
+                            "{{ $title['content'] }}"<br/>
                         @endforeach
                         <br/>
                     @endif

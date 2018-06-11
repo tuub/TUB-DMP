@@ -71,15 +71,11 @@ if [ ${DB_DRIVER} = "pgsql" ]; then
     export PGPASSWORD=${DB_PASSWORD}
 
     DB_EXISTS="psql -lqt | cut -d \| -f 1 | grep -qw ${DB_NAME}"
-    DB_USER_EXISTS="psql -t -c '\du' | cut -d \| -f 1 | grep -qw ${DB_USER}"
-    DB_DROP_CMD="sudo -u ${DB_USER} psql -q -c 'DROP DATABASE \"${DB_NAME}\"'"
-    DB_CREATE_CMD="sudo -u ${DB_USER} psql -q -c 'CREATE DATABASE \"${DB_NAME}\"'"
+    DB_COUNT_TABLES="psql -t -c \"SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'\""
     DB_UUID_CMD="sudo -u ${DB_USER} psql -q -d ${DB_NAME} -c 'CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"'"
     DB_GRANT_USER_CMD="sudo -u ${DB_USER} psql -q -c 'GRANT ALL PRIVILEGES ON DATABASE \"${DB_NAME}\" TO ${DB_USER}'"
 elif [ ${DB_DRIVER} = "mysql" ]; then
     DB_EXISTS="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"SHOW DATABASES\" | grep $DB_NAME"
-    DB_DROP_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"DROP DATABASE \"$DB_NAME\"\""
-    DB_CREATE_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"CREATE DATABASE \"$DB_NAME\"\""
     DB_UUID_CMD=""
     DB_GRANT_USER_CMD="mysql -u ${DB_USER} -p${DB_PASSWORD} -e \"GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST'\""
 else
@@ -111,8 +107,8 @@ echo -e "* Driver: $DB_DRIVER"
 echo -e "* Host: $DB_HOST"
 echo -e "* Database: $DB_NAME"
 echo -e "* User: $DB_USER"
-echo -e "* Database Reset: $DB_RESET"
 echo -e "* PHP Version: $PHP_VERSION"
+
 
 echo
 read -n1 -p "Continue? [y,n]: " CONTINUE
@@ -122,7 +118,7 @@ echo
 
 echo -e "The following script might require sudo rights for:"
 echo -e "* installing components (Composer, NPM, Yarn)"
-echo -e "* setting up the database environment (database user must exist)"
+echo -e "* setting up the database environment (database with database user must exist)"
 echo
 
 if [[ "$CONTINUE" == [Yy] ]]; then
@@ -283,42 +279,15 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     echo -e "SETUP DATABASE"
     echo -e "--------------------------------------------------------------------"
 
-    if [ "$DB_RESET" = true ]; then
+    echo -n "* Enabling UUID support on \"$DB_NAME\" using \"$DB_USER\" account  ... "
+    eval ${DB_UUID_CMD}
+    echo -n "OK"
+    echo
 
-        echo -e "Some database operations need administrative access to succeed."
-        echo -e "You might get asked for your password."
-
-        if eval ${DB_EXISTS}; then
-            echo -n "* Dropping existing database \"$DB_NAME\" using \"$DB_USER\" account ... "
-            read -n1 -p "Continue? [y,n] " CONTINUE
-            if [[ "$CONTINUE" == [yY] ]]; then
-                eval ${DB_DROP_CMD}
-                echo -n " ==> OK"
-            else
-                echo -n " ==> SKIP"
-            fi
-            echo
-        fi
-
-        echo -n "* Creating database \"$DB_NAME\" using \"$DB_USER\" account ... "
-        if eval ${DB_EXISTS}; then
-            echo -n "DATABASE ALREADY EXISTS. SKIP."
-        else
-            eval ${DB_CREATE_CMD}
-            echo -n "OK"
-        fi
-        echo
-
-        echo -n "* Enabling UUID support on \"$DB_NAME\" using \"$DB_USER\" account  ... "
-        eval ${DB_UUID_CMD}
-        echo -n "OK"
-        echo
-
-        echo -n "* Granting user \"$DB_USER\" the privileges to database  \"$DB_NAME\" using root account  ... "
-        eval ${DB_GRANT_USER_CMD}
-        echo -n "OK"
-        echo
-    fi
+    echo -n "* Granting user \"$DB_USER\" the privileges to database  \"$DB_NAME\" using root account  ... "
+    eval ${DB_GRANT_USER_CMD}
+    echo -n "OK"
+    echo
 
     # Run migrations
     echo -n "* Running migrations on database \"$DB_NAME\" ... "

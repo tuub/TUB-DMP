@@ -20,7 +20,6 @@
                     <thead>
                         <tr>
                             <th>Text</th>
-                            <th>Output Text</th>
                             <th>Answers</th>
                             <th>Created</th>
                             <th data-orderable="false">Tools</th>

@@ -31,127 +31,149 @@
                     </div>
                 @endif
 
-                @if( $project->identifier )
-                    <label>{{ $project->getMetadataLabel('identifier') }}:</label>
-                    {{ $project->identifier }}
-                    <br/>
-                @endif
+                <table class="metadata">
+                    @if( $project->identifier )
+                        <tr>
+                            <td class="label">{{ $project->getMetadataLabel('identifier') }}:</td>
+                            <td>{{ $project->identifier }}</td>
+                        </tr>
+                    @endif
 
-                @if( $project->plans_count )
-                    <label>{{ str_plural(trans('project.show.plan'), $project->plans_count) }}:</label>
-                    {{ $project->plans_count }}
-                    <br/>
-                @endif
+                    @if( $project->plans_count )
+                        <tr>
+                            <td class="label">{{ str_plural(trans('project.show.plan'), $project->plans_count) }}:</td>
+                            <td>{{ $project->plans_count }}</td>
+                        </tr>
+                    @endif
 
-                @if( $project->children_count )
-                    <label>{{ str_plural(trans('project.show.sub_project'), $project->children_count) }}:</label>
-                    {{ $project->children_count }}
-                    <br/>
-                @endif
+                    @if( $project->children_count )
+                            <tr>
+                                <td class="label">{{ str_plural(trans('project.show.sub_project'), $project->children_count) }}:</td>
+                                <td>{{ $project->children_count }}</td>
+                            </tr>
+                    @endif
 
-                @if( $project->getMetadata('title') )
-                    <label>{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</label>
-                    <br/>
-                    @foreach( $project->getMetadata('title') as $title )
-                        {{ $title['content'] }}
-                        @unless( $loop->last )
-                            <br/>
-                        @endunless
-                    @endforeach
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('title') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('title'), $project->getMetadata('title')->count()) }}:</td>
+                            <td>
+                                @foreach( $project->getMetadata('title') as $title )
+                                    {{ $title['content'] }}
+                                    @unless( $loop->last )
+                                        <br/>
+                                    @endunless
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('begin') )
-                    <label>{{ $project->getMetadataLabel('duration') }}:</label>
-                    @foreach( $project->getMetadata('begin') as $begin )
-                        @date($begin) -
-                        @if( $project->getMetadata('end') )
-                            @foreach( $project->getMetadata('end') as $end )
-                                @date($end)
-                            @endforeach
-                        @endif
-                    @endforeach
-                    <br/>
-                @endif
+                    @if( $project->getMetadata('begin') )
+                        <tr>
+                            <td class="label">{{ $project->getMetadataLabel('duration') }}:</td>
+                            <td>
+                                @foreach( $project->getMetadata('begin') as $begin )
+                                    @date($begin) -
+                                    @if( $project->getMetadata('end') )
+                                        @foreach( $project->getMetadata('end') as $end )
+                                            @date($end)
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('abstract') )
-                    <label>{{ str_plural($project->getMetadataLabel('abstract'), $project->getMetadata('abstract')->count()) }}:</label>
-                    <br/>
-                    @foreach( $project->getMetadata('abstract') as $abstract )
-                        {{ $abstract['content'] }}
-                        @unless( $loop->last )
-                            <br/>
-                        @endunless
-                    @endforeach
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('abstract') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('abstract'), $project->getMetadata('abstract')->count()) }}:</td>
+                            <td>
+                                @foreach( $project->getMetadata('abstract') as $abstract )
+                                    {{ $abstract['content'] }}
+                                    @unless( $loop->last )
+                                        <br/><br/>
+                                    @endunless
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('leader') )
-                    <label>{{ str_plural($project->getMetadataLabel('leader'), $project->getMetadata('leader')->count()) }}:</label>
-                    <br/>
-                    @foreach( $project->getMetadata('leader') as $leader )
-                        {!! \App\ProjectMetadata::getProjectMemberOutput($leader) !!}
-                        @unless( $loop->last )
-                            <br/>
-                        @endunless
-                    @endforeach
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('leader') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('leader'), $project->getMetadata('leader')->count()) }}:</td>
+                            <td>
+                                @foreach( $project->getMetadata('leader') as $leader )
+                                    {!! \App\ProjectMetadata::getProjectMemberOutput($leader) !!}
+                                    @unless( $loop->last )
+                                        <br/>
+                                    @endunless
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('member') )
-                    <label>{{ str_plural($project->getMetadataLabel('member'), $project->getMetadata('member')->count()) }}:</label>
-                    <br/>
-                    @foreach( $project->getMetadata('member') as $member )
-                        {!! \App\ProjectMetadata::getProjectMemberOutput($member) !!}
-                        @unless( $loop->last )
-                            <br/>
-                        @endunless
-                    @endforeach
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('member') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('member'), $project->getMetadata('member')->count()) }}:</td>
+                            <td>
+                                @foreach( $project->getMetadata('member') as $member )
+                                    {!! \App\ProjectMetadata::getProjectMemberOutput($member) !!}
+                                    @unless( $loop->last )
+                                        <br/>
+                                    @endunless
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('partner') )
-                    <label>{{ str_plural($project->getMetadataLabel('partner'), $project->getMetadata('partner')->count()) }}:</label>
-                    <br/>
-                    @foreach( $project->getMetadata('partner') as $partner )
-                        {{ $partner }}
-                        @unless( $loop->last )
-                            <br/>
-                        @endunless
-                    @endforeach
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('partner') )
+                        <tr>
+                            <td>{{ str_plural($project->getMetadataLabel('partner'), $project->getMetadata('partner')->count()) }}:</td>
+                            <td>
+                                @foreach( $project->getMetadata('partner') as $partner )
+                                    {{ $partner }}
+                                    @unless( $loop->last )
+                                        <br/>
+                                    @endunless
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('funding_source') )
-                    <label>{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</label>
-                    {!! $project->getMetadata('funding_source')->implode(', ') !!}
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('funding_source') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('funding_source'), $project->getMetadata('funding_source')->count()) }}:</td>
+                            <td>{!! $project->getMetadata('funding_source')->implode(', ') !!}</td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('funding_program') )
-                    <label>{{ str_plural($project->getMetadataLabel('funding_program'), $project->getMetadata('funding_program')->count()) }}:</label>
-                    {!! $project->getMetadata('funding_program')->implode(', ') !!}
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('funding_program') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('funding_program'), $project->getMetadata('funding_program')->count()) }}:</td>
+                            <td>{!! $project->getMetadata('funding_program')->implode(', ') !!}</td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('grant_reference_number') )
-                    <label>{{ str_plural($project->getMetadataLabel('grant_reference_number'), $project->getMetadata('grant_reference_number')->count()) }}:</label>
-                    {!! $project->getMetadata('grant_reference_number')->implode(', ') !!}
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('grant_reference_number') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('grant_reference_number'), $project->getMetadata('grant_reference_number')->count()) }}:</td>
+                            <td>{!! $project->getMetadata('grant_reference_number')->implode(', ') !!}</td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('project_management_organisation') )
-                    <label>{{ str_plural($project->getMetadataLabel('project_management_organisation'), $project->getMetadata('project_management_organisation')->count()) }}:</label>
-                    {!! $project->getMetadata('project_management_organisation')->implode(', ') !!}
-                    <br/><br/>
-                @endif
+                    @if( $project->getMetadata('project_management_organisation') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('project_management_organisation'), $project->getMetadata('project_management_organisation')->count()) }}:</td>
+                            <td>{!! $project->getMetadata('project_management_organisation')->implode(', ') !!}</td>
+                        </tr>
+                    @endif
 
-                @if( $project->getMetadata('project_data_contact') )
-                    <label>{{ str_plural($project->getMetadataLabel('project_data_contact'), $project->getMetadata('project_data_contact')->count()) }}:</label>
-                    {!! $project->getMetadata('project_data_contact')->implode(', ') !!}
-                    <br/><br/>
-                @endif
-
+                    @if( $project->getMetadata('project_data_contact') )
+                        <tr>
+                            <td class="label">{{ str_plural($project->getMetadataLabel('project_data_contact'), $project->getMetadata('project_data_contact')->count()) }}:</td>
+                            <td>{!! $project->getMetadata('project_data_contact')->implode(', ') !!}</td>
+                        </tr>
+                    @endif
+                </table>
             </div>
             <div class="modal-footer">
                 {{ Form::button(trans('project.show.button.submit'), ['class' => 'btn btn-success', 'data-dismiss' => 'modal']) }}

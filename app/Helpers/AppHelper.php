@@ -129,4 +129,12 @@ class AppHelper {
             return ' : ' . implode(' > ', $path_array);
         }
     }
+
+
+    public static function hideEmailAddress(string $email)
+    {
+        $mail_parts = explode('@', $email);
+        $mail_parts[0] = 'xxxxxx';
+        return implode('@', $mail_parts);
+    }
 }

@@ -6,9 +6,6 @@
     @endif
         {% $question->getQuestionText() %}
     </td>
-    <td>
-        {{ $question->output_text ? $question->output_text : trans('admin/table.value.null') }}
-    </td>
     <td class="text-center">{{ $question->answers()->count() }}</td>
     <td>@date( $question->created_at ) @time( $question->created_at )</td>
     <td>

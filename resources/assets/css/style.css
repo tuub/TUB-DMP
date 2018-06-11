@@ -536,6 +536,18 @@ tr.parent td {
     opacity: 0.5;
 }
 
+td.label {
+    font-weight: 700 !important;
+    color: #000 !important;
+    padding-right: 1em;
+}
+
+table.metadata {
+    border-collapse:separate;
+    border-spacing: 0 1em;
+}
+
 textarea {
 
 }
+

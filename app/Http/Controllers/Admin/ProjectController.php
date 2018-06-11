@@ -262,7 +262,7 @@ class ProjectController extends Controller
         if ($op) {
             $notification = new Notification(200, 'Successfully approved the project request!', 'success');
             if ($import) {
-                $notification->message .= 'Data Imported!';
+                $notification->message .= ' Data Imported!';
             }
             Mail::to($project->user->email)->send(new ProjectApproved($project));
         } else {

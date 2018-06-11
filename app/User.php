@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Helpers\AppHelper;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -121,6 +122,26 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getInstitutionIdentifierAttribute()
     {
         return session()->get('institution_identifier');
+    }
+
+
+    /**
+     * Returns email attribute.
+     *
+     * Since we have to take care of privacy issues, the display of email addresses
+     * may be deactivated through .env configuration HIDE_EMAIL_ADDRESSES.
+     *
+     * @return string
+     */
+    public function getEmailAttribute()
+    {
+        if (array_key_exists('email', $this->getAttributes()) && $this->attributes['email'] !== null) {
+            if (env('HIDE_EMAIL_ADDRESSES')) {
+                return AppHelper::hideEmailAddress($this->attributes['email']);
+            } else {
+                return $this->attributes['contact_email'];
+            }
+        }
     }
 
 
