@@ -289,7 +289,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
         echo -e "You might get asked for your password."
 
         if eval ${DB_EXISTS}; then
-            echo -n "* Dropping existing database \"$DB_NAME\" using root account ... "
+            echo -n "* Dropping existing database \"$DB_NAME\" using \"$DB_USER\" account ... "
             read -n1 -p "Continue? [y,n] " CONTINUE
             if [[ "$CONTINUE" == [yY] ]]; then
                 eval ${DB_DROP_CMD}
@@ -300,7 +300,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
             echo
         fi
 
-        echo -n "* Creating database \"$DB_NAME\" using root account ... "
+        echo -n "* Creating database \"$DB_NAME\" using \"$DB_USER\" account ... "
         if eval ${DB_EXISTS}; then
             echo -n "DATABASE ALREADY EXISTS. SKIP."
         else
@@ -309,7 +309,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
         fi
         echo
 
-        echo -n "* Enabling UUID support on \"$DB_NAME\" using root account  ... "
+        echo -n "* Enabling UUID support on \"$DB_NAME\" using \"$DB_USER\" account  ... "
         eval ${DB_UUID_CMD}
         echo -n "OK"
         echo
@@ -349,6 +349,7 @@ if [[ "$CONTINUE" == [Yy] ]]; then
     sudo chmod -R 774 $APP_ROOT/bootstrap/cache
     sudo chown -R $USER:www-data $APP_ROOT/storage
     sudo chmod -R 774 $APP_ROOT/storage
+    sudo chown -R $USER:www-data $APP_ROOT/public
     sudo chmod -R 774 $APP_ROOT/public
     echo -n "OK"
     echo

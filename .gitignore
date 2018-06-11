@@ -17,5 +17,4 @@ database/seeds/Fake*
 storage/_ide_helper.php
 *.meta.php
 *.log
-yarn.lock
 mix-manifest.json

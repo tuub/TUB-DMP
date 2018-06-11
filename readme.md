@@ -17,13 +17,14 @@ Tricky parts like authentication (Shibboleth only at the moment)
 and the import from data sources are described below.
 
 1. Copy .env.example to .env
-2. Modify it to your needs (mainly database setup)
-3. cd installer && chmod u+x install.sh && ./install.sh
+2. Create database user with sufficient rights on the database (e.g. who can create databases)
+3. Modify it to your needs (mainly database setup)
+4. cd installer && chmod u+x install.sh && ./install.sh
 
-_Note: Only PostgreSQL and MySQL are currently supported in the installer script._
+Note: Only PostgreSQL and MySQL are currently supported in the installer script._
 
 ### Activate Data Source Imports
-Tricky part: In order to import project metadata from external source you might have to configure ODBC and add a cronjob:
+Tricky part: In order to import project metadata from external source you might have to configure ODBC:
 
 ##### Example connection with SQL Server #####
 [https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx](https://msdn.microsoft.com/de-de/library/hh568454(v=sql.110).aspx)
