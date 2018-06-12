@@ -6,6 +6,8 @@
     @endif
         {% $question->getQuestionText() %}
     </td>
+    <td class="text-center">{!! $question->guidance ? trans('admin/table.value.true') : '' !!}</td>
+    <td class="text-center">{!! $question->default ? trans('admin/table.value.true'): '' !!}</td>
     <td class="text-center">{{ $question->answers()->count() }}</td>
     <td>@date( $question->created_at ) @time( $question->created_at )</td>
     <td>

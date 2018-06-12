@@ -10,9 +10,9 @@
             {{ HTML::image($template->getLogoFile('header'), $template->logo_file, ['style' => 'height: 20px;']) }}
         @endif
     </td>
-    <td>{{ $template->sections()->count() }}</td>
-    <td>{{ $template->surveys()->count() }}</td>
-    <td>{{ $template->is_active ? trans('admin/table.value.true') : trans('admin/table.value.false') }}</td>
+    <td class="text-center">{{ $template->sections()->count() }}</td>
+    <td class="text-center">{{ $template->surveys()->count() }}</td>
+    <td class="text-center">{!! $template->is_active ? trans('admin/table.value.true') : ''  !!}</td>
     <td>
         {!! Form::open(['method' => 'GET', 'route' => ['admin.template.edit', $template->id], 'style'=>'display:inline-block', 'class' => 'form-inline', 'role' => 'form']) !!}
         {!! Form::button('<i class="fa ' . trans('admin/table.icon.edit') . '"></i>', ['type' => 'submit', 'class' => 'btn btn-link btn-xs nopadding', 'title' => trans('admin/table.label.edit')] )  !!}

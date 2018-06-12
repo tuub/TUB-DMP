@@ -9,9 +9,9 @@
                 <tr>
                     <th>Name</th>
                     <th data-orderable="false">Logo</th>
-                    <th>Sections</th>
-                    <th>Usage Count</th>
-                    <th>Active</th>
+                    <th class="text-center">Sections</th>
+                    <th class="text-center">Usage Count</th>
+                    <th class="text-center">Active</th>
                     <th data-orderable="false">Tools</th>
                 </tr>
                 </thead>

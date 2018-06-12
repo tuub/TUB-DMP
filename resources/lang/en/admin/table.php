@@ -24,8 +24,8 @@ return [
         'reject' => 'Reject',
     ],
     'value' => [
-        'true' => 'Yes',
-        'false' => 'No',
+        'true' => '<span class="fa fa-check"></span>',
+        'false' => '<span class="fa fa-ban"></span>',
         'null' => 'N/A',
         'never' => 'Never',
     ],

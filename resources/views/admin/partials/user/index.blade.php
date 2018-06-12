@@ -9,9 +9,9 @@
                 <tr>
                     <th>TUB OM</th>
                     <th>Email</th>
-                    <th>Projects</th>
-                    <th>Admin</th>
-                    <th>Active</th>
+                    <th class="text-center">Projects</th>
+                    <th class="text-center">Admin</th>
+                    <th class="text-center">Active</th>
                     <th>Last Login</th>
                     <th data-orderable="false">Tools</th>
                 </tr>

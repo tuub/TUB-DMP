@@ -2,8 +2,8 @@
     <td>{{ $user->tub_om ? $user->tub_om : trans('admin/table.value.null') }}</td>
     <td>{{ $user->email ? Html::mailto($user->email) : trans('admin/table.value.null') }}</td>
     <td>{{ $user->projects_count }}</td>
-    <td>{{ $user->is_admin ? trans('admin/table.value.true') : trans('admin/table.value.false') }}</td>
-    <td>{{ $user->is_active ? trans('admin/table.value.true') : trans('admin/table.value.false') }}</td>
+    <td class="text-center">{!! $user->is_admin ? trans('admin/table.value.true') : '' !!}</td>
+    <td class="text-center">{!! $user->is_active ? trans('admin/table.value.true') : '' !!}</td>
     <td>
         @if( $user->last_login )
             @date( $user->last_login ) @time( $user->last_login )

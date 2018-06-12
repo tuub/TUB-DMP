@@ -20,7 +20,9 @@
                     <thead>
                         <tr>
                             <th>Text</th>
-                            <th>Answers</th>
+                            <th class="text-center">Guidance</th>
+                            <th class="text-center">Default</th>
+                            <th class="text-center">Answers</th>
                             <th>Created</th>
                             <th data-orderable="false">Tools</th>
                         </tr>
