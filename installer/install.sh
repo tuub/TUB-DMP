@@ -1,14 +1,12 @@
 #! /usr/bin/env bash
 
 ## TUB-DMP Installer
-## Usage: xxx
-##
-#?
+## Usage: ./install.sh
 
-# ?????
+# Stop at any error
 set -e
+# Treat undefined vars as error
 set -u
-# ?????
 
 echo
 echo -e "TUB-DMP-INSTALLER"
@@ -118,7 +116,7 @@ echo
 
 echo -e "The following script might require sudo rights for:"
 echo -e "* installing components (Composer, NPM, Yarn)"
-echo -e "* setting up the database environment (database with database user must exist)"
+echo -e "* setting up the database environment (database with database user must exist!)"
 echo
 
 if [[ "$CONTINUE" == [Yy] ]]; then
