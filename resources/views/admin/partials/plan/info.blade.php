@@ -3,7 +3,7 @@
     <td>{{ $plan->version }}</td>
     <td>{{ $plan->survey->template->name }}</td>
     <td>{{ $plan->survey->completion }} %</td>
-    <td>{{ $plan->is_snapshot ? trans('admin/table.value.true') : trans('admin/table.value.false') }}</td>
+    <td>{!! $plan->is_snapshot ? trans('admin/table.value.true') : trans('admin/table.value.false') !!}</td>
     <td>@date( $plan->created_at ) @time( $plan->created_at )</td>
     <td>
         @if( $plan->updated_at )
