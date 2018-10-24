@@ -13,7 +13,7 @@ return [
     |
     */
     'footer.version' => 'v',
-    'footer.link-01' => 'Servicezentrum Forschungsdaten und Publikationen',
+    'footer.link-01' => 'Servicezentrum Forschungsdatenmanagement',
     'footer.link-02' => 'About TUB-DMP',
     'footer.link-03' => 'Contact',
     'footer.link-04' => 'Imprint',
