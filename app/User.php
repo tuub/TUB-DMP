@@ -139,7 +139,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             if (env('HIDE_EMAIL_ADDRESSES')) {
                 return AppHelper::hideEmailAddress($this->attributes['email']);
             } else {
-                return $this->attributes['contact_email'];
+                return $this->attributes['email'];
             }
         }
     }
