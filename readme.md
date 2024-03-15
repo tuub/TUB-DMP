@@ -1,3 +1,5 @@
+# This project is not maintained anymore. We switched to [RDMO](https://github.com/rdmorganiser/).
+
 # TUB-DMP
 
 TUB-DMP is a tool for handling data management planning efficiently, based on the awesome web application framework [Laravel].
